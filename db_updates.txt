@@ -1,0 +1,547 @@
+---- Catalogue updates ----
+
+-----------------
+
+UPDATE furniture SET `interaction_type` = 'crosstrainer', `effect_id` = 195 WHERE `item_name` = 'olympics_c16_crosstrainer'
+UPDATE furniture SET `interaction_type` = 'trampoline', `effect_id` = 193 WHERE `item_name` = 'olympics_c16_trampoline'
+UPDATE furniture SET `interaction_type` = 'jogger', `effect_id` = 194 WHERE `item_name` = 'olympics_c16_treadmill'
+UPDATE furniture SET `interaction_type` = 'iceskate', `effect_id` = 38 WHERE `item_name` = 'es_skating_ice'
+UPDATE furniture SET `interaction_type` = 'rollerskate', `effect_id` = 0 WHERE `item_name` = 'val11_floor'
+UPDATE furniture SET `interaction_type` = 'skaterail', `effect_id` = 52 WHERE `item_name` = 'sb_rail'
+
+-----------------
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_CrossTrainer', 'games', 3, 50, 30, 30, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 2, 25, 20, 10, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 1, 10, 10, 1, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 10, 1000, 1200, 100, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 9, 900, 1000, 90, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 8, 800, 500, 80, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 7, 700, 400, 70, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 6, 600, 200, 60, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 5, 500, 100, 50, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 4, 400, 50, 40, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 3, 300, 25, 30, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 2, 200, 20, 10, '1', '0', '0'),
+	(null, 'ACH_Trampolinist', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 4, 400, 40, 40, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 5, 500, 50, 50, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 6, 600, 60, 60, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 7, 700, 70, 70, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 8, 800, 80, 80, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 9, 900, 90, 90, '1', '0', '0'),
+	(null, 'ACH_CrossTrainer', 'games', 10, 1000, 100, 100, '1', '0', '0'),
+	(null, 'ACH_FootballGoalScoredInRoom', 'games', 7, 100, 10, 500, '1', '0', '0'),
+	(null, 'ACH_FootballGoalScoredInRoom', 'games', 8, 100, 10, 1000, '1', '0', '0'),
+	(null, 'ACH_FootballGoalScoredInRoom', 'games', 9, 100, 10, 1750, '1', '0', '0'),
+	(null, 'ACH_FootballGoalScoredInRoom', 'games', 10, 100, 10, 2736, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_TagA', 'room_builder', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_RbTagA', 'room_builder', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 2, 100, 10, 5, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 3, 100, 10, 10, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 4, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 5, 100, 10, 20, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 6, 100, 10, 25, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 7, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 8, 100, 10, 35, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 9, 100, 10, 40, '1', '0', '0'),
+	(null, 'ACH_BotsCount', 'room_builder', 10, 100, 10, 45, '1', '0', '0'),
+	(null, 'ACH_SelfModDoorModeSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModChatFloodFilterSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModRoomFilterSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModKickSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModBanSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModChatHearRangeSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModChatScrollSpeedSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SelfModIgnoreSeen', 'explore', 1, 20, 10, 1, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 3, 300, 25, 30, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 4, 400, 50, 40, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 5, 500, 100, 50, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 6, 600, 200, 60, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 7, 700, 400, 70, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 8, 800, 500, 80, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 9, 900, 1000, 90, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 10, 1000, 1200, 100, '1', '0', '0'),
+	(null, 'ACH_Jogger', 'games', 2, 200, 20, 10, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_TagC', 'games', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_RbTagC', 'games', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_SkateBoardJump', 'games', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_SkateBoardSlide', 'games', 10, 100, 10, 2048, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 2, 100, 10, 6, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 3, 100, 10, 15, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 4, 100, 10, 30, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 5, 100, 10, 60, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 6, 100, 10, 120, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 7, 100, 10, 250, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 8, 100, 10, 512, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 9, 100, 10, 1024, '1', '0', '0'),
+	(null, 'ACH_RoomDecoHoleFurniCount', 'room_builder', 10, 100, 10, 2048, '1', '0', '0');
+
+---------------
+
+Alterar todos os "Agujeros Negros": interaction_type = "blackhole"
+
+---------------
+
+Excluir os registros duplicados em `achievements`:
+
+- ACH_SelfModDoorModeSeen
+- ACH_SelfModChatFloodFilterSeen
+- ACH_SelfModRoomFilterSeen
+- ACH_SelfModIgnoreSeen
+- ACH_SelfModKickSeen
+- ACH_SelfModBanSeen
+- ACH_SelfModChatScrollSpeedSeen
+- ACH_SelfModChatHearRangeSeen
+
+--------------
+
+Excluir a tabela catalog_marketplace_offers, a seguir teremos as atualizações para o marketplace:
+
+INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption`, `icon_image`, `visible`, `enabled`, `min_rank`, `order_num`, `page_layout`, `club_only`, `page_images`, `page_texts`, `min_sub`, `vip_only`, `link`, `extra_data`, `type`, `page_headline`, `page_teaser`, `page_special`, `page_text_1`, `page_text_2`, `page_text_details`, `page_text_teaser`, `caption_br`) VALUES (111300, 2340, 'Feira Livre', 400026, '1', '1', 1, 14, 'frontpage', '0', '["trax","catalog_djshop_teaser1"]', '["¿Es hora de Divertirse! Coloca una Jukebox en una de tus salas, añade varios discos de la sección \'Habbo Hotel Hits\' a la misma y ya lo tendrás todo listo para montar un gran fiestón.", ""]', 0, '0', 'marketplace', '', 'DEFAULT', '', '', '', '', '', '', '', 'BRAZIL');
+INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption`, `icon_image`, `visible`, `enabled`, `min_rank`, `order_num`, `page_layout`, `club_only`, `page_images`, `page_texts`, `min_sub`, `vip_only`, `link`, `extra_data`, `type`, `page_headline`, `page_teaser`, `page_special`, `page_text_1`, `page_text_2`, `page_text_details`, `page_text_teaser`, `caption_br`) VALUES (111301, 111300, 'Ofertas', 400026, '1', '1', 1, 1, 'marketplace', '0', '["trax","catalog_djshop_teaser1"]', '["¿Es hora de Divertirse! Coloca una Jukebox en una de tus salas, añade varios discos de la sección \'Habbo Hotel Hits\' a la misma y ya lo tendrás todo listo para montar un gran fiestón.", ""]', 0, '0', 'marketplace-offers', '', 'DEFAULT', '', '', '', '', '', '', '', 'BRAZIL');
+INSERT INTO `catalog_pages` (`id`, `parent_id`, `caption`, `icon_image`, `visible`, `enabled`, `min_rank`, `order_num`, `page_layout`, `club_only`, `page_images`, `page_texts`, `min_sub`, `vip_only`, `link`, `extra_data`, `type`, `page_headline`, `page_teaser`, `page_special`, `page_text_1`, `page_text_2`, `page_text_details`, `page_text_teaser`, `caption_br`) VALUES (111302, 111300, 'Meus Itens', 400026, '1', '1', 1, 1, 'marketplace_own_items', '0', '["trax","catalog_djshop_teaser1"]', '["¿Es hora de Divertirse! Coloca una Jukebox en una de tus salas, añade varios discos de la sección \'Habbo Hotel Hits\' a la misma y ya lo tendrás todo listo para montar un gran fiestón.", ""]', 0, '0', 'marketplace-own-items', '', 'DEFAULT', '', '', '', '', '', '', '', 'BRAZIL');
+
+CREATE TABLE IF NOT EXISTS `marketplace_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `price` int(11) NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `sold_timestamp` int(11) NOT NULL DEFAULT '0',
+  `state` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `itemdata` (`item_id`,`user_id`) USING BTREE,
+  KEY `price` (`price`) USING BTREE,
+  KEY `time` (`timestamp`,`sold_timestamp`) USING BTREE,
+  KEY `status` (`state`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=FIXED;
+
+/*!40000 ALTER TABLE `marketplace_items` DISABLE KEYS */;
+/*!40000 ALTER TABLE `marketplace_items` ENABLE KEYS */;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+
+ALTER TABLE items ADD limited_data VARCHAR(100) NOT NULL DEFAULT '0:0';
+
+---------
+
+DROP TABLE IF EXISTS `catalog_club_offers`;
+CREATE TABLE IF NOT EXISTS `catalog_club_offers` (
+  `id` int(11) NOT NULL,
+  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `name` varchar(35) NOT NULL,
+  `days` int(7) NOT NULL,
+  `credits` int(5) NOT NULL DEFAULT '10',
+  `points` int(5) NOT NULL DEFAULT '0',
+  `points_type` int(3) NOT NULL DEFAULT '0',
+  `type` enum('HC','VIP') NOT NULL DEFAULT 'HC',
+  `deal` enum('0','1') NOT NULL DEFAULT '0',
+  `giftable` enum('1','0') NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+INSERT INTO `catalog_club_offers` (`id`, `enabled`, `name`, `days`, `credits`, `points`, `points_type`, `type`, `deal`, `giftable`) VALUES
+	(1, '1', 'HABBO_CLUB_1_MONTH', 31, 50, 50, 5, 'VIP', '0', '0'),
+	(2, '1', 'HABBO_CLUB_3_MONTHS', 93, 120, 120, 5, 'VIP', '0', '0');
+
+----------
+
+CREATE TABLE `catalog_target_offers` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `offer_code` varchar(32) NOT NULL,
+ `title` varchar(128) NOT NULL DEFAULT '',
+ `description` varchar(2048) NOT NULL DEFAULT '',
+ `image` varchar(128) NOT NULL,
+ `icon` varchar(128) NOT NULL,
+ `end_timestamp` int(11) NOT NULL,
+ `credits` int(5) NOT NULL DEFAULT '10',
+ `points` int(5) NOT NULL DEFAULT '10',
+ `points_type` int(3) NOT NULL DEFAULT '5',
+ `purchase_limit` int(2) NOT NULL DEFAULT '5',
+ `catalog_item` int(11) NOT NULL,
+ `vars` varchar(1024) NOT NULL DEFAULT '' COMMENT 'List of strings seperated by a ;',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `player_target_offer_purchases` (
+ `player_id` int(11) NOT NULL,
+ `offer_id` int(11) NOT NULL,
+ `state` int(11) NOT NULL DEFAULT '0',
+ `amount` int(11) NOT NULL DEFAULT '0',
+ `last_purchase` int(11) NOT NULL DEFAULT '0',
+ UNIQUE KEY `use_id` (`user_id`,`offer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.keys.cmd_promote_offer', 'promoteoffer');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.description.cmd_promote_offer', ':promoteoffer [info] ou [id]');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.info', 'info');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.error.cmd_promote_offer.not_found', 'Oferta não encontrada. Use :promoteoffer info para ver todas as ofertas.');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.list', 'Ofertas disponíveis (%amount%): \n');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.list.entry', '%id%: %title%');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.success.cmd_promote_offer', 'A oferta foi alterada com sucesso para %id%: %title%');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.remove', 'A oferta foi removida com sucesso!');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.already_active', 'A oferta já está ativa!');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.expired', 'Essa oferta não está mais disponível!');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('commands.cmd_promote_offer.limit_exceeded', 'Você excedeu o limite de compras para essa oferta.');
+
+ALTER TABLE server_configuration ADD target_offer_id INT(11) NOT NULL DEFAULT '0';
+
+ALTER TABLE server_configuration ADD websockets_header VARCHAR(256) NOT NULL DEFAULT 'X-Forwarded-For';
+
+DROP TABLE IF EXISTS `permission_perks`;
+CREATE TABLE `permission_perks` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `title` varchar(75) DEFAULT 'FULL_CHAT',
+  `data` varchar(255) DEFAULT '',
+  `override_rank` enum('1','0') DEFAULT '0',
+  `override_default` enum('1','0') DEFAULT '0',
+  `min_rank` int(11) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+INSERT INTO `permission_perks` VALUES ('1', 'SAFE_CHAT', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('2', 'USE_GUIDE_TOOL', 'requirement.unfulfilled.helper_le', '1', '1', '14');
+INSERT INTO `permission_perks` VALUES ('3', 'GIVE_GUIDE_TOURS', '', '1', '1', '14');
+INSERT INTO `permission_perks` VALUES ('4', 'JUDGE_CHAT_REVIEWS', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('5', 'CALL_ON_HELPERS', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('6', 'CITIZEN', '', '1', '1', '14');
+INSERT INTO `permission_perks` VALUES ('7', 'FULL_CHAT', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('8', 'TRADE', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('9', 'VOTE_IN_COMPETITIONS', 'requirement.unfulfilled.helper_level_2', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('10', 'NEW_UI', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('11', 'EXPERIMENTAL_CHAT_BETA', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('12', 'HEIGHTMAP_EDITOR_BETA', 'requirement.unfulfilled.feature_disabled', '0', '1', '1');
+INSERT INTO `permission_perks` VALUES ('13', 'EXPERIMENTAL_TOOLBAR', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('16', 'CAMERA', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('17', 'BUILDER_AT_WORK', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('18', 'MOUSE_ZOOM', '', '1', '1', '1');
+INSERT INTO `permission_perks` VALUES ('19', 'NAVIGATOR_PHASE_TWO_2014', '', '0', '0', '1');
+INSERT INTO `permission_perks` VALUES ('20', 'NAVIGATOR_ROOM_THUMBNAIL_CAMERA', '', '0', '0', '1');
+INSERT INTO `permission_perks` VALUES ('21', 'MOD_TOOL', '', '0', '0', '14');
+
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('marketplace.buy.own.item', 'Você não pode comprar seus próprios itens da feira livre.');
+
+---------
+
+ALTER TABLE `bots` ADD `chat_random` ENUM('0','1') NOT NULL DEFAULT '0';
+
+DROP TABLE IF EXISTS `catalog_gift_wrapping`;
+CREATE TABLE `catalog_gift_wrapping` (
+  `type` enum('new','old') DEFAULT 'new',
+  `sprite_id` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3372');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3374');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3375');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3376');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3377');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3378');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3379');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3380');
+INSERT INTO `catalog_gift_wrapping` VALUES ('new', '3381');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '187');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '188');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '189');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '190');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '191');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '192');
+INSERT INTO `catalog_gift_wrapping` VALUES ('old', '193');
+
+-------------------------------------------------------------
+
+DROP TABLE IF EXISTS `items_presents`;
+CREATE TABLE `items_presents`  (
+  `item_id` int(11) NOT NULL,
+  `base_item_reward` int(11) NOT NULL
+) ENGINE = MyISAM CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Fixed;
+
+-------------------------------------------------------------------------------------
+
+DROP TABLE IF EXISTS `recycler_prizes`;
+CREATE TABLE `recycler_prizes`  (
+  `rarity` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL
+) ENGINE = MyISAM CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Fixed;
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_HorseJumping', 'explore', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_HorseJumping', 'explore', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_HorseJumping', 'explore', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_HorseJumping', 'explore', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_HorseJumping', 'explore', 5, 300, 50, 250, '1', '0', '0');
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_RoomHorseJumpCount', 'explore', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_RoomHorseJumpCount', 'explore', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_RoomHorseJumpCount', 'explore', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_RoomHorseJumpCount', 'explore', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_RoomHorseJumpCount', 'explore', 5, 300, 50, 250, '1', '0', '0');
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 5, 200, 50, 250, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 6, 250, 60, 300, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 7, 200, 70, 350, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 8, 250, 80, 400, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 9, 200, 90, 450, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 10, 250, 100, 500, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 11, 200, 110, 550, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 12, 250, 140, 600, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 13, 200, 150, 650, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 14, 250, 170, 700, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 15, 200, 180, 750, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 16, 250, 190, 800, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 17, 250, 200, 850, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 18, 200, 210, 900, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 19, 250, 220, 950, '1', '0', '0'),
+	(null, 'ACH_HorseConsecutiveJumpsCount', 'explore', 20, 300, 230, 1000, '1', '0', '0');
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_HorseRent', 'room_builder', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 5, 200, 50, 250, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 6, 250, 60, 300, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 7, 200, 70, 350, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 8, 250, 80, 400, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 9, 200, 90, 450, '1', '0', '0'),
+	(null, 'ACH_HorseRent', 'room_builder', 10, 250, 100, 500, '1', '0', '0');
+
+ALTER TABLE server_configuration ADD talenttrack_enabled ENUM('0','1') NOT NULL DEFAULT '1';
+
+ALTER TABLE player_settings ADD citizen_level INT(2) NOT NULL DEFAULT 0;
+ALTER TABLE player_settings ADD helper_level INT(2) NOT NULL DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS `achievements_talents` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` enum('citizenship','helper') NOT NULL DEFAULT 'citizenship',
+  `level` int(11) NOT NULL DEFAULT '0',
+  `achievement_ids` varchar(100) NOT NULL DEFAULT '',
+  `achievement_levels` varchar(100) NOT NULL DEFAULT '',
+  `reward_furni` varchar(100) NOT NULL DEFAULT '',
+  `reward_perks` varchar(100) NOT NULL DEFAULT '',
+  `reward_badges` varchar(100) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+INSERT INTO `achievements_talents` (`id`, `type`, `level`, `achievement_ids`, `achievement_levels`, `reward_furni`, `reward_perks`, `reward_badges`) VALUES
+	(1, 'citizenship', 0, '481', '1', '179', '', ''),
+	(2, 'citizenship', 1, '467,479,469', '1,1,1', '179', '', ''),
+	(3, 'citizenship', 2, '445', '2,1', '179', 'TRADE', 'ACH_TraderPass1'),
+	(4, 'citizenship', 3, '467', '1', '179,5003', 'CITIZEN', 'ACH_Citizenship1');
+
+//
+
+UPDATE catalog_items SET `item_ids` = 2386, `flat_id` = 2386 WHERE `id` = 200000609;
+UPDATE quests SET `goal_type` = 18, `goal_data` = 3736 WHERE `id` = 31;
+UPDATE quests SET `goal_type` = 18, `goal_data` = 3792 WHERE `id` = 33;
+
+//
+
+DROP TABLE IF EXISTS `items_wired_rewards`;
+CREATE TABLE `items_wired_rewards` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `player_id` int(11) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `reward_data` text NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC;
+
+DROP TABLE IF EXISTS `logs_exchanges`;
+CREATE TABLE `logs_exchanges` (
+  `player_id` int(11) DEFAULT NULL,
+  `item_id` int(11) DEFAULT NULL,
+  `base_item` int(11) DEFAULT NULL,
+  `currency_change` varchar(256) DEFAULT NULL,
+  `timestamp` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+//
+
+ALTER TABLE server_configuration ADD camera_pricing_coins INT(11) NOT NULL DEFAULT 0;
+ALTER TABLE server_configuration ADD camera_pricing_duckets INT(11) NOT NULL DEFAULT 0;
+
+//
+
+DROP TABLE IF EXISTS `server_external_configuration`;
+CREATE TABLE `server_external_configuration` (
+  `houseekeping_furniture_edition` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `server_external_configuration` (`houseekeping_furniture_edition`) VALUES (NULL);
+INSERT INTO `permission_commands` (`command_id`, `minimum_rank`, `vip_only`, `rights_only`) VALUES ('editfurni_command', '22', '0', '0');
+
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('command.editfurni.description', 'Abre a página de edição do mobi no painel.');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('command.editfurni.name', 'editfurni');
+
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('command.editfurni.enabled', 'Clique 2x em qualquer mobi para abrir sua página no painel.');
+INSERT INTO `server_locale` (`key`, `value`) VALUES ('command.editfurni.disabled', 'O modo editor de mobis foi desativado.');
+
+//
+
+ALTER TABLE server_external_configuration ADD `prefix_badge_event` VARCHAR(255) NOT NULL DEFAULT '';
+
+ALTER TABLE server_external_configuration ADD `badge_event_limit` INT(11) NOT NULL DEFAULT 0;
+ALTER TABLE server_external_configuration ADD `event_diamonds_reward` INT(11) NOT NULL DEFAULT 0;
+ALTER TABLE server_external_configuration ADD `event_diamonds_reward_double` INT(11) NOT NULL DEFAULT 0;
+
+ALTER TABLE server_external_configuration ADD `enable_staff_messenger_logs` ENUM('0', '1') NOT NULL DEFAULT '0';
+
+//
+
+CREATE TABLE `hotel_pass` (
+  `id` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `type` enum('jeton','ducket','diamond','item','badge','winwin') NOT NULL,
+  `color` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `value` int(11) NOT NULL,
+  `vip` enum('0','1') NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `hotel_pass` (`id`, `level`, `type`, `color`, `image`, `value`, `vip`) VALUES
+(1, 1, 'ducket', 'purple', '../storage/img/battle_pass/duckets_pass.png', 25, '0'),
+(2, 1, 'diamond', 'aqua', '../storage/img/battle_pass/diamond_pass.png', 25, '1'),
+(3, 2, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 25, '0'),
+(4, 2, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 25, '1'),
+(5, 3, 'winwin', 'red', '../storage/img/battle_pass/winwin_pass.png', 200, '0'),
+(6, 3, 'winwin', 'red', '../storage/img/battle_pass/winwin_pass.png', 200, '1'),
+(7, 4, 'jeton', 'orange', '../storage/img/battle_pass/credits_pass.png', 1, '0'),
+(8, 4, 'jeton', 'orange', '../storage/img/battle_pass/credits_pass.png', 1, '1'),
+(9, 5, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 50, '0'),
+(10, 5, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 50, '1'),
+(11, 6, 'winwin', 'red', '../storage/img/battle_pass/winwin_pass.png', 300, '0'),
+(12, 6, 'winwin', 'red', '../storage/img/battle_pass/winwin_pass.png', 300, '1'),
+(13, 7, 'ducket', 'purple', '../storage/img/battle_pass/duckets_pass.png', 50, '0'),
+(14, 7, 'ducket', 'purple', '../storage/img/battle_pass/duckets_pass.png', 50, '1'),
+(15, 8, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 200, '0'),
+(16, 8, 'diamond', 'aqua', '../storage/img/battle_pass/diamonds_pass.png', 200, '1');
+
+
+CREATE TABLE `hotel_pass_gift` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `level` int(11) NOT NULL,
+  `vip` enum('0','1') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+INSERT INTO `hotel_pass_gift` (`id`, `user_id`, `level`, `vip`) VALUES
+(32, 20, 1, '0'),
+(33, 20, 1, '1'),
+(34, 20, 2, '0'),
+(35, 20, 2, '1'),
+(36, 20, 3, '0'),
+(37, 20, 3, '1'),
+(38, 20, 4, '0'),
+(39, 20, 4, '1'),
+(40, 20, 5, '0'),
+(41, 20, 5, '1'),
+(42, 20, 6, '0'),
+(43, 20, 6, '1'),
+(44, 20, 7, '0'),
+(45, 20, 7, '1'),
+(46, 20, 8, '0'),
+(47, 20, 8, '1'),
+(48, 22, 1, '0');
+
+ALTER TABLE players ADD `xp` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE players ADD `level` INT(11) NOT NULL DEFAULT '0';
+ALTER TABLE server_configuration ADD `monster_seed_id` INT(11) NOT NULL DEFAULT '1223';
+
+//
+
+ALTER TABLE player_stats ADD kisses_amount INT(11) NOT NULL DEFAULT 0;
+ALTER TABLE player_stats ADD total_kisses_received INT(11) NOT NULL DEFAULT 0;
+ALTER TABLE player_stats ADD total_kisses_sent INT(11) NOT NULL DEFAULT 0;
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_KissGiven', 'explore', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 5, 200, 50, 250, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 6, 250, 60, 300, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 7, 200, 70, 350, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 8, 250, 80, 400, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 9, 200, 90, 450, '1', '0', '0'),
+	(null, 'ACH_KissGiven', 'explore', 10, 250, 100, 500, '1', '0', '0');
+
+INSERT INTO `achievements` (`id`, `group_name`, `category`, `level`, `reward_activity_points`, `reward_achievement_points`, `progress_requirement`, `enabled`, `game_id`, `reward_type`) VALUES
+	(null, 'ACH_KissEarned', 'explore', 1, 100, 10, 1, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 2, 150, 20, 25, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 3, 200, 30, 50, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 4, 250, 40, 100, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 5, 200, 50, 250, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 6, 250, 60, 300, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 7, 200, 70, 350, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 8, 250, 80, 400, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 9, 200, 90, 450, '1', '0', '0'),
+	(null, 'ACH_KissEarned', 'explore', 10, 250, 100, 500, '1', '0', '0');
