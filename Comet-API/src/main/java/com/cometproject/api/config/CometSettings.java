@@ -14,6 +14,9 @@ import java.util.Set;
 public class CometSettings {
     public static int minimumBotMessagesDelay = 5;
     public static int minimumBotNameLength = 30;
+
+    public static int vipRank = 2;
+
     public static boolean talentTrackEnabled = false;
     public static boolean useNewKissSystem = true;
 

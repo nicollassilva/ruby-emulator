@@ -189,9 +189,11 @@ public class CatalogManager implements ICatalogService {
      * @return A list of pages that are accessible by the specified rank
      */
     public List<ICatalogPage> getPagesByRank(int rank, int parentId) {
-        List<ICatalogPage> pages = new ArrayList<>();
+        final List<ICatalogPage> pages = new ArrayList<>();
 
-        for (ICatalogPage page : this.getPages().values()) {
+        for (final ICatalogPage page : this.getPages().values()) {
+            if(page.isVipOnly() && rank != CometSettings.vipRank) continue;
+
             if (rank >= page.getMinRank() && page.getParentId() == parentId) {
                 pages.add(page);
             }

@@ -23,17 +23,17 @@ public class PurchaseItemMessageEvent implements Event {
             return;
         }
 
-        int pageId = msg.readInt();
-        int itemId = msg.readInt();
-        String data = msg.readString();
-        int amount = msg.readInt();
+        final int pageId = msg.readInt();
+        final int itemId = msg.readInt();
+        final String data = msg.readString();
+        final int amount = msg.readInt();
 
         if (!client.getPlayer().getSettings().getAllowTrade()) {
             client.getPlayer().sendPopup(Locale.get("user.troc.disabled.title"), Locale.get("user.troc.disabled.action.message"));
             return;
         }
 
-        if (client.getPlayer().antiSpam("PurchaseItemMessageEvent", 0.3)) {
+        if (client.getPlayer().antiSpam("PurchaseItemMessageEvent", 1.0)) {
             client.getPlayer().sendPopup(Locale.get("game.catalog.furni.buytoofast.title"), Locale.get("game.catalog.furni.buytoofast.message"));
             return;
         }

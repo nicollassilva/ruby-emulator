@@ -82,6 +82,8 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             ICatalogItem item;
 
             if (page != null) {
+                if(page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
+
                 if (page.getMinRank() < client.getPlayer().getData().getRank() || page.getItems().containsKey(itemId)) {
                     item = page.getItems().get(itemId);
 
@@ -200,7 +202,6 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                 return true;
             }
 
-            System.out.println(item.getPresetData());
             if(item.getPresetData().contains("kisses")) {
                 this.purchaseKisses(page, item, client, amount);
                 return true;
@@ -214,7 +215,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     }
 
     public void purchaseKisses(ICatalogPage page, ICatalogItem item, ISession client, int amount) {
-        IPurchaseHandler handler = this.handlers.get("kisses");
+        final IPurchaseHandler handler = this.handlers.get("kisses");
 
         if(handler == null) return;
 
@@ -226,7 +227,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     }
 
     public void purchaseBadge(ICatalogPage page, ICatalogItem item, ISession client, int amount) {
-        IPurchaseHandler handler = this.handlers.get("badges");
+        final IPurchaseHandler handler = this.handlers.get("badges");
 
         if(handler == null) return;
 

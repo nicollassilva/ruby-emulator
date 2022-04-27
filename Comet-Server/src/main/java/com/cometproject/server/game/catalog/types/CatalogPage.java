@@ -1,5 +1,6 @@
 package com.cometproject.server.game.catalog.types;
 
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.catalog.types.CatalogPageType;
 import com.cometproject.api.game.catalog.types.ICatalogBundledItem;
 import com.cometproject.api.game.catalog.types.ICatalogItem;
@@ -39,6 +40,7 @@ public class CatalogPage implements ICatalogPage {
     private int order;
 
     private final boolean enabled;
+    private final boolean vipOnly;
 
     private final List<String> images;
     private final List<String> texts;
@@ -61,6 +63,7 @@ public class CatalogPage implements ICatalogPage {
         this.type = CatalogPageType.valueOf(data.getString("type"));
         this.extraData = data.getString("extra_data");
         this.order = data.getInt("order_num");
+        this.vipOnly = data.getString("vip_only").equals("1");
 
         //if (data.getString("page_images") == null || data.getString("page_images").isEmpty()) {
             this.images = new ArrayList<>();
@@ -84,15 +87,13 @@ public class CatalogPage implements ICatalogPage {
             this.enabled = data.getString("enabled").equals("1");
 
         if (this.type == CatalogPageType.BUNDLE) {
-            String bundleAlias = this.extraData;
-
-            RoomBundle roomBundle = RoomBundleManager.getInstance().getBundle(bundleAlias);
+            final RoomBundle roomBundle = RoomBundleManager.getInstance().getBundle(this.extraData);
 
             if (roomBundle != null) {
-                List<ICatalogBundledItem> bundledItems = new ArrayList<>();
-                Map<Integer, List<RoomBundleItem>> bundleItems = new HashMap<>();
+                final List<ICatalogBundledItem> bundledItems = new ArrayList<>();
+                final Map<Integer, List<RoomBundleItem>> bundleItems = new HashMap<>();
 
-                for (RoomBundleItem bundleItem : roomBundle.getRoomBundleData()) {
+                for (final RoomBundleItem bundleItem : roomBundle.getRoomBundleData()) {
                     if (bundleItems.containsKey(bundleItem.getItemId())) {
                         bundleItems.get(bundleItem.getItemId()).add(bundleItem);
                     } else {
@@ -100,7 +101,7 @@ public class CatalogPage implements ICatalogPage {
                     }
                 }
 
-                for (Map.Entry<Integer, List<RoomBundleItem>> bundledItem : bundleItems.entrySet()) {
+                for (final Map.Entry<Integer, List<RoomBundleItem>> bundledItem : bundleItems.entrySet()) {
                     bundledItems.add(new CatalogBundledItem("0", bundledItem.getValue().size(), bundledItem.getKey()));
                 }
 
@@ -148,6 +149,7 @@ public class CatalogPage implements ICatalogPage {
         int size = 0;
 
         for (ICatalogItem item : this.items.values()) {
+            if((item.isVip() || this.isVipOnly()) && rank != CometSettings.vipRank) continue;
 
             if (rank >= this.getMinRank() && this.getTemplate().equals("default_3x3")) {
                 size++;
@@ -190,6 +192,11 @@ public class CatalogPage implements ICatalogPage {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean isVipOnly() {
+        return vipOnly;
     }
 
     @Override

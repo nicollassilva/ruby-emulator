@@ -2,6 +2,7 @@ package com.cometproject.server.game.commands;
 
 import com.cometproject.api.commands.CommandInfo;
 import com.cometproject.api.config.CometExternalSettings;
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.config.Configuration;
 import com.cometproject.api.utilities.Initialisable;
 import com.cometproject.server.boot.Comet;
@@ -381,7 +382,15 @@ public class CommandManager implements Initialisable {
             return false;
         }
 
-        if (client.getPlayer().getPermissions().hasCommand(commandName) || commandName.equals("")) {
+        if(!PermissionsManager.getInstance().getCommands().containsKey(commandName)) {
+            return false;
+        }
+
+        final boolean userIsVip = client.getPlayer().getData().getRank() == CometSettings.vipRank;
+        final boolean userHasCommand = client.getPlayer().getPermissions().hasCommand(commandName);
+        final boolean commandIsVipOnly = PermissionsManager.getInstance().getCommands().get(commandName).isVipOnly();
+
+        if ((userHasCommand && !commandIsVipOnly) || (commandIsVipOnly && userIsVip) || commandName.equals("")) {
             if (client.getPlayer().getEntity().getRoom().getData().getDisabledCommands().contains(executor)) {
                 ChatCommand.sendNotif(Locale.get("command.disabled"), client);
                 return true;
@@ -421,12 +430,10 @@ public class CommandManager implements Initialisable {
 
             return true;
         } else {
-            if (PermissionsManager.getInstance().getCommands().containsKey(commandName) &&
-                    PermissionsManager.getInstance().getCommands().get(commandName).isVipOnly() &&
-                    !client.getPlayer().getSubscription().isValid())
+            if (commandIsVipOnly) {
                 ChatCommand.sendNotif(Locale.get("command.vip"), client);
+            }
 
-            log.debug(client.getPlayer().getData().getUsername() + " tried executing command: :" + message);
             return false;
         }
     }

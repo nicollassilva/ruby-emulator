@@ -20,6 +20,8 @@ public interface ICatalogPage {
 
     int getParentId();
 
+    boolean isVipOnly();
+
     boolean isEnabled();
 
     Map<Integer, ICatalogItem> getItems();
