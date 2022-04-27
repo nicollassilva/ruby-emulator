@@ -5,6 +5,7 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.protocol.messages.MessageComposer;
 import com.google.common.collect.Lists;
 
@@ -24,6 +25,12 @@ public class PrivateChatFloorItem extends DefaultFloorItem {
 
         entity.setPrivateChatItemId(this.getId());
         this.entities.add((PlayerEntity) entity);
+
+        final PlayerEntity playerEntity = (PlayerEntity) entity;
+
+        playerEntity.getPlayer().getSession().send(
+                new NotificationMessageComposer("privatechat", "Você entrou em uma área de chat privado.")
+        );
     }
 
     @Override
@@ -32,10 +39,16 @@ public class PrivateChatFloorItem extends DefaultFloorItem {
 
         entity.setPrivateChatItemId(0);
         this.entities.remove(entity);
+
+        final PlayerEntity playerEntity = (PlayerEntity) entity;
+
+        playerEntity.getPlayer().getSession().send(
+                new NotificationMessageComposer("privatechat", "Você saiu de uma área de chat privado.")
+        );
     }
 
     public void broadcastMessage(MessageComposer msg) {
-        for (PlayerEntity playerEntity : this.entities) {
+        for (final PlayerEntity playerEntity : this.entities) {
             playerEntity.getPlayer().getSession().send(msg);
         }
     }

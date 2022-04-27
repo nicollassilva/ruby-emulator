@@ -46,7 +46,7 @@ public class NotificationMessageComposer extends MessageComposer {
         } else {
             msg.writeInt(parameters.size());
 
-            for (Map.Entry<String, String> param : parameters.entrySet()) {
+            for (final Map.Entry<String, String> param : parameters.entrySet()) {
                 msg.writeString(param.getKey());
                 msg.writeString(param.getValue());
             }

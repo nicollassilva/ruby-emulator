@@ -490,10 +490,11 @@ public class Player extends Observable implements IPlayer {
             }
         }
 
+        /* Nux Status
         if(this.getSettings().getNuxStatus() == 0){
             this.getSession().send(new NuxAlertComposer(2));
             this.getSession().send(new OpenLinkMessageComposer("helpBubble/add/CHAT_INPUT/" + Locale.getOrDefault("CHAT_INPUT", "¡Haz click aquí para escribir!")));
-        }
+        }*/
 
         if (!this.enteredRooms.contains(id) && !this.rooms.contains(id)) {
             this.enteredRooms.add(id);
