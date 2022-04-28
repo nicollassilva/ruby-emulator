@@ -61,7 +61,6 @@ public class BattleBallThread extends Thread {
                     message.data = new JSONObject();
 
                     message.compose();
-
                 }
 
                 if (room.map.getGame().getInstance() != null) {
@@ -76,21 +75,19 @@ public class BattleBallThread extends Thread {
 
 
 
-                for(Session client : room.players.values()) {
+                for(final Session client : room.players.values()) {
                     System.out.println(client.getPlayer().getEntity().getAttribute("team"));
                     client.getPlayer().getEntity().setFreeze(false);
-
                 }
+
                 room.status = RoomStatus.ARENA;
                 return;
             }
 
             if (room.status == RoomStatus.STAGE_STARTING) {
-                //SnowStageStarting.exec(room);
-
                 room.status = RoomStatus.STAGE_RUNNING;
-                for(Session client : room.players.values()) {
 
+                for(final Session client : room.players.values()) {
                     Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallCounterMessage);
                     OutgoingMessage message = null;
                     message = classMessage.getDeclaredConstructor().newInstance();
@@ -106,13 +103,12 @@ public class BattleBallThread extends Thread {
                     client.getPlayer().getEntity().warpImmediately(new Position(2,10,2));
 
                 }
+
                 BattleBallThread.addTask(this, 5000, BattleBall.GAME_TURN_MILLIS);
                 return;
             }
 
             if (room.status == RoomStatus.STAGE_LOADING) {
-                //SnowStageLoadingTask.exec(room);
-
                 room.status = RoomStatus.STAGE_STARTING;
 
                 System.out.println("STAGE LOADING");
@@ -127,22 +123,25 @@ public class BattleBallThread extends Thread {
 
             if (room.status == RoomStatus.TIMER_TO_LOBBY) {
                 System.out.println("TEMPS AVANT LANCEMENT: " + room.timeToStart);
-                if(pickedRoom.players.size() == 1) {
-                    return;
-                }
-                if(pickedRoom.players.isEmpty()) {
-                    room.status = RoomStatus.CLOSE;
 
-                    return;
-                }
+//                if(pickedRoom.players.size() == 1) {
+//                    return;
+//                }
+//
+//                if(pickedRoom.players.isEmpty()) {
+//                    room.status = RoomStatus.CLOSE;
+//
+//                    return;
+//                }
+
                 if (room.timeToStart-- == 0) {
                     future.cancel(false);
 
-                    if(pickedRoom.players.size() == 1) {
-                        room.status = RoomStatus.CLOSE;
-
-                        return;
-                    }
+//                    if(pickedRoom.players.size() == 1) {
+//                        room.status = RoomStatus.CLOSE;
+//
+//                        return;
+//                    }
 
                     //TODO: REACTIVATE WHEN FINISHED
 

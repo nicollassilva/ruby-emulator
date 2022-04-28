@@ -7,28 +7,26 @@ import com.cometproject.server.game.gamecenter.games.battleball.util.RoomStatus;
 public class BattleBallRunTask {
 
     public static void exec(BattleBallRoom room) {
-
         if(room.players.isEmpty()) {
-            System.out.println("ROOM IS EMPTY!: " + room.map.getEntities().playerCount());
             room.status = RoomStatus.CLOSE;
             room.deleteRoom();
             return;
         }
-        if(room.players.size() < 2) {
+
+        // Temporary modification. Original: room.players.size() < 2
+        if(room.players.size() > 2) {
             room.status = RoomStatus.ARENA_END;
 
-            System.out.println("EEEEEEEEEENNNNNNNNNND!");
-            // TODO: Send game stats.
+            // Send BattleBall gaming stats
         }
+
         //System.out.println("CURRENT GAME TIME: " + room.turn);
 
         if(++room.turn >= BattleBall.GAME_TURNS) {
             room.status = RoomStatus.ARENA_END;
 
-            System.out.println("EEEEEEEEEENNNNNNNNNND!");
-            // TODO: Send game stats.
+            // Send BattleBall gaming stats
         }
-
     }
 
 }

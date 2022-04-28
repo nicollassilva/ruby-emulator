@@ -300,19 +300,18 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         this.getPlayer().setSpectatorRoomId(0);
         this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
 
-        /*if(this.getRoom().hasAttribute("bb_game")) {
-
+        if(this.getRoom().hasAttribute("bb_game")) {
             this.getPlayer().getEntity().setFreeze(true);
-            BattleBallRoom bbroom = BattleBall.PLAYERS.get(this.getPlayer().getId());
 
-            // Team selectionf
+            final BattleBallRoom bbroom = BattleBall.PLAYERS.get(this.getPlayer().getId());
 
-            if(bbroom.pickedTeam + 1 > bbroom.teamList.length - 1) {
+            if(bbroom.pickedTeam + 1 > BattleBallRoom.teamList.length - 1) {
                 bbroom.pickedTeam = 0;
             } else {
                 bbroom.pickedTeam = bbroom.pickedTeam + 1;
             }
-            Teams team = bbroom.teamList[bbroom.pickedTeam];
+
+            final Teams team = BattleBallRoom.teamList[bbroom.pickedTeam];
 
             if(team == Teams.RED) {
                 this.getPlayer().getEntity().getRoom().getGame().addFromTeam(GameTeam.RED, this.getPlayer().getEntity());
@@ -348,7 +347,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
                 this.getPlayer().getEntity().getRoom().getProcess().updateEntityStuff(this.getPlayer().getEntity());
             }
 
-        }*/
+        }
 
         if(this.getRoom().getData().getSongId() != 0) {
             this.sendTraxMachineSong();
@@ -495,12 +494,13 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             LogManager.getInstance().getStore().getRoomVisitContainer().updateExit(this.visitLogEntry);
         }
 
-        /*if(this.getPlayer().getEntity().getRoom().hasAttribute("bb_game")) {
-            BattleBall.PLAYERS.get(this.getPlayerId()).players.remove(this.getPlayerId());
-            BattleBall.PLAYERS.remove(this.getPlayerId());
-            System.out.println(this.getUsername() + " left battle ball game!");
-            this.getPlayer().bypassRoomAuth(false);
-        }*/
+//        if(this.getPlayer().getEntity().getRoom().hasAttribute("bb_game")) {
+//            BattleBall.PLAYERS.get(this.getPlayerId()).players.remove(this.getPlayerId());
+//            BattleBall.PLAYERS.remove(this.getPlayerId());
+//            System.out.println(this.getUsername() + " left battle ball game!");
+//
+//            this.getPlayer().bypassRoomAuth(false);
+//        }
 
         WiredTriggerLeavesRoom.executeTriggers(this);
 

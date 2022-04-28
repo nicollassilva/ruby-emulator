@@ -281,6 +281,8 @@ public class TalkMessageEvent implements Event {
                     break;
 
                 case "bbjoin":
+                    if(!Comet.isDebugging) return;
+
                     BattleBallPlayerQueue.addPlayerInQueue(client);
                     break;
             }

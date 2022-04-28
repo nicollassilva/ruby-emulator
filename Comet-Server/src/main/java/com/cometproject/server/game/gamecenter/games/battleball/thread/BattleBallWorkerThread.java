@@ -27,18 +27,7 @@ public class BattleBallWorkerThread {
     public static void addTask(final BattleBallThread task, final int initDelay, final int repeatRate, final ScheduledThreadPoolExecutor worker) {
         if (repeatRate > 0) {
             try{
-                if(task == null) {
-                    System.out.println("task null");
-                    return;
-                }
-
-                if(initDelay == 0) {
-                    System.out.println("initDelay null");
-                    return;
-                }
-
-                if(worker == null) {
-                    System.out.println("worker null");
+                if(task == null || worker == null) {
                     return;
                 }
 

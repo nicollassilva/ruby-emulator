@@ -65,7 +65,6 @@ public class BattleBallPlayerQueue {
         log.info(playerData.getUsername() + " joined a Battle Ball game!");
 
         for(Session clientt : pickedRoom.players.values()) {
-
             try {
 
                 Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);

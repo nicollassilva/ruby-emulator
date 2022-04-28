@@ -63,7 +63,6 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
 
         this.setRotation(entity.getBodyRotation());
 
-
         if (isOnBall && !this.wasDribbling && this.takeable) {
             if (entity instanceof PlayerEntity) {
                 this.kickerEntity = entity;

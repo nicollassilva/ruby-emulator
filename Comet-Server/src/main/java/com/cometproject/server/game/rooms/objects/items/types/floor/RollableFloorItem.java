@@ -29,8 +29,6 @@ public abstract class RollableFloorItem extends RoomItemFloor {
     private boolean wasDribbling = false;
     private int rollStage = -1;
 
-    private final boolean skip = false;
-
     private int animationMode = -1;
 
     public RollableFloorItem(RoomItemData itemData, Room room) {
@@ -38,29 +36,10 @@ public abstract class RollableFloorItem extends RoomItemFloor {
     }
 
     public static void roll(RoomItemFloor item, Position from, Position to, Room room) {
-        final RollableFloorItem rollableFloorItem = (RollableFloorItem) item;
-
         final Map<Integer, Double> items = new HashMap<>();
 
         items.put(item.getVirtualId(), item.getPosition().getZ());
         room.getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(from.copy(), to.copy(), item.getVirtualId(), 0, items));
-//        item.sendUpdate();
-
-        /*
-[1503332665217] Incoming: [1092]: [0][0][0][11][4]D[2][1][0][0][2]@[0]
-[1503332665216] Incoming: [3486]: [0][0][0];[13]???|[0][0][13]?[0][0][0][2][0][0][0][0][0][0][3][0][3]0.0[0][6]1.0E-6[0][0][0][0][0][0][0][0][0][2]11????[0][0][0][0][1]???
-[1503332665048] Incoming: [1092]: [0][0][0][11][4]D[2][2][0][0][1]@[0]
-[1503332665047] Incoming: [3486]: [0][0][0];[13]???|[0][0][13]?[0][0][0][1][0][0][0][0][0][0][5][0][3]0.0[0][6]1.0E-6[0][0][0][0][0][0][0][0][0][2]33????[0][0][0][0][1]???
-delay: 126ms
-[1503332664922] Incoming: [1092]: [0][0][0][11][4]D[2][3][0][0][2]@[0]
-[1503332664921] Incoming: [3486]: [0][0][0];[13]???|[0][0][13]?[0][0][0][2][0][0][0][0][0][0][5][0][3]0.0[0][6]1.0E-6[0][0][0][0][0][0][0][0][0][2]44????[0][0][0][0][1]???
-delay: 169ms
-[1503332664821] Incoming: [1092]: [0][0][0][11][4]D[2][4][0][0][3]@[0]
-[1503332664821] [b683bf485154731dea9fc99eab215556]
-[1503332664821] Incoming: [3486]: [0][0][0];[13]???|[0][0][13]?[0][0][0][3][0][0][0][0][0][0][5][0][3]0.0[0][6]1.0E-6[0][0][0][0][0][0][0][0][0][2]55????[0][0][0][0][1]???
-[1503332664771] [28e1d8306d60eba9566ddb95f64f5a36]
-[1503332664771] Incoming: [3731]: [0][0][0]=?[0][0][0][1][0][0][0][0][0][0][0][5][0][0][0][0][3]0.0[0][0][0][5][0][0][0][5][0]/flatctrl 4/mv 4,19,1.0E-6//
-[1503332664356] [e759ffbfd8bdfc8ae7721b1e33c9d49b]*/
     }
 
     public static Position calculatePosition(int x, int y, int playerRotation) {
@@ -93,7 +72,6 @@ delay: 169ms
             this.animationMode = 6;
             this.rollBall(entity.getPosition(), entity.getBodyRotation());
         } else if (isOnBall) {
-            //Doble click = encima del balón
             if (entity.getPreviousSteps() != 2) {
                 this.rollSingle(entity);
             }
@@ -138,22 +116,9 @@ delay: 169ms
 
         this.rollStage++;
 
-        // System.out.println(rollStage);
         boolean isStart = this.rollStage == 1;
-        boolean isLast = this.rollStage >= KICK_POWER;
-//
-//        int maxSteps = isStart ? 3 : 2;
-//        int stepsTaken = 1;
-//
-//        Position position = this.getNextPosition();
-//
-//        for (int i = this.rollStage; i < KICK_POWER; i++) {
-//
-//
-//        }
 
         if (isStart) {
-            // the first roll... let's do some magic.
 
             int tiles = 1;
             Position position = this.getNextPosition();
@@ -162,11 +127,11 @@ delay: 169ms
                 position = this.getNextPosition(position.getFlag(), position.squareBehind(position.getFlag()));
             }
 
-            int count = isStart ? 2 : 1;
+            int count = 2;
 
             // can we skip some tiles?
             for (int i = 0; i < count && (this.rollStage + i < KICK_POWER); i++) {
-                Position nextPosition = this.getNextPosition(position.getFlag(), position.squareInFront(position.getFlag()));
+                final Position nextPosition = this.getNextPosition(position.getFlag(), position.squareInFront(position.getFlag()));
 
                 if (!this.isValidRoll(nextPosition)) {
                     break;
@@ -195,7 +160,7 @@ delay: 169ms
             // System.out.println(tiles);
             this.setTicks(RoomItemFactory.getProcessTime(tiles * 0.5));
         } else {
-            Position nextPosition = this.getNextPosition();
+            final Position nextPosition = this.getNextPosition();
             Position newPosition;
 
             if (this.isValidRoll(nextPosition)) {
@@ -213,7 +178,6 @@ delay: 169ms
             }
 
             this.getItemData().setData((KICK_POWER - (this.rollStage - 1) == 0 ? 3 : (KICK_POWER - (this.rollStage - 1)) * 11));
-            //System.out.println("setting extradata " + this.getExtraData());
             this.sendUpdate();
 
             this.moveTo(newPosition, newPosition.getFlag());
@@ -221,12 +185,8 @@ delay: 169ms
         }
     }
 
-    private boolean isValidRoll(int x, int y) {
-        return false;
-    }
-
     private boolean isValidRoll(Position position) {
-        RoomTile tile = this.getRoom().getMapping().getTile(position.getX(), position.getY());
+        final RoomTile tile = this.getRoom().getMapping().getTile(position.getX(), position.getY());
 
         if (tile != null) {
             if (tile.canPlaceItemHere() && tile.getMovementNode() == RoomEntityMovementNode.OPEN && tile.getState() == RoomTileState.VALID) {
@@ -324,10 +284,6 @@ delay: 169ms
 
         if (entity instanceof PlayerEntity) {
             this.kickerEntity = entity;
-
-//            if (kickerEntity.getBodyRotation() % 2 != 0) {
-//                return false;
-//            }
         }
 
         this.isRolling = true;
@@ -375,7 +331,7 @@ delay: 169ms
     }
 
     private void moveTo(Position pos, int rotation) {
-        RoomTile newTile = this.getRoom().getMapping().getTile(pos);
+        final RoomTile newTile = this.getRoom().getMapping().getTile(pos);
 
         if (newTile == null) {
             return;
@@ -385,7 +341,7 @@ delay: 169ms
 
         roll(this, this.getPosition().copy(), pos.copy(), this.getRoom());
 
-        RoomTile tile = this.getRoom().getMapping().getTile(this.getPosition());
+        final RoomTile tile = this.getRoom().getMapping().getTile(this.getPosition());
 
         this.setRotation(rotation);
 
@@ -399,7 +355,7 @@ delay: 169ms
         newTile.reload();
 
         // tell all other items on the new square that there's a new item. (good method of updating score...)
-        for (RoomItemFloor floorItem : this.getRoom().getItems().getItemsOnSquare(pos.getX(), pos.getY())) {
+        for (final RoomItemFloor floorItem : this.getRoom().getItems().getItemsOnSquare(pos.getX(), pos.getY())) {
             floorItem.onItemAddedToStack(this);
         }
 
@@ -414,7 +370,6 @@ delay: 169ms
             return 1.0;
         }
 
-//        System.out.println(i);
         return 0.5;
     }
 

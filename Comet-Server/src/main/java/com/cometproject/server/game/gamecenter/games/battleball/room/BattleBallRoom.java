@@ -70,7 +70,6 @@ public class BattleBallRoom {
 
         RoomItemFloor floorItem = map.getItems().addFloorItem(id, baseId, map, 0, "Battle Ball", x, y, rot, height, data, null);
 
-
         final RoomTile tileInstance = map.getMapping().getTile(floorItem.getPosition().getX(), floorItem.getPosition().getY());
 
         if (tileInstance != null) {
@@ -132,32 +131,35 @@ public class BattleBallRoom {
 
                 map.load();
 
-                for(int i = 8; i <= 13; ++i) {
-                    for (int j = 1; j <= 4; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
-                    }
-                }
-                for(int i = 1; i <= 20; ++i) {
-                    for (int j = 8; j <= 15; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
-                    }
-                }
-                for(int i = 1; i <= 20; ++i) {
-                    for (int j = 19; j <= 26; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
-                    }
-                }
-                for(int i = 8; i <= 13; ++i) {
-                    for (int j = 30; j <= 33; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
-                    }
-                }
-
-                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach_trees.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t13000");
-
-                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t11700");
-
-                this.addItem((int) (Math.random() * (999999999 - 9999999)), 31484, 1, 2, 1, 29, "137;#;51;#;146");
+//                for(int i = 8; i <= 13; ++i) {
+//                    for (int j = 1; j <= 4; ++j) {
+//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
+//                    }
+//                }
+//
+//                for(int i = 1; i <= 20; ++i) {
+//                    for (int j = 8; j <= 15; ++j) {
+//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
+//                    }
+//                }
+//
+//                for(int i = 1; i <= 20; ++i) {
+//                    for (int j = 19; j <= 26; ++j) {
+//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
+//                    }
+//                }
+//
+//                for(int i = 8; i <= 13; ++i) {
+//                    for (int j = 30; j <= 33; ++j) {
+//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
+//                    }
+//                }
+//
+//                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach_trees.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t13000");
+//
+//                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t11700");
+//
+//                this.addItem((int) (Math.random() * (999999999 - 9999999)), 31484, 1, 2, 1, 29, "137;#;51;#;146");
 
                 spawnsRed = new SpawnPoint(2, 10, 2,2);
                 spawnsBlue = new SpawnPoint(32, 10, 2,6);
@@ -174,7 +176,7 @@ public class BattleBallRoom {
 
             case "test":
 
-                mapId = 366;
+                mapId = 207;
                 map = RoomManager.getInstance().get(mapId);
                 map.getData().setAccess(RoomAccessType.INVISIBLE);
 
