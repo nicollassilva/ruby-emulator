@@ -55,7 +55,7 @@ public class SlideObjectBundleMessageComposer extends MessageComposer {
 
         msg.writeInt(this.items.size());
 
-        for (Map.Entry<Integer, Double> item : this.items.entrySet()) {
+        for (final Map.Entry<Integer, Double> item : this.items.entrySet()) {
             msg.writeInt(item.getKey());
 
             // we want to ensure we slide to the same height as we were previously at.

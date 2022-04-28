@@ -37,9 +37,8 @@ public class InstantChatMessageComposer extends MessageComposer {
         msg.writeString(message);
         msg.writeInt(0);
 
-        if (this.username != null) { // we can assume the rest aren't null
-            final String data = username + "/" + figure + "/" + playerId;
-            msg.writeString(data);
+        if (this.username != null && figure != null && playerId != 0) {
+            msg.writeString(username + "/" + figure + "/" + playerId);
         }
     }
 }

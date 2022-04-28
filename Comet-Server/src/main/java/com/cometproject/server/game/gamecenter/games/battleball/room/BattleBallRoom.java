@@ -125,36 +125,37 @@ public class BattleBallRoom {
 
 
                 int creationTime = (int) Comet.getTime();
+
                 mapId = RoomManager.getInstance().createRoom(name, "Battle Ball game arena", new CustomFloorMapData(1, 2, 2, model, 1), 9, 8, 0, creationTime,0, 0, "", true);
                 map = RoomManager.getInstance().get(mapId);
                 map.getData().setAccess(RoomAccessType.INVISIBLE);
 
                 map.load();
 
-//                for(int i = 8; i <= 13; ++i) {
-//                    for (int j = 1; j <= 4; ++j) {
-//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
-//                    }
-//                }
-//
-//                for(int i = 1; i <= 20; ++i) {
-//                    for (int j = 8; j <= 15; ++j) {
-//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
-//                    }
-//                }
-//
-//                for(int i = 1; i <= 20; ++i) {
-//                    for (int j = 19; j <= 26; ++j) {
-//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 0, "");
-//                    }
-//                }
-//
-//                for(int i = 8; i <= 13; ++i) {
-//                    for (int j = 30; j <= 33; ++j) {
-//                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 38574689, j, i, 0, 2, "");
-//                    }
-//                }
-//
+                for(int i = 8; i <= 13; ++i) {
+                    for (int j = 1; j <= 4; ++j) {
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 2, "0");
+                    }
+                }
+
+                for(int i = 1; i <= 20; ++i) {
+                    for (int j = 8; j <= 15; ++j) {
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 0, "0");
+                    }
+                }
+
+                for(int i = 1; i <= 20; ++i) {
+                    for (int j = 19; j <= 26; ++j) {
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 0, "0");
+                    }
+                }
+
+                for(int i = 8; i <= 13; ++i) {
+                    for (int j = 30; j <= 33; ++j) {
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 2, "0");
+                    }
+                }
+
 //                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach_trees.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t13000");
 //
 //                this.addItem((int) (Math.random() * (999999999 - 9999999)), 399996, 1, 2, 1, 29, "state\t0\timageUrl\t/public/swf/c_images/background/coral_beach.png\toffsetX\t-505\toffsetY\t1977\toffsetZ\t11700");

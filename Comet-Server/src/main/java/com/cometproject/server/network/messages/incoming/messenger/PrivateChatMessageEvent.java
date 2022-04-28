@@ -23,7 +23,7 @@ import  com.cometproject.server.network.messages.outgoing.messenger.MessengerErr
 
 public class PrivateChatMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        int userId = msg.readInt();
+        final int userId = msg.readInt();
         String message = msg.readString();
 
         final int timeMutedExpire = client.getPlayer().getData().getTimeMuted() - (int) Comet.getTime();
@@ -57,7 +57,7 @@ public class PrivateChatMessageEvent implements Event {
         }
 
         if (!client.getPlayer().getPermissions().getRank().roomFilterBypass()) {
-            FilterResult filterResult = RoomManager.getInstance().getFilter().filter(message);
+            final FilterResult filterResult = RoomManager.getInstance().getFilter().filter(message);
 
             if (filterResult.isBlocked()) {
                 filterResult.sendLogToStaffs(client, "<ConsoleMessage>");
@@ -76,17 +76,20 @@ public class PrivateChatMessageEvent implements Event {
 
         }
 
-        if (userId == Integer.MAX_VALUE && client.getPlayer().getPermissions().getRank().messengerStaffChat()) {
-            for (Session player : ModerationManager.getInstance().getModerators()) {
+        if (userId == Integer.MAX_VALUE - 2 && client.getPlayer().getPermissions().getRank().messengerStaffChat()) {
+            for (final Session player : ModerationManager.getInstance().getModerators()) {
                 if (player == client) continue;
+
                 player.send(new InstantChatMessageComposer(client.getPlayer().getData().getUsername() + ": " + message, Integer.MAX_VALUE));
             }
+
             return;
         }
 
         if (userId == Integer.MIN_VALUE + 5001 && client.getPlayer().getPermissions().getRank().messengerAlfaChat()) {
-            for (Session player : ModerationManager.getInstance().getAlfas()) {
+            for (final Session player : ModerationManager.getInstance().getAlfas()) {
                 if (player == client) continue;
+
                 player.send(new InstantChatMessageComposer(message, userId, client.getPlayer().getData().getUsername(), client.getPlayer().getData().getFigure(), client.getPlayer().getId()));
             }
             return;
@@ -107,14 +110,14 @@ public class PrivateChatMessageEvent implements Event {
             return;
         }
 
-        IMessengerFriend friend = client.getPlayer().getMessenger().getFriendById(userId);
+        final IMessengerFriend friend = client.getPlayer().getMessenger().getFriendById(userId);
 
         if (friend == null) {
             client.send(new MessengerErrorMessageComposer(6, userId));
             return;
         }
 
-        ISession friendClient = friend.getSession();
+        final ISession friendClient = friend.getSession();
 
         if (friendClient == null) {
             client.send(new MessengerErrorMessageComposer(5, friend.getUserId()));

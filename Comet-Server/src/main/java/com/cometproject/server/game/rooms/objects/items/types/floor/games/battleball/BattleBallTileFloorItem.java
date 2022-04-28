@@ -26,7 +26,8 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
     }
 
     private static List<BattleBallTileFloorItem> buildBanzaiRectangle(BattleBallTileFloorItem triggerItem, int x, int y, int goX, int goY, int currentDirection, int turns, GameTeam team) {
-        boolean[] directions = new boolean[4];
+        final boolean[] directions = new boolean[4];
+
         if (goX == -1 || goX == 0) {
             directions[0] = true;
         }
@@ -39,25 +40,35 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
         if (goY == 1 || goY == 0) {
             directions[3] = true;
         }
+
         if ((goX != 0 || goY != 0) && triggerItem.getPosition().getX() == x && triggerItem.getPosition().getY() == y) {
-            return new LinkedList<BattleBallTileFloorItem>();
+            return new LinkedList<>();
         }
-        Room room = triggerItem.getRoom();
+
+        final Room room = triggerItem.getRoom();
+
         for (int i = 0; i < 4; ++i) {
             BattleBallTileFloorItem item;
             RoomItemFloor obj;
+
             if (!directions[i]) continue;
+
             int nextXStep = 0;
             int nextYStep = 0;
+
             if (i == 0 || i == 2) {
                 nextXStep = i == 0 ? 1 : -1;
             } else if (i == 1 || i == 3) {
                 nextYStep = i == 1 ? 1 : -1;
             }
+
             int nextX = x + nextXStep;
             int nextY = y + nextYStep;
+
             if (room.getMapping().getTile(nextX, nextY) == null || (obj = room.getItems().getFloorItem(room.getMapping().getTile(nextX, nextY).getTopItem())) == null || !(obj instanceof BattleBallTileFloorItem) || (item = (BattleBallTileFloorItem)obj).getTeam() != team || item.getPoints() != 3) continue;
+
             List<BattleBallTileFloorItem> foundPatches = null;
+
             if (currentDirection != i && currentDirection != -1) {
                 if (turns > 0) {
                     foundPatches = BattleBallTileFloorItem.buildBanzaiRectangle(triggerItem, nextX, nextY, nextXStep == 0 ? goX * -1 : nextXStep * -1, nextYStep == 0 ? goY * -1 : nextYStep * -1, i, turns - 1, team);
@@ -65,10 +76,14 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
             } else {
                 foundPatches = BattleBallTileFloorItem.buildBanzaiRectangle(triggerItem, nextX, nextY, nextXStep == 0 ? goX : nextXStep * -1, nextYStep == 0 ? goY : nextYStep * -1, i, turns, team);
             }
+
             if (foundPatches == null) continue;
+
             foundPatches.add(item);
+
             return foundPatches;
         }
+
         return null;
     }
 
@@ -93,26 +108,32 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
         if (!(entity instanceof PlayerEntity) || ((PlayerEntity)entity).getGameTeam() == GameTeam.NONE || !(this.getRoom().getGame().getInstance() instanceof BattleBallGame)) {
             return;
         }
+
         if (this.points == 3) {
             return;
         }
+
         if (((PlayerEntity)entity).getGameTeam() == this.gameTeam) {
             ++this.points;
         } else {
             this.gameTeam = ((PlayerEntity)entity).getGameTeam();
             this.points = 1;
         }
+
         if (this.points == 3) {
             //((PlayerEntity)entity).getPlayer().getAchievements().progressAchievement(AchievementType.ACH_10, 1);
             ((BattleBallGame)this.getRoom().getGame().getInstance()).increaseScore(this.gameTeam, 1);
             ((BattleBallGame)this.getRoom().getGame().getInstance()).decreaseTileCount();
-            List<BattleBallTileFloorItem> rectangle = BattleBallTileFloorItem.buildBanzaiRectangle(this, this.getPosition().getX(), this.getPosition().getY(), 0, 0, -1, 4, this.gameTeam);
+
+            final List<BattleBallTileFloorItem> rectangle = BattleBallTileFloorItem.buildBanzaiRectangle(this, this.getPosition().getX(), this.getPosition().getY(), 0, 0, -1, 4, this.gameTeam);
+
             if (rectangle != null) {
-                for (RoomItemFloor roomItemFloor : this.getRoom().getItems().getByClass(BattleBallTileFloorItem.class)) {
-                    BattleBallTileFloorItem tileItem = (BattleBallTileFloorItem)roomItemFloor;
-                    if (tileItem.getPoints() == 3) continue;
-                    boolean[] borderCheck = new boolean[4];
-                    for (BattleBallTileFloorItem rectangleItem : rectangle) {
+                for (final BattleBallTileFloorItem roomItemFloor : this.getRoom().getItems().getByClass(BattleBallTileFloorItem.class)) {
+                    if (roomItemFloor.getPoints() == 3) continue;
+
+                    final boolean[] borderCheck = new boolean[4];
+
+                    for (final BattleBallTileFloorItem rectangleItem : rectangle) {
                         if (rectangleItem.getPosition().getY() == roomItemFloor.getPosition().getY()) {
                             if (rectangleItem.getPosition().getX() > roomItemFloor.getPosition().getX()) {
                                 borderCheck[0] = true;
@@ -121,23 +142,29 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
                             borderCheck[1] = true;
                             continue;
                         }
+
                         if (rectangleItem.getPosition().getX() != roomItemFloor.getPosition().getX()) continue;
+
                         if (rectangleItem.getPosition().getY() > roomItemFloor.getPosition().getY()) {
                             borderCheck[2] = true;
                             continue;
                         }
+
                         borderCheck[3] = true;
                     }
-                    if (!borderCheck[0] || !borderCheck[1] || !borderCheck[2] || !borderCheck[3] || tileItem.getId() == this.getId()) continue;
-                    tileItem.setPoints(3);
-                    tileItem.setTeam(this.gameTeam);
+
+                    if (!borderCheck[0] || !borderCheck[1] || !borderCheck[2] || !borderCheck[3] || roomItemFloor.getId() == this.getId()) continue;
+
+                    roomItemFloor.setPoints(3);
+                    roomItemFloor.setTeam(this.gameTeam);
                     //((PlayerEntity)entity).getPlayer().getAchievements().progressAchievement(AchievementType.ACH_10, 1);
                     ((BattleBallGame)this.getRoom().getGame().getInstance()).increaseScore(this.gameTeam, 1);
                     ((BattleBallGame)this.getRoom().getGame().getInstance()).decreaseTileCount();
-                    tileItem.updateTileData();
+                    roomItemFloor.updateTileData();
                 }
             }
         }
+
         this.updateTileData();
     }
 
@@ -154,6 +181,7 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
             }
             this.ticker = 0;
         }
+
         ++this.ticker;
     }
 

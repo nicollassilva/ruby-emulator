@@ -84,7 +84,7 @@ public class CometSettings {
     public static int playerChangeFigureCooldown = 5;
 
     public static int messengerMaxFriends = 1100;
-    public static boolean messengerLogMessages = false;
+    public static boolean messengerLogMessages = true;
 
     /**
      * Config catalog

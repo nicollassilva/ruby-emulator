@@ -300,7 +300,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         this.getPlayer().setSpectatorRoomId(0);
         this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
 
-        if(this.getRoom().hasAttribute("bb_game")) {
+        if(Comet.isDebugging && this.getRoom().hasAttribute("bb_game")) {
             this.getPlayer().getEntity().setFreeze(true);
 
             final BattleBallRoom bbroom = BattleBall.PLAYERS.get(this.getPlayer().getId());
@@ -494,10 +494,9 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             LogManager.getInstance().getStore().getRoomVisitContainer().updateExit(this.visitLogEntry);
         }
 
-//        if(this.getPlayer().getEntity().getRoom().hasAttribute("bb_game")) {
+//        if(Comet.isDebugging && this.getPlayer().getEntity().getRoom().hasAttribute("bb_game")) {
 //            BattleBall.PLAYERS.get(this.getPlayerId()).players.remove(this.getPlayerId());
 //            BattleBall.PLAYERS.remove(this.getPlayerId());
-//            System.out.println(this.getUsername() + " left battle ball game!");
 //
 //            this.getPlayer().bypassRoomAuth(false);
 //        }

@@ -3,84 +3,67 @@ package com.cometproject.server.game.rooms.objects.items.types.floor;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
-import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
-import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.events.types.RollerFloorItemEvent;
-import com.cometproject.server.game.rooms.objects.items.types.AdvancedFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.groups.GroupGateFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectBundleMessageComposer;
-import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 
 import java.util.List;
-import java.util.Set;
 
-
-public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
-    private final boolean hasRollScheduled = false;
-    private final long lastTick = 0;
-    private final Set<Integer> entitiesOnRoller = new ConcurrentHashSet<>();
+public class BetaRollerFloorItem extends RoomItemFloor {
     private final RollerFloorItemEvent event;
 
-    public RollerFloorItem(RoomItemData itemData, Room room) {
+    public BetaRollerFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
 
-        this.event = new RollerFloorItemEvent(this.getTickCount());
-        this.queueEvent(event);
+        this.event = new RollerFloorItemEvent(0);
     }
 
     @Override
     public void onLoad() {
-        event.setTotalTicks(this.getTickCount());
-        this.queueEvent(event);
-    }
-
-    @Override
-    public void onPlaced() {
-        event.setTotalTicks(this.getTickCount());
-        this.queueEvent(event);
+        this.setTicks(this.getTickCount());
     }
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        this.entitiesOnRoller.add(entity.getId());
-        event.setTotalTicks(this.getTickCount());
-    }
+        if(entity.isWalking()) return;
 
-    @Override
-    public void onEntityStepOff(RoomEntity entity) {
-        if (!this.entitiesOnRoller.contains(entity.getId())) {
-            return;
+        if (this.ticksTimer < 1) {
+            this.setTicks(this.getTickCount());
         }
-
-        this.entitiesOnRoller.remove(entity.getId());
     }
 
     @Override
     public void onItemAddedToStack(RoomItemFloor floorItem) {
-        if(event.getCurrentTicks() < 1) {
-            event.setTotalTicks(this.getTickCount());
+        if (this.ticksTimer < 1) {
+            this.setTicks(this.getTickCount());
         }
     }
 
     @Override
-    public void onEventComplete(RollerFloorItemEvent event) {
+    public void onEntityStepOff(RoomEntity entity) {
+        if (this.ticksTimer < 1) {
+            this.setTicks(this.getTickCount());
+        }
+    }
+
+    @Override
+    public void onTickComplete() {
         this.handleItems();
         this.handleEntities();
-
-        event.setTotalTicks(this.getTickCount());
-        this.queueEvent(event);
     }
 
     private void handleEntities() {
+        RoomTile tile = this.getTile();
+
 //        if(tile.getTopItem() != this.getId())
 //            return;
 
-        final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
+        Position sqInfront = this.getPosition().squareInFront(this.getRotation());
 
         if (!this.getRoom().getMapping().isValidPosition(sqInfront)) {
             return;
@@ -88,14 +71,10 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
         boolean retry = false;
 
-        final List<RoomEntity> entities = this.getRoom().getEntities().getEntitiesAt(this.getPosition());
+        List<RoomEntity> entities = this.getRoom().getEntities().getEntitiesAt(this.getPosition());
 
-        for (final RoomEntity entity : entities) {
+        for (RoomEntity entity : entities) {
             if (entity.getPosition().getX() != this.getPosition().getX() && entity.getPosition().getY() != this.getPosition().getY()) {
-                continue;
-            }
-
-            if (!this.entitiesOnRoller.contains(entity.getId())) {
                 continue;
             }
 
@@ -103,7 +82,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 continue;
             }
 
-            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false, false, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
+            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
                 retry = true;
                 break;
             }
@@ -120,11 +99,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
             WiredTriggerWalksOffFurni.executeTriggers(entity, this);
 
             for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
-                if (nextItem instanceof GroupGateFloorItem) break;
-
-                if (entity instanceof PlayerEntity) {
-                    WiredTriggerWalksOnFurni.executeTriggers(entity, nextItem);
-                }
+                WiredTriggerWalksOnFurni.executeTriggers(entity, nextItem);
 
                 nextItem.onEntityStepOn(entity);
             }
@@ -144,11 +119,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
 
-            entity.unIdle();
-            entity.resetAfkTimer();
             entity.setPosition(new Position(sqInfront.getX(), sqInfront.getY(), toHeight));
-
-            this.onEntityStepOff(entity);
         }
 
         if (retry) {
@@ -157,7 +128,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     }
 
     private void handleItems() {
-        final List<RoomItemFloor> floorItems = this.getRoom().getItems().getItemsOnSquare(this.getPosition().getX(), this.getPosition().getY());
+        List<RoomItemFloor> floorItems = this.getRoom().getItems().getItemsOnSquare(this.getPosition().getX(), this.getPosition().getY());
 
         if (floorItems.size() < 2) {
             return;
@@ -165,8 +136,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
         // quick check illegal use of rollers
         int rollerCount = 0;
-
-        for (final RoomItemFloor f : floorItems) {
+        for (RoomItemFloor f : floorItems) {
             if (f instanceof RollerFloorItem) {
                 rollerCount++;
             }
@@ -176,10 +146,11 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
             return;
         }
 
-        final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
+        Position sqInfront = this.getPosition().squareInFront(this.getRotation());
+
         boolean noItemsOnNext = false;
 
-        for (final RoomItemFloor floor : floorItems) {
+        for (RoomItemFloor floor : floorItems) {
             if (floor.getPosition().getX() != this.getPosition().getX() && floor.getPosition().getY() != this.getPosition().getY()) {
                 continue;
             }
@@ -188,30 +159,25 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 continue;
             }
 
-            if (!floor.getDefinition().canStack() && !(floor instanceof RollableFloorItem)) {
-                if (floor.getTile().getTopItem() != floor.getId())
+            if (!floor.getDefinition().canStack()) {
+                if(floor.getTile().getTopItem() != floor.getId())
                     continue;
             }
 
             double height = this.getRoom().getMapping().getTile(sqInfront).getStackHeight();
 
-            final List<RoomItemFloor> itemsSq = this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY());
+            List<RoomItemFloor> itemsSq = this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY());
 
             boolean hasRoller = false;
 
-            for (final RoomItemFloor iq : itemsSq) {
+            for (RoomItemFloor iq : itemsSq) {
                 if (iq instanceof RollerFloorItem) {
                     hasRoller = true;
-
-                    if (iq.getPosition().getZ() != this.getPosition().getZ()) {
-                        height -= this.getPosition().getZ();
-                        height += iq.getPosition().getZ();
-                    }
                 }
             }
 
             if (!hasRoller || noItemsOnNext) {
-                //height -= 0.5;
+                height -= 0.5;
                 noItemsOnNext = true;
             }
 
@@ -231,7 +197,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 //                }
 //            }
 
-            if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, false, true) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
+            if (!this.getRoom().getMapping().isValidStep(new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
                 this.setTicks(this.getTickCount());
                 return;
             }
@@ -241,20 +207,21 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
             floor.getPosition().setX(sqInfront.getX());
             floor.getPosition().setY(sqInfront.getY());
             floor.getPosition().setZ(height);
+
             floor.save();
         }
 
         this.getRoom().getMapping().updateTile(this.getPosition().getX(), this.getPosition().getY());
         this.getRoom().getMapping().updateTile(sqInfront.getX(), sqInfront.getY());
 
-        for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
-            for (final RoomItemFloor floor : floorItems) {
+        for (RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
+            for (RoomItemFloor floor : floorItems) {
                 nextItem.onItemAddedToStack(floor);
             }
         }
     }
 
     private int getTickCount() {
-        return RoomItemFactory.getProcessTime((this.getRoom().getData().getRollerSpeed() ? this.getRoom().getData().getRollerSpeedLevel() : 4.0) / 2);
+        return RoomItemFactory.getProcessTime((this.getRoom().getData().getRollerSpeed() ? this.getRoom().getData().getRollerSpeedLevel() : 4.0));
     }
 }
