@@ -4,7 +4,6 @@ import com.cometproject.api.game.GameContext;
 import com.cometproject.server.composers.catalog.CatalogPublishMessageComposer;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.achievements.AchievementManager;
-import com.cometproject.server.game.battlepass.BattlePassManager;
 import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.commands.CommandManager;
@@ -183,12 +182,6 @@ public class ReloadCommand extends ChatCommand {
                 ItemManager.getInstance().loadCraftingMachines();
 
                 sendNotif(Locale.get("command.reload.crafting"), client);
-                break;
-
-            case "battlepass":
-                BattlePassManager.getInstance().loadBattlePass();
-
-                sendNotif("Pase de batalla reiniciado correctamente", client);
                 break;
 
             case "polls":

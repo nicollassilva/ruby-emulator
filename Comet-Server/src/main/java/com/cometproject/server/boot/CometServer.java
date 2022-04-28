@@ -5,7 +5,6 @@ import com.cometproject.api.game.GameContext;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.GameCycle;
 import com.cometproject.server.game.achievements.AchievementManager;
-import com.cometproject.server.game.battlepass.BattlePassManager;
 import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.game.commands.CommandManager;
 import com.cometproject.server.game.gamecenter.GameCenterManager;
@@ -34,7 +33,6 @@ import com.cometproject.server.storage.queries.config.ConfigDao;
 import com.cometproject.server.tasks.CometThreadManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -86,7 +84,6 @@ public class CometServer {
         PlayerManager.getInstance().initialize();
         QuestManager.getInstance().initialize();
         AchievementManager.getInstance().initialize();
-        BattlePassManager.getInstance().initialize();
         PollManager.getInstance().initialize();
         GuideManager.getInstance().initialize();
         BattleBallWorkerThread.initWorkers();

@@ -51,7 +51,7 @@ public class PlayerDao {
 
             preparedStatement = SqlHelper.prepare("SELECT p.id as playerId, p.username AS playerData_username, p.figure AS playerData_figure, p.motto AS playerData_motto, p.credits AS playerData_credits, p.vip_points AS playerData_vipPoints, p.rank AS playerData_rank, p.last_ip AS playerData_lastIp, p.seasonal_points AS playerData_seasonalPoints, " +
                     " p.vip AS playerData_vip, p.gender AS playerData_gender, p.last_online AS playerData_lastOnline, p.reg_timestamp AS playerData_regTimestamp, p.reg_date AS playerData_regDate, p.favourite_group AS playerData_favouriteGroup, p.achievement_points AS playerData_achievementPoints, p.xp_points AS playerData_xpPoints," +
-                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, p.xp AS playerData_xp, p.level AS playerData_level, \n" +
+                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, \n" +
                     "  pSettings.volume AS playerSettings_volume, pSettings.home_room AS playerSettings_homeRoom, pSettings.hide_online AS playerSettings_hideOnline, pSettings.nux AS playerSettings_nux, pSettings.hide_inroom AS playerSettings_hideInRoom, pSettings.personal_pin AS playerSettings_personalPin, pSettings.ignore_invites AS playerSettings_ignoreInvites, \n" +
                     "   pSettings.allow_friend_requests AS playerSettings_allowFriendRequests, pSettings.allow_trade AS playerSettings_allowTrade, pSettings.allow_follow AS playerSettings_allowFollow, pSettings.allow_mimic AS playerSettings_allowMimic, pSettings.wardrobe AS playerSettings_wardrobe, pSettings.playlist AS playerSettings_playlist, pSettings.chat_oldstyle AS playerSettings_useOldChat,\n" +
                     " pSettings.navigator_x AS playerSettings_navigatorX, pSettings.navigator_y AS playerSettings_navigatorY, pSettings.navigator_height AS playerSettings_navigatorHeight, pSettings.navigator_width AS playerSettings_navigatorWidth, pSettings.navigator_show_searches AS playerSettings_navigatorShowSearches, pSettings.ignore_events AS playerSettings_ignoreEvents, pSettings.disable_whisper AS playerSettings_disableWhisper, pSettings.bubble_id AS playerSettings_bubbleId, pSettings.send_login_notif AS playerSettings_sendLoginNotif, pSettings.mention_type AS playerSettings_mentionType, pSettings.camera_follow AS playerSettings_roomCameraFollow, pSettings.citizen_level AS playerSettings_citizenLevel, pSettings.helper_level AS playerSettings_helperLevel, pSettings.claimed_goal AS playerSettings_claimedGoal, " +
@@ -90,7 +90,7 @@ public class PlayerDao {
 
             preparedStatement = SqlHelper.prepare("SELECT p.id as playerId, p.username AS playerData_username, p.figure AS playerData_figure, p.motto AS playerData_motto, p.credits AS playerData_credits, p.vip_points AS playerData_vipPoints, p.rank AS playerData_rank, p.last_ip AS playerData_lastIp, p.seasonal_points AS playerData_seasonalPoints, " +
                     " p.vip AS playerData_vip, p.gender AS playerData_gender, p.last_online AS playerData_lastOnline, p.reg_timestamp AS playerData_regTimestamp, p.reg_date AS playerData_regDate, p.favourite_group AS playerData_favouriteGroup, p.achievement_points AS playerData_achievementPoints, p.xp_points AS playerData_xpPoints," +
-                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, p.xp AS playerData_xp, p.level AS playerData_level, \n" +
+                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, \n" +
                     "  pSettings.volume AS playerSettings_volume, pSettings.home_room AS playerSettings_homeRoom, pSettings.hide_online AS playerSettings_hideOnline, pSettings.nux AS playerSettings_nux, pSettings.hide_inroom AS playerSettings_hideInRoom, pSettings.personal_pin AS playerSettings_personalPin, pSettings.ignore_invites AS playerSettings_ignoreInvites, \n" +
                     "   pSettings.allow_friend_requests AS playerSettings_allowFriendRequests, pSettings.allow_trade AS playerSettings_allowTrade, pSettings.allow_follow AS playerSettings_allowFollow, pSettings.allow_mimic AS playerSettings_allowMimic, pSettings.wardrobe AS playerSettings_wardrobe, pSettings.playlist AS playerSettings_playlist, pSettings.chat_oldstyle AS playerSettings_useOldChat,\n" +
                     " pSettings.navigator_x AS playerSettings_navigatorX, pSettings.navigator_y AS playerSettings_navigatorY, pSettings.navigator_height AS playerSettings_navigatorHeight, pSettings.navigator_width AS playerSettings_navigatorWidth, pSettings.navigator_show_searches AS playerSettings_navigatorShowSearches, pSettings.ignore_events AS playerSettings_ignoreEvents, pSettings.disable_whisper AS playerSettings_disableWhisper, pSettings.bubble_id AS playerSettings_bubbleId, pSettings.send_login_notif AS playerSettings_sendLoginNotif, pSettings.mention_type AS playerSettings_mentionType, pSettings.camera_follow AS playerSettings_roomCameraFollow, pSettings.citizen_level AS playerSettings_citizenLevel, pSettings.helper_level AS playerSettings_helperLevel, pSettings.claimed_goal AS playerSettings_claimedGoal, " +
@@ -129,7 +129,7 @@ public class PlayerDao {
 
             preparedStatement = SqlHelper.prepare("SELECT p.id as playerId, p.username AS playerData_username, p.figure AS playerData_figure, p.motto AS playerData_motto, p.credits AS playerData_credits, p.vip_points AS playerData_vipPoints, p.rank AS playerData_rank, p.last_ip AS playerData_lastIp, p.seasonal_points AS playerData_seasonalPoints, " +
                     " p.vip AS playerData_vip, p.gender AS playerData_gender, p.last_online AS playerData_lastOnline, p.reg_timestamp AS playerData_regTimestamp, p.reg_date AS playerData_regDate, p.favourite_group AS playerData_favouriteGroup, p.achievement_points AS playerData_achievementPoints, p.xp_points AS playerData_xpPoints," +
-                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, p.xp AS playerData_xp, p.level AS playerData_level, \n" +
+                    " p.email AS playerData_email, p.activity_points AS playerData_activityPoints, p.quest_id AS playerData_questId, p.time_muted AS playerData_timeMuted, p.name_colour AS playerData_nameColour, p.tag AS playerData_tag, p.emoji_enabled AS playerData_emojiEnabled, p.games_win AS playerData_gamesWin, p.bonus_points AS playerData_bonusPoints, p.endvip_timestamp AS playerData_endVipTimestamp, p.snow_xp AS playerData_snowXp, p.kisses AS playerData_kisses, p.banner AS playerData_banner, \n" +
                     "  pSettings.volume AS playerSettings_volume, pSettings.home_room AS playerSettings_homeRoom, pSettings.hide_online AS playerSettings_hideOnline, pSettings.nux AS playerSettings_nux, pSettings.hide_inroom AS playerSettings_hideInRoom, pSettings.personal_pin AS playerSettings_personalPin, pSettings.ignore_invites AS playerSettings_ignoreInvites, \n" +
                     "   pSettings.allow_friend_requests AS playerSettings_allowFriendRequests, pSettings.allow_trade AS playerSettings_allowTrade, pSettings.allow_follow AS playerSettings_allowFollow, pSettings.allow_mimic AS playerSettings_allowMimic, pSettings.wardrobe AS playerSettings_wardrobe, pSettings.playlist AS playerSettings_playlist, pSettings.chat_oldstyle AS playerSettings_useOldChat,\n" +
                     " pSettings.navigator_x AS playerSettings_navigatorX, pSettings.navigator_y AS playerSettings_navigatorY, pSettings.navigator_height AS playerSettings_navigatorHeight, pSettings.navigator_width AS playerSettings_navigatorWidth, pSettings.navigator_show_searches AS playerSettings_navigatorShowSearches, pSettings.ignore_events AS playerSettings_ignoreEvents, pSettings.disable_whisper AS playerSettings_disableWhisper, pSettings.bubble_id AS playerSettings_bubbleId, pSettings.send_login_notif AS playerSettings_sendLoginNotif, pSettings.mention_type AS playerSettings_mentionType, pSettings.camera_follow AS playerSettings_roomCameraFollow, pSettings.citizen_level AS playerSettings_citizenLevel, pSettings.helper_level AS playerSettings_helperLevel, pSettings.claimed_goal AS playerSettings_claimedGoal, " +
@@ -262,7 +262,7 @@ public class PlayerDao {
                 return new PlayerData(resultSet.getInt("id"), username, resultSet.getString("motto"), resultSet.getString("figure"), resultSet.getString("gender"),
                         resultSet.getString("email") == null ? "" : resultSet.getString("email"), resultSet.getInt("rank"), resultSet.getInt("credits"), resultSet.getInt("vip_points"),
                         resultSet.getInt("activity_points"), resultSet.getInt("seasonal_points"), resultSet.getString("reg_date"), resultSet.getInt("last_online"), resultSet.getString("vip").equals("1"),
-                        resultSet.getInt("achievement_points"), resultSet.getInt("xp_points"), resultSet.getInt("reg_timestamp"), resultSet.getInt("favourite_group"), resultSet.getString("last_ip"), resultSet.getInt("quest_id"), resultSet.getInt("time_muted"), resultSet.getString("name_colour"), resultSet.getString("tag"), resultSet.getBoolean("emoji_enabled"), resultSet.getInt("games_win"), resultSet.getInt("bonus_points"), resultSet.getInt("endvip_timestamp"), resultSet.getInt("snow_xp"), resultSet.getInt("kisses"), resultSet.getString("banner"), resultSet.getInt("xp"), resultSet.getInt("level"), null);
+                        resultSet.getInt("achievement_points"), resultSet.getInt("xp_points"), resultSet.getInt("reg_timestamp"), resultSet.getInt("favourite_group"), resultSet.getString("last_ip"), resultSet.getInt("quest_id"), resultSet.getInt("time_muted"), resultSet.getString("name_colour"), resultSet.getString("tag"), resultSet.getBoolean("emoji_enabled"), resultSet.getInt("games_win"), resultSet.getInt("bonus_points"), resultSet.getInt("endvip_timestamp"), resultSet.getInt("snow_xp"), resultSet.getInt("kisses"), resultSet.getString("banner"), null);
             }
         } catch (SQLException e) {
             SqlHelper.handleSqlException(e);
@@ -292,7 +292,7 @@ public class PlayerDao {
                 return new PlayerData(resultSet.getInt("id"), resultSet.getString("username"), resultSet.getString("motto"), resultSet.getString("figure"), resultSet.getString("gender"),
                         resultSet.getString("email") == null ? "" : resultSet.getString("email"), resultSet.getInt("rank"), resultSet.getInt("credits"), resultSet.getInt("vip_points"),
                         resultSet.getInt("activity_points"), resultSet.getInt("seasonal_points"), resultSet.getString("reg_date"), resultSet.getInt("last_online"), resultSet.getString("vip").equals("1"),
-                        resultSet.getInt("achievement_points"), resultSet.getInt("xp_points"), resultSet.getInt("reg_timestamp"), resultSet.getInt("favourite_group"), resultSet.getString("last_ip"), resultSet.getInt("quest_id"), resultSet.getInt("time_muted"), resultSet.getString("name_colour"), resultSet.getString("tag"), resultSet.getBoolean("emoji_enabled"), resultSet.getInt("games_win"), resultSet.getInt("bonus_points"), resultSet.getInt("endvip_timestamp"), resultSet.getInt("snow_xp"), resultSet.getInt("kisses"), resultSet.getString("banner"), resultSet.getInt("xp"), resultSet.getInt("level"), null);
+                        resultSet.getInt("achievement_points"), resultSet.getInt("xp_points"), resultSet.getInt("reg_timestamp"), resultSet.getInt("favourite_group"), resultSet.getString("last_ip"), resultSet.getInt("quest_id"), resultSet.getInt("time_muted"), resultSet.getString("name_colour"), resultSet.getString("tag"), resultSet.getBoolean("emoji_enabled"), resultSet.getInt("games_win"), resultSet.getInt("bonus_points"), resultSet.getInt("endvip_timestamp"), resultSet.getInt("snow_xp"), resultSet.getInt("kisses"), resultSet.getString("banner"), null);
             }
 
         } catch (SQLException e) {
@@ -622,146 +622,14 @@ public class PlayerDao {
         return badges;
     }
 
-    public static void createBattleGift(int id, int level, boolean vip, boolean available) {
+    public static void updatePlayerData(int id, String username, int rank, String motto, String figure, int credits, int points, String gender, int favouriteGroup, int activityPoints, int seasonalPoints, int questId, int achievementPoints, int xpPoints, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            preparedStatement = SqlHelper.prepare("INSERT INTO hotel_pass_gift (`user_id`, `level`, `vip`) VALUES (?, ?, ?)", sqlConnection);
-            preparedStatement.setInt(1, id);
-            preparedStatement.setInt(2, level);
-            preparedStatement.setString(3, String.valueOf(vip ? '1' : '0'));
-
-            preparedStatement.execute();
-
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-    }
-
-    public static void updatePlayerBattlePassGift(int id, int xp, int level) {
-
-        //double level = Math.floor((new Double(xp)/1000)*2);
-
-        double nextLevel = level + 1;
-
-        double xpNeed = nextLevel * 500 + ((nextLevel - 1) * nextLevel) * 2.5;
-        double xpNeedCurrent = (nextLevel - 1) * 500 + (((nextLevel - 1) - 1) * (nextLevel - 1)) * 2.5;
-
-        Session client = (Session) SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(id);
-
-        System.out.println("Needed xp to lvlup " + xpNeed);
-        System.out.println("Current xp " + xp);
-        System.out.println("Current lvl " + level);
-
-
-        for (int i = 1; i <= level; i++) {
-            System.out.println("loop: " + i);
-            Connection sqlConnection = null;
-            PreparedStatement preparedStatement = null;
-            ResultSet resultSet = null;
-
-            try {
-                sqlConnection = SqlHelper.getConnection();
-
-                preparedStatement = SqlHelper.prepare("SELECT * FROM hotel_pass_gift WHERE user_id = ? AND level = ?", sqlConnection);
-                preparedStatement.setInt(1, id);
-                preparedStatement.setInt(2, i);
-
-                resultSet = preparedStatement.executeQuery();
-
-                if (resultSet.next()) {
-                    //resultSet.getInt("exist");
-                    System.out.println("existe");
-                } else {
-                    System.out.println("existe pas");
-                    createBattleGift(id, i, false, true);
-                    if (client.getPlayer().getSubscription().isValid()) {
-                        createBattleGift(id, i, true, true);
-                    }
-
-                }
-            } catch (SQLException e) {
-                SqlHelper.handleSqlException(e);
-            } finally {
-                SqlHelper.closeSilently(preparedStatement);
-                SqlHelper.closeSilently(sqlConnection);
-            }
-        }
-
-        if (xpNeed <= xp) {
-            System.out.println("Level up to lvl " + level + 1);
-            //double xpresult = xp - xpneed;
-            //System.out.println("Xp result " + xpresult);
-            client.getPlayer().getData().increaseLevel(1);
-            client.getPlayer().getData().save();
-
-            JSONObject output = new JSONObject();
-
-            JSONObject info = new JSONObject();
-
-            info.put("xp_need", xpNeed - xpNeedCurrent);
-            output.put("info", info);
-
-            JSONObject gift = new JSONObject();
-
-            for (int j = 0; j <= 1; j++) {
-                boolean vipBool = true;
-                String giftName = "vip";
-
-                if (j == 0) {
-                    vipBool = false;
-                    giftName = "novip";
-                }
-
-                final JSONObject passData = new JSONObject();
-
-                passData.put("level", level + 1);
-                passData.put("type", client.getPlayer().getData().battlePassType(level + 1, vipBool).get("type"));
-                passData.put("color", client.getPlayer().getData().battlePassType(level + 1, vipBool).get("color"));
-                passData.put("image", client.getPlayer().getData().battlePassType(level + 1, vipBool).get("image"));
-
-                if (vipBool) {
-                    passData.put("unlocked", client.getPlayer().getSubscription().isValid());
-                } else {
-                    passData.put("unlocked", true);
-                }
-
-                gift.put(giftName, passData);
-            }
-
-            output.put("gift", gift);
-
-            Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.LevelUpMessage);
-            OutgoingMessage message = null;
-            try {
-                message = classMessage.getDeclaredConstructor().newInstance();
-                message.client = client.getPlayer().getData().getWebsocketSession();
-                message.data = output;
-
-                message.compose();
-            } catch (InstantiationException | IllegalAccessException | IOException | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
-
-            //SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(id).getPlayer().getData().setXp((int)xpresult);
-        }
-
-    }
-
-    public static void updatePlayerData(int id, String username, int rank, String motto, String figure, int credits, int points, String gender, int favouriteGroup, int activityPoints, int seasonalPoints, int questId, int achievementPoints, int xpPoints, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner, int xp, int level) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            sqlConnection = SqlHelper.getConnection();
-
-            preparedStatement = SqlHelper.prepare("UPDATE players SET username = ?, motto = ?, figure = ?, credits = ?, vip_points = ?, gender = ?, favourite_group = ?, activity_points = ?, seasonal_points = ?, quest_id = ?, achievement_points = ?, xp_points = ?, name_colour = ?, tag = ?, emoji_enabled = ?, games_win = ?, bonus_points = ?, endvip_timestamp = ?, snow_xp = ?, kisses = ?, banner = ?, xp = ?, level = ? WHERE id = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("UPDATE players SET username = ?, motto = ?, figure = ?, credits = ?, vip_points = ?, gender = ?, favourite_group = ?, activity_points = ?, seasonal_points = ?, quest_id = ?, achievement_points = ?, xp_points = ?, name_colour = ?, tag = ?, emoji_enabled = ?, games_win = ?, bonus_points = ?, endvip_timestamp = ?, snow_xp = ?, kisses = ?, banner = ? WHERE id = ?", sqlConnection);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, motto);
             preparedStatement.setString(3, figure);
@@ -783,9 +651,7 @@ public class PlayerDao {
             preparedStatement.setInt(19, snowXp);
             preparedStatement.setInt(20, kisses);
             preparedStatement.setString(21, banner);
-            preparedStatement.setInt(22, xp);
-            preparedStatement.setInt(23, level);
-            preparedStatement.setInt(24, id);
+            preparedStatement.setInt(22, id);
 
             SqlHelper.executeStatementSilently(preparedStatement, false);
         } catch (SQLException e) {
@@ -793,10 +659,6 @@ public class PlayerDao {
         } finally {
             SqlHelper.closeSilently(preparedStatement);
             SqlHelper.closeSilently(sqlConnection);
-        }
-
-        if(xp != PlayerManager.getInstance().getDataByPlayerId(id).getXp() || level != PlayerManager.getInstance().getDataByPlayerId(id).getLevel()) {
-            updatePlayerBattlePassGift(id,xp,level);
         }
     }
 

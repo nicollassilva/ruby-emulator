@@ -4,7 +4,6 @@ public class Outgoing {
 
     public static final int SSOVerifiedMessage = 222;
     public static final int OpenBuildToolMessage = 223;
-    public static final int OpenBattlePassMessage = 224;
     public static final int LevelUpMessage = 225;
     public static final int BattleBallCounterMessage = 226;
     public static final int BattleBallStartedMessage = 227;

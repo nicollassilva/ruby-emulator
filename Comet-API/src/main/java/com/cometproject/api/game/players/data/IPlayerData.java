@@ -120,28 +120,4 @@ public interface IPlayerData extends PlayerAvatar {
 
     void decreaseKisses(int amount);
 
-    boolean battlePassGiftUnlocked(int level, boolean vip);
-
-    HashMap<String, String> battlePassType(int level, boolean vip);
-
-    void increaseLevel(int level);
-
-    void decreaseLevel(int level);
-
-    void setLevel(int level);
-
-    int getLevel();
-
-    int getXp();
-
-    void increaseXp(int xp);
-
-    void decreaseXp(int xp);
-
-    void setXp(int xp);
-
-    /*void setPass(boolean pass);
-
-    boolean havePass();*/
-
 }

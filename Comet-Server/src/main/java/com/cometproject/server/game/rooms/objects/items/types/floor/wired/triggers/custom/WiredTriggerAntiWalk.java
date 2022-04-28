@@ -22,8 +22,6 @@ public class WiredTriggerAntiWalk extends WiredTriggerItem {
 
         for (RoomItemFloor floorItem : getTriggers(entity.getRoom(), WiredTriggerAntiWalk.class)) {
             WiredTriggerAntiWalk trigger = ((WiredTriggerAntiWalk) floorItem);//
-            // System.out.println(trigger);
-            //System.out.println(entity.getIdleTimeWiredWalk() + " IDLE TIME WIRED WALK");
 
             if (entity.getIdleTimeWiredWalk() >= trigger.getTime()) {
                 //entity.resetIdleTimeWiredWalk();
@@ -32,7 +30,6 @@ public class WiredTriggerAntiWalk extends WiredTriggerItem {
 
             if (wasExecuted) {
                 entity.resetIdleTimeWiredWalk();
-                //System.out.println("Se ejecutó con éxito y se restableció el timer a 0");
             }
         }
 

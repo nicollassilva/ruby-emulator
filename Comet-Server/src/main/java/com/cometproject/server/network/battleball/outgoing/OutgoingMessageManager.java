@@ -4,8 +4,6 @@ import com.cometproject.server.network.battleball.outgoing.battleball.BattleBall
 import com.cometproject.server.network.battleball.outgoing.battleball.BattleBallEndMessage;
 import com.cometproject.server.network.battleball.outgoing.battleball.BattleBallJoinQueueMessage;
 import com.cometproject.server.network.battleball.outgoing.battleball.BattleBallStartedMessage;
-import com.cometproject.server.network.battleball.outgoing.battlepass.LevelUpMessage;
-import com.cometproject.server.network.battleball.outgoing.battlepass.OpenBattlePassMessage;
 import com.cometproject.server.network.battleball.outgoing.events.OpenEventAlertMessage;
 import com.cometproject.server.network.battleball.outgoing.handshake.SSOVerifiedMessage;
 import com.cometproject.server.network.battleball.outgoing.room.OpenBuildToolMessage;
@@ -41,8 +39,6 @@ public class OutgoingMessageManager {
     public void registerMessages() {
         this.messages.put(Outgoing.SSOVerifiedMessage, SSOVerifiedMessage.class);
         this.messages.put(Outgoing.OpenBuildToolMessage, OpenBuildToolMessage.class);
-        this.messages.put(Outgoing.OpenBattlePassMessage, OpenBattlePassMessage.class);
-        this.messages.put(Outgoing.LevelUpMessage, LevelUpMessage.class);
         this.messages.put(Outgoing.BattleBallCounterMessage, BattleBallCounterMessage.class);
         this.messages.put(Outgoing.BattleBallStartedMessage, BattleBallStartedMessage.class);
         this.messages.put(Outgoing.BattleBallEndMessage, BattleBallEndMessage.class);

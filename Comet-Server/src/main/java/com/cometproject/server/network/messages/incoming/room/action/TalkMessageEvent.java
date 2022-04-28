@@ -1,6 +1,5 @@
 package com.cometproject.server.network.messages.incoming.room.action;
 
-import com.cometproject.api.game.battlepass.types.BattlePassType;
 import com.cometproject.api.game.players.data.types.MentionType;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.boot.Comet;

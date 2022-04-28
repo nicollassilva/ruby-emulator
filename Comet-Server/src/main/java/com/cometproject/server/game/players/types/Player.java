@@ -74,7 +74,6 @@ public class Player extends Observable implements IPlayer {
     private final PetComponent pets;
     private final QuestComponent quests;
     private final AchievementComponent achievements;
-    private final BattlePassComponent battlePass;
     private final NavigatorComponent navigator;
     private final WardrobeComponent wardrobe;
     private CraftingMachine lastCraftingMachine;
@@ -98,7 +97,7 @@ public class Player extends Observable implements IPlayer {
     private List<Integer> enteredRooms = new ArrayList<>();
     private Set<Integer> groups = Sets.newConcurrentHashSet();
     private List<Integer> ignoredPlayers = new ArrayList<>();
-    private List<String> groupWhispers = new ArrayList<String>();
+    private List<String> groupWhispers = new ArrayList<>();
     private long roomLastMessageTime = 0;
     public ArrayList<String> whisperGroupUser;
     private double roomFloodTime = 0;
@@ -142,7 +141,6 @@ public class Player extends Observable implements IPlayer {
     private int itemPlacementState = -1;
     private boolean isBuilding = false;
     private boolean isSearchFurni = false;
-    public boolean ino_state = false;
     private boolean logsClientStaff = false;
     private String ssoTicket;
     private Set<ICatalogItem> recentPurchases;
@@ -178,8 +176,8 @@ public class Player extends Observable implements IPlayer {
 
     private int bubbleId = 0;
 
-    private final List<PlayerMention> mentions = new ArrayList<PlayerMention>();
-    private Map<String, Long> antiSpam = new ConcurrentHashMap<String, Long>();
+    private final List<PlayerMention> mentions = new ArrayList<>();
+    private Map<String, Long> antiSpam = new ConcurrentHashMap<>();
 
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
@@ -204,7 +202,6 @@ public class Player extends Observable implements IPlayer {
         this.pets = new PetComponent(this);
         this.quests = new QuestComponent(this);
         this.achievements = new AchievementComponent(this);
-        this.battlePass = new BattlePassComponent(this);
         this.navigator = new NavigatorComponent(this);
         this.wardrobe = new WardrobeComponent(this);
         this.whisperGroupUser = new ArrayList<>();
@@ -401,22 +398,6 @@ public class Player extends Observable implements IPlayer {
         // RollerSkate Achievement
         if(this.onTheRollerSkate() && this.getEntity().isWalking()) {
             this.getAchievements().progressAchievement(AchievementType.ROLLER_SKATES, 1);
-        }
-    }
-
-    public void increaseXP(int xp) {
-        int oldLevel;
-        oldLevel = this.data.getLevel();
-
-        this.data.increaseSnowXp(xp);
-        PlayerDao.updateSnowXp(this);
-
-        if (this.getData().getLevel() != oldLevel) {
-            this.data.increaseSeasonalPoints(this.data.diamondsToGive());
-            this.data.save();
-            this.sendBalance();
-
-            session.send(new NotificationMessageComposer("generic", "Du levlade precis till level: " + this.data.getLevel() + " och tilldelades: " + this.data.diamondsToGive() + " diamanter!"));
         }
     }
 
@@ -680,8 +661,6 @@ public class Player extends Observable implements IPlayer {
     public AchievementComponent getAchievements() {
         return achievements;
     }
-    
-    public BattlePassComponent getBattlePass() { return battlePass; }
 
     @Override
     public PlayerSettings getSettings() {
@@ -1334,8 +1313,6 @@ public class Player extends Observable implements IPlayer {
         coreObject.add("pets", petsDataArray);
 
         coreObject.add("achievements", achievements.toJson());
-
-        coreObject.add("battlePass", battlePass.toJson());
 
         coreObject.add("settings", settings.toJson());
 

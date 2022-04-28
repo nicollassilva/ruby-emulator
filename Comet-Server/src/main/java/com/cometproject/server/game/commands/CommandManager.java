@@ -307,8 +307,6 @@ public class CommandManager implements Initialisable {
         this.addCommand("searchfurni", new SearchFurniCommand());
         this.addCommand("prefix", new PrefixCommand());
         this.addCommand("givebanner", new GiveBannerCommand());
-        this.addCommand("testcommand", new TestCommand());
-        this.addCommand("xpcommand", new IncreaseXPCommand());
         this.addCommand("keyboard", new KeyboardWalkCommand());
 
         // Room bundles

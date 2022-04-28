@@ -62,8 +62,6 @@ public class PlayerData implements IPlayerData {
     private int kisses;
 
     private Session websocket_session;
-    private int xp;
-    private int level;
     private boolean pass;
     private String machineID;
 
@@ -74,7 +72,7 @@ public class PlayerData implements IPlayerData {
     private Object tempData = null;
 
     public PlayerData(int id, String username, String motto, String figure, String gender, String email, int rank, int credits, int vipPoints, int activityPoints,
-                      int seasonalPoints, String reg, int lastVisit, boolean vip, int achievementPoints, int xpPoints, int regTimestamp, int favouriteGroup, String ipAddress, int questId, int timeMuted, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner, int xp, int level, Player player) {
+                      int seasonalPoints, String reg, int lastVisit, boolean vip, int achievementPoints, int xpPoints, int regTimestamp, int favouriteGroup, String ipAddress, int questId, int timeMuted, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner, Player player) {
         this.id = id;
         this.username = username;
         this.motto = motto;
@@ -105,8 +103,6 @@ public class PlayerData implements IPlayerData {
         this.snowXp = snowXp;
         this.kisses = kisses;
         this.banner = banner;
-        this.xp = xp;
-        this.level = level;
 
         if (this.figure != null) {
             if (PlayerFigureValidator.CheckFilterChar(this.figure)) {
@@ -153,9 +149,7 @@ public class PlayerData implements IPlayerData {
                 data.getInt("playerData_endVipTimestamp"),
                 data.getInt("playerData_snowXp"),
                 data.getInt("playerData_kisses"),
-                data.getString("playerData_banner"),
-                data.getInt("playerData_xp"),
-                data.getInt("playerData_level"), player);
+                data.getString("playerData_banner"), player);
                 this.websocket_session = null;
     }
 
@@ -178,71 +172,7 @@ public class PlayerData implements IPlayerData {
     }
 
     public void saveNow() {
-        PlayerDao.updatePlayerData(id, username, rank, motto, figure, credits, vipPoints, gender, favouriteGroup, activityPoints, seasonalPoints, questId, achievementPoints, xpPoints, nameColour, tag, emojiEnabled, gamesWin, bonusPoints, endVipTimestamp, snowXp, kisses, banner, xp, level);
-    }
-
-    @Override
-    public boolean battlePassGiftUnlocked(int level, boolean vip) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-
-            sqlConnection = SqlHelper.getConnection();
-
-            preparedStatement = SqlHelper.prepare("SELECT * FROM hotel_pass_gift WHERE user_id = ? AND level = ? AND vip = ?", sqlConnection);
-            preparedStatement.setInt(1, this.id);
-            preparedStatement.setInt(2, level);
-            preparedStatement.setString(3, String.valueOf(vip ? '1' : '0'));
-
-            resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                return true;
-            } else {
-                return false;
-
-            }
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-        return false;
-    }
-
-    @Override
-    public HashMap<String, String> battlePassType(int level, boolean vip) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        try {
-
-            sqlConnection = SqlHelper.getConnection();
-
-            preparedStatement = SqlHelper.prepare("SELECT * FROM hotel_pass WHERE level = ? AND vip = ?", sqlConnection);
-            preparedStatement.setInt(1, level);
-            preparedStatement.setString(2, String.valueOf(vip ? '1' : '0'));
-
-            resultSet = preparedStatement.executeQuery();
-
-            if(resultSet.next()) {
-                HashMap<String, String> result = new HashMap<>();
-                result.put("type", resultSet.getString("type"));
-                result.put("color", resultSet.getString("color"));
-                result.put("image", resultSet.getString("image"));
-                return result;
-            }
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-        return null;
+        PlayerDao.updatePlayerData(id, username, rank, motto, figure, credits, vipPoints, gender, favouriteGroup, activityPoints, seasonalPoints, questId, achievementPoints, xpPoints, nameColour, tag, emojiEnabled, gamesWin, bonusPoints, endVipTimestamp, snowXp, kisses, banner);
     }
 
     public void decreaseCredits(int amount) {
@@ -609,7 +539,7 @@ public class PlayerData implements IPlayerData {
         try {
             data = (PlayerData) super.clone();
         } catch (CloneNotSupportedException e) {
-            data = new PlayerData(this.id, this.username, this.motto, this.figure, this.gender, this.email, this.rank, this.credits, this.vipPoints, this.activityPoints, this.seasonalPoints, this.regDate, this.lastVisit, this.vip, this.achievementPoints, this.xpPoints, this.regTimestamp, this.favouriteGroup, this.ipAddress, this.questId, this.timeMuted, this.nameColour, this.tag, this.emojiEnabled, this.gamesWin, this.bonusPoints, this.endVipTimestamp, this.snowXp, this.kisses, this.banner, this.xp, this.level, this.player);
+            data = new PlayerData(this.id, this.username, this.motto, this.figure, this.gender, this.email, this.rank, this.credits, this.vipPoints, this.activityPoints, this.seasonalPoints, this.regDate, this.lastVisit, this.vip, this.achievementPoints, this.xpPoints, this.regTimestamp, this.favouriteGroup, this.ipAddress, this.questId, this.timeMuted, this.nameColour, this.tag, this.emojiEnabled, this.gamesWin, this.bonusPoints, this.endVipTimestamp, this.snowXp, this.kisses, this.banner, this.player);
         }
         return data;
     }
@@ -644,40 +574,6 @@ public class PlayerData implements IPlayerData {
         return 1;
     }
 
-    @Override
-    public void increaseLevel(int level) { this.level += level; }
-
-    @Override
-    public void decreaseLevel(int level) { this.level -= level; }
-
-    @Override
-    public void setLevel(int level) { this.level = level; }
-
-    @Override
-    public int getLevel() { return this.level; }
-
-    @Override
-    public void increaseXp(int xp) { this.xp += xp; }
-
-    @Override
-    public void decreaseXp(int xp) { this.xp -= xp; }
-
-    @Override
-    public void setXp(int xp) { this.xp = xp; }
-
-    @Override
-    public int getXp() { return this.xp; }
-
-    /*@Override
-    public void setPass(boolean pass) {
-        this.pass = pass;
-    }
-
-    @Override
-    public boolean havePass() {
-        return this.pass;
-    }*/
-
     /*public String getMachineID() {
         return this.machineID;
     }
@@ -685,15 +581,6 @@ public class PlayerData implements IPlayerData {
     public void setMachineId(String machineID) {
         this.machineID = machineID;
     }*/
-
-    public int diamondsToGive() {
-        if (this.getLevel() <= 5) {
-            return 5;
-        } else if (this.getLevel() > 5 && this.getLevel() != 10){
-            return 10;
-        }
-        return 30;
-    }
     
     public Session getWebsocketSession() { return websocket_session; }
 

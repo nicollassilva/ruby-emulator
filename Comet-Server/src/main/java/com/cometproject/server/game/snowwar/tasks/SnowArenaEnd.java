@@ -16,6 +16,7 @@ public class SnowArenaEnd {
         room.Winner = 0;
         int blueScore = 0;
         int redScore = 0;
+
         for (final int TeamId : SnowWar.TEAMS) {
             if (TeamId == SnowWar.TEAM_BLUE) {
                 blueScore += room.TeamScore[TeamId - 1];
@@ -23,14 +24,14 @@ public class SnowArenaEnd {
                 redScore += room.TeamScore[TeamId - 1];
             }
         }
+
         if (blueScore > redScore) {
             room.Winner = 1;
             room.Result = 1;
         } else if (redScore > blueScore){
             room.Winner = 2;
             room.Result = 1;
-        } else if (redScore == blueScore) {
-            room.Winner = 0;
+        } else {
             room.Result = 2;
         }
 
@@ -49,9 +50,10 @@ public class SnowArenaEnd {
             }
 
             if (player.team == room.Winner) {
-                player.cn.getPlayer().increaseXP(50);
+                // Snowstorm Winner
+                //player.cn.getPlayer().increaseXP(50);
             } else {
-                player.cn.getPlayer().increaseXP(25);
+                //player.cn.getPlayer().increaseXP(25);
             }
         }
 

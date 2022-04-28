@@ -1,7 +1,6 @@
 package com.cometproject.server.network.battleball.incoming;
 
 import com.cometproject.server.network.battleball.incoming.battleball.BattleBallLeaveEvent;
-import com.cometproject.server.network.battleball.incoming.battlepass.OpenBattlePassEvent;
 import com.cometproject.server.network.battleball.incoming.events.JoinRoomEventEvent;
 import com.cometproject.server.network.battleball.incoming.handshake.SSOLoginEvent;
 import com.cometproject.server.network.battleball.incoming.queues.JoinQueueSnowstormEvent;
@@ -30,7 +29,6 @@ public class IncomingEventManager {
         events.put(Incoming.SetBuildToolEvent, SetBuildToolEvent.class);
         events.put(Incoming.CloseBuildToolEvent, CloseBuildToolEvent.class);
         events.put(Incoming.JoinQueueSnowstormEvent, JoinQueueSnowstormEvent.class);
-        events.put(Incoming.OpenBattlePassEvent, OpenBattlePassEvent.class);
         events.put(Incoming.BattleBallLeaveEvent, BattleBallLeaveEvent.class);
         events.put(Incoming.JoinRoomEventEvent, JoinRoomEventEvent.class);
         events.put(Incoming.SaveSongEvent, SaveSongEvent.class);
