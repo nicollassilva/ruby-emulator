@@ -22,11 +22,9 @@ public class HugCommand extends ChatCommand {
             return;
         }
 
-        int timeSinceLastUpdate = ((int) Comet.getTime() - client.getPlayer().getLastCommandRoleplay());
-
-        String huggedPlayer = params[0];
-
-        RoomEntity entity = client.getPlayer().getEntity().getRoom().getEntities().getEntityByName(huggedPlayer, RoomEntityType.PLAYER);
+        final int timeSinceLastUpdate = ((int) Comet.getTime() - client.getPlayer().getLastCommandRoleplay());
+        final String huggedPlayer = params[0];
+        final RoomEntity entity = client.getPlayer().getEntity().getRoom().getEntities().getEntityByName(huggedPlayer, RoomEntityType.PLAYER);
 
         if (entity == null) {
             sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
@@ -38,24 +36,26 @@ public class HugCommand extends ChatCommand {
             return;
         }
 
-            int posX = entity.getPosition().getX();
-            int posY = entity.getPosition().getY();
-            int playerX = client.getPlayer().getEntity().getPosition().getX();
-            int playerY = client.getPlayer().getEntity().getPosition().getY();
+        final int posX = entity.getPosition().getX();
+        final int posY = entity.getPosition().getY();
+        final int playerX = client.getPlayer().getEntity().getPosition().getX();
+        final int playerY = client.getPlayer().getEntity().getPosition().getY();
 
-            if (!((Math.abs((posX - playerX)) >= 2) || (Math.abs(posY - playerY) >= 2))) {
-                if(timeSinceLastUpdate >= 30) {
-                    client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), ("* " + Locale.getOrDefault("command.hug.message", "hugs %username%") + " *").replace("%username%", huggedPlayer), ChatEmotion.SMILE, 16));
-                    entity.applyEffect(new PlayerEffect(168));
-                    client.getPlayer().getEntity().applyEffect(new PlayerEffect(168));
-                    client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
-                } else {
-                    client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 30 segundos para volver a ejecutar otro comando roleplay", ChatEmotion.NONE, 1));
-                    return;
-                }
-            } else {
-                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% is not near, walk to this player.").replace("%playername%", entity.getUsername()), 16));
+        if (!((Math.abs((posX - playerX)) >= 2) || (Math.abs(posY - playerY) >= 2))) {
+            if (timeSinceLastUpdate < 30) {
+                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Espere 30 segundos para abraçar novamente.", ChatEmotion.NONE, 1));
+                return;
             }
+
+            client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.hug.message", "abraçou %username%").replace("%username%", huggedPlayer), ChatEmotion.SMILE, 16));
+
+            entity.applyEffect(new PlayerEffect(168));
+
+            client.getPlayer().getEntity().applyEffect(new PlayerEffect(168));
+            client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
+        } else {
+            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% não está por perto.").replace("%playername%", entity.getUsername()), 16));
+        }
     }
 
     @Override

@@ -51,7 +51,7 @@ public class PickUpItemMessageEvent implements Event {
         }
 
         if (item == null) {
-            RoomItemWall wItem = room.getItems().getWallItem(id);
+            final RoomItemWall wItem = room.getItems().getWallItem(id);
 
             if (wItem == null || wItem instanceof PostItWallItem) {
                 return;
@@ -60,7 +60,7 @@ public class PickUpItemMessageEvent implements Event {
             if(wItem.getItemData().getOwnerId() == client.getPlayer().getId()) {
                 room.getItems().removeItem(wItem, client.getPlayer().getId(), client);
             } else {
-                Session owner = NetworkManager.getInstance().getSessions().getByPlayerId(wItem.getItemData().getOwnerId());
+                final Session owner = NetworkManager.getInstance().getSessions().getByPlayerId(wItem.getItemData().getOwnerId());
                 room.getItems().removeItem(wItem, wItem.getItemData().getOwnerId(), owner);
             }
 

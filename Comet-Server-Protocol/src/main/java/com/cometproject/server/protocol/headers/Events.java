@@ -12,7 +12,7 @@ public class Events {
     // Previous: PRODUCTION-201709192204-203982672
     public static final int PongEvent = 2596 ; // 1552
     public static final int RequestTalentTrackEvent = 196;
-    public static final int ConfirmUsernameMessageEvent = 3878 ; // 1590 // IN SWF DANN = 6878 // IN PRODUCTION 201611 = 3878
+    public static final int ConfirmUsernameMessageEvent = 6789 ; // 1590 // IN PRODUCTION 201611 = 3878
     public static final int GetRoomBannedUsersMessageEvent = 2267 ; // 2652
     public static final int GetPetInventoryMessageEvent = 3095 ; // 567
     public static final int DropHandItemMessageEvent = 2814 ; // 2846
@@ -33,10 +33,10 @@ public class Events {
     public static final int UpdateThreadMessageEvent = 3045 ; // 777
     public static final int ManageGroupMessageEvent = 1004 ; // 2697
     public static final int ModifyRoomFilterListMessageEvent = 3001 ; // 2973
-    public static final int SSOTicketMessageEvent = 2419 ; // 286 // -> SWF DANN TO 6419 // IN PRODUCTION 201611 = 2419
+    public static final int SSOTicketMessageEvent = 6788 ; // 286 // IN PRODUCTION 201611 = 2419
     public static final int JoinGroupMessageEvent = 998 ; // 2529
     public static final int DeclineGroupMembershipMessageEvent = 1894 ; // 2688
-    public static final int UniqueIDMessageEvent = 2490 ; // 921 // -> SWF DANN TO 6490 // IN PRODUCTION 201611 = 2490
+    public static final int UniqueIDMessageEvent = 6785 ; // 921 IN PRODUCTION 201611 = 2490
     public static final int RemoveMyRightsMessageEvent = 3182 ; // 3596
     public static final int PurchaseTargetOfferEvent = 1826;
     public static final int TargetOfferStateEvent = 2041;
@@ -45,7 +45,7 @@ public class Events {
     public static final int GiveHandItemMessageEvent = 2941 ; // 2094
     public static final int UpdateFigureDataMessageEvent = 2730 ; // 3509
     public static final int RemoveGroupMemberMessageEvent = 593 ; // 3326
-    public static final int EventLogMessageEvent = 3457 ; // 658 // -> SWF DANN TO 6457 // IN PRODUCTION 201611 = 3457
+    public static final int EventLogMessageEvent = 6780 ; // 658 // IN PRODUCTION 201611 = 3457
     public static final int RefreshCampaignMessageEvent = 2912 ; // 2260
     public static final int GetPromotableRoomsMessageEvent = 2283 ; // 2372
     public static final int UseOneWayGateMessageEvent = 2765 ; // 3521

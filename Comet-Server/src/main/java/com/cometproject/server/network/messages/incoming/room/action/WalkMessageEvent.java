@@ -17,15 +17,15 @@ import java.util.List;
 
 public class WalkMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        int goalX = msg.readInt();
-        int goalY = msg.readInt();
+        final int goalX = msg.readInt();
+        final int goalY = msg.readInt();
 
         try {
             if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().hasAttribute("warp")) {
                 return;
             }
 
-            PlayerEntity entity = client.getPlayer().getEntity();
+            final PlayerEntity entity = client.getPlayer().getEntity();
 
             if (!entity.isVisible()) return;
 
@@ -40,27 +40,16 @@ public class WalkMessageEvent implements Event {
             }
 
             if (entity.hasAttribute("teleport")) {
-                Position newPosition = new Position(goalX, goalY);
+                final Position newPosition = new Position(goalX, goalY);
                 final RoomTile tile = client.getPlayer().getEntity().getRoom().getMapping().getTile(newPosition);
 
                 newPosition.setZ(tile.getWalkHeight());
 
                 entity.unIdle();
 
-                if (entity.getMountedEntity() != null) {
-                    entity.warp(newPosition);
-                }
-
-                entity.warp(newPosition);
+                entity.warpImmediately(newPosition);
                 return;
             }
-
-//
-//            if(entity.hasStatus(RoomEntityStatus.MOVE)) {
-//                // we're moving
-//                entity.setPendingWalk(new Position(goalX, goalY));
-//                return;
-//            }
 
             if (!entity.sendUpdateMessage()) {
                 entity.setSendUpdateMessage(true);

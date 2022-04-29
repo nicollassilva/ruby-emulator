@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 
 public class InventoryItem implements PlayerItem {
@@ -109,14 +110,14 @@ public class InventoryItem implements PlayerItem {
 
             msg.writeInt(17);
 
-            try {
-                if (StringUtils.isNumeric(this.getExtraData())) {
-                    groupId = Integer.parseInt(this.getExtraData());
-                }
+            final String[] _groupData = this.getExtraData().split(";");
 
+            try {
+                if (Arrays.stream(_groupData).count() == 2 && StringUtils.isNumeric(_groupData[0]) && StringUtils.isNumeric(_groupData[1])) {
+                    groupId = Integer.parseInt(_groupData[0]);
+                }
             } catch (Exception e) {
                 // invalid integer
-
             }
 
             final IGroupData groupData = groupId == 0 ? null : GameContext.getCurrent().getGroupService().getData(groupId);
@@ -127,7 +128,7 @@ public class InventoryItem implements PlayerItem {
             } else {
                 msg.writeInt(2);
                 msg.writeInt(5);
-                msg.writeString("0"); //state
+                msg.writeString(_groupData[1]); //state
                 msg.writeString(groupId);
                 msg.writeString(groupData.getBadge());
 

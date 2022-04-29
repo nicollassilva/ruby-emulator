@@ -16,13 +16,11 @@ public class GroupItemCatalogHandler extends BasicItemCatalogHandler implements 
 
         if (data.isEmpty() || !StringUtils.isNumeric(data)) return;
 
-        if (!client.getPlayer().getGroups().contains(new Integer(data))) {
+        if (!client.getPlayer().getGroups().contains(Integer.valueOf(data))) {
             return;
         }
 
-        String extraData = data;
-
-        super.execute(item, client, amount, page, giftData, definition, bundledItem, data, extraData);
+        super.execute(item, client, amount, page, giftData, definition, bundledItem, data, data + ";0");
     }
 
     @Override

@@ -14,7 +14,7 @@ public abstract class BasicItemCatalogHandler extends PurchaseHandler {
         if (giftData != null) {
             super.giftPurchase(item, client, amount, definition.isTeleporter(), giftData, extraData, giftData.getDeliveryId());
         } else {
-            super.itemPurchase(item, bundledItem, client, amount, page, definition.isTeleporter(), giftData, extraData);
+            super.itemPurchase(item, bundledItem, client, amount, page, definition.isTeleporter(), null, extraData);
         }
     }
 }

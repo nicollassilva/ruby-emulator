@@ -19,21 +19,24 @@ public class MoveAvatarEvent extends IncomingExternalInterfaceMessage<MoveAvatar
     }
     @Override
     public void handle(Session client, JSONMoveAvatarEvent message) {
-        Room room = client.getPlayer().getEntity().getRoom();
-        if(room == null)
+        final Room room = client.getPlayer().getEntity().getRoom();
+
+        if(room == null) {
             return;
+        }
 
         try {
             if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().hasAttribute("warp")) {
                 return;
             }
-            PlayerEntity entity = client.getPlayer().getEntity();
+
+            final PlayerEntity entity = client.getPlayer().getEntity();
 
             if (!entity.isVisible()) return;
 
             if (room.getModel().getDoorX() == entity.getPosition().getX() && room.getModel().getDoorY() == entity.getPosition().getY()) return;
             
-            Position goal = entity.getWalkingGoal();
+            final Position goal = entity.getWalkingGoal();
 
             switch (message.direction) {
                 case "stop":
@@ -61,7 +64,7 @@ public class MoveAvatarEvent extends IncomingExternalInterfaceMessage<MoveAvatar
             }
 
             if (entity.hasAttribute("teleport")) {
-                List<Square> squares = new LinkedList<>();
+                final List<Square> squares = new LinkedList<>();
                 squares.add(new Square(goal.getX(), goal.getY()));
 
                 entity.unIdle();

@@ -8,7 +8,6 @@ import com.cometproject.server.network.sessions.Session;
 public class PyramidCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-
         if (!client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl()) {
             return;
         }

@@ -275,7 +275,7 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
 
     @Override
     public PlayerItem add(long id, int itemId, String extraData, IGiftData giftData, LimitedEditionItem limitedEditionItem) {
-        PlayerItem item = new InventoryItem(id, itemId, extraData, giftData, limitedEditionItem);
+        final PlayerItem item = new InventoryItem(id, itemId, extraData, giftData, limitedEditionItem);
 
         this.inventoryItems.put(id, item);
 
@@ -286,9 +286,9 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
 
     @Override
     public List<SongItem> getSongs() {
-        List<SongItem> songItems = Lists.newArrayList();
+        final List<SongItem> songItems = Lists.newArrayList();
 
-        for (PlayerItem inventoryItem : this.inventoryItems.values()) {
+        for (final PlayerItem inventoryItem : this.inventoryItems.values()) {
             if (inventoryItem.getDefinition().isSong()) {
                 songItems.add(new SongItemData((InventoryItemSnapshot) inventoryItem.createSnapshot(), inventoryItem.getDefinition().getSongId()));
             }
@@ -298,10 +298,12 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
     }
 
     public boolean hasBaseItem(long itemId) {
-        for (PlayerItem inventoryItem : this.inventoryItems.values()) {
-            if (inventoryItem.getDefinition().getId() == itemId)
+        for (final PlayerItem inventoryItem : this.inventoryItems.values()) {
+            if (inventoryItem.getDefinition().getId() == itemId) {
                 return true;
+            }
         }
+
         return false;
     }
 

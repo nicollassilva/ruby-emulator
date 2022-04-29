@@ -15,11 +15,11 @@ public class Composers {
     public static final int WiredRewardMessageComposer = 178; // 2960
     public static final int HeightMapMessageComposer = 2753; // 1010
     public static final int CallForHelpPendingCallsMessageComposer = 1121; // 2804
-    public static final int ChatMessageComposer = 1446; // 2174 -> 1446 | ruby swf -> 6490
+    public static final int ChatMessageComposer = 6490; // 2174 -> 1446 | ruby swf -> 6490
     public static final int GroupMembersMessageComposer = 1200; // 610
     public static final int OpenBotActionMessageComposer = 1618; // 1469
     public static final int UserObjectMessageComposer = 2725; // 1513
-    public static final int ActionMessageComposer = 1631; // 1536 -> 1631 | ruby swf -> 6635
+    public static final int ActionMessageComposer = 6635; // 1536 -> 1631 | ruby swf -> 6635
     public static final int ManageGroupMessageComposer = 3965; // 891
     public static final int FloodControlMessageComposer = 566; // 3603
     public static final int FlatControllerAddedMessageComposer = 2088; // 3622
@@ -57,7 +57,7 @@ public class Composers {
     public static final int FloorPlanSendDoorMessageComposer = 1664; // 2201
     public static final int SleepMessageComposer = 1797; // 157
     public static final int FlatControllerRemovedMessageComposer = 1327; // 257
-    public static final int UniqueMachineIDMessageComposer = 1488; // 602 // IN SWF DANN => 6488 // IN PRODUCTION 201611 = 1488
+    public static final int UniqueMachineIDMessageComposer = 6489; // 602 // IN PRODUCTION 201611 = 1488
     public static final int ItemAddMessageComposer = 2187; // 366
     public static final int GroupForumDataMessageComposer = 3011; // 2023
     public static final int UpdateFreezeLivesMessageComposer = 2324; // 1652
@@ -122,7 +122,7 @@ public class Composers {
     public static final int GroupCreationWindowMessageComposer = 2159; // 870
     public static final int GetGuestRoomResultMessageComposer = 687; // 1826
     public static final int RoomNotificationMessageComposer = 1992; // 3531
-    public static final int InitCryptoMessageComposer = 1347; // 2904 // IN SWF DANN = 6347 // IN PRODUCTION 201611 = 1347
+    public static final int InitCryptoMessageComposer = 6347; // 2904 // IN PRODUCTION 201611 = 1347
     public static final int SoundSettingsMessageComposer = 513; // 1001
     public static final int WiredTriggerConfigMessageComposer = 383; // 3478
     public static final int ItemsMessageComposer = 1369; // 2649
@@ -143,7 +143,7 @@ public class Composers {
     public static final int PromoArticlesMessageComposer = 286; // 253
     public static final int MaintenanceStatusMessageComposer = 1350; // 2724
     public static final int BuddyRequestsMessageComposer = 280; // 1151
-    public static final int AuthenticationOKMessageComposer = 2491; // 3054 // IN SWF DANN = 6491 // IN PRODUCTION 201611 = 2491
+    public static final int AuthenticationOKMessageComposer = 6495; // 3054 // IN PRODUCTION 201611 = 2491
     public static final int QuestStartedMessageComposer = 230; // 325
     public static final int BotInventoryMessageComposer = 3086; // 3095
     public static final int PerkAllowancesMessageComposer = 2586; // 3189
