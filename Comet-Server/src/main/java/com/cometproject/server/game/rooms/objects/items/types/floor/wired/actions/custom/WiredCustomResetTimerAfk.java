@@ -37,7 +37,7 @@ public class WiredCustomResetTimerAfk extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -45,11 +45,16 @@ public class WiredCustomResetTimerAfk extends WiredActionItem {
 
         resetTimer(playerEntity);
 
-        CometThreadManager.getInstance().executeSchedule(() -> resetTimer(playerEntity), this.getWiredData().getDelay() * 500, TimeUnit.MILLISECONDS);
+        CometThreadManager.getInstance().executeSchedule(() -> resetTimer(playerEntity), this.getWiredData().getDelay() * 500L, TimeUnit.MILLISECONDS);
     }
 
     private void resetTimer(PlayerEntity playerEntity) {
-        RoomEntity roomEntity = playerEntity.getRoom().getEntities().getEntity(playerEntity.getRoom().getId());
+        final RoomEntity roomEntity = playerEntity.getRoom().getEntities().getEntity(playerEntity.getRoom().getId());
+
+        if(roomEntity == null) {
+            return;
+        }
+
         roomEntity.resetAfkTimer();
     }
 }

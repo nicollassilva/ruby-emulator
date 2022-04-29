@@ -37,8 +37,8 @@ public class WiredActionShowMessage extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        RoomEntity roomEntity = (event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final RoomEntity roomEntity = (event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;

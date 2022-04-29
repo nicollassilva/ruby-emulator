@@ -55,8 +55,6 @@ public class WiredCustomEnableBot extends WiredActionItem {
         if (botEntity != null) {
             if(StringUtils.isNumeric(message)) {
                 botEntity.applyEffect(new PlayerEffect(Integer.parseInt(message),0 ));
-            } else {
-                return;
             }
         }
     }

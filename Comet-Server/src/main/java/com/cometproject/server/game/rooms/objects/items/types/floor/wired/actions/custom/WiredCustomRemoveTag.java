@@ -42,8 +42,8 @@ public class WiredCustomRemoveTag extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        RoomEntity roomEntity = (event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final RoomEntity roomEntity = (event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -53,13 +53,10 @@ public class WiredCustomRemoveTag extends WiredActionItem {
             return;
         }
 
-        String tag = this.getWiredData().getText();
+        final String tag = this.getWiredData().getText();
+
         if(!roomEntity.addTagUser.isEmpty()) {
             roomEntity.addTagUser.remove(tag);
-            //playerEntity.getPlayer().getSession().send(new NotificationMessageComposer("generic", "Se te ha removido el tag: " + tag + " exitosamente"));
-        } else if (!roomEntity.addTagUser.isEmpty() && tag.equals(":removeall")) {
-            roomEntity.addTagUser.clear();
-            //playerEntity.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Se te han quitado todos los tag que tenías", ChatEmotion.NONE, 1));
         }
     }
 }

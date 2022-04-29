@@ -55,9 +55,9 @@ public class WiredActionBotTalk extends WiredActionItem {
         final BotEntity botEntity = this.getRoom().getBots().getBotByName(botName);
 
         if (botEntity != null) {
-            boolean isShout = (this.getWiredData().getParams().size() == 1 && (this.getWiredData().getParams().get(PARAM_MESSAGE_TYPE) == 1));
             String finalMessage = message;
-            if (isShout) {
+
+            if ((this.getWiredData().getParams().size() == 1 && (this.getWiredData().getParams().get(PARAM_MESSAGE_TYPE) == 1))) { // is shout message
                 this.getRoom().getEntities().getPlayerEntities().forEach(playerEntity -> playerEntity.getPlayer().getSession().send(new ShoutMessageComposer(botEntity.getId(), finalMessage.replace("%username%", (event.entity instanceof PlayerEntity) ? event.entity.getUsername() : playerEntity.getUsername()), ChatEmotion.NONE, 2)));
             } else {
                 this.getRoom().getEntities().getPlayerEntities().forEach(playerEntity -> playerEntity.getPlayer().getSession().send(new TalkMessageComposer(botEntity.getId(), finalMessage.replace("%username%", (event.entity instanceof PlayerEntity) ? event.entity.getUsername() : playerEntity.getUsername()), ChatEmotion.NONE, 2)));

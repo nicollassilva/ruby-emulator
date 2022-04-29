@@ -21,19 +21,19 @@ public class WiredCustomUserMove extends WiredActionItem {
             return;
         }
 
-        Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
+        final Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
 
         if (itemId == null) {
             return;
         }
 
-        RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
+        final RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
 
         if (item == null || item.isAtDoor() || item.getPosition() == null || item.getTile() == null) {
             return;
         }
 
-        Position position = new Position(item.getPosition().getX(), item.getPosition().getY());
+        final Position position = new Position(item.getPosition().getX(), item.getPosition().getY());
 
         if (event.entity == null) {
             return;

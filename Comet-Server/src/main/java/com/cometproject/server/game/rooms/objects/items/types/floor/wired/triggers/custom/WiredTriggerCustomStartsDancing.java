@@ -15,11 +15,12 @@ public class WiredTriggerCustomStartsDancing extends WiredTriggerItem {
     public static boolean executeTriggers(PlayerEntity playerEntity, int dance) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomStartsDancing.class)) {
-            WiredTriggerCustomStartsDancing trigger = ((WiredTriggerCustomStartsDancing) floorItem);
-                if (!trigger.getWiredData().getText().isEmpty() && String.valueOf(dance).equals(trigger.getWiredData().getText().toLowerCase())) {
+        for (WiredTriggerCustomStartsDancing floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomStartsDancing.class)) {
+            if(floorItem == null) continue;
+
+            if (!floorItem.getWiredData().getText().isEmpty() && String.valueOf(dance).equals(floorItem.getWiredData().getText().toLowerCase())) {
                     wasExecuted = true;
-                    trigger.evaluate(playerEntity, dance);
+                    floorItem.evaluate(playerEntity, dance);
                 }
             }
 

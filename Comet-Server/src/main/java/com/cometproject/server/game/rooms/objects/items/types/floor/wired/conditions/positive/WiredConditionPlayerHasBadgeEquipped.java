@@ -19,15 +19,17 @@ public class WiredConditionPlayerHasBadgeEquipped extends WiredConditionItem {
     @Override
     public boolean evaluate(RoomEntity entity, Object data) {
         boolean isEquipped = false;
+
         if (!(entity instanceof PlayerEntity)) return false;
 
-        PlayerEntity playerEntity = ((PlayerEntity) entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
         if (playerEntity.getPlayer().getInventory().hasBadge(this.getWiredData().getText())) {
-            int slot = playerEntity.getPlayer().getInventory().getBadges().get(this.getWiredData().getText());
+            final int slot = playerEntity.getPlayer().getInventory().getBadges().get(this.getWiredData().getText());
 
-            if (slot != 0)
+            if (slot != 0) {
                 isEquipped = true;
+            }
         }
 
         return isNegative != isEquipped;

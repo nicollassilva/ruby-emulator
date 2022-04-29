@@ -29,7 +29,6 @@ public class WiredConditionPlayerWearingEffect extends WiredConditionItem {
         final int effectId = this.getWiredData().getParams().get(PARAM_EFFECT_ID);
         boolean isWearingEffect = false;
 
-
         if (entity.getCurrentEffect() != null) {
             if (entity.getCurrentEffect().getEffectId() == effectId) {
                 isWearingEffect = true;

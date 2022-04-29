@@ -17,11 +17,11 @@ public class WiredTriggerScoreAchieved extends WiredTriggerItem {
     public static boolean executeTriggers(int score, GameTeam team, Room room) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(room, WiredTriggerScoreAchieved.class)) {
-            WiredTriggerScoreAchieved trigger = ((WiredTriggerScoreAchieved) floorItem);
+        for (final WiredTriggerScoreAchieved floorItem : getTriggers(room, WiredTriggerScoreAchieved.class)) {
+            if(floorItem == null) continue;
 
-            if (trigger.scoreToAchieve() == score) {
-                wasExecuted = trigger.evaluate(null, team);
+            if (floorItem.scoreToAchieve() == score) {
+                wasExecuted = floorItem.evaluate(null, team);
             }
         }
 

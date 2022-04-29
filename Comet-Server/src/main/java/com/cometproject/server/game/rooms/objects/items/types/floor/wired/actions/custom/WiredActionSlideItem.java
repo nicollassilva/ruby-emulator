@@ -18,17 +18,22 @@ public class WiredActionSlideItem extends WiredActionItem {
     @Override
     public void onEventComplete(WiredItemEvent event) {
         try {
-            String[] values = this.getWiredData().getText().split(",");
-            if (values.length <= 0)
+            final String[] values = this.getWiredData().getText().split(",");
+
+            if (values.length <= 0) {
                 return;
+            }
+
             int x = 0;
             int y = 0;
             double z = 0;
 
-            for (String value : values) {
-                String[] entries = value.split(":");
-                if (entries.length != 2)
+            for (final String value : values) {
+                final String[] entries = value.split(":");
+
+                if (entries.length != 2) {
                     return;
+                }
 
                 switch (entries[0]) {
                     case "x":
@@ -44,18 +49,21 @@ public class WiredActionSlideItem extends WiredActionItem {
             }
 
             synchronized (this.getWiredData().getSelectedIds()) {
-                for (long itemId : this.getWiredData().getSelectedIds()) {
-                    RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+                for (final long itemId : this.getWiredData().getSelectedIds()) {
+                    final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+
                     if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
+
                     final Position currentPosition = floorItem.getPosition().copy();
+                    final Position newPosition = new Position(currentPosition.getX() + x, currentPosition.getY() + y, currentPosition.getZ() + z);
 
-                    Position newPosition = new Position(currentPosition.getX() + x, currentPosition.getY() + y, currentPosition.getZ() + z);
-
-                    if (newPosition.getX() > this.getRoom().getModel().getSizeX() || newPosition.getY() > this.getRoom().getModel().getSizeY() || newPosition.getZ() > 100)
+                    if (newPosition.getX() > this.getRoom().getModel().getSizeX() || newPosition.getY() > this.getRoom().getModel().getSizeY() || newPosition.getZ() > 100) {
                         return;
+                    }
 
-                    if (newPosition.getX() == 0 || newPosition.getY() == 0 || newPosition.getZ() < -100)
+                    if (newPosition.getX() == 0 || newPosition.getY() == 0 || newPosition.getZ() < -100) {
                         return;
+                    }
 
 
                     if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, floorItem.getRotation(), true, false, false)) {
@@ -66,8 +74,8 @@ public class WiredActionSlideItem extends WiredActionItem {
                     floorItem.save();
                 }
             }
-        } catch (Exception ignored) {
-            ignored.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

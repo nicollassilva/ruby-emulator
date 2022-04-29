@@ -25,10 +25,9 @@ public class WiredAddonVisualTimer extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
-            if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
-                    && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
+            if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId()) && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
                 return false;
             }
         }
@@ -100,7 +99,7 @@ public class WiredAddonVisualTimer extends RoomItemFloor {
             return;
         }
 
-        int timeLength = Integer.parseInt(this.getItemData().getData());
+        final int timeLength = Integer.parseInt(this.getItemData().getData());
 
         if (timeLength - 1 >= 1) {
             this.setTicks(RoomItemFactory.getProcessTime(1.0));

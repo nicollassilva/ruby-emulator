@@ -32,9 +32,9 @@ public class WiredActionToggleState extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        List<Position> tilesToUpdate = Lists.newArrayList();
+        final List<Position> tilesToUpdate = Lists.newArrayList();
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem == null || floorItem instanceof WiredFloorItem || floorItem instanceof DiceFloorItem)
@@ -44,7 +44,7 @@ public class WiredActionToggleState extends WiredActionItem {
             tilesToUpdate.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY()));
         }
 
-        for (Position tileToUpdate : tilesToUpdate) {
+        for (final Position tileToUpdate : tilesToUpdate) {
             this.getRoom().getMapping().updateTile(tileToUpdate.getX(), tileToUpdate.getY());
         }
 

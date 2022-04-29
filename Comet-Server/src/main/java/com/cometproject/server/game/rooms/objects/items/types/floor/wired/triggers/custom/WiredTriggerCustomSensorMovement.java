@@ -20,10 +20,10 @@ public class WiredTriggerCustomSensorMovement extends WiredTriggerItem {
     public static boolean executeTriggers(PlayerEntity playerEntity) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomSensorMovement.class)) {
-            WiredTriggerCustomSensorMovement trigger = ((WiredTriggerCustomSensorMovement) floorItem);
+        for (final WiredTriggerCustomSensorMovement floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomSensorMovement.class)) {
+            if(floorItem == null) continue;
 
-            wasExecuted = trigger.evaluate(playerEntity, null);
+            wasExecuted = floorItem.evaluate(playerEntity, null);
         }
 
         return wasExecuted;

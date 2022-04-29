@@ -28,17 +28,17 @@ public class WiredConditionSuperWired extends WiredConditionItem {
 
     @Override
     public boolean evaluate(RoomEntity entity, Object data) {
+        final Room team = this.getRoom();
 
-        Room team = this.getRoom();
-
-        String str = this.getWiredData().getText();
-        String[] finalText = str.split(":");
+        final String str = this.getWiredData().getText();
+        final String[] finalText = str.split(":");
 
         switch (finalText[0].toLowerCase()) {
             case "enable":
                 if (entity == null) {
                     return false;
                 }
+
                 if (!StringUtils.isNumeric(finalText[1])) {
                     return false;
                 }
@@ -48,6 +48,7 @@ public class WiredConditionSuperWired extends WiredConditionItem {
                 if (entity == null) {
                     return false;
                 }
+
                 if (!StringUtils.isNumeric(finalText[1])) {
                     return false;
                 }
@@ -57,6 +58,7 @@ public class WiredConditionSuperWired extends WiredConditionItem {
                 if (entity == null) {
                     return false;
                 }
+
                 if (!StringUtils.isNumeric(finalText[1])) {
                     return false;
                 }
@@ -66,6 +68,7 @@ public class WiredConditionSuperWired extends WiredConditionItem {
                 if (entity == null) {
                     return false;
                 }
+
                 if (!StringUtils.isNumeric(finalText[1])) {
                     return false;
                 }
@@ -204,7 +207,7 @@ public class WiredConditionSuperWired extends WiredConditionItem {
                     return false;
                 }
 
-                return team.getGame().getTeams().get(GameTeam.YELLOW).size() == Integer.parseInt(finalText[1]);
+                return team.getGame().getTeams().get(GameTeam.YELLOW).size() != Integer.parseInt(finalText[1]);
             case "teamallcount":
                 if(!StringUtils.isNumeric(finalText[1])) {
                     return false;
@@ -217,56 +220,48 @@ public class WiredConditionSuperWired extends WiredConditionItem {
                 }
 
                 return team.getGame().getTeams().size() != Integer.parseInt(finalText[1]);
-
             case "hastag":
                 if(entity == null) {
                     return false;
                 }
 
                 return entity.getTagUser().contains(finalText[1]);
-
             case "nohastag":
                 if(entity == null) {
                     return false;
                 }
 
                 return !entity.getTagUser().contains(finalText[1]);
-
             case "haspoints":
                 if(entity == null) {
                     return false;
                 }
 
                 return nearestPlayerEntity().getPoints() == Integer.parseInt(finalText[1]);
-
             case "nohaspoints":
                 if(entity == null) {
                     return false;
                 }
 
                 return nearestPlayerEntity().getPoints() != Integer.parseInt(finalText[1]);
-
             case "haspointsmin":
                 if(entity == null) {
                     return false;
                 }
 
                 return nearestPlayerEntity().getPoints() >= Integer.parseInt(finalText[1]);
-
             case "haspointsmax":
                 if(entity == null) {
                     return false;
                 }
 
                 return nearestPlayerEntity().getPoints() <= Integer.parseInt(finalText[1]);
-
             case "botusername":
                 if(entity == null) {
                     return false;
                 }
 
                 return nearestBotEntity().getData().getUsername().equals(finalText[1]);
-
             case "nobotusername":
                 if(entity == null) {
                     return false;

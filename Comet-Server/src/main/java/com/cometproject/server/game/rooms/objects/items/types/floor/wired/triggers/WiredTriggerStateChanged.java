@@ -16,11 +16,12 @@ public class WiredTriggerStateChanged extends WiredTriggerItem {
     public static boolean executeTriggers(RoomEntity entity, RoomItemFloor floorItem) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor wiredItem : getTriggers(entity.getRoom(), WiredTriggerStateChanged.class)) {
-            WiredTriggerStateChanged trigger = ((WiredTriggerStateChanged) wiredItem);
+        for (WiredTriggerStateChanged wiredItem : getTriggers(entity.getRoom(), WiredTriggerStateChanged.class)) {
+            if(wiredItem == null) continue;
 
-            if (trigger.getWiredData().getSelectedIds().contains(floorItem.getId()))
-                wasExecuted = trigger.evaluate(entity, floorItem);
+            if (wiredItem.getWiredData().getSelectedIds().contains(floorItem.getId())) {
+                wasExecuted = wiredItem.evaluate(entity, floorItem);
+            }
         }
 
         return wasExecuted;

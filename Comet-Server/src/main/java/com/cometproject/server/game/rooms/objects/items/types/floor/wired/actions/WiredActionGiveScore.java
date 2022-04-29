@@ -42,16 +42,17 @@ public class WiredActionGiveScore extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         /*
         This is not how this wired should work, but it's how people like it
          */
         final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
-        ArrayList<String> score = new ArrayList<>();
+        final ArrayList<String> score = new ArrayList<>();
         score.add(playerEntity.getUsername());
-        for (HighscoreFloorItem scoreboard : scoreboards) {
+
+        for (final HighscoreFloorItem scoreboard : scoreboards) {
             scoreboard.onTeamWins(score, this.getScore());
         }
 

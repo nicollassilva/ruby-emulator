@@ -37,15 +37,19 @@ public class WiredCustomTeleportYellow extends WiredActionItem {
     public void onEventComplete(WiredItemEvent event) {
         if (this.getWiredData().getSelectedIds().size() == 0) return;
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem == null) continue;
-            List<Integer> groupMembers =  new ArrayList<>(this.getRoom().getGame().getTeams().get(GameTeam.YELLOW));
 
-            for (Integer groupMember : groupMembers) {
-                PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(groupMember);
-                if(player.getPlayer().getEntity().getGameTeam().equals(GameTeam.YELLOW)) { player.teleportToItem(floorItem);} else { return; }
+            final List<Integer> groupMembers =  new ArrayList<>(this.getRoom().getGame().getTeams().get(GameTeam.YELLOW));
+
+            for (final Integer groupMember : groupMembers) {
+                final PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(groupMember);
+
+                if(player.getPlayer().getEntity().getGameTeam().equals(GameTeam.YELLOW)) {
+                    player.teleportToItem(floorItem);
+                }
             }
         }
     }

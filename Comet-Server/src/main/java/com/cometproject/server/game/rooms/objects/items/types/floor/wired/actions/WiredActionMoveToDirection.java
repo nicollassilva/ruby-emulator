@@ -50,8 +50,8 @@ public class WiredActionMoveToDirection extends WiredActionItem {
         final int startDir = this.getWiredData().getParams().get(PARAM_START_DIR);
 
         synchronized (this.getWiredData().getSelectedIds()) {
-            for (long itemId : this.getWiredData().getSelectedIds()) {
-                RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            for (final long itemId : this.getWiredData().getSelectedIds()) {
+                final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
                 if (floorItem == null) continue;
 
@@ -63,12 +63,9 @@ public class WiredActionMoveToDirection extends WiredActionItem {
                 this.moveItem(floorItem, new AtomicInteger(0));
             }
         }
-
-        return;
     }
 
     private void moveItem(RoomItemFloor floorItem, AtomicInteger tries) {
-
         final Position currentPosition = floorItem.getPosition().copy();
         final Position nextPosition = floorItem.getPosition().squareInFront(floorItem.getMoveDirection());
 
@@ -86,9 +83,8 @@ public class WiredActionMoveToDirection extends WiredActionItem {
 
     private void attemptBlockedAction(RoomItemFloor floorItem, AtomicInteger tries) {
         int movementDirection = floorItem.getMoveDirection();
+
         final int actionWhenBlocked = this.getWiredData().getParams().get(PARAM_ACTION_WHEN_BLOCKED);
-
-
         final Position position = floorItem.getPosition().squareInFront(floorItem.getMoveDirection());
         final RoomTile roomTile = this.getRoom().getMapping().getTile(position);
 
@@ -123,7 +119,6 @@ public class WiredActionMoveToDirection extends WiredActionItem {
             case ACTION_TURN_LEFT_90:
                 movementDirection = this.antiClockwise(movementDirection, 2);
                 break;
-
         }
 
         floorItem.setMoveDirection(movementDirection);
@@ -133,18 +128,20 @@ public class WiredActionMoveToDirection extends WiredActionItem {
     public int getRandomDirection(RoomItemFloor floorItem) {
         int limit = 0;
         int movementDirection;
-        while (true) {
-            if (limit > 7) {
-                break;
-            }
+
+        while (limit <= 7) {
             movementDirection = Direction.random().num;
+
             final Position randomPosition = floorItem.getPosition().squareInFront(movementDirection);
             final RoomTile randomRoomTile = this.getRoom().getMapping().getTile(randomPosition);
+
             if (randomRoomTile != null && randomRoomTile.canPlaceItemHere()) {
                 return movementDirection;
             }
+
             limit++;
         }
+
         return 0;
     }
 

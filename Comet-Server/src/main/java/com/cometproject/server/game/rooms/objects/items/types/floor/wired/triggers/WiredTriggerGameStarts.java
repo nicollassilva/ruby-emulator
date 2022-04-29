@@ -15,10 +15,10 @@ public class WiredTriggerGameStarts extends WiredTriggerItem {
     public static boolean executeTriggers(Room room) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(room, WiredTriggerGameStarts.class)) {
-            WiredTriggerGameStarts trigger = ((WiredTriggerGameStarts) floorItem);
+        for (final WiredTriggerGameStarts floorItem : getTriggers(room, WiredTriggerGameStarts.class)) {
+            if(floorItem == null) continue;
 
-            wasExecuted = trigger.evaluate(null, null);
+            wasExecuted = floorItem.evaluate(null, null);
         }
 
         return wasExecuted;

@@ -25,15 +25,11 @@ public class WiredActionLeaveTeam extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        if (event.entity == null || !(event.entity instanceof PlayerEntity)) {
+        if (!(event.entity instanceof PlayerEntity)) {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        if (playerEntity != null) {
-
-            this.getRoom().getGame().removeFromTeam(playerEntity.getGameTeam(), playerEntity);
-        }
-
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        this.getRoom().getGame().removeFromTeam(playerEntity.getGameTeam(), playerEntity);
     }
 }

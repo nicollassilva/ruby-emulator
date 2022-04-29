@@ -40,7 +40,7 @@ public class WiredCustomUnfreeze extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -48,7 +48,7 @@ public class WiredCustomUnfreeze extends WiredActionItem {
 
         unfreeze(playerEntity);
 
-        CometThreadManager.getInstance().executeSchedule(() -> unfreeze(playerEntity), this.getWiredData().getDelay() * 500, TimeUnit.MILLISECONDS);
+        CometThreadManager.getInstance().executeSchedule(() -> unfreeze(playerEntity), this.getWiredData().getDelay() * 500L, TimeUnit.MILLISECONDS);
     }
 
     private void unfreeze(PlayerEntity playerEntity) {

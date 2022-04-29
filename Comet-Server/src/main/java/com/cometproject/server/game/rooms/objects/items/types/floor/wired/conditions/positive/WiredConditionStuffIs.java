@@ -24,8 +24,7 @@ public class WiredConditionStuffIs extends WiredConditionItem {
         }
 
         final RoomItemFloor floor = ((RoomItemFloor) data);
-        boolean result = this.getWiredData().getSelectedIds().contains(floor.getId());
 
-        return !this.isNegative == result;
+        return !this.isNegative == this.getWiredData().getSelectedIds().contains(floor.getId());
     }
 }

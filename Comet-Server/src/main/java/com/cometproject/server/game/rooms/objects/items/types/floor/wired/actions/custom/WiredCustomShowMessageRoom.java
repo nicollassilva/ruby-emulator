@@ -33,8 +33,8 @@ public class WiredCustomShowMessageRoom extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        Room room = playerEntity.getRoom();
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final Room room = playerEntity.getRoom();
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -45,6 +45,7 @@ public class WiredCustomShowMessageRoom extends WiredActionItem {
         }
 
         String finalText = this.getWiredData().getText();
+
         finalText = finalText.replace("%username%", playerEntity.getPlayer().getData().getUsername());
         finalText = finalText.replace("%roomname%", getRoom().getData().getName());
         finalText = finalText.replace("%usersonline%", Integer.toString(Comet.getStats().getPlayers()));

@@ -28,7 +28,7 @@ public class WiredActionKickUser extends WiredActionShowMessage {
             return;
         }
 
-        PlayerEntity playerEntity = (PlayerEntity) event.entity;
+        final PlayerEntity playerEntity = (PlayerEntity) event.entity;
 
         String kickException = "";
 
@@ -42,9 +42,10 @@ public class WiredActionKickUser extends WiredActionShowMessage {
             if(!this.usePlayersAnimation()) {
                 event.entity.applyEffect(new PlayerEffect(4, 5));
             }
-            event.type = 1;
 
+            event.type = 1;
             event.setTotalTicks(RoomItemFactory.getProcessTime(0.9));
+
             this.queueEvent(event);
         } else {
             playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Wired kick exception: " + kickException));

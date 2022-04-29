@@ -51,10 +51,12 @@ public class WiredCustomGiveVipPoints extends WiredActionItem {
             return;
         }
 
-        int number = Integer.parseInt(this.getWiredData().getText());
-
-        playerEntity.getPlayer().getData().increaseVipPoints(number);
-        playerEntity.getPlayer().getData().save();
-        playerEntity.getPlayer().sendBalance();
+        try {
+            playerEntity.getPlayer().getData().increaseVipPoints(Integer.parseInt(this.getWiredData().getText()));
+            playerEntity.getPlayer().getData().save();
+            playerEntity.getPlayer().sendBalance();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 }

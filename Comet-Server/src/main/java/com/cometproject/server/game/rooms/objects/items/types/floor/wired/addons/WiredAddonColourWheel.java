@@ -29,15 +29,13 @@ public class WiredAddonColourWheel extends RoomItemFloor {
         this.getItemData().setData("9");
         this.sendUpdate();
 
-        this.setTicks(RoomItemFactory.getProcessTime(TIMEOUT / 2));
+        this.setTicks(RoomItemFactory.getProcessTime(TIMEOUT / 2.0));
         return true;
     }
 
     @Override
     public void onTickComplete() {
-        final int randomInteger = RandomUtil.getRandomInt(1, 8);
-
-        this.getItemData().setData(randomInteger + "");
+        this.getItemData().setData(RandomUtil.getRandomInt(1, 8) + "");
         this.sendUpdate();
     }
 }

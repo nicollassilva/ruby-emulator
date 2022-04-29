@@ -18,13 +18,11 @@ public class WiredTriggerEnterRoom extends WiredTriggerItem {
             return;
         }
 
-        for (RoomItemFloor floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerEnterRoom.class)) {
-            if (!(floorItem instanceof WiredTriggerEnterRoom)) continue;
+        for (final WiredTriggerEnterRoom floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerEnterRoom.class)) {
+            if (floorItem == null) continue;
 
-            WiredTriggerEnterRoom trigger = ((WiredTriggerEnterRoom) floorItem);
-
-            if (trigger.getWiredData().getText().isEmpty() || trigger.getWiredData().getText().equals(playerEntity.getUsername())) {
-                trigger.evaluate(playerEntity, null);
+            if (floorItem.getWiredData().getText().isEmpty() || floorItem.getWiredData().getText().equals(playerEntity.getUsername())) {
+                floorItem.evaluate(playerEntity, null);
             }
         }
     }

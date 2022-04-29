@@ -29,7 +29,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     public RollerFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
 
-        this.event = new RollerFloorItemEvent(this.getTickCount());
+        this.event = new RollerFloorItemEvent(0);
         this.queueEvent(event);
     }
 
@@ -47,6 +47,8 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
+        if(entity.isWalking()) return;
+
         this.entitiesOnRoller.add(entity.getId());
         event.setTotalTicks(this.getTickCount());
     }
@@ -77,9 +79,6 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     }
 
     private void handleEntities() {
-//        if(tile.getTopItem() != this.getId())
-//            return;
-
         final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
 
         if (!this.getRoom().getMapping().isValidPosition(sqInfront)) {
@@ -129,6 +128,14 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 oldTile.getEntities().remove(entity);
             }
 
+            this.onEntityStepOff(entity);
+
+            if(entity.isWalking()) {
+                this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(sqInfront, new Position(this.getPosition().getX(), this.getPosition().getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
+                entity.setWalkingGoal(this.getPosition().getX(), this.getPosition().getY());
+                return;
+            }
+
             if (newTile != null) {
                 newTile.getEntities().add(entity);
             }
@@ -143,11 +150,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 nextItem.onEntityStepOn(entity);
             }
 
-            entity.unIdle();
-            entity.resetAfkTimer();
             entity.setPosition(new Position(sqInfront.getX(), sqInfront.getY(), toHeight));
-
-            this.onEntityStepOff(entity);
         }
 
         if (retry) {

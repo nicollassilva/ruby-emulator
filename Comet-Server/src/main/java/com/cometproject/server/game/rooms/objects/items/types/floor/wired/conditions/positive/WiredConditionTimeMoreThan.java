@@ -21,7 +21,6 @@ public class WiredConditionTimeMoreThan extends WiredConditionItem {
 
     @Override
     public boolean evaluate(RoomEntity entity, Object data) {
-        final int ticks = this.getWiredData().getParams().get(PARAM_TICKS);
-        return this.getRoom().getWiredTimer() >= ticks;
+        return this.getRoom().getWiredTimer() >= this.getWiredData().getParams().get(PARAM_TICKS);
     }
 }

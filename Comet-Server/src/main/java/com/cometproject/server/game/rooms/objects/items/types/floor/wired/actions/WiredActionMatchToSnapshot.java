@@ -49,13 +49,15 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
 
         for (long itemId : this.getWiredData().getSelectedIds()) {
 
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+
             if (floorItem == null) continue;
 
-            WiredItemSnapshot itemSnapshot = this.getWiredData().getSnapshots().get(itemId);
+            final WiredItemSnapshot itemSnapshot = this.getWiredData().getSnapshots().get(itemId);
+
             if (itemSnapshot == null) continue;
 
-            if (matchState && !(floorItem instanceof DiceFloorItem || floorItem instanceof HighscoreClassicFloorItem || floorItem instanceof HighscoreFloorItem)) {
+            if (matchState && !(floorItem instanceof DiceFloorItem || floorItem instanceof HighscoreFloorItem)) {
 
                 /*if (floorItem instanceof BanzaiTimerFloorItem) {
                     if (this.getRoom().getGame().getInstance() != null) {
@@ -71,11 +73,10 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
             //floorItem.save();
             //  floorItem.saveData();
 
-            Position currentPosition = floorItem.getPosition().copy();
-            Position newPosition = new Position(itemSnapshot.getX(), itemSnapshot.getY(), itemSnapshot.getZ());
+            final Position currentPosition = floorItem.getPosition().copy();
+            final Position newPosition = new Position(itemSnapshot.getX(), itemSnapshot.getY(), itemSnapshot.getZ());
 
             if (this.getRoom().getItems().moveFloorItemWired(floorItem, !matchPosition ? currentPosition : newPosition, matchRotation ? itemSnapshot.getRotation() : floorItem.getRotation(), true, false, false)) {
-
                 if (!(floorItem instanceof WiredCustomSetSpeedRollerSelected)) {
                     if (this.useItemsAnimation()) {
                         this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
@@ -85,8 +86,6 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
                     }
                 }
             }
-
-
 
            /* if(matchState) {
                 floorItem.sendUpdate();

@@ -39,7 +39,7 @@ public class WiredActionBotGiveHandItem extends WiredActionItem {
 
         if (!(event.entity instanceof PlayerEntity)) return;
 
-        int param = this.getWiredData().getParams().get(PARAM_HANDITEM);
+        final int param = this.getWiredData().getParams().get(PARAM_HANDITEM);
 
         final String botName = this.getWiredData().getText();
         final BotEntity botEntity = this.getRoom().getBots().getBotByName(botName);

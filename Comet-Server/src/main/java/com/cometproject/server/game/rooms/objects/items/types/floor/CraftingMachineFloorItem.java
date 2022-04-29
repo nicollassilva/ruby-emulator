@@ -21,19 +21,22 @@ public class CraftingMachineFloorItem  extends RoomItemFloor {
             return false;
         }
 
-        PlayerEntity p = ((PlayerEntity) entity);
+        final PlayerEntity player = ((PlayerEntity) entity);
 
-        if(p == null)
+        if(player == null) {
             return false;
+        }
 
-        CraftingMachine machine = ItemManager.getInstance().getCraftingMachine(this.getDefinition().getId());
+        final CraftingMachine machine = ItemManager.getInstance().getCraftingMachine(this.getDefinition().getId());
 
-        if(machine == null)
+        if(machine == null) {
             return false;
+        }
 
-        p.getPlayer().setLastCraftingMachine(machine);
-        p.getPlayer().getInventory().send();
-        p.getPlayer().getSession().send(new CraftableProductsMessageComposer(machine));
+        player.getPlayer().setLastCraftingMachine(machine);
+        player.getPlayer().getInventory().send();
+        player.getPlayer().getSession().send(new CraftableProductsMessageComposer(machine));
+
         return true;
     }
 

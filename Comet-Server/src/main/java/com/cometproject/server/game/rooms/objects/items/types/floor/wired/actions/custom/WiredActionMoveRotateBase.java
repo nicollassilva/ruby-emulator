@@ -44,8 +44,8 @@ public class WiredActionMoveRotateBase extends WiredActionItem {
         final int rotation = this.getWiredData().getParams().get(PARAM_ROTATION);
 
         synchronized (this.getWiredData().getSelectedIds()) {
-            for (long itemId : this.getWiredData().getSelectedIds()) {
-                RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            for (final long itemId : this.getWiredData().getSelectedIds()) {
+                final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
                 if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
 
@@ -82,7 +82,7 @@ public class WiredActionMoveRotateBase extends WiredActionItem {
 
             case 1:
                 // Random
-                int movement = random.nextInt((4 - 1) + 1 + 1);
+                final int movement = random.nextInt((4 - 1) + 1 + 1);
 
                 if (movement == 1) {
                     point = handleMovement(point, 4);
@@ -175,25 +175,28 @@ public class WiredActionMoveRotateBase extends WiredActionItem {
     private Position getRandomPosition(int movement, Position currentPosition) {
         int limit = 5;
         Position newPosition;
-        while (true) {
-            if (limit > 12) {
-                break;
-            }
+
+        while (limit <= 12) {
             newPosition = this.handleMovement(currentPosition.copy(), movement);
             final RoomTile randomRoomTile = this.getRoom().getMapping().getTile(newPosition);
+
             if (randomRoomTile != null) {
-                RoomItemFloor tileItem = randomRoomTile.getTopItemInstance();
+                final RoomItemFloor tileItem = randomRoomTile.getTopItemInstance();
+
                 if (tileItem != null) {
                     newPosition.setZ(tileItem.getPosition().getZ() + tileItem.getDefinition().getHeight());
                 } else {
                     newPosition.setZ(0);
                 }
+
                 if (randomRoomTile.canPlaceItemHere()) {
                     return newPosition;
                 }
             }
+
             limit++;
         }
+
         return currentPosition;
     }
 }

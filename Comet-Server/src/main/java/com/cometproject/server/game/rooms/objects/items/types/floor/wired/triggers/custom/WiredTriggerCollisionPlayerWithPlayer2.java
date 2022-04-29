@@ -25,9 +25,10 @@ public class WiredTriggerCollisionPlayerWithPlayer2 extends WiredTriggerItem {
     public static boolean executeTriggers(RoomEntity entity) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(entity.getRoom(), WiredTriggerCollisionPlayerWithPlayer2.class)) {
-            WiredTriggerCollisionPlayerWithPlayer2 trigger = ((WiredTriggerCollisionPlayerWithPlayer2) floorItem);
-            wasExecuted = trigger.evaluate(entity, null);
+        for (final WiredTriggerCollisionPlayerWithPlayer2 floorItem : getTriggers(entity.getRoom(), WiredTriggerCollisionPlayerWithPlayer2.class)) {
+            if(floorItem == null) continue;
+
+            wasExecuted = floorItem.evaluate(entity, null);
 
         }
         return wasExecuted;

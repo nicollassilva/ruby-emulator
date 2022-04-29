@@ -17,17 +17,17 @@ public class WiredTriggerCustomStateChanged extends WiredTriggerItem {
         PlayerEntity playerEntity = ((PlayerEntity) entity);
         boolean wasExecuted = false;
 
-        for (RoomItemFloor wiredItem : getTriggers(entity.getRoom(), WiredTriggerCustomStateChanged.class)) {
-            WiredTriggerCustomStateChanged trigger = ((WiredTriggerCustomStateChanged) wiredItem);
+        for (final WiredTriggerCustomStateChanged wiredItem : getTriggers(entity.getRoom(), WiredTriggerCustomStateChanged.class)) {
+            if(wiredItem == null) continue;
 
-            if (trigger.getWiredData().getSelectedIds().contains(floorItem.getId()))
+            if (wiredItem.getWiredData().getSelectedIds().contains(floorItem.getId()))
                 if(!floorItem.getPosition().touching(entity.getPosition())) {
                     entity.moveTo(floorItem.getPosition().squareInFront(floorItem.getRotation()).getX(), floorItem.getPosition().squareInFront(floorItem.getRotation()).getY());
                     return false;
                 } else if (floorItem.getPosition().touching(entity.getPosition())) {
                     entity.cancelWalk();
                     entity.lookTo(playerEntity.getPosition().squareInFront(floorItem.getRotation()).getX(), playerEntity.getPosition().squareBehind(floorItem.getRotation()).getY());
-                    wasExecuted = trigger.evaluate(entity, floorItem);
+                    wasExecuted = wiredItem.evaluate(entity, floorItem);
                 }
         }
 

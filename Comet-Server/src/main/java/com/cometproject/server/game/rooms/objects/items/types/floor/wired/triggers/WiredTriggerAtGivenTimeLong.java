@@ -11,19 +11,17 @@ public class WiredTriggerAtGivenTimeLong extends WiredTriggerAtGivenTime {
     public WiredTriggerAtGivenTimeLong(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
 
-        if (this.getWiredData().getParams().get(PARAM_TICK_LENGTH) == null) {
-            this.getWiredData().getParams().put(PARAM_TICK_LENGTH, 2); // 10s
-        }
+        this.getWiredData().getParams().putIfAbsent(PARAM_TICK_LENGTH, 2); // 10s
     }
 
     public static boolean executeTriggers(Room room, int timer) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor wiredItem : getTriggers(room, WiredTriggerAtGivenTimeLong.class)) {
-            WiredTriggerAtGivenTimeLong trigger = ((WiredTriggerAtGivenTimeLong) wiredItem);
+        for (final WiredTriggerAtGivenTimeLong wiredItem : getTriggers(room, WiredTriggerAtGivenTimeLong.class)) {
+            if(wiredItem == null) continue;
 
-            if (timer >= trigger.getTime()) {
-                if (trigger.evaluate(null, null)) {
+            if (timer >= wiredItem.getTime()) {
+                if (wiredItem.evaluate(null, null)) {
                     wasExecuted = true;
                 }
             }

@@ -22,8 +22,8 @@ public class WiredConditionPlayerInGroup extends WiredConditionItem {
     @Override
     public boolean evaluate(RoomEntity entity, Object data) {
         if (!(entity instanceof PlayerEntity)) return false;
-        final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
+        final PlayerEntity playerEntity = ((PlayerEntity) entity);
         final IGroup group = this.getRoom().getGroup();
 
         if (group != null) {

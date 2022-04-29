@@ -46,13 +46,14 @@ public class WiredCustomCollisionCase extends WiredActionItem {
     public void onEventComplete(WiredItemEvent event) {
         if (this.getWiredData().getSelectedIds().size() == 0) return;
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem == null) continue;
 
-            List<RoomEntity> entities = floorItem.getEntitiesOnItem();
-            for(RoomEntity entity : entities) {
+            final List<RoomEntity> entities = floorItem.getEntitiesOnItem();
+
+            for(final RoomEntity entity : entities) {
                 //if(entity instanceof PlayerEntity) {
 
                     if (isCollided(entity, floorItem)) {
@@ -65,9 +66,8 @@ public class WiredCustomCollisionCase extends WiredActionItem {
     }
 
     public boolean isCollided(RoomEntity entity, RoomItemFloor floorItem) {
-
-        int maxX = 0;
-        int maxY = 0;
+        int maxX;
+        int maxY;
 
         if(floorItem.getRotation() == 0 || floorItem.getRotation() == 4) {
             maxX = floorItem.getPosition().getX() + floorItem.getDefinition().getWidth();

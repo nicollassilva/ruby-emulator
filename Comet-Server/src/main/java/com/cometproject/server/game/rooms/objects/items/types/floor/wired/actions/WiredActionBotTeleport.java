@@ -19,20 +19,19 @@ public class WiredActionBotTeleport extends WiredActionItem {
             return;
         }
 
-        Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
+        final Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
 
         if (itemId == null) {
             return;
         }
 
-        RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
+        final RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
 
         if (item == null || item.isAtDoor() || item.getPosition() == null || item.getTile() == null) {
             return;
         }
 
         final String entityName = this.getWiredData().getText();
-
         final BotEntity botEntity = this.getRoom().getBots().getBotByName(entityName);
 
         if (botEntity == null) {

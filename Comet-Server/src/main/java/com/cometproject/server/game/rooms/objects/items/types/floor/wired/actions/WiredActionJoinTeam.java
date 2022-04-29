@@ -36,7 +36,7 @@ public class WiredActionJoinTeam extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getGameTeam() != GameTeam.NONE) {
             return; // entity already in a team!
@@ -46,8 +46,6 @@ public class WiredActionJoinTeam extends WiredActionItem {
 
         if (this.getTeam() == GameTeam.NONE)
             return;
-
-
 
         playerEntity.setGameTeam(gameTeam);
         this.getRoom().getGame().joinTeam(gameTeam, playerEntity);

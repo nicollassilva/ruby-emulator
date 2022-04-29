@@ -37,7 +37,7 @@ public class WiredCustomGiveBadge extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -47,13 +47,10 @@ public class WiredCustomGiveBadge extends WiredActionItem {
             return;
         }
 
-        String badgeCode = this.getWiredData().getText();
+        final String badgeCode = this.getWiredData().getText();
 
         if(!playerEntity.getPlayer().getInventory().hasBadge(badgeCode)) {
             playerEntity.getPlayer().getInventory().addBadge(badgeCode, true);
-        } else {
-            return;
         }
-
     }
 }

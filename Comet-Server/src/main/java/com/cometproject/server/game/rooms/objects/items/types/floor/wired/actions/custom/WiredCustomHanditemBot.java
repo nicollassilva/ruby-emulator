@@ -57,8 +57,6 @@ public class WiredCustomHanditemBot extends WiredActionItem {
         if (botEntity != null) {
             if(StringUtils.isNumeric(message)) {
                 botEntity.carryItem(Integer.parseInt(message));
-            } else {
-                return;
             }
         }
     }

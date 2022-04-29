@@ -36,15 +36,12 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
     @Override
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
         if (!isWiredTrigger) {
-
-
             int minimumRarity = 0;
 
-            int bodyRarity = randomBody(minimumRarity);
-            int colorRarity = randomColor(minimumRarity);
-
-            PetMonsterPlant body = PetManager.getInstance().getMonsterPlantBodies().get(bodyRarity);
-            PetMonsterPlantColor color = PetManager.getInstance().getMonsterPlantColors().get(colorRarity);
+            final int bodyRarity = randomBody(minimumRarity);
+            final int colorRarity = randomColor(minimumRarity);
+            final PetMonsterPlant body = PetManager.getInstance().getMonsterPlantBodies().get(bodyRarity);
+            final PetMonsterPlantColor color = PetManager.getInstance().getMonsterPlantColors().get(colorRarity);
 
             final PetMonsterPlantData petData = new PetMonsterPlantData
                     (
@@ -61,31 +58,31 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
                             Comet.getRandom().nextInt(12) + 1,
                             Comet.getRandom().nextInt(11)
                     );
+
             final int petId = PetDao.createPet(this.getItemData().getOwnerId(), petData.getName(), petData.getTypeId(), petData.getRaceId(), "FFFFFF", petData.getExtradata());
             petData.setId(petId);
 
-            MonsterPlantEntity petEntity = this.getRoom().getPets().addMonsterPlant(petData, this.getPosition());
-            this.getTile().getEntities().add(petEntity);
+            final MonsterPlantEntity petEntity = this.getRoom().getPets().addMonsterPlant(petData, this.getPosition());
 
+            this.getTile().getEntities().add(petEntity);
             this.getRoom().getEntities().broadcastMessage(new AvatarsMessageComposer(petEntity));
+
             petEntity.addStatus(RoomEntityStatus.GESTURE, RoomEntityStatus.FLASH.getStatusCode());
             petEntity.sendGrowth();
             petEntity.removeStatus(RoomEntityStatus.GESTURE);
 
-
             this.getRoom().getItems().removeItem(this, null, false, true);
-
-
         }
         return false;
     }
 
 
     public int randomBody(int minimumRarity) {
-        int size = (minimumRarity == 7) ? 4 : 1;
-        int sizeMin = (minimumRarity == 7) ? 1 : 2;
-        int min = Math.max(minimumRarity - sizeMin, 0);
-        int max = Math.min(minimumRarity + size, 11);
+        final int size = (minimumRarity == 7) ? 4 : 1;
+        final int sizeMin = (minimumRarity == 7) ? 1 : 2;
+        final int min = Math.max(minimumRarity - sizeMin, 0);
+        final int max = Math.min(minimumRarity + size, 11);
+
         return Comet.getRandom().nextInt(max - min + 1) + min;
     }
 
@@ -93,14 +90,16 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
         boolean isGold = minimumRarity == 7;
 
         int min = Math.max(minimumRarity - ((isGold) ? 1 : 3), 0);
+
         if (min == 0) {
             min = Math.max(minimumRarity - 2, 0);
+
             if (min == 0) {
                 min = Math.max(minimumRarity - 1, 0);
             }
         }
 
-        int max = Math.min((minimumRarity + 3), 10);
+        final int max = Math.min((minimumRarity + 3), 10);
 
         return Comet.getRandom().nextInt(max - min + 1) + min;
     }
@@ -108,7 +107,9 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
 
     public int random(int low, int high, double bias) {
         double r = Math.random();
+
         r = Math.pow(r, bias);
+
         return (int) (low + (high - low) * r);
     }
 
@@ -132,6 +133,5 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        return;
     }
 }

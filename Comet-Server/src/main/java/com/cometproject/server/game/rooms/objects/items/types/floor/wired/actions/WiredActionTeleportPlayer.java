@@ -26,21 +26,21 @@ public class WiredActionTeleportPlayer extends WiredActionItem {
             return;
         }
 
-        Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
+        final Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
 
         if (itemId == null) {
             event.entity = null;
             return;
         }
 
-        RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
+        final RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
 
         if (item == null || item.isAtDoor() || item.getPosition() == null || item.getTile() == null) {
             event.entity = null;
             return;
         }
 
-        Position position = new Position(item.getPosition().getX(), item.getPosition().getY(), item.getTile().getWalkHeight());
+        final Position position = new Position(item.getPosition().getX(), item.getPosition().getY(), item.getTile().getWalkHeight());
 
         if (!event.entity.getPosition().equals(position)) {
             event.entity.applyEffect(new PlayerEffect(4, 4));

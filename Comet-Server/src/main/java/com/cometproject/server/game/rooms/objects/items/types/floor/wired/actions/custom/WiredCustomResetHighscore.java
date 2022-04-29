@@ -40,7 +40,7 @@ public class WiredCustomResetHighscore extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -48,14 +48,14 @@ public class WiredCustomResetHighscore extends WiredActionItem {
 
         resetHighscore(playerEntity);
 
-        CometThreadManager.getInstance().executeSchedule(() -> resetHighscore(playerEntity), this.getWiredData().getDelay() * 500, TimeUnit.MILLISECONDS);
+        CometThreadManager.getInstance().executeSchedule(() -> resetHighscore(playerEntity), this.getWiredData().getDelay() * 500L, TimeUnit.MILLISECONDS);
     }
 
     private void resetHighscore(PlayerEntity playerEntity) {
         final List<HighscoreFloorItem> scoreboards = playerEntity.getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
         if (scoreboards.size() != 0) {
-            for (HighscoreFloorItem scoreboard : scoreboards) {
+            for (final HighscoreFloorItem scoreboard : scoreboards) {
                 scoreboard.resetScoreboard();
             }
         }

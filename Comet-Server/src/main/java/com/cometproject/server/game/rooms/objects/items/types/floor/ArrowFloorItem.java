@@ -33,16 +33,15 @@ public class ArrowFloorItem extends RoomItemFloor {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        Position sqInfront = this.getPosition().squareInFront(this.getRotation());
-        //Position sqBehind = this.getPosition().squareBehind(this.getRotation());
+        final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
 
         if (!this.getRoom().getMapping().isValidPosition(sqInfront)) {
             return;
         }
 
-        List<RoomEntity> entities = this.getRoom().getEntities().getEntitiesAt(this.getPosition());
+        final List<RoomEntity> entities = this.getRoom().getEntities().getEntitiesAt(this.getPosition());
 
-        for (RoomEntity entity2 : entities) {
+        for (final RoomEntity entity2 : entities) {
             if (entity2.getPosition().getX() != this.getPosition().getX() && entity2.getPosition().getY() != this.getPosition().getY()) {
                 continue;
             }

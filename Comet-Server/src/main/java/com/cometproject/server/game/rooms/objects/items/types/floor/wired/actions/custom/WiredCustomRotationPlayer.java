@@ -33,7 +33,7 @@ public class WiredCustomRotationPlayer extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -45,7 +45,7 @@ public class WiredCustomRotationPlayer extends WiredActionItem {
 
         if(!StringUtils.isNumeric(this.getWiredData().getText())) return;
 
-        String finalText = this.getWiredData().getText();
+        final String finalText = this.getWiredData().getText();
 
         int i = Integer.parseInt(finalText);
 
@@ -54,6 +54,7 @@ public class WiredCustomRotationPlayer extends WiredActionItem {
         playerEntity.setBodyRotation(i);
         playerEntity.setHeadRotation(i);
         playerEntity.markNeedsUpdate();
+
         if(finalText.equals("-1")) {
             playerEntity.setBodyRotation(RandomUtil.getRandomInt(0, 7));
             playerEntity.markNeedsUpdate();

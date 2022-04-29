@@ -56,8 +56,6 @@ public class WiredCustomFreezeBot extends WiredActionItem {
                 botEntity.setCanWalk(false);
             } else if(message.equals("0")) {
                 botEntity.setCanWalk(true);
-            } else {
-                return;
             }
         }
     }

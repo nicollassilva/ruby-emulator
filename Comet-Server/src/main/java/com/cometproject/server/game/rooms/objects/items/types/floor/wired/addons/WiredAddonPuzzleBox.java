@@ -25,6 +25,7 @@ public class WiredAddonPuzzleBox extends RoomItemFloor
 
     private boolean isValidRoll(final Position nextPosition) {
         final List<Square> path = ItemPathfinder.getInstance().makePath(this, nextPosition);
+
         return path != null && !path.isEmpty();
     }
 
@@ -38,21 +39,28 @@ public class WiredAddonPuzzleBox extends RoomItemFloor
 
     private void moveTo(final Position pos, final int rotation, final RoomEntity entity, final Position old) {
         final RoomTile newTile = this.getRoom().getMapping().getTile(pos);
+
         if (newTile != null) {
             pos.setZ(newTile.getStackHeight());
             roll(this, this.getPosition(), pos, this.getRoom());
+
             final RoomTile tile = this.getRoom().getMapping().getTile(this.getPosition());
+
             this.setRotation(rotation);
             this.getPosition().setX(pos.getX());
             this.getPosition().setY(pos.getY());
+
             if (tile != null) {
                 tile.reload();
             }
+
             entity.moveTo(old);
             newTile.reload();
+
             for (final RoomItemFloor floorItem : this.getRoom().getItems().getItemsOnSquare(pos.getX(), pos.getY())) {
                 floorItem.onItemAddedToStack(this);
             }
+
             this.getPosition().setZ(pos.getZ());
         }
     }
@@ -62,21 +70,27 @@ public class WiredAddonPuzzleBox extends RoomItemFloor
         if (isWiredTrigger || entity == null) {
             return false;
         }
+
         if (!this.getPosition().touching(entity.getPosition())) {
             return true;
         }
+
         final int rotation = Position.calculateRotation(entity.getPosition().getX(), entity.getPosition().getY(), this.getPosition().getX(), this.getPosition().getY(), false);
+
         if (!entity.hasStatus(RoomEntityStatus.SIT) && !entity.hasStatus(RoomEntityStatus.LAY)) {
             entity.setBodyRotation(rotation);
             entity.setHeadRotation(rotation);
             entity.markNeedsUpdate();
         }
+
         final Position currentPosition = new Position(this.getPosition().getX(), this.getPosition().getY(), this.getPosition().getZ());
+
         if (this.isValidRoll(this.getNextPosition(currentPosition))) {
             final Position newPosition = calculatePosition(this.getPosition().getX(), this.getPosition().getY(), rotation);
             this.moveTo(newPosition, rotation, entity, currentPosition);
             return true;
         }
+
         return false;
     }
 }

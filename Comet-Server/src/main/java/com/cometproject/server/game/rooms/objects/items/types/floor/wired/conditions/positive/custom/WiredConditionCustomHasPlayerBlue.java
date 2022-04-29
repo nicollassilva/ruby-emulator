@@ -22,13 +22,12 @@ public class WiredConditionCustomHasPlayerBlue extends WiredConditionItem {
     public boolean evaluate(RoomEntity entity, Object data) {
         int itemsWithPlayers = 0;
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem != null) {
                 if (floorItem.getEntitiesBlueOnItem().size() != 0) {
-                        // System.out.format("%s, %s, %s\n", this.getId(), floorItem.getId(), floorItem.getTile().getEntity().getUsername());
-                        itemsWithPlayers++;
+                    itemsWithPlayers++;
                 }
             }
         }

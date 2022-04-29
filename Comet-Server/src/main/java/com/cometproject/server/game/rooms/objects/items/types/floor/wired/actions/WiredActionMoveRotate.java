@@ -43,8 +43,8 @@ public class WiredActionMoveRotate extends WiredActionItem {
         final int rotation = this.getWiredData().getParams().get(PARAM_ROTATION);
 
         synchronized (this.getWiredData().getSelectedIds()) {
-            for (long itemId : this.getWiredData().getSelectedIds()) {
-                RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            for (final long itemId : this.getWiredData().getSelectedIds()) {
+                final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
                 if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
 
@@ -53,12 +53,12 @@ public class WiredActionMoveRotate extends WiredActionItem {
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
-
                 if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, true, false)) {
-                    if (!rotationChanged)
+                    if (!rotationChanged) {
                         this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));
-                    else
+                    } else {
                         this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
+                    }
                 }
 
                 floorItem.save();
@@ -75,7 +75,7 @@ public class WiredActionMoveRotate extends WiredActionItem {
 
             case 1:
                 // Random
-                int movement = random.nextInt((4 - 1) + 1 + 1);
+                final int movement = random.nextInt((4 - 1) + 1 + 1);
 
                 if (movement == 1) {
                     point = handleMovement(point, 4);
@@ -142,7 +142,7 @@ public class WiredActionMoveRotate extends WiredActionItem {
                 break;
 
             case 2:
-                // Counter clockwise
+                // Counterclockwise
                 rotation = rotation - 2;
 
                 if (rotation > 6)
@@ -168,17 +168,18 @@ public class WiredActionMoveRotate extends WiredActionItem {
     private Position getRandomPosition(int movement, Position currentPosition) {
         int limit = 5;
         Position newPosition;
-        while (true) {
-            if (limit > 12) {
-                break;
-            }
+
+        while (limit <= 12) {
             newPosition = this.handleMovement(currentPosition.copy(), movement);
+
             final RoomTile randomRoomTile = this.getRoom().getMapping().getTile(newPosition);
+
             if (randomRoomTile != null) {
                 if (randomRoomTile.canPlaceItemHere()) {
                     return newPosition;
                 }
             }
+
             limit++;
         }
         return currentPosition;

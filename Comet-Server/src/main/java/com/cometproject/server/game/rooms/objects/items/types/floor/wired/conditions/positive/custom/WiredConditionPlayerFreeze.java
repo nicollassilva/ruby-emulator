@@ -23,10 +23,10 @@ public class WiredConditionPlayerFreeze extends WiredConditionItem {
 
         if (!(entity instanceof PlayerEntity)) return false;
 
-        PlayerEntity playerEntity = ((PlayerEntity) entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
         if (!playerEntity.canWalk()) {
-                isFreeze = true;
+            isFreeze = true;
         }
 
         return isNegative != isFreeze;

@@ -31,16 +31,15 @@ public class WiredCustomMuteTriggerer extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        if (event.entity == null || !(event.entity instanceof PlayerEntity)) {
+        if (!(event.entity instanceof PlayerEntity)) {
             return;
         }
 
-        int time = this.getWiredData().getParams().get(PARAM_MUTE_TIME);
-
-        String message = this.getWiredData().getText();
+        final int time = this.getWiredData().getParams().get(PARAM_MUTE_TIME);
+        final String message = this.getWiredData().getText();
 
         if (time > 0) {
-            ((PlayerEntity)event.entity).getPlayer().getSession().send(new WhisperMessageComposer(((PlayerEntity)event.entity).getPlayerId(), "Wired Mute: Silenciado por " + time + (time > 1 ? "minutos" : "minuto") + "! Mensaje: " + (message == null || message.isEmpty() ? "Ningún mensaje" : message)));
+            ((PlayerEntity)event.entity).getPlayer().getSession().send(new WhisperMessageComposer(((PlayerEntity)event.entity).getPlayerId(), "Wired Mute: Silenciado por " + time + (time > 1 ? "minutos" : "minuto") + "! Mensagem: " + (message == null || message.isEmpty() ? "Nenhuma mensagem" : message)));
 
             if (this.getRoom().getRights().hasMute(((PlayerEntity)event.entity).getPlayerId())) {
                 this.getRoom().getRights().updateMute(((PlayerEntity)event.entity).getPlayerId(), time);

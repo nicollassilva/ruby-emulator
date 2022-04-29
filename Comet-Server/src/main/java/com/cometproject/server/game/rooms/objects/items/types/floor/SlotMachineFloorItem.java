@@ -36,7 +36,6 @@ public class SlotMachineFloorItem extends RoomItemFloor {
         entity.cancelWalk();
         entity.lookTo(this.getPosition().squareInFront(this.getRotation()).getX() - 1, this.getPosition().squareBehind(this.getRotation()).getY() - 1);
 
-
         if (this.isInUse) {
             ((PlayerEntity) entity).getPlayer().getSession().send(new WhisperMessageComposer(this.getVirtualId(), "Esta máquina está siendo usada, por favor espera.", 34));
             return false;

@@ -56,8 +56,6 @@ public class WiredCustomDanceBot extends WiredActionItem {
             if(StringUtils.isNumeric(message)) {
                 botEntity.setDanceId(Integer.parseInt(message));
                 botEntity.getRoom().getEntities().broadcastMessage(new DanceMessageComposer(botEntity.getId(), Integer.parseInt(message)));
-            } else {
-                return;
             }
         }
     }

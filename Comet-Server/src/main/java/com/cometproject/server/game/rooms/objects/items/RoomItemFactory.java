@@ -239,6 +239,9 @@ public class RoomItemFactory {
             put("wf_xtra_tiles", WiredAddonTile.class); // tile de colores cambia de estado al pisarla
             put("monsterplant_seed", MonsterPlantSeedFloorItem.class);
             put("battle_ball_tile", BattleBallTileFloorItem.class);
+
+            /* Continuar abaixo */
+
             put("wf_cstm_set_points", WiredCustomSetPoints.class); // setear puntos
             put("wf_xtra_keb_bar", WiredAddonKebBar.class); // keb bar
             put("wf_trg_bot_reached_furni", WiredTriggerBotReachedFurni.class); // bot reached furni

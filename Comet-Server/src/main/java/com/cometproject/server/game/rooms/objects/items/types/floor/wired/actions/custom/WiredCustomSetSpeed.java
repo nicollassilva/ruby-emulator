@@ -38,7 +38,7 @@ public class WiredCustomSetSpeed extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -52,10 +52,11 @@ public class WiredCustomSetSpeed extends WiredActionItem {
             return;
         }
 
-        int rollerLevel = Integer.parseInt(this.getWiredData().getText());
-        //playerEntity.getRoom().setAttribute("customRollerSpeed", rollerLevel);
+        final int rollerLevel = Integer.parseInt(this.getWiredData().getText());
+
         playerEntity.getRoom().getData().setRollerSpeedLevel(rollerLevel);
         playerEntity.getRoom().getData().setRollerSpeed(true);
+
         RoomDao.rollerSpeedRoom(rollerLevel, playerEntity.getRoom().getId());
         RoomDao.rollerSpeed(playerEntity.getRoom().getId());
     }

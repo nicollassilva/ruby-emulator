@@ -54,7 +54,6 @@ public class WiredActionBotTalkToAvatar extends WiredActionItem {
             return;
         }
 
-
         message = message.replace("%username%", event.entity.getUsername())
                   .replace("%points%", String.valueOf(((PlayerEntity) event.entity).getPoints()));
 
@@ -63,9 +62,8 @@ public class WiredActionBotTalkToAvatar extends WiredActionItem {
         final BotEntity botEntity = this.getRoom().getBots().getBotByName(botName);
 
         if (botEntity != null) {
-            boolean isWhisper = (this.getWiredData().getParams().size() == 1 && (this.getWiredData().getParams().get(PARAM_MESSAGE_TYPE) == 1));
             if (((PlayerEntity) event.entity).getPlayer() != null && ((PlayerEntity) event.entity).getPlayer().getSession() != null) {
-                if (isWhisper) {
+                if ((this.getWiredData().getParams().size() == 1 && (this.getWiredData().getParams().get(PARAM_MESSAGE_TYPE) == 1))) { // is whisper message
                     ((PlayerEntity) event.entity).getPlayer().getSession().send(new WhisperMessageComposer(botEntity.getId(), message, 2));
                 } else {
                     ((PlayerEntity) event.entity).getPlayer().getSession().send(new TalkMessageComposer(botEntity.getId(), message, ChatEmotion.NONE, 2));

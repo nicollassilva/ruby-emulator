@@ -45,9 +45,11 @@ public class WiredActionGiveScoreTeam extends WiredActionItem {
         if (gameTeam == GameTeam.NONE)
             return;
 
-        ArrayList<String> teamUsernames = new ArrayList<>();
+        final ArrayList<String> teamUsernames = new ArrayList<>();
+
         this.getRoom().getGame().getTeams().get(gameTeam).forEach( member -> {
-            PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(member);
+            final PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(member);
+
             if(player != null)  {
                 teamUsernames.add(player.getUsername());
             }
@@ -60,7 +62,7 @@ public class WiredActionGiveScoreTeam extends WiredActionItem {
         
         final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
-        for (HighscoreFloorItem scoreboard : scoreboards) {
+        for (final HighscoreFloorItem scoreboard : scoreboards) {
             scoreboard.onTeamWins(teamUsernames, this.getScore());
         }
 

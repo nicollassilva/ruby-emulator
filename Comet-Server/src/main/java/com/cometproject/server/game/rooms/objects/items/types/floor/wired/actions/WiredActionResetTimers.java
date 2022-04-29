@@ -33,7 +33,7 @@ public class WiredActionResetTimers extends WiredActionItem {
 
         items.addAll(this.getRoom().getItems().getByClass(WiredTriggerAtGivenTimeLong.class));
 
-        for (WiredTriggerAtGivenTime floorItem : items) {
+        for (final WiredTriggerAtGivenTime floorItem : items) {
             floorItem.setNeedsReset(false);
         }
 

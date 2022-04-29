@@ -33,21 +33,23 @@ public class WiredCustomToggleStateRandom extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        Random random = new Random();
-        List<Position> tilesToUpdate = Lists.newArrayList();
+        final Random random = new Random();
+        final List<Position> tilesToUpdate = Lists.newArrayList();
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
-            if (floorItem == null || floorItem instanceof WiredFloorItem || floorItem instanceof DiceFloorItem)
+            if (floorItem == null || floorItem instanceof WiredFloorItem || floorItem instanceof DiceFloorItem) {
                 continue;
-
+            }
 
             floorItem.getItemData().setData(random.nextInt(floorItem.getDefinition().getInteractionCycleCount() + 1) + "");
             floorItem.sendUpdate();
+
             tilesToUpdate.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY()));
         }
-        for (Position tileToUpdate : tilesToUpdate) {
+
+        for (final Position tileToUpdate : tilesToUpdate) {
             this.getRoom().getMapping().updateTile(tileToUpdate.getX(), tileToUpdate.getY());
         }
 

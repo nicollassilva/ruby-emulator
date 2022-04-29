@@ -22,16 +22,16 @@ public class WiredTriggerCustomKeywordExclude extends WiredTriggerItem {
     public static boolean executeTriggers(PlayerEntity playerEntity, String message) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomKeywordExclude.class)) {
-            WiredTriggerCustomKeywordExclude trigger = ((WiredTriggerCustomKeywordExclude) floorItem);
+        for (final WiredTriggerCustomKeywordExclude floorItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomKeywordExclude.class)) {
+            if(floorItem == null) continue;
 
-            final boolean ownerOnly = trigger.getWiredData().getParams().containsKey(PARAM_OWNERONLY) && trigger.getWiredData().getParams().get(PARAM_OWNERONLY) != 0;
-            final boolean isOwner = playerEntity.getPlayerId() == trigger.getRoom().getData().getOwnerId();
+            final boolean ownerOnly = floorItem.getWiredData().getParams().containsKey(PARAM_OWNERONLY) && floorItem.getWiredData().getParams().get(PARAM_OWNERONLY) != 0;
+            final boolean isOwner = playerEntity.getPlayerId() == floorItem.getRoom().getData().getOwnerId();
 
             if (!ownerOnly || isOwner) {
-                if (!trigger.getWiredData().getText().isEmpty() && message.equalsIgnoreCase(trigger.getWiredData().getText())) {
+                if (!floorItem.getWiredData().getText().isEmpty() && message.equalsIgnoreCase(floorItem.getWiredData().getText())) {
                     wasExecuted = true;
-                    trigger.evaluate(playerEntity, message);
+                    floorItem.evaluate(playerEntity, message);
                 }
             }
         }

@@ -14,22 +14,20 @@ public class WiredTriggerAtGivenTime extends WiredTriggerItem {
     public WiredTriggerAtGivenTime(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
 
-        if (this.getWiredData().getParams().get(PARAM_TICK_LENGTH) == null) {
-            this.getWiredData().getParams().put(PARAM_TICK_LENGTH, 2); // 1s
-        }
+        this.getWiredData().getParams().putIfAbsent(PARAM_TICK_LENGTH, 2); // 1s
     }
 
     public static boolean executeTriggers(Room room, int timer) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor wiredItem : getTriggers(room, WiredTriggerAtGivenTime.class)) {
-            WiredTriggerAtGivenTime trigger = ((WiredTriggerAtGivenTime) wiredItem);
+        for (final WiredTriggerAtGivenTime wiredItem : getTriggers(room, WiredTriggerAtGivenTime.class)) {
+            if(wiredItem == null) continue;
 
-            if (timer >= trigger.getTime() && !trigger.needsReset) {
-                if (trigger.evaluate(null, null)) {
+            if (timer >= wiredItem.getTime() && !wiredItem.needsReset) {
+                if (wiredItem.evaluate(null, null)) {
                     wasExecuted = true;
 
-                    trigger.needsReset = true;
+                    wiredItem.needsReset = true;
                 }
             }
         }

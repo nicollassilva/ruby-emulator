@@ -35,8 +35,7 @@ public class WiredCustomActionsPlayer extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        RoomEntity roomEntity = event.entity;
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -46,7 +45,8 @@ public class WiredCustomActionsPlayer extends WiredActionItem {
             return;
         }
 
-        String finalText = this.getWiredData().getText();
+        final String finalText = this.getWiredData().getText();
+
         switch (finalText) {
             case "o/":
                 playerEntity.getRoom().getEntities().broadcastMessage(new ActionMessageComposer(playerEntity.getId(), PlayerAvatarActions.EXPRESSION_WAVE.getValue())); // wave o/

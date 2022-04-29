@@ -17,6 +17,8 @@ public class WiredTriggerWalksOnFurni extends WiredTriggerItem {
         boolean wasExecuted = false;
 
         for (final WiredTriggerWalksOnFurni wiredItem : getTriggers(entity.getRoom(), WiredTriggerWalksOnFurni.class)) {
+            if(wiredItem == null) continue;
+
             if (wiredItem.getWiredData().getSelectedIds().contains(floorItem.getId())) {
                 wasExecuted = wiredItem.evaluate(entity, floorItem);
             }

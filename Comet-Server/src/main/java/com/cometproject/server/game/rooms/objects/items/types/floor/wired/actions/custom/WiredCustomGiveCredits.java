@@ -37,7 +37,7 @@ public class WiredCustomGiveCredits extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -51,10 +51,12 @@ public class WiredCustomGiveCredits extends WiredActionItem {
             return;
         }
 
-        int number = Integer.parseInt(this.getWiredData().getText());
-
-        playerEntity.getPlayer().getData().increaseCredits(number);
-        playerEntity.getPlayer().getData().save();
-        playerEntity.getPlayer().sendBalance();
+        try {
+            playerEntity.getPlayer().getData().increaseCredits(Integer.parseInt(this.getWiredData().getText()));
+            playerEntity.getPlayer().getData().save();
+            playerEntity.getPlayer().sendBalance();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 }

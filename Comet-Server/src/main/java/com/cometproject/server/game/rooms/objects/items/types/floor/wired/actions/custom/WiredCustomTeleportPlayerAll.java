@@ -22,23 +22,27 @@ public class WiredCustomTeleportPlayerAll extends WiredActionItem {
         if (event.entity == null) {
             return;
         }
+
         if ((!(event.entity instanceof PlayerEntity) && this.getWiredData() == null) || this.getWiredData().getSelectedIds() == null || this.getWiredData().getSelectedIds().isEmpty()) {
             event.entity = null;
             return;
         }
+
         final Long itemId = WiredUtil.getRandomElement(this.getWiredData().getSelectedIds());
 
         if (itemId == null) {
             event.entity = null;
             return;
         }
+
         final RoomItemFloor item = this.getRoom().getItems().getFloorItem(itemId);
+
         if (item == null || item.isAtDoor() || item.getPosition() == null || item.getTile() == null) {
             event.entity = null;
             return;
         }
-        final Position position = new Position(item.getPosition().getX(), item.getPosition().getY(), item.getTile().getWalkHeight());
-        for (PlayerEntity player : this.getRoom().getEntities().getPlayerEntities()) {
+
+        for (final PlayerEntity player : this.getRoom().getEntities().getPlayerEntities()) {
             player.teleportToItem(item);
         }
     }

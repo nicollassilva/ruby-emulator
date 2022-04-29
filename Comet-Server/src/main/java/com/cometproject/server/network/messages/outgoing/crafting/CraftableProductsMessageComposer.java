@@ -40,6 +40,7 @@ public class CraftableProductsMessageComposer extends MessageComposer {
         }
 
         msg.writeInt(this.machine.getAllowedItems().size());
+
         for(final String productData : this.machine.getAllowedItems().values()) {
             msg.writeString(productData);
         }

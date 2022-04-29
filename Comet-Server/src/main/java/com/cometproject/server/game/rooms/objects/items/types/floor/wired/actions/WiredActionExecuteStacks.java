@@ -20,24 +20,28 @@ public class WiredActionExecuteStacks extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        List<Position> tilesToExecute = Lists.newArrayList();
-        List<RoomItemFloor> actions = Lists.newArrayList();
+        final List<Position> tilesToExecute = Lists.newArrayList();
+        final List<RoomItemFloor> actions = Lists.newArrayList();
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
-            if (floorItem == null)
-                continue;
 
-            for (Position positions : floorItem.getPositions()) {
-                if (!tilesToExecute.contains(positions))
+            if (floorItem == null) {
+                continue;
+            }
+
+            for (final Position positions : floorItem.getPositions()) {
+                if (!tilesToExecute.contains(positions)) {
                     tilesToExecute.add(positions);
+                }
             }
         }
 
-        for (Position tileToUpdate : tilesToExecute) {
-            for (RoomItemFloor roomItemFloor : this.getRoom().getMapping().getTile(tileToUpdate).getItems()) {
-                if (actions.size() > 1000)
+        for (final Position tileToUpdate : tilesToExecute) {
+            for (final RoomItemFloor roomItemFloor : this.getRoom().getMapping().getTile(tileToUpdate).getItems()) {
+                if (actions.size() > 1000) {
                     break;
+                }
 
                 if (!(roomItemFloor instanceof WiredCustomForwardRoom)) {
                     if (roomItemFloor instanceof WiredActionItem) {
@@ -47,8 +51,9 @@ public class WiredActionExecuteStacks extends WiredActionItem {
             }
         }
 
-        if (actions.size() > 0)
+        if (actions.size() > 0) {
             WiredTriggerItem.startExecute(event.entity, event.data, actions, false);
+        }
 
         tilesToExecute.clear();
         actions.clear();
