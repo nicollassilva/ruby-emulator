@@ -59,7 +59,7 @@ public class AbstractRoomProcess implements CometTask {
 
     private boolean update = false;
 
-    private long delay;
+    private final long delay;
 
     public AbstractRoomProcess(Room room, long delay) {
         this.room = room;
@@ -80,14 +80,14 @@ public class AbstractRoomProcess implements CometTask {
 
         update = !update;
 
-        long timeSinceLastProcess = this.lastProcess == 0 ? 0 : (System.currentTimeMillis() - this.lastProcess);
+        final long timeSinceLastProcess = this.lastProcess == 0 ? 0 : (System.currentTimeMillis() - this.lastProcess);
         this.lastProcess = System.currentTimeMillis();
 
         if (this.getProcessTimes() != null && this.getProcessTimes().size() < 30) {
             log.info("Time since last cleanWord: " + timeSinceLastProcess + "ms");
         }
 
-        long timeStart = System.currentTimeMillis();
+        final long timeStart = System.currentTimeMillis();
 
         try {
             if (this.update)
@@ -97,7 +97,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         try {
-            Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
+            final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
             playersToRemove = new ArrayList<>();
             entitiesToUpdate = new ArrayList<>();
@@ -106,8 +106,9 @@ public class AbstractRoomProcess implements CometTask {
              * Why do we shuffle this before processing? To give each player a fair
              * chance at winning a tile in the pathfinder
              */
-            ArrayList<RoomEntity> shuffledEntities = new ArrayList<>(entities.values());
+            final ArrayList<RoomEntity> shuffledEntities = new ArrayList<>(entities.values());
             Collections.shuffle(shuffledEntities);
+
             for (final RoomEntity entity : shuffledEntities) {
                 if (entity.isFastWalkEnabled() || this.update)
                     this.startProcessing(entity);
@@ -297,11 +298,11 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             // Create the new position
-            Position newPosition = entity.getPositionToSet().copy();
-            Position oldPosition = entity.getPosition().copy();
+            final Position newPosition = entity.getPositionToSet().copy();
+            final Position oldPosition = entity.getPosition().copy();
 
-            List<RoomItemFloor> itemsOnSq = this.getRoom().getItems().getItemsOnSquare(entity.getPositionToSet().getX(), entity.getPositionToSet().getY());
-            List<RoomItemFloor> itemsOnOldSq = this.getRoom().getItems().getItemsOnSquare(entity.getPosition().getX(), entity.getPosition().getY());
+            final List<RoomItemFloor> itemsOnSq = this.getRoom().getItems().getItemsOnSquare(entity.getPositionToSet().getX(), entity.getPositionToSet().getY());
+            final List<RoomItemFloor> itemsOnOldSq = this.getRoom().getItems().getItemsOnSquare(entity.getPosition().getX(), entity.getPosition().getY());
 
             final RoomTile oldTile = this.getRoom().getMapping().getTile(entity.getPosition().getX(), entity.getPosition().getY());
             final RoomTile newTile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
@@ -344,7 +345,6 @@ public class AbstractRoomProcess implements CometTask {
 
 
             for (final RoomItemFloor item : itemsOnSq) {
-
                 if (playerEntity != null) {
                     if (playerEntity.getPlayer() != null && playerEntity.getPlayer().getData().getQuestId() != 0 && playerEntity.getPlayer().getQuests() != null)
                         ((PlayerEntity) entity).getPlayer().getQuests().progressQuest(QuestType.EXPLORE_FIND_ITEM, item.getDefinition().getSpriteId());

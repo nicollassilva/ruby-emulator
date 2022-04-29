@@ -66,7 +66,7 @@ public enum AchievementType {
     }
 
     public static AchievementType getTypeByName(String name) {
-        for (AchievementType type : AchievementType.values()) {
+        for (final AchievementType type : AchievementType.values()) {
             if (type.groupName.equals(name)) {
                 return type;
             }

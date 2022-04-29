@@ -119,20 +119,11 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
             WiredTriggerWalksOffFurni.executeTriggers(entity, this);
 
-            for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
-                if (nextItem instanceof GroupGateFloorItem) break;
-
-                if (entity instanceof PlayerEntity) {
-                    WiredTriggerWalksOnFurni.executeTriggers(entity, nextItem);
-                }
-
-                nextItem.onEntityStepOn(entity);
-            }
-
             final double toHeight = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY()).getWalkHeight();
-
             final RoomTile oldTile = this.getRoom().getMapping().getTile(entity.getPosition().getX(), entity.getPosition().getY());
             final RoomTile newTile = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY());
+
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
 
             if (oldTile != null) {
                 oldTile.getEntities().remove(entity);
@@ -142,7 +133,15 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 newTile.getEntities().add(entity);
             }
 
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
+            for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
+                if (nextItem instanceof GroupGateFloorItem) break;
+
+                if (entity instanceof PlayerEntity) {
+                    WiredTriggerWalksOnFurni.executeTriggers(entity, nextItem);
+                }
+
+                nextItem.onEntityStepOn(entity);
+            }
 
             entity.unIdle();
             entity.resetAfkTimer();

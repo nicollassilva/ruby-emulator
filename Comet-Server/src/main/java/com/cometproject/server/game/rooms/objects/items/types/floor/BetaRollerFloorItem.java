@@ -5,64 +5,86 @@ import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.events.types.RollerFloorItemEvent;
+import com.cometproject.server.game.rooms.objects.items.types.AdvancedFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectBundleMessageComposer;
+import com.cometproject.server.utilities.collections.ConcurrentHashSet;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class BetaRollerFloorItem extends RoomItemFloor {
+public class BetaRollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     private final RollerFloorItemEvent event;
+    private boolean hasRollScheduled = false;
+    private long lastTick = 0;
+    private boolean cycleCancelled = false;
+    private Set<Integer> skippedEntities = Sets.newConcurrentHashSet();
+    private Set<Integer> skippedItems = Sets.newConcurrentHashSet();
+    private Set<RoomEntity> movedEntities = new ConcurrentHashSet<>();
 
     public BetaRollerFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
 
-        this.event = new RollerFloorItemEvent(0);
+        this.event = new RollerFloorItemEvent(this.getTickCount());
+        this.queueEvent(event);
     }
 
     @Override
     public void onLoad() {
-        this.setTicks(this.getTickCount());
+        event.setTotalTicks(this.getTickCount());
+        this.queueEvent(event);
+    }
+
+    @Override
+    public void onPlaced() {
+        event.setTotalTicks(this.getTickCount());
+        this.queueEvent(event);
     }
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        if(entity.isWalking()) return;
+        skippedEntities.add(entity.getId());
 
-        if (this.ticksTimer < 1) {
-            this.setTicks(this.getTickCount());
-        }
-    }
-
-    @Override
-    public void onItemAddedToStack(RoomItemFloor floorItem) {
-        if (this.ticksTimer < 1) {
-            this.setTicks(this.getTickCount());
-        }
     }
 
     @Override
     public void onEntityStepOff(RoomEntity entity) {
-        if (this.ticksTimer < 1) {
-            this.setTicks(this.getTickCount());
-        }
     }
 
     @Override
-    public void onTickComplete() {
+    public void onItemAddedToStack(RoomItemFloor floorItem) {
+        skippedItems.add(floorItem.getVirtualId());
+
+    }
+
+    @Override
+    public void onEventComplete(RollerFloorItemEvent event) {
+        if (this.cycleCancelled) {
+            this.cycleCancelled = false;
+        }
+
+//        if (!cycleCancelled) {
         this.handleItems();
+//        }
+
         this.handleEntities();
+
+        this.movedEntities.clear();
+        this.skippedEntities.clear();
+        this.skippedItems.clear();
+
+        event.setTotalTicks(this.getTickCount());
+        this.queueEvent(event);
     }
 
     private void handleEntities() {
-        RoomTile tile = this.getTile();
-
-//        if(tile.getTopItem() != this.getId())
-//            return;
-
         Position sqInfront = this.getPosition().squareInFront(this.getRotation());
 
         if (!this.getRoom().getMapping().isValidPosition(sqInfront)) {
@@ -78,11 +100,15 @@ public class BetaRollerFloorItem extends RoomItemFloor {
                 continue;
             }
 
+            if (this.skippedEntities.contains(entity.getId())) {
+                continue;
+            }
+
             if (entity.getPositionToSet() != null) {
                 continue;
             }
 
-            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
+            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false, true, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
                 retry = true;
                 break;
             }
@@ -98,32 +124,28 @@ public class BetaRollerFloorItem extends RoomItemFloor {
 
             WiredTriggerWalksOffFurni.executeTriggers(entity, this);
 
-            for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
-                WiredTriggerWalksOnFurni.executeTriggers(entity, nextItem);
-
-                nextItem.onEntityStepOn(entity);
-            }
-
             final double toHeight = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY()).getWalkHeight();
 
-            final RoomTile oldTile = this.getRoom().getMapping().getTile(entity.getPosition().getX(), entity.getPosition().getY());
-            final RoomTile newTile = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY());
-
-            if (oldTile != null) {
-                oldTile.getEntities().remove(entity);
-            }
-
-            if (newTile != null) {
-                newTile.getEntities().add(entity);
-            }
-
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition().copy(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
 
             entity.setPosition(new Position(sqInfront.getX(), sqInfront.getY(), toHeight));
+
+            Position notifyStep = new Position(sqInfront.getX(), sqInfront.getY(), toHeight);
+            RoomTile notifyTile = this.getRoom().getMapping().getTile(notifyStep);
+
+            if(!notifyTile.getItems().isEmpty())
+                WiredTriggerWalksOnFurni.executeTriggers(entity, notifyTile.getTopItemInstance());
+
+            entity.unIdle();
+            entity.resetAfkTimer();
+            entity.markNeedsUpdate(true);
+
+            this.onEntityStepOff(entity);
+            movedEntities.add(entity);
         }
 
         if (retry) {
-            this.setTicks(this.getTickCount());
+            this.cycleCancelled = true;
         }
     }
 
@@ -146,12 +168,20 @@ public class BetaRollerFloorItem extends RoomItemFloor {
             return;
         }
 
-        Position sqInfront = this.getPosition().squareInFront(this.getRotation());
+        final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
+        List<RoomItemFloor> itemsSq = this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY());
 
         boolean noItemsOnNext = false;
 
+        Position position = null;
+        final Map<Integer, Double> slidingItems = Maps.newHashMap();
+
         for (RoomItemFloor floor : floorItems) {
             if (floor.getPosition().getX() != this.getPosition().getX() && floor.getPosition().getY() != this.getPosition().getY()) {
+                continue;
+            }
+
+            if (this.skippedItems.contains(floor.getVirtualId())) {
                 continue;
             }
 
@@ -159,69 +189,75 @@ public class BetaRollerFloorItem extends RoomItemFloor {
                 continue;
             }
 
-            if (!floor.getDefinition().canStack()) {
-                if(floor.getTile().getTopItem() != floor.getId())
+            if (!floor.getDefinition().canStack() && !(floor instanceof RollableFloorItem)) {
+                if (floor.getTile().getTopItem() != floor.getId())
                     continue;
             }
 
-            double height = this.getRoom().getMapping().getTile(sqInfront).getStackHeight();
+            if (position == null) {
+                position = floor.getPosition().copy();
+            }
 
-            List<RoomItemFloor> itemsSq = this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY());
+            double height = floor.getPosition().getZ();
 
             boolean hasRoller = false;
 
             for (RoomItemFloor iq : itemsSq) {
                 if (iq instanceof RollerFloorItem) {
                     hasRoller = true;
+
+                    if (iq.getPosition().getZ() != this.getPosition().getZ()) {
+                        height -= this.getPosition().getZ();
+                        height += iq.getPosition().getZ();
+                    }
+                }
+            }
+
+            if (!noItemsOnNext) { // we have items on next tile
+                final RoomTile tile = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY());
+
+                if(tile != null) {
+                    height = tile.getStackHeight();
                 }
             }
 
             if (!hasRoller || noItemsOnNext) {
-                height -= 0.5;
+                if(noItemsOnNext) height -= 0.5;
                 noItemsOnNext = true;
             }
 
-//            double heightDiff = 0;
-//
-//            if (itemsSq.size() > 1) {
-//                RoomItemFloor item1 = itemsSq.get(0);
-//                RoomItemFloor item2 = itemsSq.get(1);
-//
-//                heightDiff = item1.getPosition().getZ() - item2.getPosition().getZ();
-//            }
-//
-//            if (heightDiff > -2) {
-//                if (!this.getRoom().getMapping().isValidStep(new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true) || !this.getRoom().getEntities().positionHasEntity(sqInfront.getX(), sqInfront.getY())) {
-//                    this.setTicks(3);
-//                    break;
-//                }
-//            }
-
-            if (!this.getRoom().getMapping().isValidStep(new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
-                this.setTicks(this.getTickCount());
+            if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, true, true) || this.getRoom().getEntities().positionHasEntity(sqInfront, this.movedEntities)) {
                 return;
             }
 
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), new Position(sqInfront.getX(), sqInfront.getY(), height), this.getVirtualId(), 0, floor.getVirtualId()));
+            slidingItems.put(floor.getVirtualId(), height);
 
             floor.getPosition().setX(sqInfront.getX());
             floor.getPosition().setY(sqInfront.getY());
             floor.getPosition().setZ(height);
 
-            floor.save();
+            for (final RoomEntity roomEntity : this.movedEntities) {
+                floor.onEntityStepOn(roomEntity);
+            }
+
+            this.getRoom().getItemProcess().saveItem(floor);
         }
+
+        if (slidingItems.size() != 0)
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(position, sqInfront.copy(), this.getVirtualId(), 0, slidingItems));
 
         this.getRoom().getMapping().updateTile(this.getPosition().getX(), this.getPosition().getY());
         this.getRoom().getMapping().updateTile(sqInfront.getX(), sqInfront.getY());
 
-        for (RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
-            for (RoomItemFloor floor : floorItems) {
+        for (final RoomItemFloor nextItem : this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY())) {
+            for (final RoomItemFloor floor : floorItems) {
                 nextItem.onItemAddedToStack(floor);
             }
         }
     }
 
     private int getTickCount() {
-        return RoomItemFactory.getProcessTime((this.getRoom().getData().getRollerSpeed() ? this.getRoom().getData().getRollerSpeedLevel() : 4.0));
+//        return RoomItemFactory.getProcessTime(this.getRoom().hasAttribute("customRollerSpeed") ? (int) this.getRoom().getAttribute("customRollerSpeed") : 3);
+        return RoomItemFactory.getProcessTime((this.getRoom().getData().getRollerSpeed() ? this.getRoom().getData().getRollerSpeedLevel() : 4.0) / 2);
     }
 }

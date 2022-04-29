@@ -172,7 +172,7 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
     public void onTick() {
         if (this.hasTicks() && this.ticker >= RoomItemFactory.getProcessTime(0.5)) {
             if (this.needsChange) {
-                this.getItemData().setData("1");
+                this.getItemData().setData("0");
                 this.sendUpdate();
                 this.needsChange = false;
             } else {
@@ -210,10 +210,11 @@ public class BattleBallTileFloorItem extends RoomItemFloor {
 
     public void updateTileData() {
         if (this.points != 0) {
-            this.getItemData().setData(this.points + this.gameTeam.getTeamId() * 3 - 1 + "");
+            this.getItemData().setData(this.points + this.gameTeam.getTeamId() * 3 - 3 + "");
         } else {
-            this.getItemData().setData("1");
+            this.getItemData().setData("0");
         }
+
         this.sendUpdate();
     }
 

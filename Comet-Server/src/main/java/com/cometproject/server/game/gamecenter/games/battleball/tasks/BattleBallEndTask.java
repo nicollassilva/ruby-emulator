@@ -50,7 +50,6 @@ public class BattleBallEndTask {
 
         room.map.getGame().getInstance().onGameEnds();
         room.map.getGame().stop();
-
     }
 
 }

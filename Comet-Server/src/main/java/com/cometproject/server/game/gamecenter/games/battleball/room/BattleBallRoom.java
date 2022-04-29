@@ -51,7 +51,6 @@ public class BattleBallRoom {
         roomId = id;
 
         loadMap("Coral Beach");
-
     }
 
     public Room getRoom() {

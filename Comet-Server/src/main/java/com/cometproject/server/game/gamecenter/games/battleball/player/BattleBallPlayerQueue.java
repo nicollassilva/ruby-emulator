@@ -32,13 +32,10 @@ public class BattleBallPlayerQueue {
         RoomQueue pickedRoom = null;
 
         if(roomQueue.isEmpty()) {
-
             pickedRoom = new RoomQueue(new BattleBallRoom(roomCounter++));
 
             roomQueue.put(pickedRoom.room.roomId, pickedRoom);
-
         } else {
-
             for(final RoomQueue room : roomQueue.values()) {
                 if(room.players.size() < BattleBall.GAME_MAX_PLAYERS) {
                     pickedRoom = room;
@@ -47,16 +44,11 @@ public class BattleBallPlayerQueue {
             }
 
             if(pickedRoom == null) {
-
                 pickedRoom = new RoomQueue(new BattleBallRoom(roomCounter++));
 
                 roomQueue.put(pickedRoom.room.roomId, pickedRoom);
-
             }
-
         }
-
-
 
         if(pickedRoom.players.isEmpty()) {
             pickedRoom.room.owner = playerData.getUsername();
@@ -64,37 +56,32 @@ public class BattleBallPlayerQueue {
 
         log.info(playerData.getUsername() + " joined a Battle Ball game!");
 
-        for(Session clientt : pickedRoom.players.values()) {
+        for(final Session playerClient : pickedRoom.players.values()) {
             try {
+                final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);
+                final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
 
-                Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);
-                OutgoingMessage message = null;
-                message = classMessage.getDeclaredConstructor().newInstance();
                 message.client = client.getPlayer().getData().getWebsocketSession();
-                message.data = new JSONObject();
 
-                message.data.put("username", clientt.getPlayer().getEntity().getUsername());
-                message.data.put("figure", clientt.getPlayer().getEntity().getFigure());
+                message.data = new JSONObject();
+                message.data.put("username", playerClient.getPlayer().getEntity().getUsername());
+                message.data.put("figure", playerClient.getPlayer().getEntity().getFigure());
 
                 message.compose();
-
             } catch(final Exception ex) {
                 ex.printStackTrace();
                 System.out.println("BattleBallEngine " + ex);
             }
-
         }
 
         pickedRoom.players.put(playerData.getId(), client);
 
-        for(Session clientt : pickedRoom.players.values()) {
-
+        for(final Session playerClient : pickedRoom.players.values()) {
             try {
-
                 Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);
                 OutgoingMessage message = null;
                 message = classMessage.getDeclaredConstructor().newInstance();
-                message.client = clientt.getPlayer().getData().getWebsocketSession();
+                message.client = playerClient.getPlayer().getData().getWebsocketSession();
                 message.data = new JSONObject();
 
                 message.data.put("username", client.getPlayer().getEntity().getUsername());
@@ -106,33 +93,7 @@ public class BattleBallPlayerQueue {
                 ex.printStackTrace();
                 System.out.println("BattleBallEngine " + ex);
             }
-
         }
-
-
-            /*try {
-
-                for(Session clientt : pickedRoom.players.values()) {
-
-                    Class<? extends OutgoingMessage> classMessage = outgoingEventManager.getMessages().get(Outgoing.BattleBallJoinQueueMessage);
-                    OutgoingMessage message = null;
-                    message = classMessage.getDeclaredConstructor().newInstance();
-                    message.client = client.getPlayer().getData().getWebsocketSession();
-                    message.data = new JSONObject();
-
-                    message.data.put("username", clientt.getPlayer().getEntity().getUsername());
-                    message.data.put("figure", clientt.getPlayer().getEntity().getFigure());
-
-                    message.compose();
-                }
-
-            } catch(final Exception ex) {
-                ex.printStackTrace();
-                System.out.println("BattleBallEngine " + ex);
-            }
-*/
-
-
 
         if(pickedRoom.room.timeToStart < 20 && pickedRoom.room.status == RoomStatus.TIMER_TO_LOBBY) {
             // TODO: Send packet to player with counter;

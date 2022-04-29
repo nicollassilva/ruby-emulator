@@ -93,7 +93,7 @@ public class BattleBallGame extends RoomGame {
     public void onGameEnds() {
         GameTeam winningTeam = this.winningTeam();
 
-        for (RoomItemFloor item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
+        for (final RoomItemFloor item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
             if (item instanceof BattleBallTileFloorItem) {
                 if (((BattleBallTileFloorItem) item).getTeam() == winningTeam && winningTeam != GameTeam.NONE) {
                     ((BattleBallTileFloorItem) item).flash();
@@ -103,40 +103,41 @@ public class BattleBallGame extends RoomGame {
             }
         }
 
-        List<Long> exitid = Lists.newArrayList();
-        for (RoomItemFloor item : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
+        final List<Long> exitid = Lists.newArrayList();
+
+        for (final RoomItemFloor item : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
             if (item instanceof FreezeExitFloorItem) {
                 exitid.add(item.getId());
             }
         }
 
-        for (RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
+        for (final RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
             if (entity.getEntityType().equals(RoomEntityType.PLAYER)) {
-                PlayerEntity playerEntity = (PlayerEntity) entity;
+                final PlayerEntity playerEntity = (PlayerEntity) entity;
 
                 if (this.getGameComponent().getTeam(playerEntity.getPlayerId()).equals(winningTeam) && winningTeam != GameTeam.NONE) {
                     //playerEntity.getPlayer().getAchievements().progressAchievement(AchievementType.BB_WINNER, 1);
                     this.room.getEntities().broadcastMessage(new ActionMessageComposer(playerEntity.getId(), 1)); // wave o/
                 } else if (playerEntity.getGameTeam() != GameTeam.NONE && playerEntity.getGameTeam() != null) {
-
-
                     this.room.getGame().removeFromTeam(playerEntity);
 
-                    Long itemId = WiredUtil.getRandomElement(exitid);
+                    final Long itemId = WiredUtil.getRandomElement(exitid);
+
                     if (itemId == null) {
                         continue;
                     }
-                    RoomItemFloor item = this.room.getItems().getFloorItem(itemId);
+
+                    final RoomItemFloor item = this.room.getItems().getFloorItem(itemId);
+
                     if (item == null || item.isAtDoor() || item.getPosition() == null || item.getTile() == null) {
                         continue;
                     }
 
-                    Position position = new Position(item.getPosition().getX(), item.getPosition().getY(), item.getTile().getWalkHeight());
+                    final Position position = new Position(item.getPosition().getX(), item.getPosition().getY(), item.getTile().getWalkHeight());
 
                     entity.applyEffect(new PlayerEffect(4, 5));
                     entity.cancelWalk();
                     entity.warp(position);
-
                 }
 
                 WiredTriggerGameEnds.executeTriggers(entity.getRoom());

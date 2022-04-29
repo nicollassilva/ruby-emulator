@@ -96,12 +96,13 @@ public class BattleBallThread extends Thread {
 
                     message.compose();
 
+                    /* dumb code
                     room.map.getGame().joinTeam(GameTeam.RED, client.getPlayer().getEntity());
                     client.getPlayer().getEntity().setGameTeam(GameTeam.RED);
                     client.getPlayer().getEntity().applyTeamEffect(new PlayerEffect(GameTeam.RED.getEffect(GameType.BATTLEBALL), 0));
 
                     client.getPlayer().getEntity().warpImmediately(new Position(2,10,2));
-
+                     */
                 }
 
                 BattleBallThread.addTask(this, 5000, BattleBall.GAME_TURN_MILLIS);
@@ -124,24 +125,24 @@ public class BattleBallThread extends Thread {
             if (room.status == RoomStatus.TIMER_TO_LOBBY) {
                 System.out.println("TEMPS AVANT LANCEMENT: " + room.timeToStart);
 
-//                if(pickedRoom.players.size() == 1) {
-//                    return;
-//                }
-//
-//                if(pickedRoom.players.isEmpty()) {
-//                    room.status = RoomStatus.CLOSE;
-//
-//                    return;
-//                }
+                if(pickedRoom.players.size() == 1) {
+                    return;
+                }
+
+                if(pickedRoom.players.isEmpty()) {
+                    room.status = RoomStatus.CLOSE;
+
+                    return;
+                }
 
                 if (room.timeToStart-- == 0) {
                     future.cancel(false);
 
-//                    if(pickedRoom.players.size() == 1) {
-//                        room.status = RoomStatus.CLOSE;
-//
-//                        return;
-//                    }
+                    if(pickedRoom.players.size() == 1) {
+                        room.status = RoomStatus.CLOSE;
+
+                        return;
+                    }
 
                     //TODO: REACTIVATE WHEN FINISHED
 
@@ -156,7 +157,4 @@ public class BattleBallThread extends Thread {
             System.out.println("BattleBallEngine " + ex);
         }
     }
-
-
-
 }
