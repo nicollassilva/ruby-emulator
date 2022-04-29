@@ -158,6 +158,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.walkingGoal = new Position(x, y, 0.0);
     }
 
+    public void setWalkingGoal(int x, int y, double z) {
+        this.walkingGoal = new Position(x, y, z);
+    }
+
     public void moveTo(Position position) {
         this.moveTo(position.getX(), position.getY());
     }
@@ -196,10 +200,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             return;
         }
 
-        RoomTile tile = this.getRoom().getMapping().getTile(x, y);
+        final RoomTile tile = this.getRoom().getMapping().getTile(x, y);
 
-        if (tile == null)
-            return;
+        if (tile == null) return;
 
 //        if (playerEntity != null && !playerEntity.hasAttribute("interacttpencours")) {
 //            if (tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) {

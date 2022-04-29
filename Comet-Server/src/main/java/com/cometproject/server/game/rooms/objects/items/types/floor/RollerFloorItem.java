@@ -121,20 +121,23 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
             final double toHeight = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY()).getWalkHeight();
             final RoomTile oldTile = this.getRoom().getMapping().getTile(entity.getPosition().getX(), entity.getPosition().getY());
             final RoomTile newTile = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY());
+            final Position realPosition = entity.getPosition();
 
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(
+                    entity.getPosition(),
+                    new Position(sqInfront.getX(), sqInfront.getY(), toHeight),
+                    this.getVirtualId(), entity.getId(), 0
+            ));
+
+            if(entity.isWalking() || (entity.getWalkingGoal().getX() != realPosition.getX() || entity.getWalkingGoal().getY() != realPosition.getY())) {
+                continue;
+            }
 
             if (oldTile != null) {
                 oldTile.getEntities().remove(entity);
             }
 
             this.onEntityStepOff(entity);
-
-            if(entity.isWalking()) {
-                this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(sqInfront, new Position(this.getPosition().getX(), this.getPosition().getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
-                entity.setWalkingGoal(this.getPosition().getX(), this.getPosition().getY());
-                return;
-            }
 
             if (newTile != null) {
                 newTile.getEntities().add(entity);
