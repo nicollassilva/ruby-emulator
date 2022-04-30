@@ -58,7 +58,7 @@ public class Events {
     public static final int GetRoomSettingsMessageEvent = 3129 ; // 3700
     public static final int RequestFurniInventoryMessageEvent = 3150 ; // 3750
     public static final int ModerationKickMessageEvent = 2582 ; // 794
-    public static final int OpenFlatConnectionMessageEvent = 2312 ; // 2450
+    public static final int OpenFlatConnectionMessageEvent = 6805 ; // 2450
     public static final int SpectateRoomMessageEvent = 3093 ; // 1187
     public static final int DanceMessageEvent = 2080 ; // 1126
     public static final int RemoveBuddyMessageEvent = 1689 ; // 1106
@@ -68,7 +68,7 @@ public class Events {
     public static final int SetObjectDataMessageEvent = 3608 ; // 2194
     public static final int MessengerInitMessageEvent = 2781 ; // 1186
     public static final int PickUpBotMessageEvent = 3323 ; // 2856
-    public static final int ActionMessageEvent = 2456 ; // 3017
+    public static final int ActionMessageEvent = 6810 ; // 3017
     public static final int LookToMessageEvent = 3301 ; // 3557
     public static final int ToggleMoodlightMessageEvent = 2296 ; // 3146
     public static final int FollowFriendMessageEvent = 3997 ; // 2
@@ -181,12 +181,12 @@ public class Events {
     public static final int PickupObjectMessageEvent = 3456 ; // 3064
     public static final int CancelQuestMessageEvent = 2397 ; // 3297
     public static final int NavigatorSearchMessageEvent = 249 ; // 946
-    public static final int MoveAvatarMessageEvent = 3320 ; // 3802
-    public static final int GetClientVersionMessageEvent = 4000 ; // 4000 // IN SWF DANN 6666 // IN PRODUCTION 201611 = 4000
+    public static final int MoveAvatarMessageEvent = 6801 ; // 3802
+    public static final int GetClientVersionMessageEvent = 6798 ; // 4000 IN PRODUCTION 201611 = 4000
     public static final int InitializeNavigatorMessageEvent = 2110 ; // 3231
     public static final int GetRoomFilterListMessageEvent = 1911 ; // 1973
     public static final int WhisperMessageEvent = 1543 ; // 88
-    public static final int InitCryptoMessageEvent = 2688 ; // 3347 // INN SWF DANN 6688 // IN PRODUCTION 201611 = 2688
+    public static final int InitCryptoMessageEvent = 6799 ; // 3347 // IN PRODUCTION 201611 = 2688
     public static final int GetPetTrainingPanelMessageEvent = 2161 ; // 2691
     public static final int MoveObjectMessageEvent = 248 ; // 2955
     public static final int StartTypingMessageEvent = 1597 ; // 1266

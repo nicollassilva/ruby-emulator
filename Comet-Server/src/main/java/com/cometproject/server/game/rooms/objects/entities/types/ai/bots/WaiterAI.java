@@ -10,22 +10,30 @@ import com.cometproject.server.network.messages.outgoing.room.permissions.FloodF
 
 public class WaiterAI extends AbstractBotAI {
     public static final Drink[] drinks = {
-            new Drink("tea", 1),
-            new Drink("juice", 2),
-            new Drink("milk", 5),
-            new Drink("coffee", 8),
-            new Drink("decaff", 9),
-            new Drink("espresso", 13),
+            new Drink("cha", 1),
+            new Drink("chá", 1),
+            new Drink("suco", 2),
+            new Drink("leite", 5),
+            new Drink("cafe", 8),
+            new Drink("café", 8),
+            new Drink("descafeinado", 9),
+            new Drink("expresso", 13),
             new Drink("mocha", 11),
-            new Drink("iced_coffee", 15),
+            new Drink("cafe gelado", 15),
+            new Drink("café gelado", 15),
+            new Drink("capuccino", 16),
             new Drink("cappuccino", 16),
             new Drink("java", 17),
-            new Drink("coke", 19),
+            new Drink("coca", 19),
             new Drink("cola", 55),
-            new Drink("bubble", 24),
-            new Drink("potion", 25),
-            new Drink("frappe", 86),
-            new Drink("pink_champagne", 35)
+            new Drink("bolha", 24),
+            new Drink("poção", 25),
+            new Drink("pocao", 25),
+            new Drink("pocão", 25),
+            new Drink("poçao", 25),
+            new Drink("frape", 86),
+            new Drink("frapê", 86),
+            new Drink("champagne rosa", 35)
     };
 
     public WaiterAI(RoomEntity entity) {
@@ -34,7 +42,6 @@ public class WaiterAI extends AbstractBotAI {
 
     @Override
     public boolean onTalk(PlayerEntity entity, String message) {
-
         String triggerMessage = message.toLowerCase();
 
         for (Drink drink : drinks) {

@@ -761,19 +761,17 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         final String colour = getPlayer().getData().getNameColour();
         final String tag = getPlayer().getData().getTag();
 
-        if (!tag.isEmpty()) {
+        if (tag != null && !tag.isEmpty()) {
             username.append(String.format("<font color='#DC7C1B'>[%s] ›</font><font color='#%s'> %s</font>", tag, colour, getUsername()));
         } else {
             username.append(String.format("<font color='#%s'> %s</font>", colour, getUsername()));
         }
 
-        UserNameChangeMessageComposer userNameChangeMessageComposer = new UserNameChangeMessageComposer(getRoom().getId(), getId(), username.toString());
-
         for (final PlayerEntity playerEntity : getRoom().getEntities().getPlayerEntities()) {
             if (playerEntity == null || playerEntity.getPlayer() == null || playerEntity.getPlayer().getSettings() == null) continue;
 
             if (!playerEntity.getPlayer().getSettings().isUseOldChat()) {
-                playerEntity.getPlayer().getSession().send(userNameChangeMessageComposer);
+                playerEntity.getPlayer().getSession().send(new UserNameChangeMessageComposer(getRoom().getId(), getId(), username.toString()));
             }
         }
     }
