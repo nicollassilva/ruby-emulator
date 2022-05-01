@@ -15,6 +15,8 @@ public enum AchievementType {
     BB_PLAYER("ACH_BattleBallPlayer"),
     BB_WINNER("ACH_BattleBallWinner"),
     FREEZING_PLAYERS("ACH_EsA"),
+    GAME_PLAYER_EXPERIENCE("ACH_GamePlayerExperience"),
+    GAME_AUTHOR_EXPERIENCE("ACH_GameAuthorExperience"),
     ONLINE_TIME("ACH_AllTimeHotelPresence"),
     LOGIN("ACH_Login"),
     FRIENDS_LIST("ACH_FriendListSize"),

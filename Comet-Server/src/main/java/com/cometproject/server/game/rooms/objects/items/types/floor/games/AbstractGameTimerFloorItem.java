@@ -4,6 +4,7 @@ import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTimerFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameState;
 import com.cometproject.server.game.rooms.types.components.games.GameType;
@@ -110,10 +111,9 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
     }
 
     @Override
-    public void onPickup() {
-        if (this.getRoom().getGame().getInstance() != null) {
-            this.getRoom().getGame().getInstance().onGameEnds();
-            this.getRoom().getGame().stop();
+    public void onTickComplete() {
+        if(this instanceof FreezeTimerFloorItem) {
+            System.out.println("Acabou");
         }
     }
 

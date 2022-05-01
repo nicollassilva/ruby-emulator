@@ -1,12 +1,17 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
+import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.AbstractGameTimerFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredUtil;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameType;
 
+import java.util.List;
+
 public class FreezeTimerFloorItem extends AbstractGameTimerFloorItem {
-    private final int time = 0;
+    private int time = 0;
     public static boolean running = false;
 
     public FreezeTimerFloorItem(RoomItemData itemData, Room room) {
@@ -77,7 +82,7 @@ public class FreezeTimerFloorItem extends AbstractGameTimerFloorItem {
             this.setTicks(RoomItemFactory.getProcessTime(1.0));
         }
         return true;
-    }
+    }*/
 
     @Override
     public void onTickComplete() {
@@ -92,13 +97,15 @@ public class FreezeTimerFloorItem extends AbstractGameTimerFloorItem {
             this.setTicks(RoomItemFactory.getProcessTime(1.0));
         } else {
             this.time = 0;
-            List<FreezeTileFloorItem> freezeTileFloorItems = this.getRoom().getItems().getByClass(FreezeTileFloorItem.class);
-            List<FreezeExitFloorItem> freezeExitFloorItems = this.getRoom().getItems().getByClass(FreezeExitFloorItem.class);
 
-            for (FreezeTileFloorItem freezeItem : freezeTileFloorItems) {
-                FreezeExitFloorItem freezeExitFloorItem = WiredUtil.getRandomElement(freezeExitFloorItems);
+            final List<FreezeTileFloorItem> freezeTileFloorItems = this.getRoom().getItems().getByClass(FreezeTileFloorItem.class);
+            final List<FreezeExitFloorItem> freezeExitFloorItems = this.getRoom().getItems().getByClass(FreezeExitFloorItem.class);
+
+            for (final FreezeTileFloorItem freezeItem : freezeTileFloorItems) {
+                final FreezeExitFloorItem freezeExitFloorItem = WiredUtil.getRandomElement(freezeExitFloorItems);
+
                 if (freezeItem.getEntitiesOnItem().size() > 0 && freezeExitFloorItems.size() > 0) {
-                    for (RoomEntity roomEntity : freezeItem.getEntitiesOnItem()) {
+                    for (final RoomEntity roomEntity : freezeItem.getEntitiesOnItem()) {
                         roomEntity.teleportToItem(freezeExitFloorItem);
                     }
                 }
@@ -106,7 +113,6 @@ public class FreezeTimerFloorItem extends AbstractGameTimerFloorItem {
         }
     }
 
-     */
     @Override
     public GameType getGameType() {
         return GameType.FREEZE;
