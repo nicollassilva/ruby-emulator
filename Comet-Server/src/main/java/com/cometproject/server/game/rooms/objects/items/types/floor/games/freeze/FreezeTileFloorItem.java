@@ -28,7 +28,7 @@ public class FreezeTileFloorItem extends RoomItemFloor {
         }
 
         if (entity.getTile() != this.getTile()) {
-            double distance = entity.getPosition().distanceTo(this.getPosition());
+            final double distance = entity.getPosition().distanceTo(this.getPosition());
 
             if (this.getTile().getMovementNode() != RoomEntityMovementNode.OPEN || distance > 1) {
                 return false;

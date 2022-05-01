@@ -23,7 +23,7 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
             if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
@@ -31,15 +31,20 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
             }
         }
 
-        InteractionGameTimerAction action = InteractionGameTimerAction.getByAction(requestData);
+        final InteractionGameTimerAction action = InteractionGameTimerAction.getByAction(requestData);
+
         if (action == InteractionGameTimerAction.INCREASE_TIME) {
             if(this.getRoom().getGame().getInstance() != null) {
-                if(this.getRoom().getGame().getInstance().getState().equals(GameState.RUNNING)) return false;
+                if(this.getRoom().getGame().getInstance().getState().equals(GameState.RUNNING)) {
+                    return false;
+                }
+
                 if(this.getRoom().getGame().getInstance().getState().equals(GameState.PAUSED)) {
                     this.getRoom().getGame().getInstance().onGameEnds();
                     this.getRoom().getGame().stop();
                 }
             }
+
             int time = 0;
 
             if (!this.getItemData().getData().isEmpty() && StringUtils.isNumeric(this.getItemData().getData())) {
@@ -77,14 +82,16 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
             this.getItemData().setData(time + "");
             this.sendUpdate();
             this.saveData();
-        } else { // pause/start game
+        } else {
             if (this.getItemData().getData().equals("0") && this.lastTime != null && !this.lastTime.isEmpty()) {
                 this.getItemData().setData(this.lastTime);
             }
 
-            int gameLength = Integer.parseInt(this.getItemData().getData());
+            final int gameLength = Integer.parseInt(this.getItemData().getData());
 
-            if (gameLength == 0) return true;
+            if (gameLength == 0) {
+                return true;
+            }
 
             if (this.getRoom().getGame().getInstance() == null) {
                 this.lastTime = this.getItemData().getData();

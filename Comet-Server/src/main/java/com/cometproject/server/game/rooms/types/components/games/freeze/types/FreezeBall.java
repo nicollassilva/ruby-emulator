@@ -3,7 +3,7 @@ package com.cometproject.server.game.rooms.types.components.games.freeze.types;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
 
 public class FreezeBall {
-    public static final int START_TICKS = 2;
+    public static final int START_TICKS = 1;
 
     private final int playerId;
     private final FreezeTileFloorItem source;
@@ -19,7 +19,7 @@ public class FreezeBall {
         this.diagonal = diagonal;
 
         // default ticks = 4
-        this.ticksUntilExplode = 2;
+        this.ticksUntilExplode = 1;
     }
 
     public int getPlayerId() {
