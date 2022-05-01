@@ -47,12 +47,12 @@ public class FreezeGame extends RoomGame {
 
     @Override
     public void tick() {
-        for (RoomItemFloor item : room.getItems().getByClass(FreezeTimerFloorItem.class)) {
+        for (final RoomItemFloor item : room.getItems().getByClass(FreezeTimerFloorItem.class)) {
             item.getItemData().setData((gameLength - timer) + "");
             item.sendUpdate();
         }
 
-        for (FreezePlayer freezePlayer : this.players.values()) {
+        for (final FreezePlayer freezePlayer : this.players.values()) {
             if (freezePlayer.getFreezeTimer() > 0) {
                 freezePlayer.decrementFreezeTimer();
 
@@ -67,7 +67,7 @@ public class FreezeGame extends RoomGame {
             }
         }
 
-        for (FreezeBall freezeBall : this.activeBalls) {
+        for (final FreezeBall freezeBall : this.activeBalls) {
             if (freezeBall.getTicksUntilExplode() == FreezeBall.START_TICKS) {
                 freezeBall.getSource().tempState(freezeBall.isMega() ? 6000 : (Math.min(freezeBall.getRange(), 4)) * 1000);
             }
@@ -79,7 +79,7 @@ public class FreezeGame extends RoomGame {
 
             // kaboom
             dir:
-            for (Direction direction : freezeBall.isMega() ? EXPLODE_MEGA : (freezeBall.isDiagonal() ? EXPLODE_DIAGONAL : EXPLODE_NORMAL)) {
+            for (final Direction direction : freezeBall.isMega() ? EXPLODE_MEGA : (freezeBall.isDiagonal() ? EXPLODE_DIAGONAL : EXPLODE_NORMAL)) {
                 for (int i = 1; i <= (direction == null ? 1 : freezeBall.getRange()); i++) {
                     final RoomTile tile = direction == null ? freezeBall.getSource().getTile() : freezeBall.getSource().getRoom().getMapping().getTile(freezeBall.getSource().getPosition().getX() + (i * direction.modX), freezeBall.getSource().getPosition().getY() + (i * direction.modY));
 
@@ -100,19 +100,23 @@ public class FreezeGame extends RoomGame {
 
                         final Set<FreezeBlockFloorItem> blocks = new HashSet<>();
 
-                        for (RoomItemFloor floorItem : tile.getItems()) {
+                        for (final RoomItemFloor floorItem : tile.getItems()) {
                             if (floorItem instanceof FreezeBlockFloorItem) {
                                 blocks.add(((FreezeBlockFloorItem) floorItem));
                             }
                         }
 
-                        for (RoomEntity entity : tile.getEntities()) {
+                        for (final RoomEntity entity : tile.getEntities()) {
                             if (entity instanceof PlayerEntity) {
                                 final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
                                 if (this.players.containsKey(playerEntity.getPlayerId())) {
                                     // we lost 10 points!
-                                    this.getGameComponent().decreaseScore(playerEntity.getGameTeam(), 10);
+                                    if(this.getGameComponent().getScore(playerEntity.getGameTeam()) >= 10) {
+                                        this.getGameComponent().decreaseScore(playerEntity.getGameTeam(), 10);
+                                    } else {
+                                        this.getGameComponent().decreaseScore(playerEntity.getGameTeam(), 0);
+                                    }
 
                                     final FreezePlayer freezePlayer = this.freezePlayer(playerEntity.getPlayerId());
 
@@ -189,29 +193,29 @@ public class FreezeGame extends RoomGame {
             final List<HighscoreFloorItem> scoreboards = this.room.getItems().getByClass(HighscoreFloorItem.class);
 
             if (scoreboards.size() != 0) {
-                List<Integer> winningPlayers = this.room.getGame().getTeams().get(winningTeam);
-                List<String> winningPlayerUsernames = Lists.newArrayList();
+                final List<Integer> winningPlayers = this.room.getGame().getTeams().get(winningTeam);
+                final List<String> winningPlayerUsernames = Lists.newArrayList();
                 final int score = this.getGameComponent().getScore(winningTeam);
 
-                for (int playerId : winningPlayers) {
+                for (final int playerId : winningPlayers) {
                     winningPlayerUsernames.add(this.room.getEntities().getEntityByPlayerId(playerId).getUsername());
                 }
 
                 if (winningPlayerUsernames.size() != 0) {
-                    for (HighscoreFloorItem scoreboard : scoreboards) {
+                    for (final HighscoreFloorItem scoreboard : scoreboards) {
                         scoreboard.onTeamWins(winningPlayerUsernames, score);
                     }
                 }
             }
 
-            for (FreezePlayer freezePlayer : this.players.values()) {
+            for (final FreezePlayer freezePlayer : this.players.values()) {
                 if (freezePlayer.getEntity().getGameTeam() == winningTeam) {
                     this.room.getEntities().broadcastMessage(new ActionMessageComposer(freezePlayer.getEntity().getId(), PlayerAvatarActions.EXPRESSION_WAVE.getValue())); // wave o/
                 }
             }
         }
 
-        for (FreezePlayer freezePlayer : this.players.values()) {
+        for (final FreezePlayer freezePlayer : this.players.values()) {
             freezePlayer.getEntity().teleportToItem(exitItem);
         }
     }
@@ -219,7 +223,7 @@ public class FreezeGame extends RoomGame {
     private GameTeam getBestTeam() {
         GameTeam best = null;
 
-        for (Map.Entry<GameTeam, List<Integer>> team : this.getGameComponent().getTeams().entrySet()) {
+        for (final Map.Entry<GameTeam, List<Integer>> team : this.getGameComponent().getTeams().entrySet()) {
             if (team.getValue().size() > 0 && this.getGameComponent().getScore(team.getKey()) > 0 &&
                     (best == null || this.getGameComponent().getScore(team.getKey()) > this.getGameComponent().getScore(best))) {
                 best = team.getKey();
@@ -228,7 +232,7 @@ public class FreezeGame extends RoomGame {
 
         // Detect draws
         if (best != null) {
-            for (Map.Entry<GameTeam, List<Integer>> team : this.getGameComponent().getTeams().entrySet()) {
+            for (final Map.Entry<GameTeam, List<Integer>> team : this.getGameComponent().getTeams().entrySet()) {
                 if (team.getValue().size() > 0 && this.getGameComponent().getScore(team.getKey()) > 0 &&
                         this.getGameComponent().getScore(team.getKey()) == this.getGameComponent().getScore(best)) {
                     return null;
@@ -242,7 +246,7 @@ public class FreezeGame extends RoomGame {
     public void launchBall(FreezeTileFloorItem freezeTile, FreezePlayer freezePlayer) {
         int range = freezePlayer != null ? 2 : (RandomUtil.getRandomBool(0.10) ? 999 : RandomUtil.getRandomInt(1, 3));
         boolean diagonal = freezePlayer == null && (RandomUtil.getRandomBool(0.5));
-        int playerId = freezePlayer == null ? -1 : freezePlayer.getEntity().getPlayerId();
+        final int playerId = freezePlayer == null ? -1 : freezePlayer.getEntity().getPlayerId();
 
         if (freezePlayer != null) {
             switch (freezePlayer.getPowerUp()) {
@@ -271,19 +275,19 @@ public class FreezeGame extends RoomGame {
         WiredTriggerGameStarts.executeTriggers(this.room);
         this.activeBalls.clear();
 
-        // Everyone starts with 40 points & 3 lives.
-        for (PlayerEntity playerEntity : this.room.getGame().getPlayers()) {
+        for (final PlayerEntity playerEntity : this.room.getGame().getPlayers()) {
             this.players.put(playerEntity.getPlayerId(), new FreezePlayer(playerEntity));
 
-            this.getGameComponent().increaseScore(playerEntity.getGameTeam(), 40);
+            // Starts with 40 points
+            // this.getGameComponent().increaseScore(playerEntity.getGameTeam(), 40);
             playerEntity.getRoom().getEntities().broadcastMessage(new UpdateFreezeLivesMessageComposer(playerEntity.getId(), 3));
         }
 
-        for (FreezeBlockFloorItem blockItem : this.room.getItems().getByClass(FreezeBlockFloorItem.class)) {
+        for (final FreezeBlockFloorItem blockItem : this.room.getItems().getByClass(FreezeBlockFloorItem.class)) {
             blockItem.reset();
         }
 
-        for (FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
+        for (final FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
             exitItem.getItemData().setData("1");
             exitItem.sendUpdate();
         }
@@ -295,22 +299,21 @@ public class FreezeGame extends RoomGame {
 
     @Override
     public void onGameEnds() {
-        for (FreezeBlockFloorItem blockItem : this.room.getItems().getByClass(FreezeBlockFloorItem.class)) {
-            blockItem.getItemData().setData("0");
-            blockItem.sendUpdate();
+        for (final FreezeBlockFloorItem blockItem : this.room.getItems().getByClass(FreezeBlockFloorItem.class)) {
+            blockItem.reset();
         }
 
-        for (FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
+        for (final FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
             exitItem.getItemData().setData("0");
             exitItem.sendUpdate();
         }
 
-        for (FreezeTimerFloorItem timer : this.room.getItems().getByClass(FreezeTimerFloorItem.class)) {
+        for (final FreezeTimerFloorItem timer : this.room.getItems().getByClass(FreezeTimerFloorItem.class)) {
             timer.getItemData().setData("0");
             timer.sendUpdate();
         }
 
-        for (PlayerEntity playerEntity : this.getGameComponent().getPlayers()) {
+        for (final PlayerEntity playerEntity : this.getGameComponent().getPlayers()) {
             playerEntity.setCanWalk(true);
             playerEntity.setIsFreeze(false);
         }
@@ -322,7 +325,7 @@ public class FreezeGame extends RoomGame {
     }
 
     private FreezeExitFloorItem getExitTile() {
-        for (FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
+        for (final FreezeExitFloorItem exitItem : this.room.getItems().getByClass(FreezeExitFloorItem.class)) {
             return exitItem;
         }
 
