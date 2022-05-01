@@ -7,7 +7,7 @@ import com.cometproject.server.game.rooms.types.components.processing.AbstractRo
 public class ProcessComponent extends AbstractRoomProcess {
 
     public ProcessComponent(Room room) {
-        super(room, 0);
+        super(room, 250);
     }
 
     @Override

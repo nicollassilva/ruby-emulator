@@ -68,7 +68,7 @@ public class ItemProcessComponent implements CometTask {
 
         final Set<IRoomItemData> items = Sets.newHashSet();
 
-        while((roomItem = this.saveQueue.poll()) != null) {
+        while ((roomItem = this.saveQueue.poll()) != null) {
             items.add(roomItem.getItemData());
         }
 
@@ -76,11 +76,6 @@ public class ItemProcessComponent implements CometTask {
     }
 
     public void stop() {
-        if (Room.useCycleForItems) {
-            this.active = false;
-            return;
-        }
-
         if (this.future != null) {
             this.active = false;
 
@@ -108,28 +103,29 @@ public class ItemProcessComponent implements CometTask {
 
         for (final RoomItemFloor item : this.getRoom().getItems().getFloorItems().values()) {
             try {
-                if (item != null && item.requiresTick() || item instanceof RollerFloorItem) {
-
-                    if(item instanceof WiredActionItem) {
-                        ((WiredActionItem) item).resetExecute();
-                    }
-
-                    if (item instanceof WiredTriggerPeriodically) {
-                        final String posStr = item.getPosition().getX() + "_" + item.getPosition().getY();
-
-                        if (positionsWithPeriodicTrigger.contains(posStr)) {
-                            continue;
-                        } else {
-                            positionsWithPeriodicTrigger.add(posStr);
-                        }
-                    }
-
-                    if (item.isStateSwitched()) {
-                        item.restoreState();
-                    }
-
-                    item.tick();
+                if ((item == null || !item.requiresTick()) && !(item instanceof RollerFloorItem)) {
+                    continue;
                 }
+
+                if (item instanceof WiredActionItem) {
+                    ((WiredActionItem) item).resetExecute();
+                }
+
+                if (item instanceof WiredTriggerPeriodically) {
+                    final String posStr = item.getPosition().getX() + "_" + item.getPosition().getY();
+
+                    if (positionsWithPeriodicTrigger.contains(posStr)) {
+                        continue;
+                    } else {
+                        positionsWithPeriodicTrigger.add(posStr);
+                    }
+                }
+
+                if (item.isStateSwitched()) {
+                    item.restoreState();
+                }
+
+                item.tick();
             } catch (Exception e) {
                 this.handleException(item, e);
             }
@@ -145,10 +141,12 @@ public class ItemProcessComponent implements CometTask {
             }
         }
 
-        final TimeSpan span = new TimeSpan(System.currentTimeMillis(), System.currentTimeMillis());
+        if(Comet.isDebugging) {
+            final TimeSpan span = new TimeSpan(System.currentTimeMillis(), System.currentTimeMillis());
 
-        if (span.toMilliseconds() > FLAG && Comet.isDebugging) {
-            log.warn("ItemProcessComponent process took: " + span.toMilliseconds() + "ms to execute.");
+            if (span.toMilliseconds() > FLAG) {
+                log.warn("ItemProcessComponent process took: " + span.toMilliseconds() + "ms to execute.");
+            }
         }
     }
 

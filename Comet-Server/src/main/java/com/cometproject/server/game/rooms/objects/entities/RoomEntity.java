@@ -43,7 +43,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private List<Square> walkingPath;
     private Square futureSquare;
     private int previousSteps = 0;
-    private final int diceCount = 0;
     private int idleTime;
     private int signTime;
     private int danceId;
@@ -67,6 +66,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private final boolean countDados = false;
     private boolean isTeleported = false;
     private boolean isIdle = false;
+    private boolean isRolling;
     private boolean isBodyRotating = false;
     private boolean isHeadRotating = false;
     public ArrayList<String> addTagUser;
@@ -119,6 +119,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.signTime = 0;
         this.handItem = 0;
         this.handItemTimer = 0;
+        this.isRolling = false;
 
         this.danceId = 0;
         this.walkTimeOut = (int) Comet.getTime();
@@ -204,6 +205,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         if (tile == null) return;
 
+        if ((tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) && tile.getRedirect() == null) {
+            return;
+        }
+
 //        if (playerEntity != null && !playerEntity.hasAttribute("interacttpencours")) {
 //            if (tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) {
 //                if (tile.getRedirect() == null) {
@@ -224,28 +229,29 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             }
         }*/
 
-        this.previousSteps = 0;
-
-        // reassign the position values if they're set to redirect
         if (tile.getRedirect() != null) {
             x = tile.getRedirect().getX();
             y = tile.getRedirect().getY();
         }
 
-        if (this.getPositionToSet() != null) {
-            final RoomTile oldTile = this.getRoom().getMapping().getTile(this.getPosition());
-            final RoomTile newTile = this.getRoom().getMapping().getTile(this.getPositionToSet());
+        this.previousSteps = 0;
 
-            if (oldTile != null) {
-                oldTile.getEntities().remove(this);
-            }
+        // reassign the position values if they're set to redirect
 
-            if (newTile != null) {
-                newTile.getEntities().add(this);
-            }
-
-            this.setPosition(this.getPositionToSet());
-        }
+//        if (this.getPositionToSet() != null) {
+//            final RoomTile oldTile = this.getRoom().getMapping().getTile(this.getPosition());
+//            final RoomTile newTile = this.getRoom().getMapping().getTile(this.getPositionToSet());
+//
+//            if (oldTile != null) {
+//                oldTile.getEntities().remove(this);
+//            }
+//
+//            if (newTile != null) {
+//                newTile.getEntities().add(this);
+//            }
+//
+//            this.setPosition(this.getPositionToSet());
+//        }
 
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
@@ -318,8 +324,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         final int currentRotation = this.bodyRotation;
         final int rotation = Position.calculateRotation(this.getPosition().getX(), this.getPosition().getY(), x, y, false);
-
-        int rotationDifference = currentRotation - rotation;
+        final int rotationDifference = currentRotation - rotation;
 
         this.unIdle();
 
@@ -658,16 +663,15 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
             this.getRoom().getEntities().broadcastMessage(new ApplyEffectMessageComposer(this.getId(), 0));
         } else if (this instanceof PlayerEntity) {
-
-            PlayerEntity playerEntity = (PlayerEntity) this;
-
+            final PlayerEntity playerEntity = (PlayerEntity) this;
             int effectId = effect.getEffectId();
-
             final Integer minimumRank = PermissionsManager.getInstance().getEffects().get(effect.getEffectId());
+
             if (minimumRank != null && playerEntity.getPlayer().getData().getRank() < minimumRank) {
                 effectId = 10;
                 effect = new PlayerEffect(10);
             }
+
             this.getRoom().getEntities().broadcastMessage(new ApplyEffectMessageComposer(this.getId(), effectId));
         } else {
             this.getRoom().getEntities().broadcastMessage(new ApplyEffectMessageComposer(this.getId(), effect.getEffectId()));
@@ -1037,7 +1041,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     public void addToTile(RoomTile tile) {
         if (this.tiles.size() != 0) {
-            for (RoomTile oldTile : this.tiles) {
+            for (final RoomTile oldTile : this.tiles) {
                 oldTile.getEntities().remove(this);
             }
 
@@ -1066,6 +1070,14 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     public String getStatus(RoomEntityStatus key) {
         return this.status.get(key);
+    }
+
+    public boolean isRolling() {
+        return this.isRolling;
+    }
+
+    public void setRolling(final boolean rolling) {
+        this.isRolling = rolling;
     }
 
 }

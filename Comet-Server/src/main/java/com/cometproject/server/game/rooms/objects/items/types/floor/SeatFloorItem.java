@@ -44,13 +44,16 @@ public class SeatFloorItem extends RoomItemFloor {
     }
 
     public void onEntityStepOn(RoomEntity entity, boolean instantUpdate) {
-        if(entity.getPosition().getX() == this.getPosition().getX() && entity.getPosition().getY() == this.getPosition().getY()) {
+        if (entity.getPosition().getX() == this.getPosition().getX() && entity.getPosition().getY() == this.getPosition().getY()) {
             entity.sit(getSitHeight(), getRotation());
         }
 
-        if (instantUpdate)
+        if (instantUpdate || entity.isRolling()) {
+            entity.setRolling(false);
             this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entity));
-        else entity.markNeedsUpdate();
+        } else {
+            entity.markNeedsUpdate();
+        }
     }
 
     @Override

@@ -14,7 +14,6 @@ import java.util.Map;
 
 
 public class AvatarUpdateMessageComposer extends MessageComposer {
-
     private final int count;
     private final AvatarState singleEntity;
     private final List<AvatarState> entities;
@@ -22,7 +21,7 @@ public class AvatarUpdateMessageComposer extends MessageComposer {
     public AvatarUpdateMessageComposer(final Collection<RoomEntity> entities) {
         this.entities = Lists.newArrayList();
 
-        for (RoomEntity entity : entities) {
+        for (final RoomEntity entity : entities) {
             if (!entity.isVisible() || !entity.sendUpdateMessage()) {
                 entity.setSendUpdateMessage(true);
                 continue;
@@ -85,10 +84,9 @@ public class AvatarUpdateMessageComposer extends MessageComposer {
             this.headRotation = entity.getHeadRotation();
             this.bodyRotation = entity.getBodyRotation();
 
-            StringBuilder statusString = new StringBuilder("/");
+            final StringBuilder statusString = new StringBuilder("/");
 
-            for (Map.Entry<RoomEntityStatus, String> status : entity.getStatuses().entrySet()) {
-
+            for (final Map.Entry<RoomEntityStatus, String> status : entity.getStatuses().entrySet()) {
                 statusString
                         .append(status.getKey().getStatusCode())
                         .append(" ")

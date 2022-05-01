@@ -79,11 +79,7 @@ public class Room implements Attributable, IRoom {
     private YoutubeJukeboxComponent youtubeJukebox;
     private boolean isDisposed = false;
     private int idleTicks = 0;
-    private final String tocando = "";
-    private final int TempoJuke = 0;
     private boolean playmusica = true;
-    private final int likes = 0;
-    private final int deslikes = 0;
     private boolean isReloading = false;
     private boolean forcedUnload = false;
     private int executedEvent = 0;

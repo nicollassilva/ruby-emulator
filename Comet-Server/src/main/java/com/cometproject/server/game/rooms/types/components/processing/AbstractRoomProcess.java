@@ -47,7 +47,7 @@ public class AbstractRoomProcess implements CometTask {
     private ScheduledFuture processFuture;
     private boolean active = false;
 
-    private boolean adaptiveProcessTimes = false;
+    private final boolean adaptiveProcessTimes;
     private List<Long> processTimes;
 
     private long lastProcess = 0;
@@ -110,8 +110,9 @@ public class AbstractRoomProcess implements CometTask {
             Collections.shuffle(shuffledEntities);
 
             for (final RoomEntity entity : shuffledEntities) {
-                if (entity.isFastWalkEnabled() || this.update)
+                if (entity.isFastWalkEnabled() || this.update) {
                     this.startProcessing(entity);
+                }
             }
 
             // only send the updates if we need to
@@ -141,11 +142,10 @@ public class AbstractRoomProcess implements CometTask {
             log.warn("Error during room entity processing", e);
         }
 
-        TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
+        final TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
 
-        if (this.getProcessTimes() != null) {
-            if (this.getProcessTimes().size() < 30)
-                this.getProcessTimes().add(span.toMilliseconds());
+        if (this.getProcessTimes() != null && this.getProcessTimes().size() < 30) {
+            this.getProcessTimes().add(span.toMilliseconds());
         }
 
         if (this.adaptiveProcessTimes) {
@@ -156,11 +156,6 @@ public class AbstractRoomProcess implements CometTask {
     }
 
     public void start() {
-        if (Room.useCycleForEntities) {
-            this.active = true;
-            return;
-        }
-
         if (this.active) {
             stop();
         }
@@ -168,7 +163,7 @@ public class AbstractRoomProcess implements CometTask {
         if (this.adaptiveProcessTimes) {
             CometThreadManager.getInstance().executeSchedule(this, 250, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 250, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 250L, TimeUnit.MILLISECONDS);
         }
 
         this.active = true;
@@ -177,11 +172,6 @@ public class AbstractRoomProcess implements CometTask {
     }
 
     public void stop() {
-        if (Room.useCycleForEntities) {
-            this.active = false;
-            return;
-        }
-
         if (this.getProcessTimes() != null) {
             this.getProcessTimes().clear();
         }
@@ -203,7 +193,7 @@ public class AbstractRoomProcess implements CometTask {
 
     public void setDelay(int time) {
         this.processFuture.cancel(false);
-        this.processFuture = CometThreadManager.getInstance().executePeriodic(this, 0, time, TimeUnit.MILLISECONDS);
+        this.processFuture = CometThreadManager.getInstance().executePeriodic(this, 0L, time, TimeUnit.MILLISECONDS);
     }
 
     private void startProcessing(RoomEntity entity) {
@@ -231,10 +221,8 @@ public class AbstractRoomProcess implements CometTask {
             }
             if (entity.getEntityType() == RoomEntityType.BOT) {
                 processEntity(entity);
-            } else if (entity.getEntityType() == RoomEntityType.PET) {
-                if (entity.getMountedEntity() == null) {
-                    processEntity(entity);
-                }
+            } else if (entity.getEntityType() == RoomEntityType.PET && entity.getMountedEntity() == null) {
+                processEntity(entity);
             }
         }
 
@@ -252,13 +240,10 @@ public class AbstractRoomProcess implements CometTask {
                 entity.updatePhase = 1;
                 entitiesToUpdate.add(entity);
             } else {
-                if (entity instanceof PlayerEntity) {
-                    if (entity.getMountedEntity() != null) {
-                        processEntity(entity.getMountedEntity());
-
-                        entity.getMountedEntity().markUpdateComplete();
-                        entitiesToUpdate.add(entity.getMountedEntity());
-                    }
+                if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
+                    processEntity(entity.getMountedEntity());
+                    entity.getMountedEntity().markUpdateComplete();
+                    entitiesToUpdate.add(entity.getMountedEntity());
                 }
 
                 if (entity.isWarped()) {
@@ -267,7 +252,6 @@ public class AbstractRoomProcess implements CometTask {
 
                 entity.markUpdateComplete();
                 entitiesToUpdate.add(entity);
-
             }
         }
     }
@@ -308,10 +292,11 @@ public class AbstractRoomProcess implements CometTask {
             final RoomTile newTile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
             if (oldTile != null) {
-                if (!oldTile.equals(newTile))
-                {
-                    oldTile.getEntities().remove(entity);
-                }
+                entity.removeFromTile(oldTile);
+            }
+
+            if (newTile != null) {
+                entity.addToTile(newTile);
             }
 
             entity.updateAndSetPosition(null);
@@ -319,7 +304,7 @@ public class AbstractRoomProcess implements CometTask {
 
             PlayerEntity playerEntity = null;
 
-            if(entity instanceof PlayerEntity) {
+            if (entity instanceof PlayerEntity) {
                 playerEntity = (PlayerEntity) entity;
             }
 
@@ -420,9 +405,9 @@ public class AbstractRoomProcess implements CometTask {
                 entity.setHandItemTimer(0);
             }
 
-            if(entity.isBodyRotating()){
+            if (entity.isBodyRotating()) {
                 int rotation = entity.getBodyRotation();
-                if(rotation >= 8)
+                if (rotation >= 8)
                     rotation = 0;
 
                 rotation++;
@@ -430,9 +415,9 @@ public class AbstractRoomProcess implements CometTask {
                 entity.markNeedsUpdate();
             }
 
-            if(entity.isHeadRotating()){
+            if (entity.isHeadRotating()) {
                 int rotation = entity.getHeadRotation();
-                if(rotation >= 8)
+                if (rotation >= 8)
                     rotation = 0;
 
                 rotation++;
@@ -447,8 +432,8 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             //if (entity.getIdleTimeWiredWalk() >= 30) {
-            if(entity instanceof PlayerEntity) {
-                    WiredTriggerAntiWalk.executeTriggers(((PlayerEntity) entity));
+            if (entity instanceof PlayerEntity) {
+                WiredTriggerAntiWalk.executeTriggers(((PlayerEntity) entity));
             }
             //}
 
@@ -478,7 +463,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (entity.isWalking()) {
-            Square nextSq = entity.getProcessingPath().get(0);
+            final Square nextSq = entity.getProcessingPath().get(0);
             entity.incrementPreviousSteps();
 
             if (entity.getProcessingPath().size() > 1)
@@ -497,96 +482,7 @@ public class AbstractRoomProcess implements CometTask {
 
             boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
-            if (nextSq != null && entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0), isLastStep) || entity.isOverriden()) {
-                Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
-                Position nextPos = new Position(nextSq.x, nextSq.y);
-
-                final double mountHeight = entity instanceof PlayerEntity && entity.getMountedEntity() != null ? 1.0 : 0;
-
-                final RoomTile tile = this.room.getMapping().getTile(nextSq.x, nextSq.y);
-                final double height = tile.getWalkHeight() + mountHeight;
-                boolean isCancelled = entity.isWalkCancelled();
-                boolean effectNeedsRemove = true;
-
-                List<RoomItemFloor> preItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-                for (RoomItemFloor item : preItems) {
-                    if (item != null) {
-                        if (!(item instanceof EffectFloorItem) && entity.getCurrentEffect() != null && entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
-                            if (item.getId() == tile.getTopItem()) {
-                                effectNeedsRemove = false;
-                            }
-                        }
-
-                        if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-                            isCancelled = true;
-                        }
-
-                        if (!isCancelled) {
-                            item.onEntityPreStepOn(entity);
-                        }
-                    }
-                }
-                if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {
-                    entity.applyEffect(entity.getLastEffect());
-                }
-
-                if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
-                    final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
-
-                    if (!allowWalkthrough || entity instanceof PetEntity) {
-                        isCancelled = true;
-                    }
-
-                    RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
-
-                    if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
-                        isCancelled = false;
-                    }
-
-                    if (entityOnTile instanceof PetEntity && entity instanceof PetEntity) {
-                        if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
-                            isCancelled = false;
-                        }
-                    }
-                }
-
-                if (!isCancelled) {
-                    entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
-                    entity.setHeadRotation(entity.getBodyRotation());
-
-                    entity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextSq.x).concat(",").concat(String.valueOf(nextSq.y)).concat(",").concat(String.valueOf(height)));
-
-                    entity.removeStatus(RoomEntityStatus.SIT);
-                    entity.removeStatus(RoomEntityStatus.LAY);
-
-                    final Position newPosition = new Position(nextSq.x, nextSq.y, height);
-                    entity.updateAndSetPosition(newPosition);
-                    entity.markNeedsUpdate();
-
-                    if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
-                        RoomEntity mountedEntity = entity.getMountedEntity();
-
-                        mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
-                    }
-
-                    List<RoomItemFloor> postItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-                    for (RoomItemFloor item : postItems) {
-                        if (item != null) {
-                            item.onEntityPostStepOn(entity);
-                        }
-                    }
-
-                    tile.getEntities().add(entity);
-                } else {
-                    if (entity.getWalkingPath() != null) {
-                        entity.getWalkingPath().clear();
-                    }
-                    entity.getProcessingPath().clear();
-                    entity.setWalkCancelled(false);//
-                }
-            } else {
+            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
                 if (entity.getWalkingPath() != null) {
                     entity.getWalkingPath().clear();
                 }
@@ -596,6 +492,96 @@ public class AbstractRoomProcess implements CometTask {
                 // RoomTile is blocked, let's try again!
                 entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
                 return this.processEntity(entity, true);
+            }
+
+            final Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
+            final Position nextPos = new Position(nextSq.x, nextSq.y);
+
+            final double mountHeight = entity instanceof PlayerEntity && entity.getMountedEntity() != null ? 1.0 : 0;
+
+            final RoomTile tile = this.room.getMapping().getTile(nextSq.x, nextSq.y);
+            final double height = tile.getWalkHeight() + mountHeight;
+            boolean isCancelled = entity.isWalkCancelled();
+            boolean effectNeedsRemove = true;
+
+            final List<RoomItemFloor> preItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
+
+            for (final RoomItemFloor item : preItems) {
+                if (item != null) {
+                    if (!(item instanceof EffectFloorItem) && entity.getCurrentEffect() != null && entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
+                        if (item.getId() == tile.getTopItem()) {
+                            effectNeedsRemove = false;
+                        }
+                    }
+
+                    if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
+                        isCancelled = true;
+                    }
+
+                    if (!isCancelled) {
+                        item.onEntityPreStepOn(entity);
+                    }
+                }
+            }
+            if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {
+                entity.applyEffect(entity.getLastEffect());
+            }
+
+            if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
+                final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
+
+                if (!allowWalkthrough || entity instanceof PetEntity) {
+                    isCancelled = true;
+                }
+
+                final RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
+
+                if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
+                    isCancelled = false;
+                }
+
+                if (entityOnTile instanceof PetEntity && entity instanceof PetEntity) {
+                    if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
+                        isCancelled = false;
+                    }
+                }
+            }
+
+            if (!isCancelled) {
+                entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
+                entity.setHeadRotation(entity.getBodyRotation());
+
+                entity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextSq.x).concat(",").concat(String.valueOf(nextSq.y)).concat(",").concat(String.valueOf(height)));
+
+                entity.removeStatus(RoomEntityStatus.SIT);
+                entity.removeStatus(RoomEntityStatus.LAY);
+
+                final Position newPosition = new Position(nextSq.x, nextSq.y, height);
+
+                entity.updateAndSetPosition(newPosition);
+                entity.markNeedsUpdate();
+
+                if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
+                    final RoomEntity mountedEntity = entity.getMountedEntity();
+
+                    mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
+                }
+
+                final List<RoomItemFloor> postItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
+
+                for (final RoomItemFloor item : postItems) {
+                    if (item != null) {
+                        item.onEntityPostStepOn(entity);
+                    }
+                }
+
+                entity.addToTile(tile);
+            } else {
+                if (entity.getWalkingPath() != null) {
+                    entity.getWalkingPath().clear();
+                }
+                entity.getProcessingPath().clear();
+                entity.setWalkCancelled(false);//
             }
         } else {
             if (isPlayer && ((PlayerEntity) entity).isKicked())

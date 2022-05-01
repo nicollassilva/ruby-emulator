@@ -21,7 +21,7 @@ public abstract class AdvancedFloorItem<T extends FloorItemEvent> extends RoomIt
     public void onTick() {
         final Set<T> finishedEvents = new HashSet<>();
 
-        for (T itemEvent : itemEvents) {
+        for (final T itemEvent : itemEvents) {
             itemEvent.incrementTicks();
 
             if (itemEvent.isFinished()) {
@@ -29,7 +29,7 @@ public abstract class AdvancedFloorItem<T extends FloorItemEvent> extends RoomIt
             }
         }
 
-        for (T finishedEvent : finishedEvents) {
+        for (final T finishedEvent : finishedEvents) {
             this.itemEvents.remove(finishedEvent);
 
             finishedEvent.onCompletion(this);

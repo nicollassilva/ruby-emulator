@@ -9,6 +9,7 @@ import com.cometproject.server.game.items.types.LowPriorityItemProcessor;
 import com.cometproject.server.game.rooms.objects.BigRoomFloorObject;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.types.AdvancedFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.OldRollerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.RollerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballGateFloorItem;
@@ -83,7 +84,7 @@ public abstract class RoomItem extends BigRoomFloorObject implements Attributabl
     }
 
     public final boolean requiresTick() {
-        return this.hasTicks() || this instanceof WiredFloorItem || this instanceof AdvancedFloorItem || this instanceof RollerFloorItem;
+        return this.hasTicks() || this instanceof WiredFloorItem || this instanceof AdvancedFloorItem || this instanceof RollerFloorItem || this instanceof OldRollerFloorItem;
     }
 
     protected final boolean hasTicks() {
