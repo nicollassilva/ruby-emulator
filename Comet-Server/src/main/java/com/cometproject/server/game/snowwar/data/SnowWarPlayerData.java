@@ -82,12 +82,14 @@ public class SnowWarPlayerData {
         }
 
         final GameItemObject vict = currentSnowWar.gameObjects.get(victim);
+
         if(vict == null) {
             return;
         }
 
         final SnowBallGameObject ball = new SnowBallGameObject(currentSnowWar);
         ball.objectId = currentSnowWar.objectIdCounter++;
+
         synchronized(currentSnowWar.gameEvents) {
             currentSnowWar.gameEvents.add(new CreateSnowBall(ball, humanObject, vict.location3D().x(), vict.location3D().y(), type));
             currentSnowWar.gameEvents.add(new BallThrowToHuman(humanObject, (HumanGameObject)vict, 0));

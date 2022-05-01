@@ -17,13 +17,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PermissionsDao {
-
     public static Map<Integer, Perk> getPerks() {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, Perk> data = new ConcurrentHashMap<>();
+        final Map<Integer, Perk> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -51,7 +50,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, Rank> data = new ConcurrentHashMap<>();
+        final Map<Integer, Rank> data = new ConcurrentHashMap<>();
 
         try {
 
@@ -103,7 +102,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<String, CommandPermission> data = new ConcurrentHashMap<>();
+        final Map<String, CommandPermission> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -134,7 +133,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<String, OverrideCommandPermission> data = new ConcurrentHashMap<>();
+        final Map<String, OverrideCommandPermission> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -165,7 +164,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<String, PlayerBanner> data = new ConcurrentHashMap<>();
+        final Map<String, PlayerBanner> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -196,7 +195,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, Integer> data = new ConcurrentHashMap<>();
+        final Map<Integer, Integer> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -223,7 +222,7 @@ public class PermissionsDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, Integer> data = new ConcurrentHashMap<>();
+        final Map<Integer, Integer> data = new ConcurrentHashMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();

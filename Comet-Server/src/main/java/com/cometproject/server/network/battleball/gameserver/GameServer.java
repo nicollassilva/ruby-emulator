@@ -20,7 +20,6 @@ import java.util.HashMap;
 
 @WebSocket
 public class GameServer {
-
     private static final Logger log = LogManager.getLogger(PlayerManager.class.getName());
 
     @OnWebSocketConnect
@@ -35,10 +34,9 @@ public class GameServer {
     }
 
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws InterruptedException, SQLException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
-
-        JSONObject data = new JSONObject(message);
-        IncomingEventManager incomingEventManager = new IncomingEventManager();
+    public void onMessage(Session session, String message) throws SQLException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
+        final JSONObject data = new JSONObject(message);
+        final IncomingEventManager incomingEventManager = new IncomingEventManager();
 
         if(data.has("header") && data.has("data")) {
             if(incomingEventManager.getEvents().containsKey(data.getInt("header"))) {

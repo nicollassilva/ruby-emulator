@@ -16,7 +16,7 @@ public class BaseItem {
     public static final BaseItem snst_tree1 = new BaseItem("s",4063,"snst_tree1",1,1);
     public static final BaseItem s_snowball_machine = new BaseItem("s",4068,"s_snowball_machine",1,1);
     public static final BaseItem snst_iceblock = new BaseItem("s",4064,"snst_iceblock",1,1);
-    public static final BaseItem ads_igorraygun = new BaseItem("s",2648,"ads_igorraygun",1,2);
+    public static final BaseItem ads_igorraygun = new BaseItem("s",1156,"ads_igorraygun",1,2);
 
     public int SpriteId;
     public String Name;

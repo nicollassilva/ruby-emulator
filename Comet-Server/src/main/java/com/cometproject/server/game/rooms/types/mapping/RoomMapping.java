@@ -365,7 +365,7 @@ public class RoomMapping {
 
 
 
-        RoomTile tile = tiles[to.getX()][to.getY()];
+        final RoomTile tile = tiles[to.getX()][to.getY()];
 
         if (tile == null) {
             return false;

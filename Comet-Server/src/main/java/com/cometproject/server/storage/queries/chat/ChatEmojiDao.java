@@ -14,7 +14,8 @@ public class ChatEmojiDao {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        ArrayList<ChatEmoji> data = new ArrayList<>();
+
+        final ArrayList<ChatEmoji> data = new ArrayList<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -25,6 +26,7 @@ public class ChatEmojiDao {
                 final int id = resultSet.getInt("id");
                 final int min_rank = resultSet.getInt("min_rank");
                 final ArrayList<String> keys = new ArrayList<>(Arrays.asList(resultSet.getString("strings").split("&")));
+
                 data.add(new ChatEmoji(id, min_rank, keys));
             }
         } catch (SQLException e) {
@@ -34,6 +36,7 @@ public class ChatEmojiDao {
                 SqlHelper.closeSilently(preparedStatement);
                 SqlHelper.closeSilently(sqlConnection);
         }
+
         return data;
     }
 }

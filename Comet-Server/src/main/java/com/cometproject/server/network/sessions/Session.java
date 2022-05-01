@@ -84,24 +84,6 @@ public class Session implements ISession {
                                             .replace("%username%", player.getData().getUsername())));
                         }
                     }
-
-                    if(CometSettings.NobbaWebhooksEnabled) {
-                        if(this.getPlayer().getData().getRank() == 15 || this.getPlayer().getData().getRank() >= 17) {
-                            Webhook webhook = new Webhook("https://discord.com/api/webhooks/962422387125674054/rns3km8KN7hix4AY_6YBdGvMuG-g_Xmtk_XJdATJaHtXumYtcoQ_jpQbjOAqwU4Ldawd");
-                            webhook.setUsername("Nobba");
-                            webhook.setAvatarUrl("https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif");
-                            webhook.addEmbed(new Webhook.EmbedObject()
-                                    .addField("\u200B", "El usuario **" + this.getPlayer().getData().getUsername() + "** se ha desconectado del hotel a las: **" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "**", true)
-                                    //.addField("\u200B", "**Pour la rejoindre clique sur ce lien:**\u200Bhttp://bobbax.fr/hotel/room/" + client.getPlayer().getEntity().getRoom().getData().getId(), true)
-                                    //.setImage("https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif")
-                                    .setAuthor("Nobba", "https://nobba.tv", "https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif"));
-                            try {
-                                webhook.execute();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
                 }
 
                 if (this.player != null) {
@@ -207,7 +189,7 @@ public class Session implements ISession {
             return;
         }
 
-        String username = player.getData().getUsername();
+        final String username = player.getData().getUsername();
 
         this.logger = LogManager.getLogger("[" + username + "][" + player.getId() + "]");
         this.player = player;

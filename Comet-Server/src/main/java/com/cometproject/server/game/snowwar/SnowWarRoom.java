@@ -47,8 +47,9 @@ public class SnowWarRoom extends SynchronizedGameStage {
         Name = "SnowStorm level " + ArenaType.ArenaType;
         map = new SnowWarGameStage();
         map.initialize(ArenaType);
+
         for (final int TeamId : SnowWar.TEAMS) {
-            TeamPlayers.put(TeamId, new ConcurrentHashMap<Integer, HumanGameObject>());
+            TeamPlayers.put(TeamId, new ConcurrentHashMap<>());
         }
     }
 
@@ -75,7 +76,7 @@ public class SnowWarRoom extends SynchronizedGameStage {
 
     public void stageLoaded(HumanGameObject humanObject) {
         if(stageLoadedPlayers == null) {
-            stageLoadedPlayers = new ConcurrentHashMap<Integer, HumanGameObject>();
+            stageLoadedPlayers = new ConcurrentHashMap<>();
         }
 
         stageLoadedPlayers.put(humanObject.objectId, humanObject);

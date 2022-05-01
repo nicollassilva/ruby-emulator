@@ -141,28 +141,6 @@ public class PlayerLoginRequest implements CometTask {
 
             client.getLogger().debug(client.getPlayer().getData().getUsername() + " logged in");
 
-            if(CometSettings.NobbaWebhooksEnabled) {
-                if(client.getPlayer().getData().getRank() == 15 || client.getPlayer().getData().getRank() >= 17) {
-                    Webhook webhook = new Webhook("https://discord.com/api/webhooks/962422387125674054/rns3km8KN7hix4AY_6YBdGvMuG-g_Xmtk_XJdATJaHtXumYtcoQ_jpQbjOAqwU4Ldawd");
-                    webhook.setUsername("Nobba");
-                    webhook.setAvatarUrl("https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif");
-                    webhook.addEmbed(new Webhook.EmbedObject()
-                            .addField("\u200B", "El usuario **" + client.getPlayer().getData().getUsername() + "** ha entrado al hotel a las: **" + LocalDateTime.now().getHour() + ":" + LocalDateTime.now().getMinute() + "**", true)
-                            //.addField("\u200B", "**Pour la rejoindre clique sur ce lien:**\u200Bhttp://bobbax.fr/hotel/room/" + client.getPlayer().getEntity().getRoom().getData().getId(), true)
-                            //.setImage("https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif")
-                            .setAuthor("Nobba", "https://nobba.tv", "https://media.discordapp.net/attachments/913121829793706055/961823939053633536/Foto-de-perfil.gif"));
-                    try {
-                        webhook.execute();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            //client.getPlayer().getMessenger().broadcast(new FriendToolbarNotificationMessageComposer(client.getPlayer().getId(), FriendToolbarNotificationMessageComposer.IS_PLAYING_GAME, "VIP_Badge"));
-            //client.getPlayer().getMessenger().sendStatus(true, client.getPlayer().getEntity() != null);
-            //System.out.println("FriendToolbar SEND VIP_Badge");
-
             player.setOnline(true);
 
             if (player.getSubscription().isValid()) {
@@ -212,11 +190,6 @@ public class PlayerLoginRequest implements CometTask {
             if (CometSettings.motdEnabled) {
                 client.sendQueue(new OpenLinkMessageComposer("habbopages/bienvenida.txt?" + Comet.getTime()));
             }
-
-            /*if (client.getPlayer().getData().getEndVipTimestamp() <= (int) Comet.getTime()) {
-                SubscriptionDao.deleteSubscription(client.getPlayer().getId());
-                client.getPlayer().getData().save();
-            }*/
 
             if (CometSettings.onlineRewardDoubleDays.size() != 0) {
                 LocalDate date = LocalDate.now();

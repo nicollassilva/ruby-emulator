@@ -111,7 +111,7 @@ public class RoomTile {
 
         this.items.clear();
 
-        for (Map.Entry<Long, RoomItemFloor> itemEntry : mappingInstance.getRoom().getItems().getFloorItems().entrySet()) {
+        for (final Map.Entry<Long, RoomItemFloor> itemEntry : mappingInstance.getRoom().getItems().getFloorItems().entrySet()) {
             final RoomItemFloor item = itemEntry.getValue();
 
             if (item == null || item.getDefinition() == null) continue; // it's null!
@@ -119,10 +119,10 @@ public class RoomTile {
             if (item.getPosition().getX() == this.position.getX() && item.getPosition().getY() == this.position.getY()) {
                 items.add(item);
             } else {
-                List<AffectedTile> affectedTiles = AffectedTile.getAffectedTilesAt(
+                final List<AffectedTile> affectedTiles = AffectedTile.getAffectedTilesAt(
                         item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation());
 
-                for (AffectedTile tile : affectedTiles) {
+                for (final AffectedTile tile : affectedTiles) {
                     if (this.position.getX() == tile.x && this.position.getY() == tile.y) {
                         if (!items.contains(item)) {
                             items.add(item);
@@ -132,7 +132,7 @@ public class RoomTile {
             }
         }
 
-        for (RoomItemFloor item : new ArrayList<>(items)) {
+        for (final RoomItemFloor item : new ArrayList<>(items)) {
             if (item.getDefinition() == null)
                 continue;
 
@@ -174,7 +174,11 @@ public class RoomTile {
                     break;
 
                 case "gate":
-                    movementNode = ((GateFloorItem) item).isOpen() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
+                    if(!(item instanceof GateFloorItem)) {
+                        movementNode = RoomEntityMovementNode.CLOSED;
+                    } else {
+                        movementNode = ((GateFloorItem) item).isOpen() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
+                    }
                     break;
 
                 case "onewaygate":
@@ -186,7 +190,11 @@ public class RoomTile {
                     break;
 
                 case "freeze_block":
-                    movementNode = ((FreezeBlockFloorItem) item).isDestroyed() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
+                    if(!(item instanceof FreezeBlockFloorItem)) {
+                        movementNode = RoomEntityMovementNode.CLOSED;
+                    } else {
+                        movementNode = ((FreezeBlockFloorItem) item).isDestroyed() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
+                    }
                     break;
             }
 
@@ -322,7 +330,7 @@ public class RoomTile {
     public double getWalkHeight() {
         double height = this.stackHeight;
 
-        RoomItemFloor roomItemFloor = this.mappingInstance.getRoom().getItems().getFloorItem(this.topItem);
+        final RoomItemFloor roomItemFloor = this.mappingInstance.getRoom().getItems().getFloorItem(this.topItem);
 
         if (roomItemFloor != null && (roomItemFloor.getDefinition().canSit() || roomItemFloor instanceof BedFloorItem || roomItemFloor instanceof SnowboardJumpFloorItem)) {
             if (roomItemFloor instanceof SnowboardJumpFloorItem) {

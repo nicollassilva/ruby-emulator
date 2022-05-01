@@ -21,7 +21,6 @@ public class CometSettings {
     public static boolean useNewKissSystem = true;
 
     public static boolean userDisconnectNotification = false;
-    public static boolean NobbaWebhooksEnabled = false;
 
     public static int seasonalNumber = 103;
 
