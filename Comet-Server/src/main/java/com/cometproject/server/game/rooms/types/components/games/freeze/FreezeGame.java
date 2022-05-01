@@ -1,5 +1,6 @@
 package com.cometproject.server.game.rooms.types.components.games.freeze;
 
+import com.cometproject.api.game.achievements.types.AchievementType;
 import com.cometproject.server.game.players.types.PlayerAvatarActions;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
@@ -136,13 +137,18 @@ public class FreezeGame extends RoomGame {
 
                                     entity.cancelWalk();
                                     entity.setCanWalk(false);
+
                                     playerEntity.setIsFreeze(true);
                                     playerEntity.getPlayer().getSession().send(new UpdateFreezeLivesMessageComposer(playerEntity.getId(), freezePlayer.getLives()));
+
+                                    if(playerEntity.getPlayerId() != freezeBall.getPlayer().getEntity().getPlayerId()) {
+                                        freezeBall.getPlayer().getEntity().getPlayer().getAchievements().progressAchievement(AchievementType.FREEZING_PLAYERS, 1);
+                                    }
                                 }
                             }
                         }
 
-                        for (FreezeBlockFloorItem block : blocks) {
+                        for (final FreezeBlockFloorItem block : blocks) {
                             block.explode();
                         }
 
@@ -246,8 +252,8 @@ public class FreezeGame extends RoomGame {
     public void launchBall(FreezeTileFloorItem freezeTile, FreezePlayer freezePlayer) {
         int range = freezePlayer != null ? 2 : (RandomUtil.getRandomBool(0.10) ? 999 : RandomUtil.getRandomInt(1, 3));
         boolean diagonal = freezePlayer == null && (RandomUtil.getRandomBool(0.5));
-        final int playerId = freezePlayer == null ? -1 : freezePlayer.getEntity().getPlayerId();
 
+        System.out.println(freezePlayer == null);
         if (freezePlayer != null) {
             switch (freezePlayer.getPowerUp()) {
                 case ExtraRange:
@@ -264,10 +270,10 @@ public class FreezeGame extends RoomGame {
             }
 
             freezePlayer.powerUp(FreezePowerUp.None);
-        }
 
-        final FreezeBall freezeBall = new FreezeBall(playerId, freezeTile, range, diagonal);
-        this.activeBalls.add(freezeBall);
+            final FreezeBall freezeBall = new FreezeBall(freezePlayer, freezeTile, range, diagonal);
+            this.activeBalls.add(freezeBall);
+        }
     }
 
     @Override

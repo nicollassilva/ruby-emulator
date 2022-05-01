@@ -5,15 +5,15 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze
 public class FreezeBall {
     public static final int START_TICKS = 1;
 
-    private final int playerId;
+    private final FreezePlayer freezePlayer;
     private final FreezeTileFloorItem source;
     private final int range;
     private final boolean diagonal;
 
     private int ticksUntilExplode;
 
-    public FreezeBall(int playerId, FreezeTileFloorItem source, int range, boolean diagonal) {
-        this.playerId = playerId;
+    public FreezeBall(FreezePlayer freezePlayer, FreezeTileFloorItem source, int range, boolean diagonal) {
+        this.freezePlayer = freezePlayer;
         this.source = source;
         this.range = range;
         this.diagonal = diagonal;
@@ -23,7 +23,11 @@ public class FreezeBall {
     }
 
     public int getPlayerId() {
-        return this.playerId;
+        return this.freezePlayer.getEntity().getPlayerId();
+    }
+
+    public FreezePlayer getPlayer() {
+        return this.freezePlayer;
     }
 
     public FreezeTileFloorItem getSource() {

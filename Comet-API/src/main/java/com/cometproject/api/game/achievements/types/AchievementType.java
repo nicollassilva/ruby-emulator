@@ -14,6 +14,7 @@ public enum AchievementType {
     BB_TILES_LOCKED("ACH_BattleBallTilesLocked"),
     BB_PLAYER("ACH_BattleBallPlayer"),
     BB_WINNER("ACH_BattleBallWinner"),
+    FREEZING_PLAYERS("ACH_EsA"),
     ONLINE_TIME("ACH_AllTimeHotelPresence"),
     LOGIN("ACH_Login"),
     FRIENDS_LIST("ACH_FriendListSize"),
