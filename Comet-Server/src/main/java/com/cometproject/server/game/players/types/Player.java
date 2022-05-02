@@ -437,7 +437,7 @@ public class Player extends Observable implements IPlayer {
             setEntity(null);
         }
 
-        Room room = RoomManager.getInstance().get(id);
+        final Room room = RoomManager.getInstance().get(id);
 
         if (room == null) {
             session.send(new HotelViewMessageComposer());

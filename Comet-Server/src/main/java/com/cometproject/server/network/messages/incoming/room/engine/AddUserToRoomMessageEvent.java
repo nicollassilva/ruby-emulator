@@ -43,7 +43,7 @@ public class AddUserToRoomMessageEvent implements Event {
             return;
         }
 
-        Room room = avatar.getRoom();
+        final Room room = avatar.getRoom();
 
         if (!room.getProcess().isActive()) {
             room.getProcess().start();
@@ -57,15 +57,14 @@ public class AddUserToRoomMessageEvent implements Event {
             client.sendQueue(new FloodFilterMessageComposer(client.getPlayer().getRoomFloodTime()));
         }
 
-        Map<Integer, String> groupsInRoom = new HashMap<>();
+        final Map<Integer, String> groupsInRoom = new HashMap<>();
 
-        for (PlayerEntity playerEntity : room.getEntities().getPlayerEntities()) {
+        for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities()) {
             if (playerEntity.getPlayer() != null && playerEntity.getPlayer().getData() != null) {
                 if (playerEntity.getPlayer().getData().getFavouriteGroup() != 0) {
-                    IGroupData groupData = GameContext.getCurrent().getGroupService().getData(playerEntity.getPlayer().getData().getFavouriteGroup());
+                    final IGroupData groupData = GameContext.getCurrent().getGroupService().getData(playerEntity.getPlayer().getData().getFavouriteGroup());
 
-                    if (groupData == null)
-                        continue;
+                    if (groupData == null) continue;
 
                     groupsInRoom.put(playerEntity.getPlayer().getData().getFavouriteGroup(), groupData.getBadge());
                 }
@@ -84,7 +83,7 @@ public class AddUserToRoomMessageEvent implements Event {
             client.sendQueue(new AvatarUpdateMessageComposer(room.getEntities().getAllEntities().values()));
         }
 
-        for (RoomEntity av : room.getEntities().getAllEntities().values()) {
+        for (final RoomEntity av : room.getEntities().getAllEntities().values()) {
             if (av.getCurrentEffect() != null) {
                 client.sendQueue(new ApplyEffectMessageComposer(av.getId(), av.getCurrentEffect().getEffectId()));
             }
@@ -119,7 +118,7 @@ public class AddUserToRoomMessageEvent implements Event {
         WiredTriggerEnterRoom.executeTriggers(client.getPlayer().getEntity());
 
         if (PollManager.getInstance().roomHasPoll(room.getId())) {
-            Poll poll = PollManager.getInstance().getPollByRoomId(room.getId());
+            final Poll poll = PollManager.getInstance().getPollByRoomId(room.getId());
 
             if (!poll.getPlayersAnswered().contains(client.getPlayer().getId()) && !PollDao.hasAnswered(client.getPlayer().getId(), poll.getPollId())) {
                 client.send(new InitializePollMessageComposer(poll.getPollId(), poll.getPollTitle(), poll.getThanksMessage()));

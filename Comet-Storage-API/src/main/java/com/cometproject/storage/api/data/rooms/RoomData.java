@@ -454,9 +454,9 @@ public class RoomData implements IRoomData {
 
     @Override
     public String getDecorationString() {
-        StringBuilder decorString = new StringBuilder();
+        final StringBuilder decorString = new StringBuilder();
 
-        for (Map.Entry<String, String> decoration : this.getDecorations().entrySet()) {
+        for (final Map.Entry<String, String> decoration : this.getDecorations().entrySet()) {
             decorString.append(decoration.getKey()).append("=").append(decoration.getValue()).append(",");
         }
 

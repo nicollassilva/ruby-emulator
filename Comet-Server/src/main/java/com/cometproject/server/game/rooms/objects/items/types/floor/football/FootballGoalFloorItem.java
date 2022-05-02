@@ -47,7 +47,6 @@ public class FootballGoalFloorItem extends RoomItemFloor {
                 Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
                 if (session != null && session.getPlayer() != null && session.getPlayer().getAchievements() != null) {
-                    session.getPlayer().getAchievements().progressAchievement(AchievementType.FOOTBALL_GOAL_IN_ROOM, 1);
                     session.getPlayer().getAchievements().progressAchievement(AchievementType.FOOTBALL_GOAL, 1);
 
                     nearestPlayerEntity().getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new ActionMessageComposer(session.getPlayer().getEntity().getId(), PlayerAvatarActions.EXPRESSION_RESPECT.getValue()));

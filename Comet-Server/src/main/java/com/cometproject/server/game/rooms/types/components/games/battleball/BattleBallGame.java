@@ -68,20 +68,19 @@ public class BattleBallGame extends RoomGame {
 
     @Override
     public void onGameStarts() {
-        for (RoomEntity entitystart : this.room.getEntities().getAllEntities().values()) {
-            if (entitystart.getEntityType().equals(RoomEntityType.PLAYER)) {
-                PlayerEntity playerEntity = (PlayerEntity) entitystart;
-
-                WiredTriggerGameStarts.executeTriggers(entitystart.getRoom());
-
+        for (final RoomEntity entityStart : this.room.getEntities().getAllEntities().values()) {
+            if (entityStart.getEntityType().equals(RoomEntityType.PLAYER)) {
+                WiredTriggerGameStarts.executeTriggers(entityStart.getRoom());
             }
         }
 
         this.battleBallTileCount = 0;
 
-        for (RoomItemFloor item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
+        for (BattleBallTileFloorItem item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
+            if(item == null) continue;
+
             this.battleBallTileCount++;
-            ((BattleBallTileFloorItem) item).onGameStarts();
+            item.onGameStarts();
         }
 
         this.startBattleBallTileCount = this.battleBallTileCount;
@@ -91,14 +90,14 @@ public class BattleBallGame extends RoomGame {
 
     @Override
     public void onGameEnds() {
-        GameTeam winningTeam = this.winningTeam();
+        final GameTeam winningTeam = this.winningTeam();
 
-        for (final RoomItemFloor item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
-            if (item instanceof BattleBallTileFloorItem) {
-                if (((BattleBallTileFloorItem) item).getTeam() == winningTeam && winningTeam != GameTeam.NONE) {
-                    ((BattleBallTileFloorItem) item).flash();
+        for (final BattleBallTileFloorItem item : this.room.getItems().getByClass(BattleBallTileFloorItem.class)) {
+            if (item != null) {
+                if (item.getTeam() == winningTeam && winningTeam != GameTeam.NONE) {
+                    item.flash();
                 } else {
-                    ((BattleBallTileFloorItem) item).onGameEnds();
+                    item.onGameEnds();
                 }
             }
         }

@@ -18,7 +18,7 @@ public class AvatarsMessageComposer extends MessageComposer {
     public AvatarsMessageComposer(final Room room) {
         this.entities = Lists.newArrayList();
 
-        for (RoomEntity entity : room.getEntities().getAllEntities().values()) {
+        for (final RoomEntity entity : room.getEntities().getAllEntities().values()) {
             if (entity.isVisible()) {
                 if (entity instanceof PlayerEntity) {
                     if (((PlayerEntity) entity).getPlayer() == null) continue;

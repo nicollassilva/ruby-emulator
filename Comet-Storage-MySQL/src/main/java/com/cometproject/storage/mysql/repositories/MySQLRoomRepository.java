@@ -221,12 +221,12 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final List<String> disabledCommands = JsonUtil.getInstance().fromJson(room.readString("disabled_commands"), STRING_LIST_TYPE);
         final int groupId = room.readInteger("group_id");
         final String requiredBadge = room.readString("required_badge");
-        final boolean wiredHidden = room.readBoolean("hide_wired");
+        final boolean wiredHidden = room.readString("hide_wired").equals("1");
         final int userIdleTicks = room.readInteger("user_idle_ticks");
         final int rollerSpeedLevel = room.readInteger("roller_speed_level");
-        final boolean rollerSpeed = room.readBoolean("roller_speed");
+        final boolean rollerSpeed = room.readString("roller_speed").equals("1");
         final boolean wiredLimit = room.readBoolean("wired_limit");
-        final boolean roomDiagonal = room.readBoolean("room_diagonal");
+        final boolean roomDiagonal = room.readString("room_diagonal").equals("1");
         final int songId = room.readInteger("song_id");
 
         return this.roomDataFactory.createRoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,

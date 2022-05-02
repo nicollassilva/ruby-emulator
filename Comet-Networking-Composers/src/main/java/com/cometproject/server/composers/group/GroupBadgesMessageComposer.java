@@ -35,7 +35,7 @@ public class GroupBadgesMessageComposer extends MessageComposer {
         if (this.badges != null) {
             msg.writeInt(badges.size());
 
-            for (Map.Entry<Integer, String> badge : badges.entrySet()) {
+            for (final Map.Entry<Integer, String> badge : badges.entrySet()) {
                 this.composeGroupBadge(msg, badge.getKey(), badge.getValue());
             }
         } else {

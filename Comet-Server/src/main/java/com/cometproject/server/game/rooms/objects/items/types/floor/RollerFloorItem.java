@@ -18,6 +18,7 @@ import com.google.common.collect.Sets;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -76,6 +77,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
         this.handleItems();
         this.handleEntities();
+
         this.movedEntities.clear();
         this.skippedEntities.clear();
         this.skippedItems.clear();
@@ -247,6 +249,6 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     }
 
     private int getTickCount() {
-        return RoomItemFactory.getProcessTime((this.getRoom().getData().getRollerSpeed() ? this.getRoom().getData().getRollerSpeedLevel() : 4.0) / 2);
+        return RoomItemFactory.getProcessTime(this.getRoom().getData().getRollerSpeedLevel() / 2);
     }
 }

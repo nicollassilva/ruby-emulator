@@ -18,7 +18,7 @@ public class RoomWriter {
 
     public static void write(IRoomData room, IComposer msg, boolean skipAuth) {
         boolean isActive = RoomManager.getInstance().isActive(room.getId());
-        PublicRoom publicRoom = NavigatorManager.getInstance().getPublicRoom(room.getId());
+        final PublicRoom publicRoom = NavigatorManager.getInstance().getPublicRoom(room.getId());
 
         msg.writeInt(room.getId());
         msg.writeString(publicRoom != null ? publicRoom.getCaption() : room.getName());
@@ -43,8 +43,8 @@ public class RoomWriter {
             msg.writeInt(0);
         }
 
-        RoomPromotion promotion = RoomManager.getInstance().getRoomPromotions().get(room.getId());
-        IGroupData group = GameContext.getCurrent().getGroupService().getData(room.getGroupId());
+        final RoomPromotion promotion = RoomManager.getInstance().getRoomPromotions().get(room.getId());
+        final IGroupData group = GameContext.getCurrent().getGroupService().getData(room.getGroupId());
 
         composeRoomSpecials(msg, room, promotion, group, room.getType());
     }
@@ -58,7 +58,7 @@ public class RoomWriter {
         msg.writeBoolean(NavigatorManager.getInstance().isStaffPicked(room.getId()));
         msg.writeBoolean(RoomManager.getInstance().isActive(room.getId()) && RoomManager.getInstance().get(room.getId()).hasRoomMute());
 
-        Room roomInstance = RoomManager.getInstance().get(room.getId());
+        final Room roomInstance = RoomManager.getInstance().get(room.getId());
 
         msg.writeBoolean(roomInstance.hasRoomMute()); // is muted
 

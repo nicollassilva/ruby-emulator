@@ -61,6 +61,7 @@ public class BattleBallRoom {
         for(Map.Entry<Long, RoomItemFloor> item : this.getRoom().getItems().getFloorItems().entrySet()) {
             RoomItemDao.deleteItem(item.getKey());
         }
+
         RoomDao.deleteRoom(this.getRoom().getId());
     }
 
@@ -197,7 +198,4 @@ public class BattleBallRoom {
                 break;
         }
     }
-
-
-
 }

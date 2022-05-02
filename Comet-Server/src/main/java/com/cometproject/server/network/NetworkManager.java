@@ -6,6 +6,7 @@ import com.cometproject.networking.api.INetworkingServerFactory;
 import com.cometproject.networking.api.NetworkingContext;
 import com.cometproject.networking.api.config.NetworkingServerConfig;
 import com.cometproject.networking.api.sessions.INetSessionFactory;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.battleball.Server;
 import com.cometproject.server.network.messages.GameMessageHandler;
 import com.cometproject.server.network.messages.MessageHandler;
@@ -89,7 +90,10 @@ public class NetworkManager {
                 sessionFactory);
 
         gameServer.start();
-        Server.connect();
+
+        if(Comet.isDebugging) {
+            Server.connect();
+        }
     }
 
     public SessionManager getSessions() {

@@ -8,6 +8,6 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 
 public class CanCreateRoomMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        client.send(new CanCreateRoomMessageComposer());
+        client.send(new CanCreateRoomMessageComposer(client.getPlayer().getRooms().size()));
     }
 }

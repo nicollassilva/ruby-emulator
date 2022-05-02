@@ -88,7 +88,7 @@ public class RoomDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, IRoomData> rooms = new ListOrderedMap<>();
+        final Map<Integer, IRoomData> rooms = new ListOrderedMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -118,7 +118,7 @@ public class RoomDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        Map<Integer, IRoomData> rooms = new ListOrderedMap<>();
+        final Map<Integer, IRoomData> rooms = new ListOrderedMap<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
@@ -693,12 +693,12 @@ public class RoomDao {
         final List<String> disabledCommands = JsonUtil.getInstance().fromJson(room.getString("disabled_commands"), STRING_LIST_TYPE);
         final int groupId = room.getInt("group_id");
         final String requiredBadge = room.getString("required_badge");
-        final boolean wiredHidden = room.getBoolean("hide_wired");
+        final boolean wiredHidden = room.getString("hide_wired").equals("1");
         final int userIdleTicks = room.getInt("user_idle_ticks");
         final int rollerSpeedLevel = room.getInt("roller_speed_level");
-        final boolean rollerSpeed = room.getBoolean("roller_speed");
+        final boolean rollerSpeed = room.getString("roller_speed").equals("1");
         final boolean wiredLimit = room.getBoolean("wired_limit");
-        final boolean roomDiagonal = room.getBoolean("room_diagonal");
+        final boolean roomDiagonal = room.getString("room_diagonal").equals("1");
         final int songId = room.getInt("song_id");
 
         return new RoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
@@ -709,8 +709,8 @@ public class RoomDao {
     }
 
     private static void fillDecorations(Map<String, String> decorations, String[] decorationsArray) {
-        for (String s : decorationsArray) {
-            String[] decoration = s.split("=");
+        for (final String s : decorationsArray) {
+            final String[] decoration = s.split("=");
 
             if (decoration.length == 2)
                 decorations.put(decoration[0], decoration[1]);
