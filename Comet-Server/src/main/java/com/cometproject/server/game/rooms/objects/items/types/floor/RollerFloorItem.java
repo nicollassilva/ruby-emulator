@@ -75,8 +75,10 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
             this.cycleCancelled = false;
         }
 
-        this.handleItems();
-        this.handleEntities();
+        synchronized (this) {
+            this.handleItems();
+            this.handleEntities();
+        }
 
         this.movedEntities.clear();
         this.skippedEntities.clear();
@@ -166,6 +168,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
         final Position sqInfront = this.getPosition().squareInFront(this.getRotation());
         final List<RoomItemFloor> itemsSq = this.getRoom().getItems().getItemsOnSquare(sqInfront.getX(), sqInfront.getY());
+        final RoomTile nextTile = this.getRoom().getMapping().getTile(sqInfront);
 
         boolean noItemsOnNext = false;
         Position position = null;
@@ -197,7 +200,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 position = floor.getPosition().copy();
             }
 
-            double height = this.getRoom().getMapping().getTile(sqInfront).getStackHeight();
+            double height = nextTile.getStackHeight();
             boolean hasRoller = false;
 
             for (final RoomItemFloor iq : itemsSq) {
@@ -218,7 +221,9 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 noItemsOnNext = true;
             }
 
-            if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, true, true) || this.getRoom().getEntities().positionHasEntity(sqInfront, this.movedEntities)) {
+            if (! this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, true, true) ||
+                    this.getRoom().getEntities().positionHasEntity(sqInfront, this.movedEntities) ||
+                    (nextTile.getTopItemInstance() != null && !nextTile.getTopItemInstance().getDefinition().canStack())) {
                 return;
             }
 

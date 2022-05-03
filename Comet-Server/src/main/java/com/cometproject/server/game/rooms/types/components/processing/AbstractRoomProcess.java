@@ -137,7 +137,6 @@ public class AbstractRoomProcess implements CometTask {
 
             playersToRemove = null;
             entitiesToUpdate = null;
-
         } catch (Exception e) {
             log.warn("Error during room entity processing", e);
         }

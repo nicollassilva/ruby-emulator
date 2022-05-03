@@ -5,7 +5,6 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.processing.AbstractRoomProcess;
 
 public class ProcessComponent extends AbstractRoomProcess {
-
     public ProcessComponent(Room room) {
         super(room, 0);
     }

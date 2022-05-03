@@ -11,7 +11,7 @@ public class InitializeRoomMessageEvent implements Event {
 
     public void handle(Session client, MessageEvent msg) {
         int id = msg.readInt();
-        String password = msg.readString();
+        final String password = msg.readString();
 
         if (client.getPlayer() == null) {
             return;

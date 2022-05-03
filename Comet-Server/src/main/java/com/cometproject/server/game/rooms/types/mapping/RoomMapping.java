@@ -82,6 +82,7 @@ public class RoomMapping {
                             if (((PlayerEntity) entity).getPlayer() == null) {
                                 entitiesToRemove.add(entity);
                             }
+
                             else if (!((PlayerEntity) entity).getPlayer().getEntity().getPosition().equals(tile.getPosition()) && !((PlayerEntity) entity).getPlayer().getEntity().getPositionToSet().copy().equals(tile.getPosition())) {
                                 entitiesToRemove.add(entity);
 

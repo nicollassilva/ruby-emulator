@@ -28,11 +28,6 @@ public class CheckCalendarDayMessageEvent implements Event {
         final String campaign = msg.readString();
         final int day = msg.readInt();
 
-        if (!client.getPlayer().getData().isVip()) {
-            client.sendQueue(new NotificationMessageComposer("generic", Locale.getOrDefault("calendar.requires.vip", "No eres un usuario VIP por lo cual no puedes cobrar premios diarios del calendario.")));
-            return;
-        }
-
         if (!campaign.equals("xmas14"))
             return;
 

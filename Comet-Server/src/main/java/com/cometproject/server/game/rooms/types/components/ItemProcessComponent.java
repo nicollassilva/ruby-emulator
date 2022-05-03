@@ -46,11 +46,6 @@ public class ItemProcessComponent implements CometTask {
     }
 
     public void start() {
-        if (Room.useCycleForItems) {
-            this.active = true;
-            return;
-        }
-
         if (this.future != null && this.active) {
             stop();
         }
@@ -97,7 +92,9 @@ public class ItemProcessComponent implements CometTask {
             return;
         }
 
-        if (this.getRoom().getEntities().realPlayerCount() == 0) return;
+        if (!this.getRoom().getEntities().hasPlayers()) {
+            return;
+        }
 
         final Set<String> positionsWithPeriodicTrigger = new HashSet<>();
 

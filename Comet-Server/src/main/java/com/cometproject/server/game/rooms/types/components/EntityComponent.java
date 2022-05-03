@@ -404,6 +404,10 @@ public class EntityComponent {
         }
     }
 
+    public boolean hasPlayers() {
+        return ! this.playerIdToEntity.isEmpty();
+    }
+
     public int realPlayerCount() {
         return this.playerIdToEntity.size();
     }

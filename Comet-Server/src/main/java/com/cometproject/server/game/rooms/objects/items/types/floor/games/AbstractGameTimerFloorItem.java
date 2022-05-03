@@ -110,13 +110,6 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
         return true;
     }
 
-    @Override
-    public void onTickComplete() {
-        if(this instanceof FreezeTimerFloorItem) {
-            System.out.println("Acabou");
-        }
-    }
-
     public void setLastTime(String lastTime) {
         this.lastTime = lastTime;
     }

@@ -4,6 +4,6 @@ public enum VoucherType {
     COINS,
     DUCKETS,
     VIP_POINTS,
-    ROOM_BUNDLE,
+    SEASONAL_POINTS,
     BADGE
 }
