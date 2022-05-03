@@ -102,14 +102,7 @@ public class AbstractRoomProcess implements CometTask {
             playersToRemove = new ArrayList<>();
             entitiesToUpdate = new ArrayList<>();
 
-            /*
-             * Why do we shuffle this before processing? To give each player a fair
-             * chance at winning a tile in the pathfinder
-             */
-            final ArrayList<RoomEntity> shuffledEntities = new ArrayList<>(entities.values());
-            Collections.shuffle(shuffledEntities);
-
-            for (final RoomEntity entity : shuffledEntities) {
+            for (final RoomEntity entity : entities.values()) {
                 if (entity.isFastWalkEnabled() || this.update) {
                     this.startProcessing(entity);
                 }

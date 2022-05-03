@@ -41,7 +41,6 @@ import com.cometproject.server.game.rooms.types.components.games.GameType;
 import com.cometproject.server.game.rooms.types.components.types.Trade;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
-import com.cometproject.server.game.rooms.types.misc.NameColor;
 import com.cometproject.server.game.utilities.DistanceCalculator;
 import com.cometproject.server.logging.LogManager;
 import com.cometproject.server.logging.entries.RoomVisitLogEntry;
@@ -49,8 +48,6 @@ import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.battleball.outgoing.Outgoing;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessage;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessageManager;
-import com.cometproject.server.network.messages.incoming.room.action.ShoutMessageEvent;
-import com.cometproject.server.network.messages.incoming.room.action.WhisperMessageEvent;
 import com.cometproject.server.network.messages.incoming.room.engine.InitializeRoomMessageEvent;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.access.DoorbellRequestComposer;
@@ -69,7 +66,6 @@ import com.cometproject.server.network.messages.outgoing.room.queue.RoomQueueSta
 import com.cometproject.server.network.messages.outgoing.room.settings.RoomRatingMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.inventory.PetInventoryMessageComposer;
 import com.cometproject.server.network.sessions.Session;
-import com.cometproject.server.protocol.messages.MessageComposer;
 import com.cometproject.server.storage.queries.pets.RoomPetDao;
 import com.cometproject.server.utilities.attributes.Attributable;
 import org.apache.logging.log4j.Logger;
@@ -78,7 +74,6 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -346,7 +341,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
                 this.getPlayer().getEntity().markNeedsUpdate();
                 this.getPlayer().getEntity().getRoom().getProcess().updateEntityStuff(this.getPlayer().getEntity());
             }
-
         }
 
         if(this.getRoom().getData().getSongId() != 0) {

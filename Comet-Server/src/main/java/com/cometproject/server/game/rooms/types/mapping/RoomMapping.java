@@ -98,8 +98,8 @@ public class RoomMapping {
                     for (final RoomEntity entityToRemove : entitiesToRemove) {
                         tile.getEntities().remove(entityToRemove);
                     }
-                } catch (Exception e) {
-                    // TODO: Check ici et check pourquoi des erreurs
+                } catch (Exception ignored) {
+
                 }
 
                 entitiesToRemove.clear();
@@ -331,40 +331,7 @@ public class RoomMapping {
             if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor) {
                 return false;
             }
-           /* } else if ((room.getData().getAllowWalkthrough()) && lastStep && !isAtDoor) {
-                return false;
-            }*/
         }
-
-        /* ATRAVESAR HABBOS "FIX" */
-        /*if (positionHasUser) {
-            if (!isRetry && !room.getData().getAllowWalkthrough()) {
-                return false;
-            }
-
-            if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor) {
-                return false;
-            }
-           /* } else if ((room.getData().getAllowWalkthrough()) && lastStep && !isAtDoor) {
-                return false;
-           } */
-        //}
-        /* */
-
-        /* atravesar habbos predeterminado comet */
-        /*if (positionHasUser) {
-            if (!isRetry) {
-                return false;
-            }
-
-            if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor) {
-                return false;
-            } else if ((room.getData().getAllowWalkthrough()) && lastStep && !isAtDoor) {
-                return false;
-           }
-        }*/
-
-
 
         final RoomTile tile = tiles[to.getX()][to.getY()];
 

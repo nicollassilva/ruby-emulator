@@ -630,24 +630,17 @@ public class MessageHandler {
         final int header = message.getId();
 
         if (Comet.isDebugging) {
-            log.debug(message.toString());
+            //log.debug(message.toString());
         }
 
         if (!Comet.isRunning)
             return;
 
-        System.out.println(header);
         if (this.getMessages().containsKey(header)) {
-
-            /*if(header != 295 && header != 2596) { // Latency Packet && Pong Packet
-                System.out.println(header); // packet debugger
-            }*/
             try {
                 final Event event = this.getMessages().get(header);
 
                 if (event != null) {
-                    if (Comet.isDebugging)
-                        System.out.println("Receive: [" + header + "][" + event.getClass().getSimpleName() + "][" + message.toString() + "]");
                     this.eventExecutor.submit(new MessageEventTask(event, client, message));
                 }
             } catch (Exception e) {

@@ -408,10 +408,6 @@ public class EntityComponent {
         return ! this.playerIdToEntity.isEmpty();
     }
 
-    public int realPlayerCount() {
-        return this.playerIdToEntity.size();
-    }
-
     public Map<Integer, RoomEntity> getAllEntities() {
         return this.entities;
     }

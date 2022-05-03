@@ -139,16 +139,16 @@ public class RightsComponent {
     }
 
     public void tick() {
-        List<RoomBan> bansToRemove = new ArrayList<>();
-        List<RoomMute> mutesToRemove = new ArrayList<>();
+        final List<RoomBan> bansToRemove = new ArrayList<>();
+        final List<RoomMute> mutesToRemove = new ArrayList<>();
 
-        for (RoomBan ban : this.bannedPlayers.values()) {
+        for (final RoomBan ban : this.bannedPlayers.values()) {
             if (ban.getExpireTimestamp() <= Comet.getTime() && !ban.isPermanent()) {
                 bansToRemove.add(ban);
             }
         }
 
-        for (RoomMute mute : this.mutedPlayers) {
+        for (final RoomMute mute : this.mutedPlayers) {
             if (mute.getTicksLeft() <= 0) {
                 mutesToRemove.add(mute);
             }
@@ -157,11 +157,11 @@ public class RightsComponent {
         }
 
 
-        for (RoomBan ban : bansToRemove) {
+        for (final RoomBan ban : bansToRemove) {
             this.bannedPlayers.remove(ban.getPlayerId());
         }
 
-        for (RoomMute mute : mutesToRemove) {
+        for (final RoomMute mute : mutesToRemove) {
             this.mutedPlayers.remove(mute);
         }
 

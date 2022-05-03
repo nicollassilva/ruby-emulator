@@ -84,7 +84,7 @@ public abstract class RoomItem extends BigRoomFloorObject implements Attributabl
     }
 
     public final boolean requiresTick() {
-        return this.hasTicks() || this instanceof WiredFloorItem || this instanceof AdvancedFloorItem || this instanceof RollerFloorItem || this instanceof OldRollerFloorItem;
+        return this.hasTicks() || this instanceof WiredFloorItem || this instanceof AdvancedFloorItem;
     }
 
     protected final boolean hasTicks() {

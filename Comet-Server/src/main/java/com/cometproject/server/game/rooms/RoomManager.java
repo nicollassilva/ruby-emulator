@@ -402,7 +402,7 @@ public class RoomManager implements Initialisable {
         final Room room = this.get(roomId);
 
         if (room != null) {
-            if (room.getEntities() != null && room.getEntities().realPlayerCount() >= 1) {
+            if (room.getEntities() != null && room.getEntities().hasPlayers()) {
                 room.getEntities().broadcastMessage(new RoomPromotionMessageComposer(room.getData(), this.roomPromotions.get(roomId)));
             }
         }

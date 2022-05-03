@@ -21,7 +21,7 @@ public class FollowRoomInfoMessageEvent implements Event {
             return;
         }
 
-        Room room = RoomManager.getInstance().get(roomId);
+        final Room room = RoomManager.getInstance().get(roomId);
 
         if (room == null || room.getData() == null) {
             return;

@@ -23,7 +23,7 @@ public class RoomService implements IRoomService {
             return null;
         }
 
-        Data<IRoomData> roomData = Data.createEmpty();
+        final Data<IRoomData> roomData = Data.createEmpty();
 
         if (this.roomDataCache.contains(roomId)) {
             return this.roomDataCache.get(roomId);

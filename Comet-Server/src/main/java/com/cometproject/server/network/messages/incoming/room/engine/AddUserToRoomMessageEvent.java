@@ -33,7 +33,7 @@ import java.util.Map;
 public class AddUserToRoomMessageEvent implements Event {
 
     public void handle(Session client, MessageEvent msg) {
-        PlayerEntity avatar = client.getPlayer().getEntity();
+        final PlayerEntity avatar = client.getPlayer().getEntity();
 
         if (client.getPlayer().antiSpam("AddUserToRoomMessageEvent", 0.5)) {
             return;

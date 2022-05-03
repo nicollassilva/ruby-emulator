@@ -45,9 +45,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Room implements Attributable, IRoom {
-    public static final boolean useCycleForItems = false;
-    public static final boolean useCycleForEntities = false;
-
     public final Logger log;
 
     private final IRoomData data;
@@ -193,7 +190,7 @@ public class Room implements Attributable, IRoom {
     }
 
     public boolean isIdle() {
-        if (this.idleTicks < 600 && this.getEntities().realPlayerCount() > 0) {
+        if (this.idleTicks < 600 && this.getEntities().hasPlayers()) {
             this.idleTicks = 0;
         } else {
             if (this.idleTicks >= 600) {

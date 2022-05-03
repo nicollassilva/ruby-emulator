@@ -30,8 +30,8 @@ public class WiredCustomAddTag extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
-        RoomEntity roomEntity = (event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final RoomEntity roomEntity = (event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -41,12 +41,10 @@ public class WiredCustomAddTag extends WiredActionItem {
             return;
         }
 
-        String tag = this.getWiredData().getText();
-        //roomEntity.addTagUser.add(tag);
+        final String tag = this.getWiredData().getText();
 
         if(!roomEntity.addTagUser.contains(tag)) {
             roomEntity.addTagUser.add(tag);
         }
-        //bghyjkplayerEntity.getPlayer().getSession().send(new NotificationMessageComposer("generic", "Se te ha añadido el tag: " + tag + " exitosamente"));
     }
 }

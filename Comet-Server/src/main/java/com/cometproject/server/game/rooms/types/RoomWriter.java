@@ -115,7 +115,7 @@ public class RoomWriter {
         //   1         1            1           0           0         30
         //   1         1            1           0           1         31
 
-        PublicRoom publicRoom = NavigatorManager.getInstance().getPublicRoom(roomData.getId());
+        final PublicRoom publicRoom = NavigatorManager.getInstance().getPublicRoom(roomData.getId());
 
         if (group != null)
             specialsType += 2;

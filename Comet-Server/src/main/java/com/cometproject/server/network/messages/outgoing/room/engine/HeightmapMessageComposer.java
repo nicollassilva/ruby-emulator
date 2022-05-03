@@ -35,7 +35,7 @@ public class HeightmapMessageComposer extends MessageComposer {
 
         for (int y = 0; y < room.getModel().getSizeY(); y++) {
             for (int x = 0; x < room.getModel().getSizeX(); x++) {
-                RoomTile tile = room.getMapping().getTile(x, y);
+                final RoomTile tile = room.getMapping().getTile(x, y);
 
                 if (room.getModel().getSquareState()[x][y] == RoomTileState.INVALID) {
                     msg.writeShort(16191);
@@ -54,18 +54,16 @@ public class HeightmapMessageComposer extends MessageComposer {
                     } */
 
                     if (this.modesetz) {
-
                         int height;
 
                         if(this.setz < 0) {
-                            height = (int) ((room.getModel().getSquareHeight()[x][y]) * 256);
+                            height = (room.getModel().getSquareHeight()[x][y]) * 256;
                         } else {
                             height = (int) ((room.getModel().getSquareHeight()[x][y] + this.setz) * 256);
                         }
                         msg.writeShort(height);
 
                     } else {
-
                         if (tile != null) {
                             int height = (int) ((tile.getStackHeight()) * 256);
 
@@ -74,8 +72,6 @@ public class HeightmapMessageComposer extends MessageComposer {
                             msg.writeShort((short) room.getModel().getSquareHeight()[x][y] * 256);
                         }
                     }
-
-
                 }
             }
         }

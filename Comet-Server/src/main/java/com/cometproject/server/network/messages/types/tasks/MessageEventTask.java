@@ -27,10 +27,10 @@ public class MessageEventTask implements CometTask {
     @Override
     public void run() {
         try {
-            log.debug("Started packet process for packet: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "]");
+            log.debug("Packet processing: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "]");
             this.messageEvent.handle(this.session, this.messageEventData);
 
-            long timeTakenSinceCreation = ((System.currentTimeMillis() - this.start));
+            final long timeTakenSinceCreation = ((System.currentTimeMillis() - this.start));
 
             // If the packet took more than 750ms to be handled, red flag!
             if (timeTakenSinceCreation >= 100) {
@@ -39,7 +39,7 @@ public class MessageEventTask implements CometTask {
                 else
                     log.trace("[" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "] Packet took " + timeTakenSinceCreation + "ms to execute");
             }
-            log.debug("Finished packet process for packet: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "] in " + timeTakenSinceCreation + "ms");
+            //log.debug("Finished packet process for packet: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "] in " + timeTakenSinceCreation + "ms");
 
         } catch (Exception e) {
             if (this.session.getLogger() != null)

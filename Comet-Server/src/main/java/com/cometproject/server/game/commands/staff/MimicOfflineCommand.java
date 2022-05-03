@@ -19,7 +19,7 @@ public class MimicOfflineCommand extends ChatCommand {
         final String username = params[0];
 
         if(username == null ) {
-            client.send(new NotificationMessageComposer("generic", "Recuerda poner un nombre de usuario"));
+            client.send(new NotificationMessageComposer("generic", "Por favor, informe o nome do usuário"));
             return;
         }
 

@@ -37,8 +37,6 @@ public class SetBuildToolEvent extends IncomingEvent {
 
                 Double value = this.data.getJSONObject("data").getDouble("value");
 
-                System.out.println(value);
-
                 client.getPlayer().getEntity().setAttribute("setz.height", value);
                 for (RoomTile[] pTile : client.getPlayer().getEntity().getRoom().getMapping().getTiles()) {
 

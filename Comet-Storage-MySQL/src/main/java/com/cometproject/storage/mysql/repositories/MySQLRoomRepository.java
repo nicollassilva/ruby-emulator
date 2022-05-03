@@ -179,7 +179,6 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
 
         final String password = room.readString("password");
         final RoomAccessType access = RoomAccessType.valueOf(accessTypeString.toUpperCase());
-        final String originalPassword = password;
 
         final int score = room.readInteger("score");
 
@@ -230,7 +229,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final int songId = room.readInteger("song_id");
 
         return this.roomDataFactory.createRoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
-                originalPassword, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
+                password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands == null ? Lists.newArrayList() : disabledCommands,
                 groupId, requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId);
