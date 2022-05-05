@@ -206,9 +206,6 @@ public class CommandManager implements Initialisable {
 
         this.addCommand(Locale.getOrDefault("command.listdisabledcommand.name", "listcommands"), new ListDisabledCommandsCommand());
         this.addCommand(Locale.getOrDefault("command.toggleshoot.name", "toggleshoot"), new ToggleShootCommand());
-
-        this.addCommand(Locale.get("command.sell_room.name"), new SellRoomCommand());
-        this.addCommand(Locale.get("command.buy_room.name"), new BuyRoomCommand());
     }
 
     /**

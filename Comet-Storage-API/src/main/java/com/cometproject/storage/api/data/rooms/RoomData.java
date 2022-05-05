@@ -64,7 +64,6 @@ public class RoomData implements IRoomData {
     private final int creationTime;
     private boolean wiredLimit;
     private boolean roomDiagonal;
-    private int roomPrice;
 
     public RoomData(int id, RoomType type, String name, String description, int ownerId, String owner, int category,
                     int maxUsers, RoomAccessType access, String password, String originalPassword,
@@ -73,7 +72,7 @@ public class RoomData implements IRoomData {
                     boolean allowPets, String heightmap, RoomMuteState muteState, RoomKickState kickState,
                     RoomBanState banState, int bubbleMode, int bubbleType, int bubbleScroll, int chatDistance,
                     int antiFloodSettings, List<String> disabledCommands, int groupId,
-                    String requiredBadge, String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, boolean roomDiagonal, int songId, int roomPrice) {
+                    String requiredBadge, String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, boolean roomDiagonal, int songId) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -116,7 +115,6 @@ public class RoomData implements IRoomData {
         this.wiredLimit = wiredLimit;
         this.roomDiagonal = roomDiagonal;
         this.songId = songId;
-        this.roomPrice = roomPrice;
     }
 
     @Override
@@ -526,15 +524,5 @@ public class RoomData implements IRoomData {
     @Override
     public void setRoomDiagonal(boolean roomDiagonal) {
         this.roomDiagonal = roomDiagonal;
-    }
-
-    @Override
-    public int getRoomPrice() {
-        return this.roomPrice;
-    }
-
-    @Override
-    public void setRoomPrice(int value) {
-        this.roomPrice = value;
     }
 }

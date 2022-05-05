@@ -7,7 +7,7 @@ import com.cometproject.api.game.utilities.Position;
 public class RoomItemData implements IRoomItemData {
     private final long id;
     private final int itemId;
-    private int ownerId;
+    private final int ownerId;
     private final String ownerName;
 
     private String data;
@@ -44,11 +44,6 @@ public class RoomItemData implements IRoomItemData {
 
     public int getOwnerId() {
         return ownerId;
-    }
-
-    @Override
-    public void setOwnerId(int userId) {
-        this.ownerId = userId;
     }
 
     public String getOwnerName() {
