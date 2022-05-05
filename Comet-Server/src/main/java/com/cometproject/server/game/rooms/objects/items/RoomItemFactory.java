@@ -152,6 +152,7 @@ public class RoomItemFactory {
             put("wf_cnd_match_snapshot", WiredConditionMatchSnapshot.class);
             put("wf_cnd_not_match_snap", WiredNegativeConditionMatchSnapshot.class);
             put("wf_cnd_has_handitem", WiredConditionHasHandItem.class);
+            put("wf_cnd_not_handitem", WiredNegativeConditionHasHandItem.class);
             put("wf_cnd_time_more_than", WiredConditionTimeMoreThan.class);
             put("wf_cnd_time_less_than", WiredConditionTimeLessThan.class);
             put("wf_cnd_actor_in_team", WiredConditionPlayerInTeam.class);
@@ -171,7 +172,7 @@ public class RoomItemFactory {
             put("wf_pyramid", WiredAddonPyramid.class);
             put("wf_visual_timer", WiredAddonVisualTimer.class);
             put("wf_blob", WiredAddonBlob.class);
-            put("wf_puzzlebox", WiredAddonPuzzleBox.class);
+            put("wf_puzzlebox", WiredAddonNewPuzzleBox.class); // old: WiredAddonPuzzleBox
 
             put("wf_act_collision_case", WiredCustomCollisionCase.class); // action new
             put("wf_act_unfreeze", WiredCustomUnfreeze.class); // action new

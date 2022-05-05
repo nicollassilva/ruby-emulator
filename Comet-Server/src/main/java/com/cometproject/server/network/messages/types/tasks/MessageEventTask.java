@@ -1,5 +1,6 @@
 package com.cometproject.server.network.messages.types.tasks;
 
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
@@ -27,7 +28,9 @@ public class MessageEventTask implements CometTask {
     @Override
     public void run() {
         try {
-            log.debug("Packet processing: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "]");
+            if(Comet.isDebugging) {
+                log.debug("Packet processing: [" + this.messageEvent.getClass().getSimpleName() + "][" + messageEventData.getId() + "]");
+            }
             this.messageEvent.handle(this.session, this.messageEventData);
 
             final long timeTakenSinceCreation = ((System.currentTimeMillis() - this.start));

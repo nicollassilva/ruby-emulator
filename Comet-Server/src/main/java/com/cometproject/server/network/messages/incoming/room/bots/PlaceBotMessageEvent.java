@@ -20,12 +20,12 @@ import com.cometproject.server.storage.queries.bots.RoomBotDao;
 
 public class PlaceBotMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        int botId = msg.readInt();
-        int x = msg.readInt();
-        int y = msg.readInt();
+        final int botId = msg.readInt();
+        final int x = msg.readInt();
+        final int y = msg.readInt();
 
-        Room room = client.getPlayer().getEntity().getRoom();
-        IBotData bot = client.getPlayer().getBots().getBot(botId);
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final IBotData bot = client.getPlayer().getBots().getBot(botId);
 
         if (room == null || bot == null || (!room.getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl())) {
             return;
@@ -51,7 +51,7 @@ public class PlaceBotMessageEvent implements Event {
 
         RoomBotDao.savePosition(x, y, height, botId, room.getId());
 
-        BotEntity botEntity = room.getBots().addBot(bot, x, y, height);
+        final BotEntity botEntity = room.getBots().addBot(bot, x, y, height);
         client.getPlayer().getBots().remove(botId);
 
         botEntity.addToTile(tile);
@@ -59,10 +59,11 @@ public class PlaceBotMessageEvent implements Event {
         room.getEntities().broadcastMessage(new AvatarsMessageComposer(botEntity));
         client.send(new BotInventoryMessageComposer(client.getPlayer().getBots().getBots()));
 
-        for (RoomItemFloor floorItem : room.getItems().getItemsOnSquare(x, y)) {
+        for (final RoomItemFloor floorItem : room.getItems().getItemsOnSquare(x, y)) {
             floorItem.onEntityStepOn(botEntity);
         }
 
+        client.getPlayer().getEntity().cancelWalk();
         botEntity.getAI().onAddedToRoom();
     }
 }

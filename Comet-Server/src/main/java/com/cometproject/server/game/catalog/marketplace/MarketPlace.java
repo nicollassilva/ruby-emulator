@@ -216,7 +216,7 @@ public class MarketPlace {
                     offers.add(new MarketPlaceOffer(set, false));
                 }
             } catch (Exception e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         } catch (SQLException e) {
             SqlHelper.handleSqlException(e);

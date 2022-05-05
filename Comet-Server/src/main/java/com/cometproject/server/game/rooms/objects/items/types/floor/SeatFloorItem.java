@@ -2,6 +2,7 @@ package com.cometproject.server.game.rooms.objects.items.types.floor;
 
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -44,8 +45,10 @@ public class SeatFloorItem extends RoomItemFloor {
     }
 
     public void onEntityStepOn(RoomEntity entity, boolean instantUpdate) {
-        if (entity.getPosition().getX() == this.getPosition().getX() && entity.getPosition().getY() == this.getPosition().getY()) {
-            entity.sit(getSitHeight(), getRotation());
+        for (final Position position : this.getPositions()) {
+            if(entity.getPosition().getX() == position.getX() && entity.getPosition().getY() == position.getY()) {
+                entity.sit(getSitHeight(), getRotation());
+            }
         }
 
         if (instantUpdate || entity.isRolling()) {

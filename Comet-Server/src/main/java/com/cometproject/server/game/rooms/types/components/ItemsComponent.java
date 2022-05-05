@@ -8,6 +8,8 @@ import com.cometproject.api.game.furniture.types.LimitedEditionItem;
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
 import com.cometproject.server.network.messages.incoming.catalog.data.UnseenItemsMessageComposer;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.items.ItemManager;
@@ -346,9 +348,7 @@ public class ItemsComponent {
             if (tileInstance != null) {
                 tileInstance.reload();
 
-                if (!(item instanceof WiredFloorItem)) {
-                    room.getEntities().broadcastMessageModeBuild(tileInstance);
-                }
+                room.getEntities().broadcastMessageModeBuild(tileInstance);
             }
         }
 
@@ -367,6 +367,10 @@ public class ItemsComponent {
             return false;
         }
 
+        if(item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
+            return false;
+        }
+
         double height;
 
         if (autoheight)
@@ -374,11 +378,11 @@ public class ItemsComponent {
         else
             height = newPosition.getZ();
 
-        /*if (item instanceof PuzzleFloorItem) {
+        if (item instanceof WiredAddonNewPuzzleBox) {
             if (!tile.canPlaceItemHere()) {
                 return false;
             }
-        }*/
+        }
 
         if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 0.2)
             return false;
@@ -732,24 +736,25 @@ public class ItemsComponent {
     }
 
     public boolean moveFloorItem(long itemId, Position newPosition, int rotation, boolean save, Session client) {
-        RoomItemFloor item = this.getFloorItem(itemId);
+        final RoomItemFloor item = this.getFloorItem(itemId);
+
         if (item == null) return false;
 
-        RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
+        final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
         double height;
         boolean verifyItem = true;
         int rot = rotation;
 
         if (client != null) {
-
             if (client.getPlayer().getEntity().hasAttribute("modebuild") || (client.getPlayer().getEntity().hasAttribute("setz.height")) && !(item instanceof DiceFloorItem)) {
                 verifyItem = false;
             }
+
             if (client.getPlayer().getEntity().hasAttribute("rotation.height")) {
                 rot = (int) client.getPlayer().getEntity().getAttribute("rotation.height");
-                System.out.println(rot);
             }
+
             if (client.getPlayer().getEntity().hasAttribute("setz.height")) {
                 height = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
             } else {
@@ -757,7 +762,6 @@ public class ItemsComponent {
             }
 
         } else {
-
             height = tile.getStackHeight(item, null);
         }
 
@@ -891,7 +895,7 @@ public class ItemsComponent {
             final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(
                     item.getLength(), item.getWidth(), tile.getPosition().getX(), tile.getPosition().getY(), rotation);
 
-            for (AffectedTile affectedTile : affectedTiles) {
+            for (final AffectedTile affectedTile : affectedTiles) {
                 final RoomTile roomTile = this.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
 
                 if (roomTile != null) {

@@ -14,7 +14,7 @@ public class AffectedTile {
     }
 
     public static List<AffectedTile> getAffectedBothTilesAt(int length, int width, int posX, int posY, int rotation) {
-        List<AffectedTile> pointList = new ArrayList<>();
+        final List<AffectedTile> pointList = new ArrayList<>();
 
         pointList.add(new AffectedTile(posX, posY));
 
@@ -62,7 +62,7 @@ public class AffectedTile {
     }
 
     public static List<AffectedTile> getAffectedTilesAt(int length, int width, int posX, int posY, int rotation) {
-        List<AffectedTile> pointList = new ArrayList<>();
+        final List<AffectedTile> pointList = new ArrayList<>();
 
         if (length > 1) {
             if (rotation == 0 || rotation == 4) {

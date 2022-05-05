@@ -161,7 +161,7 @@ public class Session implements ISession {
             logger.debug("Unknown header ID for message: " + msg.getClass().getSimpleName());
         }
 
-        if (!(msg instanceof AvatarUpdateMessageComposer) && !(msg instanceof UpdateFloorItemMessageComposer))
+        if (!(msg instanceof AvatarUpdateMessageComposer) && !(msg instanceof UpdateFloorItemMessageComposer) && Comet.isDebugging)
             logger.debug("Sent message: " + msg.getClass().getSimpleName() + " / " + msg.getId());
 
         if (!queue) {

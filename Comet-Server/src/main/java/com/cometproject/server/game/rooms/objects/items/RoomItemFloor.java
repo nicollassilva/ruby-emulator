@@ -269,16 +269,20 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
 
 
     public ArrayList<Position> getPositions() {
-        ArrayList<Position> positions = new ArrayList<>();
+        final ArrayList<Position> positions = new ArrayList<>();
+
         positions.add(new Position(this.getPosition().getX(), this.getPosition().getY()));
-        for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-            Position position = new Position(affectedTile.x, affectedTile.y);
+
+        for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+            final Position position = new Position(affectedTile.x, affectedTile.y);
+
             if (this.getRoom().getMapping().isValidPosition(position)) {
                 if (!positions.contains(position)) {
                     positions.add(position);
                 }
             }
         }
+
         return positions;
     }
 

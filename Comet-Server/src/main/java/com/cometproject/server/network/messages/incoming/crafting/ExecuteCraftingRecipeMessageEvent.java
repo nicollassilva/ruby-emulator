@@ -29,7 +29,6 @@ public class ExecuteCraftingRecipeMessageEvent implements Event {
 
         final int machineId = msg.readInt();
         final String result = msg.readString();
-        System.out.println(result);
         final CraftingRecipe recipe = machine.getRecipeByProductData(result);
 
         if (recipe == null) {

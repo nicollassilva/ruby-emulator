@@ -21,8 +21,8 @@ public class WiredConditionDateRange extends WiredConditionItem {
 
     @Override
     public boolean evaluate(RoomEntity entity, Object data) {
-        int DateStart = this.getWiredData().getParams().get(DATE_START);
-        int DateEnd = this.getWiredData().getParams().get(DATE_END);
+        final int DateStart = this.getWiredData().getParams().get(DATE_START);
+        final int DateEnd = this.getWiredData().getParams().get(DATE_END);
 
         if(DateStart != 0 && DateEnd != 0) {
             return Comet.getTime() > DateStart && Comet.getTime() < DateEnd;

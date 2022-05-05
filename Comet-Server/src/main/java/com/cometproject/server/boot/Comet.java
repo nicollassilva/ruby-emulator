@@ -76,7 +76,7 @@ public class Comet {
 
         for (final String arg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
             if (arg.contains("dt_")) {
-                isDebugging = true;
+                //isDebugging = true;
                 break;
             }
         }
@@ -102,7 +102,7 @@ public class Comet {
 
             for (final String arg : arguments) {
                 if (arg.equals("--debug-logging")) {
-                    isDebugging = true;
+                    //isDebugging = true;
                 }
 
                 if (arg.equals("--gui")) {

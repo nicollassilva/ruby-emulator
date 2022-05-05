@@ -36,21 +36,22 @@ public class MoveFloorItemMessageEvent implements Event {
             return;
         }
 
-        int x = msg.readInt();
-        int y = msg.readInt();
-        int rot = msg.readInt();
+        final int x = msg.readInt();
+        final int y = msg.readInt();
+        final int rot = msg.readInt();
 
         if (client.getPlayer().getEntity() == null) return;
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null) return;
 
-        RoomItemFloor floorItem = room.getItems().getFloorItem(id);
+        final RoomItemFloor floorItem = room.getItems().getFloorItem(id);
 
         if (!client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl()) {
-            Map<String, String> notificationParams = Maps.newHashMap();
+            final Map<String, String> notificationParams = Maps.newHashMap();
             notificationParams.put("message", "${room.error.cant_set_item}");
+
             client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
             client.send(new UpdateFloorItemMessageComposer(floorItem));
             return;
@@ -71,7 +72,7 @@ public class MoveFloorItemMessageEvent implements Event {
                     client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
                 }
             } else {
-                Map<String, String> notificationParams = Maps.newHashMap();
+                final Map<String, String> notificationParams = Maps.newHashMap();
 
                 notificationParams.put("message", "${room.error.cant_set_item}");
 

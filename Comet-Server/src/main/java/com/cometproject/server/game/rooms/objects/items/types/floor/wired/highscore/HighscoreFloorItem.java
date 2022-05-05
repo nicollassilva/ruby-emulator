@@ -28,7 +28,9 @@ public abstract class HighscoreFloorItem extends RoomItemFloor {
 
         final String data = roomItemData.getData();
 
-        this.clearType = ScoreboardClearType.getByFurniType(Integer.parseInt(this.getDefinition().getItemName().split("\\*")[1]));
+        final String[] splittedItemDefinitionName = this.getDefinition().getItemName().split("_");
+
+        this.clearType = ScoreboardClearType.getByFurniType(Integer.parseInt(splittedItemDefinitionName[splittedItemDefinitionName.length - 1]));
 
         if (roomItemData.getData().startsWith("1{") || roomItemData.getData().startsWith("0{")) {
             this.state = data.startsWith("1");
