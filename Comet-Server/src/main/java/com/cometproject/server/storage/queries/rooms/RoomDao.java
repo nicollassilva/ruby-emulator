@@ -518,6 +518,26 @@ public class RoomDao {
         }
     }
 
+    public static void changeRoomPrice(int roomId, int price) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET room_price = ? WHERE `id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, price);
+            preparedStatement.setInt(1, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static void roomDiagonalEnable(int roomId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;

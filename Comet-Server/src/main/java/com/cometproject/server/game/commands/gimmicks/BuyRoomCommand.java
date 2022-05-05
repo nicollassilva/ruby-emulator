@@ -9,6 +9,7 @@ import com.cometproject.server.game.rooms.types.components.ItemsComponent;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.sessions.Session;
+import com.cometproject.server.storage.queries.rooms.RoomDao;
 
 import java.util.stream.Collectors;
 
@@ -88,6 +89,7 @@ public class BuyRoomCommand extends ChatCommand {
 
         sendNotif("O seu quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!", roomOwner);
 
+        RoomDao.changeRoomPrice(room.getId(), 0);
         roomData.setRoomPrice(0);
 
         room.reload();
