@@ -7,11 +7,18 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.sessions.Session;
+import com.cometproject.server.storage.queries.rooms.RoomDao;
 
 public class SellRoomCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-        Room room = client.getPlayer().getEntity().getRoom();
+        if(params.length < 1) {
+            sendWhisper("Oops, você precisa digitar a quantidade de moedas para vender este quarto.", client);
+            return;
+        }
+
+        final Room room = client.getPlayer().getEntity().getRoom();
+
         if (room.getData().getOwnerId() != client.getPlayer().getId()) {
             sendWhisper("Oops, você não é o dono desde quarto!", client);
             return;
@@ -22,15 +29,10 @@ public class SellRoomCommand extends ChatCommand {
             return;
         }
 
-        if (params.length == 1) {
-            sendWhisper("Oops, você precisa digitar a quantidade de moedas para vender este quarto.", client);
-            return;
-        }
-
-        int value = 0;
+        int value;
 
         try {
-            value = Integer.parseInt(params[1]);
+            value = Integer.parseInt(params[0]);
         } catch (NumberFormatException ex) {
             sendWhisper("Oops, aconteceu um erro ao converter este valor, tente novamente.", client);
             return;

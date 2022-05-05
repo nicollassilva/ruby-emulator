@@ -227,11 +227,12 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final boolean wiredLimit = room.readBoolean("wired_limit");
         final boolean roomDiagonal = room.readString("room_diagonal").equals("1");
         final int songId = room.readInteger("song_id");
+        final int roomPrice = room.readInteger("room_price");
 
         return this.roomDataFactory.createRoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
                 password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands == null ? Lists.newArrayList() : disabledCommands,
-                groupId, requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId);
+                groupId, requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice);
     }
 }
