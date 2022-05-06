@@ -20,13 +20,6 @@ public class InfoRetrieveMessageEvent implements Event {
 
         client.getPlayer().getMessenger().sendStatus(!client.getPlayer().getSettings().getHideOnline(), client.getPlayer().getSettings().allowedFollowToRoom());
 
-//        if(client.getPlayer().getPermissions().getRank().alfaTool()){
-//            final HelperSession helperSession = new HelperSession(client.getPlayer().getId(), true, true, true);
-//            client.getPlayer().setHelperSession(helperSession);
-//            GuideManager.getInstance().startPlayerDuty(client.getPlayer().getHelperSession());
-//            client.send(new GuideToolsMessageComposer(true));
-//        }
-
         client.flush();
     }
 }

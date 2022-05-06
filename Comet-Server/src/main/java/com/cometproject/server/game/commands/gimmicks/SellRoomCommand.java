@@ -17,15 +17,15 @@ public class SellRoomCommand extends ChatCommand {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room.getData().getOwnerId() != client.getPlayer().getId()) {
-            sendWhisper("Oops, você não é o dono desde quarto!", client);
+            sendWhisper("Você não pode vender o quarto de outro usuário.", client);
             return;
         }
 
         if (room.getGroup() != null) {
-            sendWhisper("Oops, não pode vender este quarto porque tem um grupo.", client);
+            sendWhisper("Venda não permitida: Este quarto possui um grupo.", client);
             return;
         }
 
@@ -34,12 +34,12 @@ public class SellRoomCommand extends ChatCommand {
         try {
             value = Integer.parseInt(params[0]);
         } catch (NumberFormatException ex) {
-            sendWhisper("Oops, aconteceu um erro ao converter este valor, tente novamente.", client);
+            sendWhisper("Digite um valor válido para o preço do seu quarto.", client);
             return;
         }
 
         if (value < 0) {
-            sendWhisper("Oops, valor inválido. Tente novamente.", client);
+            sendWhisper("Digite um valor válido para o preço do seu quarto.", client);
             return;
         }
 

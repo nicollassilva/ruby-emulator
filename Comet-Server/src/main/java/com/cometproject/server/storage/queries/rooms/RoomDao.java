@@ -545,7 +545,7 @@ public class RoomDao {
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE items SET `room_id` = 0 WHERE `user_id` = <> ? AND `room_id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("UPDATE items SET room_id = 0 WHERE `user_id` <> ? AND `room_id` = ?", sqlConnection);
 
             preparedStatement.setInt(1, ownerId);
             preparedStatement.setInt(2, roomId);
@@ -579,16 +579,17 @@ public class RoomDao {
         }
     }
 
-    public static void changeRoomOwner(int roomId, int newOwnerUserId) {
+    public static void changeRoomOwner(int roomId, int newOwnerUserId, String username) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `owner_id` = ? WHERE `id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `owner_id` = ?, `owner` = ? WHERE `id` = ?", sqlConnection);
 
             preparedStatement.setInt(1, newOwnerUserId);
-            preparedStatement.setInt(2, roomId);
+            preparedStatement.setString(2, username);
+            preparedStatement.setInt(3, roomId);
 
             preparedStatement.execute();
         } catch (SQLException e) {

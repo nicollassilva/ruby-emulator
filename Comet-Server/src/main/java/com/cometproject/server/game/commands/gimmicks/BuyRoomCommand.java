@@ -1,50 +1,61 @@
 package com.cometproject.server.game.commands.gimmicks;
 
 import com.cometproject.api.game.rooms.IRoomData;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
+import com.cometproject.server.game.players.types.Player;
+import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.RoomReloadListener;
 import com.cometproject.server.network.NetworkManager;
+import com.cometproject.server.network.messages.outgoing.handshake.HomeRoomMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.rooms.RoomDao;
-
-import java.util.stream.Collectors;
 
 public class BuyRoomCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-        Room room = client.getPlayer().getEntity().getRoom();
-        IRoomData roomData = room.getData();
-        int roomPrice = roomData.getRoomPrice();
-        int userId = client.getPlayer().getData().getId();
+        // Can buy rooms every 30 seconds
+        if (client.getPlayer().antiSpam("buyRoom", 30.0)) {
+            sendWhisper("Compra não concluída: Você está comprando muitos quartos em pouco tempo.", client);
+            return;
+        }
+
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final IRoomData roomData = room.getData();
+        final int roomPrice = roomData.getRoomPrice();
+        final int userId = client.getPlayer().getData().getId();
 
         //Check if the room is on sell
         if (roomPrice == 0) {
-            sendWhisper("Oops, este quarto não está à venda!", client);
+            sendWhisper("Esse quarto não está a venda!", client);
             return;
         }
 
         if (roomData.getOwnerId() == userId) {
-            sendWhisper("Oops, não pode comprar o seu próprio quarto! Se quiser o remover da venda, digite :sellroom 0", client);
+            sendWhisper("Não é permitido comprar o próprio quarto. Para cancelar essa venda, anuncie-o novamente com o preço zero.", client);
             return;
         }
 
         if (room.getGroup() != null) {
-            sendWhisper("Oops, não pode comprar este quarto porque tem um grupo.", client);
+            sendWhisper("Não é permitido comprar um quarto que possui grupo.", client);
             return;
         }
 
         //Check if has enough credits
         if (client.getPlayer().getData().getCredits() < roomPrice) {
-            sendWhisper("Oops, não tem créditos suficientes!", client);
+            sendWhisper("Você não possui moedas suficientes para comprar este quarto!", client);
             return;
         }
 
-        Session roomOwner = NetworkManager.getInstance().getSessions().getByPlayerId(roomData.getOwnerId());
+        final Session roomOwner = NetworkManager.getInstance().getSessions().getByPlayerId(roomData.getOwnerId());
+
         if (roomOwner == null) {
-            sendWhisper("Oops, o dono deste quarto está offline!", client);
+            sendWhisper("O dono deste quarto está offline!", client);
             return;
         }
 
@@ -58,27 +69,57 @@ public class BuyRoomCommand extends ChatCommand {
         roomOwner.getPlayer().getData().save();
         roomOwner.getPlayer().sendBalance();
 
-        for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities().stream().filter(player -> player.getId() != roomOwner.getPlayer().getData().getId()).collect(Collectors.toList())) {
-            playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Este quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!"));
+        for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities()) {
+            if(playerEntity.getPlayer().getId() == roomOwner.getPlayer().getId()) continue;
+
+            playerEntity.getPlayer().getSession().send(
+                    new WhisperMessageComposer(playerEntity.getId(), "Este quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!")
+            );
         }
 
         sendNotif("O seu quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!", roomOwner);
 
-        int roomId = room.getId();
+        final int roomId = room.getId();
 
-        RoomDao.transferItems(roomId, room.getData().getOwnerId(), userId);
         RoomDao.changeRoomPrice(roomId, 0);
-        RoomDao.changeRoomOwner(roomId, userId);
+        RoomDao.removeNonOwnerItems(roomId, room.getData().getOwnerId());
+        RoomDao.transferItems(roomId, room.getData().getOwnerId(), userId);
+        RoomDao.changeRoomOwner(roomId, userId, client.getPlayer().getData().getUsername());
 
-        roomData.setOwnerId(userId);
         roomData.setRoomPrice(0);
+        roomData.setOwnerId(userId);
+        roomData.setOwner(client.getPlayer().getData().getUsername());
+
+        if (roomOwner.getPlayer().getSettings().getHomeRoom() == roomId) {
+            client.send(new HomeRoomMessageComposer(roomOwner.getPlayer().getSettings().getHomeRoom(), 0));
+            client.getPlayer().getSettings().setHomeRoom(0);
+        }
 
         room.getItems().getItemOwners().keySet().forEach(id -> {
-            Session itemOwner = NetworkManager.getInstance().getSessions().getByPlayerId(id);
+            final Session itemOwner = NetworkManager.getInstance().getSessions().getByPlayerId(id);
+
             if (itemOwner != null)
-                itemOwner.getPlayer().getInventory().loadItems(0);
+                itemOwner.getPlayer().getInventory().send();
         });
 
+        this.sendUpdateDataAndReload(client, roomOwner, room);
+    }
+
+    public void sendUpdateDataAndReload(Session buyerSession, Session sellerSession, Room room) {
+        final RoomReloadListener reloadListener = new RoomReloadListener(room, (players, newRoom) -> {
+            for (final Player player : players) {
+                if (player.getEntity() == null) continue;
+
+                player.getSession().send(new RoomForwardMessageComposer(newRoom.getId()));
+            }
+        });
+
+        RoomManager.getInstance().addReloadListener(buyerSession.getPlayer().getEntity().getRoom().getId(), reloadListener);
+
+        buyerSession.getPlayer().getRooms().add(room.getId());
+        sellerSession.getPlayer().getRooms().remove(room.getId());
+
+        buyerSession.getPlayer().setLastRoomCreated((int) Comet.getTime());
         room.reload();
     }
 

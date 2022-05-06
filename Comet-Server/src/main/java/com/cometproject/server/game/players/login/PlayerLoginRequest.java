@@ -254,7 +254,7 @@ public class PlayerLoginRequest implements CometTask {
             }
 
             if (SessionManager.isLocked) {
-                client.sendQueue(new AlertMessageComposer("Hotel cerrado, vuelve pronto!"));
+                client.sendQueue(new AlertMessageComposer("Hotel fechado, volte em breve!"));
                 CometThreadManager.getInstance().executeSchedule(client::disconnect, 5, TimeUnit.SECONDS);
             }
 
