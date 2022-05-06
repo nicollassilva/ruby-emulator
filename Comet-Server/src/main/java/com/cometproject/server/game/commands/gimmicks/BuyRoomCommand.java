@@ -59,39 +59,28 @@ public class BuyRoomCommand extends ChatCommand {
         roomOwner.getPlayer().getData().save();
         roomOwner.getPlayer().sendBalance();
 
-        ItemsComponent roomItems = room.getItems();
-
-        roomItems.getFloorItems().values().forEach(item -> {
-            if (item != null) {
-                if (item.getItemData().getOwnerId() != roomOwner.getPlayer().getData().getId()) {
-                    Session owner = NetworkManager.getInstance().getSessions().getByPlayerId(item.getItemData().getOwnerId());
-                    room.getItems().removeItem(item, owner);
-                } else {
-                    item.getItemData().setOwnerId(userId);
-                }
-            }
-        });
-
-        roomItems.getWallItems().values().forEach(item -> {
-            if (item != null) {
-                if (item.getItemData().getOwnerId() != roomOwner.getPlayer().getData().getId()) {
-                    Session owner = NetworkManager.getInstance().getSessions().getByPlayerId(item.getItemData().getOwnerId());
-                    room.getItems().removeItem(item, item.getItemData().getOwnerId(), owner);
-                } else {
-                    item.getItemData().setOwnerId(userId);
-                }
-            }
-        });
-
         for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities().stream().filter(player -> player.getId() != roomOwner.getPlayer().getData().getId()).collect(Collectors.toList())) {
             playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Este quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!"));
         }
 
         sendNotif("O seu quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!", roomOwner);
 
-        RoomDao.changeRoomPrice(room.getId(), 0);
-        RoomDao.changeRoomOwner(room.getId(), client.getPlayer().getData().getId());
+        int playerId = client.getPlayer().getData().getId();
+        int roomId = room.getId();
+
+        RoomDao.transferItems(roomId, room.getData().getOwnerId(), playerId);
+        RoomDao.changeRoomPrice(roomId, 0);
+        RoomDao.changeRoomOwner(roomId, playerId);
+
+        roomData.setOwnerId(playerId);
         roomData.setRoomPrice(0);
+
+        room.getItems().getItemOwners().keySet().forEach(id -> {
+            Session itemOwner = NetworkManager.getInstance().getSessions().getByPlayerId(id);
+            if (itemOwner != null) {
+                itemOwner.getPlayer().getInventory().loadItems(0);
+            }
+        });
 
         room.reload();
     }

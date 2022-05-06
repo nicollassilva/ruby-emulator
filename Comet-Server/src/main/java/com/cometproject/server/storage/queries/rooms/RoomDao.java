@@ -518,6 +518,47 @@ public class RoomDao {
         }
     }
 
+    public static void transferItems(int roomId, int ownerId, int toOwnerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE items SET `user_id` = ? WHERE `user_id` = ? AND `room_id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, toOwnerId);
+            preparedStatement.setInt(2, ownerId);
+            preparedStatement.setInt(3, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void removeNonOwnerItems(int roomId, int ownerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE items SET `room_id` = 0 WHERE `user_id` = <> ? AND `room_id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, ownerId);
+            preparedStatement.setInt(2, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static void changeRoomPrice(int roomId, int price) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
