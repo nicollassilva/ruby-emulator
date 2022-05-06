@@ -65,14 +65,13 @@ public class BuyRoomCommand extends ChatCommand {
 
         sendNotif("O seu quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!", roomOwner);
 
-        int playerId = client.getPlayer().getData().getId();
         int roomId = room.getId();
 
-        RoomDao.transferItems(roomId, room.getData().getOwnerId(), playerId);
+        RoomDao.transferItems(roomId, room.getData().getOwnerId(), userId);
         RoomDao.changeRoomPrice(roomId, 0);
-        RoomDao.changeRoomOwner(roomId, playerId);
+        RoomDao.changeRoomOwner(roomId, userId);
 
-        roomData.setOwnerId(playerId);
+        roomData.setOwnerId(userId);
         roomData.setRoomPrice(0);
 
         room.getItems().getItemOwners().keySet().forEach(id -> {
