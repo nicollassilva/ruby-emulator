@@ -5,7 +5,6 @@ import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.game.rooms.types.components.ItemsComponent;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -76,9 +75,8 @@ public class BuyRoomCommand extends ChatCommand {
 
         room.getItems().getItemOwners().keySet().forEach(id -> {
             Session itemOwner = NetworkManager.getInstance().getSessions().getByPlayerId(id);
-            if (itemOwner != null) {
+            if (itemOwner != null)
                 itemOwner.getPlayer().getInventory().loadItems(0);
-            }
         });
 
         room.reload();

@@ -17,7 +17,7 @@ public class SellRoomCommand extends ChatCommand {
             return;
         }
 
-        final Room room = client.getPlayer().getEntity().getRoom();
+        Room room = client.getPlayer().getEntity().getRoom();
 
         if (room.getData().getOwnerId() != client.getPlayer().getId()) {
             sendWhisper("Oops, você não é o dono desde quarto!", client);
@@ -48,9 +48,8 @@ public class SellRoomCommand extends ChatCommand {
         RoomDao.changeRoomPrice(room.getId(), value);
         room.getData().setRoomPrice(value);
 
-        for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities()) {
+        for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities())
             playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Este quarto " + (!isSelling ? "já não está à venda!" : "está à venda por " + value + " créditos!")));
-        }
     }
 
     @Override
