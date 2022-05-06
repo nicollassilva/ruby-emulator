@@ -27,7 +27,7 @@ public class BuyRoomCommand extends ChatCommand {
             return;
         }
 
-        if (roomData.getId() == userId) {
+        if (roomData.getOwnerId() == userId) {
             sendWhisper("Oops, não pode comprar o seu próprio quarto! Se quiser o remover da venda, digite :sellroom 0", client);
             return;
         }
@@ -90,6 +90,7 @@ public class BuyRoomCommand extends ChatCommand {
         sendNotif("O seu quarto foi comprado pelo usuário " + client.getPlayer().getData().getUsername() + "!", roomOwner);
 
         RoomDao.changeRoomPrice(room.getId(), 0);
+        RoomDao.changeRoomOwner(room.getId(), client.getPlayer().getData().getId());
         roomData.setRoomPrice(0);
 
         room.reload();

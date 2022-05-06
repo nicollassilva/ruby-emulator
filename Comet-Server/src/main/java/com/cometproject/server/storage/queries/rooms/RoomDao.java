@@ -524,10 +524,30 @@ public class RoomDao {
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET room_price = ? WHERE `id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `room_price` = ? WHERE `id` = ?", sqlConnection);
 
             preparedStatement.setInt(1, price);
-            preparedStatement.setInt(1, roomId);
+            preparedStatement.setInt(2, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void changeRoomOwner(int roomId, int newOwnerUserId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `owner_id` = ? WHERE `id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, newOwnerUserId);
+            preparedStatement.setInt(2, roomId);
 
             preparedStatement.execute();
         } catch (SQLException e) {
