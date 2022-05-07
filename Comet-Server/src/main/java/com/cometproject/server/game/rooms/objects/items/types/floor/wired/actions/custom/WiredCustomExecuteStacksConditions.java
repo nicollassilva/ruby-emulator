@@ -25,31 +25,33 @@ public class WiredCustomExecuteStacksConditions extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        List<Position> tilesToExecute = Lists.newArrayList();
-        List<RoomItemFloor> itemFloors = Lists.newArrayList();
+        final List<Position> tilesToExecute = Lists.newArrayList();
+        final List<RoomItemFloor> itemFloors = Lists.newArrayList();
         int nbEffect = 0;
         int nbEffectMsg = 0;
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem == null)
                 continue;
 
-            for (Position positions : floorItem.getPositions()) {
+            for (final Position positions : floorItem.getPositions()) {
                 if (!tilesToExecute.contains(positions))
                     tilesToExecute.add(positions);
             }
         }
 
-        for (Position tileToUpdate : tilesToExecute) {
+        for (final Position tileToUpdate : tilesToExecute) {
+            final List<RoomItemFloor> itemsOnTile = this.getRoom().getMapping().getTile(tileToUpdate).getItems();
+            final boolean hasAddonRandomEffect = itemsOnTile.stream().anyMatch(item -> item instanceof WiredAddonRandomEffect);
+            boolean randomEffectAdded = false;
 
-            for (RoomItemFloor roomItemFloor : this.getRoom().getMapping().getTile(tileToUpdate).getItems()) {
-
+            for (final RoomItemFloor roomItemFloor : itemsOnTile) {
                 if (nbEffect > 1000)
                     break;
 
-                if (roomItemFloor instanceof WiredActionItem || roomItemFloor instanceof WiredConditionItem || roomItemFloor instanceof WiredAddonUnseenEffect || roomItemFloor instanceof WiredAddonRandomEffect || roomItemFloor instanceof  WiredAddonNoItemsAnimateEffect) {
+                if (roomItemFloor instanceof WiredActionItem || roomItemFloor instanceof WiredConditionItem || roomItemFloor instanceof WiredAddonUnseenEffect || roomItemFloor instanceof WiredAddonRandomEffect || roomItemFloor instanceof WiredAddonNoItemsAnimateEffect) {
                     if (roomItemFloor instanceof WiredActionShowMessage || roomItemFloor instanceof WiredCustomShowMessageRoom) {
                         if (nbEffectMsg >= 10) {
                             continue;
@@ -58,9 +60,17 @@ public class WiredCustomExecuteStacksConditions extends WiredActionItem {
                         nbEffectMsg++;
                     }
 
-                    if (!(roomItemFloor instanceof WiredCustomForwardRoom))
-                        itemFloors.add(roomItemFloor);
+                    if (roomItemFloor instanceof WiredCustomForwardRoom) continue;
 
+                    if (hasAddonRandomEffect) {
+                        if (roomItemFloor instanceof WiredActionItem) {
+                            if (randomEffectAdded) continue;
+
+                            randomEffectAdded = true;
+                        }
+                    }
+
+                    itemFloors.add(roomItemFloor);
                     nbEffect++;
                 }
             }

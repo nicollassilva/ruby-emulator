@@ -39,8 +39,8 @@ public abstract class WiredActionItem extends WiredFloorItem {
         final WiredItemEvent itemEvent = new WiredItemEvent(entity, data);
 
         if (this.getWiredData().getDelay() >= 1) {
-            itemEvent.setTotalTicks(RoomItemFactory.getProcessTime((double)this.getWiredData().getDelay() / 2));
-            this.setTicks(RoomItemFactory.getProcessTime((double)this.getWiredData().getDelay() / 2));
+            itemEvent.setTotalTicks(RoomItemFactory.getProcessTime((double) this.getWiredData().getDelay() / 2));
+            this.setTicks(RoomItemFactory.getProcessTime((double) this.getWiredData().getDelay() / 2));
 
             this.queueEvent(itemEvent);
         } else {
@@ -60,20 +60,22 @@ public abstract class WiredActionItem extends WiredFloorItem {
     }
 
     public boolean usePlayersAnimation() {
-        for(RoomItemFloor floorItem : this.getItemsOnStack()) {
-            if(floorItem instanceof WiredAddonNoPlayersAnimateEffect) {
+        for (final RoomItemFloor floorItem : this.getItemsOnStack()) {
+            if (floorItem instanceof WiredAddonNoPlayersAnimateEffect) {
                 return true;
             }
         }
+
         return false;
     }
 
     public boolean useItemsAnimation() {
-        for(RoomItemFloor floorItem : this.getItemsOnStack()) {
-            if(floorItem instanceof WiredAddonNoItemsAnimateEffect) {
+        for (final RoomItemFloor floorItem : this.getItemsOnStack()) {
+            if (floorItem instanceof WiredAddonNoItemsAnimateEffect) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -83,14 +85,14 @@ public abstract class WiredActionItem extends WiredFloorItem {
     }
 
     public List<WiredTriggerItem> getIncompatibleTriggers() {
-        List<WiredTriggerItem> incompatibleTriggers = Lists.newArrayList();
+        final List<WiredTriggerItem> incompatibleTriggers = Lists.newArrayList();
 
         if (this.requiresPlayer()) {
-            for (RoomItemFloor floorItem : this.getItemsOnStack()) {
-                if (floorItem instanceof WiredTriggerItem) {
-                    if (!((WiredTriggerItem) floorItem).suppliesPlayer()) {
-                        incompatibleTriggers.add(((WiredTriggerItem) floorItem));
-                    }
+            for (final RoomItemFloor floorItem : this.getItemsOnStack()) {
+                if (!(floorItem instanceof WiredTriggerItem)) continue;
+
+                if (!((WiredTriggerItem) floorItem).suppliesPlayer()) {
+                    incompatibleTriggers.add(((WiredTriggerItem) floorItem));
                 }
             }
         }

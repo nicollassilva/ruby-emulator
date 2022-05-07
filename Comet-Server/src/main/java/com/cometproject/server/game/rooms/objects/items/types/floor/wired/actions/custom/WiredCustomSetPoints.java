@@ -36,7 +36,7 @@ public class WiredCustomSetPoints extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -50,13 +50,14 @@ public class WiredCustomSetPoints extends WiredActionItem {
             return;
         }
 
-        String finalText = this.getWiredData().getText();
+        final String finalText = this.getWiredData().getText();
 
         final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
         ArrayList<String> score = new ArrayList<>();
         score.add(playerEntity.getUsername());
-        for (HighscoreFloorItem scoreboard : scoreboards) {
+
+        for (final HighscoreFloorItem scoreboard : scoreboards) {
             scoreboard.onTeamWins(score, Integer.parseInt(finalText));
         }
     }

@@ -23,17 +23,15 @@ public class WiredTriggerBotReachedFurni extends WiredTriggerItem {
     }
 
     public static void executeTriggers(RoomEntity entity, RoomItemFloor floorItem, String username) {
-        for (RoomItemFloor floorItemm : getTriggers(entity.getRoom(), WiredTriggerBotReachedFurni.class)) {
-            WiredTriggerBotReachedFurni trigger = ((WiredTriggerBotReachedFurni) floorItemm);
+        for (final WiredTriggerBotReachedFurni floorItemm : getTriggers(entity.getRoom(), WiredTriggerBotReachedFurni.class)) {
+            if(floorItem == null) continue;
 
-            if (trigger.getWiredData().getText().isEmpty() || trigger.getWiredData().getText().equals(username)) {
-                if (trigger.getWiredData().getSelectedIds().contains(floorItem.getId())) {
-                    trigger.evaluate(entity, null);
+            if (floorItemm.getWiredData().getText().isEmpty() || floorItemm.getWiredData().getText().equals(username)) {
+                if (floorItemm.getWiredData().getSelectedIds().contains(floorItem.getId())) {
+                    floorItemm.evaluate(entity, null);
                 }
             }
 
         }
-
-        return;
     }
 }

@@ -12,20 +12,18 @@ public class WiredTriggerAntiWalk extends WiredTriggerItem {
     public WiredTriggerAntiWalk(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
 
-        if (this.getWiredData().getParams().get(PARAM_TICK_LENGTH) == null) {
-            this.getWiredData().getParams().put(PARAM_TICK_LENGTH, 30); // 15s
-        }
+        this.getWiredData().getParams().putIfAbsent(PARAM_TICK_LENGTH, 30); // 15s
     }
 
     public static boolean executeTriggers(PlayerEntity entity) {
         boolean wasExecuted = false;
 
-        for (RoomItemFloor floorItem : getTriggers(entity.getRoom(), WiredTriggerAntiWalk.class)) {
-            WiredTriggerAntiWalk trigger = ((WiredTriggerAntiWalk) floorItem);//
+        for (final WiredTriggerAntiWalk floorItem : getTriggers(entity.getRoom(), WiredTriggerAntiWalk.class)) {
+            if(floorItem == null) continue;
 
-            if (entity.getIdleTimeWiredWalk() >= trigger.getTime()) {
+            if (entity.getIdleTimeWiredWalk() >= floorItem.getTime()) {
                 //entity.resetIdleTimeWiredWalk();
-                wasExecuted = trigger.evaluate(entity, trigger);
+                wasExecuted = floorItem.evaluate(entity, floorItem);
             }
 
             if (wasExecuted) {
