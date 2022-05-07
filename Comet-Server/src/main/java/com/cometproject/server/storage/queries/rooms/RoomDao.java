@@ -518,6 +518,88 @@ public class RoomDao {
         }
     }
 
+    public static void transferItems(int roomId, int ownerId, int toOwnerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE items SET `user_id` = ? WHERE `user_id` = ? AND `room_id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, toOwnerId);
+            preparedStatement.setInt(2, ownerId);
+            preparedStatement.setInt(3, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void removeNonOwnerItems(int roomId, int ownerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE items SET room_id = 0 WHERE `user_id` <> ? AND `room_id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, ownerId);
+            preparedStatement.setInt(2, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void changeRoomPrice(int roomId, int price) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `room_price` = ? WHERE `id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, price);
+            preparedStatement.setInt(2, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void changeRoomOwner(int roomId, int newOwnerUserId, String username) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `owner_id` = ?, `owner` = ? WHERE `id` = ?", sqlConnection);
+
+            preparedStatement.setInt(1, newOwnerUserId);
+            preparedStatement.setString(2, username);
+            preparedStatement.setInt(3, roomId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static void roomDiagonalEnable(int roomId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -637,7 +719,7 @@ public class RoomDao {
 
     private static final Type STRING_LIST_TYPE = new TypeToken<List<String>>() {}.getType();
 
-    private static IRoomData roomDataFromResultSet(final ResultSet room) throws SQLException {
+    private static RoomData roomDataFromResultSet(final ResultSet room) throws SQLException {
         final int id = room.getInt("id");
         final RoomType type = RoomType.valueOf(room.getString("type"));
         final String name = room.getString("name");
@@ -700,12 +782,13 @@ public class RoomDao {
         final boolean wiredLimit = room.getBoolean("wired_limit");
         final boolean roomDiagonal = room.getString("room_diagonal").equals("1");
         final int songId = room.getInt("song_id");
+        final int roomPrice = room.getInt("room_price");
 
         return new RoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
                 originalPassword, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands, groupId,
-                requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId);
+                requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice);
     }
 
     private static void fillDecorations(Map<String, String> decorations, String[] decorationsArray) {

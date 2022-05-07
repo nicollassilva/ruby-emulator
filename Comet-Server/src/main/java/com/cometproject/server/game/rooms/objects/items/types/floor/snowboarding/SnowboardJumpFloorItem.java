@@ -18,7 +18,7 @@ public class SnowboardJumpFloorItem extends RoomItemFloor {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        Position tileGoal = this.getPartnerTile();
+        final Position tileGoal = this.getPartnerTile();
 
         boolean increaseY = false;
         boolean decreaseY = false;
@@ -45,6 +45,7 @@ public class SnowboardJumpFloorItem extends RoomItemFloor {
             }
 
             entity.moveTo(tileGoal.getX() + (increaseX ? 1 : decreaseX ? -1 : 0), tileGoal.getY() + (increaseY ? 1 : decreaseY ? -1 : 0));
+
             this.getRoom().getEntities().broadcastMessage(new ActionMessageComposer(entity.getId(), PlayerAvatarActions.EXPRESSION_SNOWBOARD_OLLIE.getValue()));
         }
     }
@@ -55,7 +56,7 @@ public class SnowboardJumpFloorItem extends RoomItemFloor {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
         // Random!
         int actionId = RandomUtil.getRandomInt(PlayerAvatarActions.EXPRESSION_SNOWBOARD_360.getValue(), PlayerAvatarActions.EXPRESSION_RIDE_JUMP.getValue());

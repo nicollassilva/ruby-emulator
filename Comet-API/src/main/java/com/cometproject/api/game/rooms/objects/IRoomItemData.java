@@ -11,6 +11,8 @@ public interface IRoomItemData {
 
     int getOwnerId();
 
+    void setOwnerId(int userId);
+
     String getOwnerName();
 
     Position getPosition();

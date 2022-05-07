@@ -171,4 +171,8 @@ public interface IRoomData {
     boolean isRoomDiagonal();
 
     void setRoomDiagonal(boolean roomDiagonal);
+
+    int getRoomPrice();
+
+    void setRoomPrice(int value);
 }

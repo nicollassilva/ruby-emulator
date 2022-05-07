@@ -51,11 +51,11 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
             msg.writeBoolean(false);
             msg.writeInt(0);
 
-            List<IRoomData> rooms = NavigatorSearchService.order(RoomManager.getInstance().getRoomsByQuery(this.data), 50);
+            final List<IRoomData> rooms = NavigatorSearchService.order(RoomManager.getInstance().getRoomsByQuery(this.data), 50);
 
-            for (IRoomData roomData : rooms) {
+            for (final IRoomData roomData : rooms) {
                 if (roomData.getAccess() == RoomAccessType.INVISIBLE && player.getData().getRank() < 3) {
-                    Room room = RoomManager.getInstance().get(roomData.getId());
+                    final Room room = RoomManager.getInstance().get(roomData.getId());
 
                     if (room.getGroup() != null) {
                         if (!player.getGroups().contains(room.getGroup().getId())) {
@@ -71,9 +71,10 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
 
             msg.writeInt(rooms.size() - invisibleRooms);
 
-            for (IRoomData roomData : rooms) {
+            for (final IRoomData roomData : rooms) {
                 if (roomData.getAccess() == RoomAccessType.INVISIBLE && player.getData().getRank() < 3) {
-                    Room room = RoomManager.getInstance().get(roomData.getId());
+                    final Room room = RoomManager.getInstance().get(roomData.getId());
+
                     if (room.getGroup() != null) {
                         if (!player.getGroups().contains(room.getGroup().getId())) {
                             continue;
@@ -92,7 +93,7 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
         } else {
             msg.writeInt(this.categories.size());
 
-            for (Category category : this.categories) {
+            for (final Category category : this.categories) {
                 msg.writeString(category.getCategoryId());
                 msg.writeString(category.getPublicName());
 
@@ -103,11 +104,11 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
                         category.getViewMode() == NavigatorViewMode.REGULAR ? 0 :
                                 category.getViewMode() == NavigatorViewMode.THUMBNAIL ? 1 : 0);
 
-                List<IRoomData> rooms = NavigatorSearchService.getInstance().search(category, this.player, this.categories.size() == 1);
+                final List<IRoomData> rooms = NavigatorSearchService.getInstance().search(category, this.player, this.categories.size() == 1);
 
                 msg.writeInt(rooms.size());// size of rooms found.
 
-                for (IRoomData roomData : rooms) {
+                for (final IRoomData roomData : rooms) {
                     RoomWriter.write(roomData, msg);
                 }
 

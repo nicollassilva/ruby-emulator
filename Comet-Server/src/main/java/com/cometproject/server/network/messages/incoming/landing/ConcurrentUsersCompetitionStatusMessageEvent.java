@@ -35,6 +35,5 @@ public class ConcurrentUsersCompetitionStatusMessageEvent implements Event {
             int type = 0;
             client.send(new ConcurrentUsersCompetitionMessageComposer(type, current, goal));
         }
-
     }
 }
