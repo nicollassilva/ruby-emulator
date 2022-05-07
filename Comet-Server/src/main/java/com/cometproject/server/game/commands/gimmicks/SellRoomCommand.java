@@ -13,7 +13,7 @@ public class SellRoomCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 1) {
-            sendWhisper("Oops, você precisa digitar a quantidade de moedas para vender este quarto.", client);
+            sendWhisper("Digite um valor válido para a venda do quarto.", client);
             return;
         }
 

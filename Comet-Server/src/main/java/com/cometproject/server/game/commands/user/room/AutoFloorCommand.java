@@ -18,12 +18,17 @@ public class AutoFloorCommand extends ChatCommand {
     public void execute(Session client, String[] message) {
         if (!client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl())
             return;
-        Room room = client.getPlayer().getEntity().getRoom();
-        int sizeX = room.getMapping().getModel().getSizeX();
-        int sizeY = room.getMapping().getModel().getSizeY();
-        StringBuilder text = new StringBuilder();
+
+        final Room room = client.getPlayer().getEntity().getRoom();
+
+        final int sizeX = room.getMapping().getModel().getSizeX();
+        final int sizeY = room.getMapping().getModel().getSizeY();
+
+        final StringBuilder text = new StringBuilder();
+
         for (int i = 0; i < sizeY; i++) {
-            StringBuilder text2 = new StringBuilder();
+            final StringBuilder text2 = new StringBuilder();
+
             for (int j = 0; j < sizeX; j++) {
                 if (!room.getMapping().getTile(j, i).hasItems()) {
                     text2.append("x");
@@ -31,21 +36,28 @@ public class AutoFloorCommand extends ChatCommand {
                     text2.append(parseInvers(room.getMapping().getTile(j, i).getTileHeight()));
                 }
             }
+
             text.append(text2);
             text.append('\r');
         }
-        CustomFloorMapData floorMapData = new CustomFloorMapData(room.getModel().getDoorX(), room.getModel().getDoorY(), room.getModel().getDoorRotation(), text.toString().trim(), room.getModel().getRoomModelData().getWallHeight());
+
+        final CustomFloorMapData floorMapData = new CustomFloorMapData(room.getModel().getDoorX(), room.getModel().getDoorY(), room.getModel().getDoorRotation(), text.toString().trim(), room.getModel().getRoomModelData().getWallHeight());
+
         room.getData().setHeightmap(JsonUtil.getInstance().toJson(floorMapData));
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
-        RoomReloadListener reloadListener = new RoomReloadListener(room, (players, newRoom) -> {
-            for (Player player : players) {
-                if (player.getEntity() != null)
+
+        final RoomReloadListener reloadListener = new RoomReloadListener(room, (players, newRoom) -> {
+            for (final Player player : players) {
+                if (player.getEntity() == null)
                     continue;
+
                 player.getSession().send(new NotificationMessageComposer("furni_placement_error", Locale.get("command.floor.complete")));
                 player.getSession().send(new RoomForwardMessageComposer(newRoom.getId()));
             }
         });
+
         RoomManager.getInstance().addReloadListener(room.getId(), reloadListener);
+
         room.reload();
     }
 

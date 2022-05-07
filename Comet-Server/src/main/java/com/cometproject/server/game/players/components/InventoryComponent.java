@@ -165,7 +165,7 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
                         put(4, Lists.newArrayList(1));
                     }}));
 
-            if (sendAlert || isAchievement) {
+            if (sendAlert) {
                     this.getPlayer().getSession().send(new WiredRewardMessageComposer(7));
             }
 
