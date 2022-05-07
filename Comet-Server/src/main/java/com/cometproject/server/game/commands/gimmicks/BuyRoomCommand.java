@@ -117,7 +117,7 @@ public class BuyRoomCommand extends ChatCommand {
         RoomManager.getInstance().addReloadListener(buyerSession.getPlayer().getEntity().getRoom().getId(), reloadListener);
 
         buyerSession.getPlayer().getRooms().add(room.getId());
-        sellerSession.getPlayer().getRooms().remove(room.getId());
+        sellerSession.getPlayer().getRooms().remove(Integer.valueOf(room.getId()));
 
         buyerSession.getPlayer().setLastRoomCreated((int) Comet.getTime());
         room.reload();
