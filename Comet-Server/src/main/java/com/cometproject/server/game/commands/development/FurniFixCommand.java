@@ -29,6 +29,7 @@ public class FurniFixCommand extends ChatCommand {
         String type = params[0].toLowerCase();
         String option = params[1];
         String name = this.merge(params, 1);
+
         switch(type) {
             case "name":
                 FurniFixDao.changeName(name, itemId);

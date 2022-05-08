@@ -24,15 +24,11 @@ import java.util.Set;
 public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     private final RollerFloorItemEvent event;
     private boolean cycleCancelled;
-    private final Set<Integer> skippedEntities;
-    private final Set<Integer> skippedItems;
     private final Set<RoomEntity> movedEntities;
 
     public RollerFloorItem(final RoomItemData itemData, final Room room) {
         super(itemData, room);
         this.cycleCancelled = false;
-        this.skippedEntities = Sets.newConcurrentHashSet();
-        this.skippedItems = Sets.newConcurrentHashSet();
         this.movedEntities = new ConcurrentHashSet<>();
 
         this.queueEvent(this.event = new RollerFloorItemEvent(this.getTickCount()));
@@ -52,9 +48,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
     @Override
     public void onEntityStepOn(final RoomEntity entity) {
-        if (this.event.getCurrentTicks() == 3) {
-            this.skippedEntities.add(entity.getId());
-        }
+        event.setTotalTicks(this.getTickCount());
     }
 
     @Override
@@ -63,9 +57,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
     @Override
     public void onItemAddedToStack(final RoomItemFloor floorItem) {
-        if (this.event.getCurrentTicks() == 3) {
-            this.skippedItems.add(floorItem.getVirtualId());
-        }
+        event.setTotalTicks(this.getTickCount());
     }
 
     @Override
@@ -80,8 +72,6 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
         }
 
         this.movedEntities.clear();
-        this.skippedEntities.clear();
-        this.skippedItems.clear();
 
         event.setTotalTicks(this.getTickCount());
         this.queueEvent(event);
@@ -103,15 +93,11 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 continue;
             }
 
-            if (this.skippedEntities.contains(entity.getId())) {
-                continue;
-            }
-
             if (entity.getPositionToSet() != null) {
                 continue;
             }
 
-            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false, true, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
+            if (!this.getRoom().getMapping().isValidStep(entity.getId(), entity.getPosition(), sqInfront, true, false, false, false, false) || this.getRoom().getEntities().positionHasEntity(sqInfront)) {
                 retry = true;
                 break;
             }
@@ -179,10 +165,6 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 continue;
             }
 
-            if (this.skippedItems.contains(floor.getVirtualId())) {
-                continue;
-            }
-
             if (floor instanceof RollerFloorItem) {
                 continue;
             }
@@ -220,7 +202,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 noItemsOnNext = true;
             }
 
-            if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, true, true) ||
+            if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, false, true) ||
                     this.getRoom().getEntities().positionHasEntity(sqInfront, this.movedEntities) ||
                     (nextTile.getTopItemInstance() != null && !nextTile.getTopItemInstance().getDefinition().canStack())) {
                 return;
