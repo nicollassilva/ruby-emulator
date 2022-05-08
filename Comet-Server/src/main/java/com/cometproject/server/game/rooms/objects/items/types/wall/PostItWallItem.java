@@ -49,6 +49,10 @@ public class PostItWallItem extends RoomItemWall {
             case "FF9CFF":
             case "9CCEFF":
             case "9CFF9C":
+            case "F5AD42":
+            case "CFCFCF":
+            case "DBC4A2":
+            case "EB4949":
                 return true;
         }
     }
