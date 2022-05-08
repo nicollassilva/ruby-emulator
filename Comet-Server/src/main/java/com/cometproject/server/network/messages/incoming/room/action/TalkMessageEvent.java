@@ -159,50 +159,6 @@ public class TalkMessageEvent implements Event {
                 }
             }
 
-            if (message.startsWith("nb!love")) {
-                final int timeSinceLastUpdate = ((int) Comet.getTime() - client.getPlayer().getLastNbLove());
-
-                if (timeSinceLastUpdate >= 5) {
-                    int love = RandomUtil.getRandomInt(0, 100);
-
-                    final PlayerEntity userOne = client.getPlayer().getEntity();
-                    final String[] splittedName = message.replace("nb!love", "").split(" ");
-                    final String finalName = splittedName[1];
-                    final Session s = NetworkManager.getInstance().getSessions().getByPlayerUsername(finalName);
-
-                    if (s == null) {
-                        client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Este usuario está desconectado", ChatEmotion.NONE, 1));
-                        return;
-                    }
-
-                    if (s.getPlayer().getEntity() == null) {
-                        client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Este usuario no está en la sala", ChatEmotion.NONE, 1));
-                        return;
-                    }
-
-                    if (finalName.equals(userOne.getUsername())) {
-                        return;
-                    }
-
-                    CometThreadManager.getInstance().executeSchedule(() -> {
-                        userOne.getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), client.getPlayer().getEntity().getUsername() + " tiene " + "<b>" + love + "</b>" + "% de compatibilidad con " + finalName, ChatEmotion.NONE, 1));
-                    }, 1, TimeUnit.SECONDS);
-
-                    client.getPlayer().setLastNbLove((int) Comet.getTime());
-
-                /*if(love == 100) {
-                    CometThreadManager.getInstance().executeSchedule(() -> {
-                    NetworkManager.getInstance().getSessions().broadcast(new TalkMessageComposer(client.getPlayer().getEntity().getId(), userOne.getUsername() + " y " + finalName + " han logrado un 100%, armen todos una fiesta ahora mismo por que se viene la boda.", ChatEmotion.NONE, 34));
-                    }, 2, TimeUnit.SECONDS);
-                } else if (love == 0) {
-                    userOne.getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), client.getPlayer().getEntity().getUsername() + " no tiene ninguna chance con " + finalName + ", es mejor que se alejen antes que terminen odiandose", ChatEmotion.NONE, 34));
-                }*/
-                } else {
-                    client.getPlayer().getSession().sendQueue(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 5 segundos para poder volver a utilizar el nb!love", ChatEmotion.NONE, 1));
-                    return;
-                }
-            }
-
             switch (message) {
                 case ":'(":
                     client.getPlayer().getEntity().applyEffect(new PlayerEffect(660, 10));
@@ -301,14 +257,6 @@ public class TalkMessageEvent implements Event {
             } catch (Exception ignored) {
 
             }
-
-            /*try {
-                if (client.getPlayer().getData().getUsername().equals("Dan")) {
-                    filteredMessage = TranslationComponent.translate("es", "pt", message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
 
             if (client.getPlayer().getEntity().getPrivateChatItemId() != 0) {
                 // broadcast message only to players in the tent.

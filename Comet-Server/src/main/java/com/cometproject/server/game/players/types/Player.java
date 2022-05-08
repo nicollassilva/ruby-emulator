@@ -88,7 +88,6 @@ public class Player extends Observable implements IPlayer {
     private PlayerSettings settings;
     private PlayerData data;
     private final PlayerStatistics stats;
-    private final MisteryComponent mistery;
     private PlayerEntity entity;
     private Session session;
     private HelperSession helperSession;
@@ -113,49 +112,37 @@ public class Player extends Observable implements IPlayer {
     private long teleportId = 0;
     private int teleportRoomId = 0;
     private String lastMessage = "";
-    private final String banner = "";
     private int lastVoucherRedeemAttempt = 0;
     private int voucherRedeemAttempts = 0;
     private int notifCooldown = 0;
     private int lastRoomId;
     private int lastGift = 0;
     private int lastPurchase = 0;
-    private int lastNbLove = 0;
     private int lastSpin = 0;
     private int lastCommandRoleplay = 0;
     private int lastRoomCreated = 0;
     private boolean isDeletingGroup = false;
     private long deletingGroupAttempt = 0;
     private boolean bypassRoomAuth;
-    private int bypassRoomId = 0;
     private long lastDiamondReward;
     private long lastReward;
     private boolean invisible = false;
-    private int lastTradePlayer = 0;
     private long lastTradeTime = 0;
     private int lastTradeFlag = 0;
     private long lastTradeFlood = 0;
     private long lastPhotoTaken = 0;
-    private double itemPlacementHeight = -1;
-    private int itemPlacementRotation = -1;
-    private int itemPlacementState = -1;
-    private boolean isBuilding = false;
     private boolean isSearchFurni = false;
     private boolean logsClientStaff = false;
     private String ssoTicket;
     private Set<ICatalogItem> recentPurchases;
     private boolean[] calendarGifts;
 
-    private boolean inCrossTrainer = false;
-    private boolean inTrampoline = false;
-    private boolean inJogger = false;
-
     private boolean inIceSkate = false;
     private boolean inRollerSkate = false;
 
     private boolean onHorseJumpingSequence = false;
 
-    private Set<Integer> listeningPlayers = Sets.newConcurrentHashSet();
+    private final Set<Integer> listeningPlayers = Sets.newConcurrentHashSet();
 
     private Set<String> eventLogCategories = Sets.newConcurrentHashSet();
 
@@ -192,7 +179,6 @@ public class Player extends Observable implements IPlayer {
             this.stats = new PlayerStatistics(data, true, this);
         }
 
-        this.mistery = PlayerDao.getMisteryById(this.id);
         this.permissions = new PermissionComponent(this);
         this.inventory = new InventoryComponent(this);
         this.messenger = new MessengerComponent(this);
@@ -334,30 +320,6 @@ public class Player extends Observable implements IPlayer {
         return this.onHorseJumpingSequence;
     }
 
-    public void setInCrossTrainer(boolean inCrossTrainer) {
-        this.inCrossTrainer = inCrossTrainer;
-    }
-
-    public boolean onTheCrossTrainer() {
-        return this.inCrossTrainer && !this.inTrampoline && !this.inJogger;
-    }
-
-    public void setInTrampoline(boolean inTrampoline) {
-        this.inTrampoline = inTrampoline;
-    }
-
-    public boolean onTheTrampoline() {
-        return this.inTrampoline && !this.inCrossTrainer && !this.inJogger;
-    }
-
-    public void setInJogger(boolean inJogger) {
-        this.inJogger = inJogger;
-    }
-
-    public boolean onTheJogger() {
-        return this.inJogger && !this.inCrossTrainer && !this.inTrampoline;
-    }
-
     public void setInIceSkate(boolean inIceSkate) {
         this.inIceSkate = inIceSkate;
     }
@@ -375,21 +337,6 @@ public class Player extends Observable implements IPlayer {
     }
 
     public void managePeriodicAchievements() {
-        // CrossTrainer Achievement
-        if(this.onTheCrossTrainer()) {
-            this.getAchievements().progressAchievement(AchievementType.CROSS_TRAINER, 1);
-        }
-
-        // Trampoline Achievement
-        if(this.onTheTrampoline()) {
-            this.getAchievements().progressAchievement(AchievementType.TRAMPOLINIST, 1);
-        }
-
-        // Jogger Achievement
-        if(this.onTheJogger()) {
-            this.getAchievements().progressAchievement(AchievementType.JOGGER, 1);
-        }
-
         // IceSkate Achievement
         if(this.onTheIceSkate() && this.getEntity().isWalking()) {
             this.getAchievements().progressAchievement(AchievementType.ICE_SKATES, 1);
@@ -425,13 +372,6 @@ public class Player extends Observable implements IPlayer {
 
     @Override
     public void loadRoom(int id, String password) {
-        /*
-        if (!this.usernameConfirmed) {
-            session.send(new HotelViewMessageComposer());
-            return;
-        }
-         */
-
         if (entity != null && entity.getRoom() != null) {
             entity.leaveRoom(true, false, false);
             setEntity(null);
@@ -480,9 +420,6 @@ public class Player extends Observable implements IPlayer {
         if (!this.enteredRooms.contains(id) && !this.rooms.contains(id)) {
             this.enteredRooms.add(id);
         }
-
-        // todo: add rank effect to effects component
-
     }
 
     @Override
@@ -582,12 +519,10 @@ public class Player extends Observable implements IPlayer {
         return roomsWithRights;
     }
 
-    //    @Override
     public PlayerEntity getEntity() {
         return this.entity;
     }
 
-    //    @Override
     public void setEntity(PlayerEntity avatar) {
         this.entity = avatar;
 
@@ -623,12 +558,10 @@ public class Player extends Observable implements IPlayer {
         return this.permissions;
     }
 
-    //    @Override
     public MessengerComponent getMessenger() {
         return this.messenger;
     }
 
-    //    @Override
     public PlayerInventory getInventory() {
         return this.inventory;
     }
@@ -643,17 +576,14 @@ public class Player extends Observable implements IPlayer {
         return this.relationships;
     }
 
-    //    @Override
     public InventoryBotComponent getBots() {
         return this.bots;
     }
 
-    //    @Override
     public PetComponent getPets() {
         return this.pets;
     }
 
-    //    @Override
     public QuestComponent getQuests() {
         return quests;
     }
@@ -665,10 +595,6 @@ public class Player extends Observable implements IPlayer {
     @Override
     public PlayerSettings getSettings() {
         return this.settings;
-    }
-
-    public MisteryComponent getMistery() {
-        return this.mistery;
     }
 
     @Override
@@ -780,14 +706,6 @@ public class Player extends Observable implements IPlayer {
     public void setLastSpin(int lastSpin) { this.lastSpin = lastSpin; }
 
     @Override
-    public int getLastNbLove() {
-        return lastNbLove;
-    }
-
-    @Override
-    public void setLastNbLove(int lastNbLove) { this.lastNbLove = lastNbLove; }
-
-    @Override
     public int getLastCommandRoleplay() {
         return lastCommandRoleplay;
     }
@@ -858,14 +776,6 @@ public class Player extends Observable implements IPlayer {
     @Override
     public boolean isBypassingRoomAuth() {
         return bypassRoomAuth;
-    }
-
-    public void setBypassRoomId(int bypassRoomId) {
-        this.bypassRoomId = bypassRoomId;
-    }
-
-    public int getBypassRoomId() {
-        return this.bypassRoomId;
     }
 
     @Override
@@ -964,14 +874,6 @@ public class Player extends Observable implements IPlayer {
         this.invisible = invisible;
 
         flush();
-    }
-
-    public int getLastTradePlayer() {
-        return lastTradePlayer;
-    }
-
-    public void setLastTradePlayer(int lastTradePlayer) {
-        this.lastTradePlayer = lastTradePlayer;
     }
 
     public long getLastTradeTime() {
@@ -1112,45 +1014,6 @@ public class Player extends Observable implements IPlayer {
 
     public boolean getLogsClientStaff(){return logsClientStaff;}
 
-    public double getItemPlacementHeight() {
-        return itemPlacementHeight;
-    }
-
-    public int getItemPlacementRotation() {
-        return itemPlacementRotation;
-    }
-
-    public int getItemPlacementState() {
-        return itemPlacementState;
-    }
-
-    public void setItemPlacementHeight(double itemPlacementHeight) {
-        this.itemPlacementHeight = itemPlacementHeight;
-    }
-
-    public void resetItemPlacementHeight() {
-        this.itemPlacementHeight = -1;
-    }
-
-    public void setItemPlacementRotation(int itemPlacementRotation) {
-        this.itemPlacementRotation = itemPlacementRotation;
-    }
-
-    public void setItemPlacementState(int itemPlacementState) {
-        this.itemPlacementState = itemPlacementState;
-    }
-    public void setIsBuilding(boolean status) {
-        this.isBuilding = status;
-    }
-
-    public void resetBuilding(){
-        this.itemPlacementHeight = -1;
-        this.itemPlacementRotation = -1;
-        this.itemPlacementState = -1;
-    }
-
-    public boolean getIsBuilding(){ return isBuilding;}
-
     public void setIsSearchFurni(boolean status) {
         this.isSearchFurni = status;
     }
@@ -1175,9 +1038,6 @@ public class Player extends Observable implements IPlayer {
 
     public void addMention(PlayerMention mention) {
         this.mentions.add(mention);
-    }
-    public void setListeningPlayers(Set<Integer> listeningPlayers) {
-        this.listeningPlayers = listeningPlayers;
     }
 
     public int getBubbleId() {
@@ -1376,11 +1236,8 @@ public class Player extends Observable implements IPlayer {
     }
 
     public void resetInteractionHandlers() {
-        this.setInJogger(false);
         this.setInIceSkate(false);
-        this.setInTrampoline(false);
         this.setInRollerSkate(false);
-        this.setInCrossTrainer(false);
         this.isFurniturePickup(false);
         this.isFurnitureEditing(false);
     }

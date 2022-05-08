@@ -56,10 +56,6 @@ public interface IPlayer {
 
     List<Integer> getRooms();
 
-    void setInCrossTrainer(boolean inCrossTrainer);
-
-    boolean onTheCrossTrainer();
-
     void setInIceSkate(boolean inIceSkate);
 
     boolean onTheIceSkate();
@@ -67,14 +63,6 @@ public interface IPlayer {
     void setInRollerSkate(boolean inRollerSkate);
 
     boolean onTheRollerSkate();
-
-    void setInTrampoline(boolean inTrampolinist);
-
-    boolean onTheTrampoline();
-
-    void setInJogger(boolean inJogger);
-
-    boolean onTheJogger();
 
     List<Integer> getRoomsWithRights();
 
@@ -155,10 +143,6 @@ public interface IPlayer {
     int getLastSpin();
 
     void setLastSpin(int lastSpin);
-
-    int getLastNbLove();
-
-    void setLastNbLove(int lastNbLove);
 
     int getLastCommandRoleplay();
 

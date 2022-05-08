@@ -131,7 +131,6 @@ public class BattleBallPlayerQueue {
         for(Session client : queue.players.values()) {
             client.getPlayer().getEntity().setCanWalk(false);
 
-            client.getPlayer().setBypassRoomId(room.map.getId());
             client.getPlayer().bypassRoomAuth(true);
             client.send(new RoomForwardMessageComposer(room.map.getId()));
             room.players.put(client.getPlayer().getId(), client);

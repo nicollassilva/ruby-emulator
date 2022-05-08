@@ -142,7 +142,7 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
 
     @Override
     public void sendUpdate() {
-        Room r = this.getRoom();
+        final Room r = this.getRoom();
 
         if (r != null) {
             r.getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(this));
@@ -169,15 +169,17 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomItemFloor> getItemsOnStack() {
-        List<RoomItemFloor> floorItems = Lists.newArrayList();
+        final List<RoomItemFloor> floorItems = Lists.newArrayList();
 
-        List<AffectedTile> affectedTiles = AffectedTile.getAffectedTilesAt(
-                this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation());
+        final List<AffectedTile> affectedTiles = AffectedTile.getAffectedTilesAt(
+                this.getDefinition().getLength(), this.getDefinition().getWidth(),
+                this.getPosition().getX(), this.getPosition().getY(), this.getRotation()
+        );
 
         floorItems.addAll(this.getRoom().getItems().getItemsOnSquare(this.getPosition().getX(), this.getPosition().getY()));
 
-        for (AffectedTile tile : affectedTiles) {
-            for (RoomItemFloor floorItem : this.getRoom().getItems().getItemsOnSquare(tile.x, tile.y)) {
+        for (final AffectedTile tile : affectedTiles) {
+            for (final RoomItemFloor floorItem : this.getRoom().getItems().getItemsOnSquare(tile.x, tile.y)) {
                 if (!floorItems.contains(floorItem)) floorItems.add(floorItem);
             }
         }
@@ -186,12 +188,12 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomEntity> getEntitiesOnItem() {
-        List<RoomEntity> entities = Lists.newArrayList();
+        final List<RoomEntity> entities = Lists.newArrayList();
 
         entities.addAll(this.getRoom().getEntities().getEntitiesAt(this.getPosition()));
 
-        for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-            List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+        for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+            final List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
             entities.addAll(entitiesOnTile);
         }
@@ -200,13 +202,13 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomEntity> getEntitiesRedOnItem() {
-        List<RoomEntity> entities = Lists.newArrayList();
+        final List<RoomEntity> entities = Lists.newArrayList();
 
         if(nearestPlayerEntity().getGameTeam().equals(GameTeam.RED)) {
         entities.addAll(this.getRoom().getEntities().getEntitiesAt(this.getPosition()));
 
-            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-                List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+                final List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 entities.addAll(entitiesOnTile);
             }
@@ -217,13 +219,13 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomEntity> getEntitiesGreenOnItem() {
-        List<RoomEntity> entities = Lists.newArrayList();
+        final List<RoomEntity> entities = Lists.newArrayList();
 
         if(nearestPlayerEntity().getGameTeam().equals(GameTeam.GREEN)) {
             entities.addAll(this.getRoom().getEntities().getEntitiesAt(this.getPosition()));
 
-            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-                List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+                final List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 entities.addAll(entitiesOnTile);
             }
@@ -234,13 +236,13 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomEntity> getEntitiesBlueOnItem() {
-        List<RoomEntity> entities = Lists.newArrayList();
+        final List<RoomEntity> entities = Lists.newArrayList();
 
         if(nearestPlayerEntity().getGameTeam().equals(GameTeam.BLUE)) {
             entities.addAll(this.getRoom().getEntities().getEntitiesAt(this.getPosition()));
 
-            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-                List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+                final List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 entities.addAll(entitiesOnTile);
             }
@@ -251,13 +253,13 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public List<RoomEntity> getEntitiesYellowOnItem() {
-        List<RoomEntity> entities = Lists.newArrayList();
+        final List<RoomEntity> entities = Lists.newArrayList();
 
         if(nearestPlayerEntity().getGameTeam().equals(GameTeam.YELLOW)) {
             entities.addAll(this.getRoom().getEntities().getEntitiesAt(this.getPosition()));
 
-            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-                List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+                final List<RoomEntity> entitiesOnTile = this.getRoom().getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 entities.addAll(entitiesOnTile);
             }
@@ -289,7 +291,7 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     public Position getPartnerTile() {
         if (this.getDefinition().getLength() != 2) return null;
 
-        for (AffectedTile affTile : AffectedTile.getAffectedBothTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+        for (final AffectedTile affTile : AffectedTile.getAffectedBothTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
             if (affTile.x == this.getPosition().getX() && affTile.y == this.getPosition().getY()) continue;
 
             return new Position(affTile.x, affTile.y);

@@ -10,6 +10,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.sessions.Session;
+import com.cometproject.server.utilities.RandomUtil;
 
 public class SkateRailFloorItem extends RoomItemFloor {
     private final int effectId;
@@ -26,10 +27,10 @@ public class SkateRailFloorItem extends RoomItemFloor {
             return;
         }
 
-        int playerId = ((PlayerEntity) entity).getPlayerId();
+        final int playerId = ((PlayerEntity) entity).getPlayerId();
 
         if(PlayerManager.getInstance().isOnline(playerId)) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
             if (session == null || session.getPlayer() == null || session.getPlayer().getAchievements() == null) {
                 return;
@@ -40,27 +41,20 @@ public class SkateRailFloorItem extends RoomItemFloor {
                 entity.applyEffect(new PlayerEffect(this.effectId, 0));
             }
 
-            // TODO: Otimizar isso (talvez enviar o progresso ao banco de dados somente quando o usuário sair do mobi)
             session.getPlayer().getAchievements().progressAchievement(AchievementType.SKATEBOARD_JUMP, 1);
         }
     }
 
     @Override
     public void onEntityPostStepOn(RoomEntity entity) {
-        int randomRotation = this.getRandomNumber(0, 7);
+        final int randomRotation = RandomUtil.getRandomInt(0, 7);
 
         entity.setBodyRotation(randomRotation);
         entity.setHeadRotation(randomRotation);
 
-        // Aumente isso caso queira aumentar a porcentagem de ganho da conquista SKATEBOARD_SLIDE
         if(randomRotation < 2) {
-            // TODO: Otimizar isso (talvez enviar o progresso ao banco de dados somente quando o usuário sair do mobi)
             ((PlayerEntity) entity).getPlayer().getAchievements().progressAchievement(AchievementType.SKATEBOARD_SLIDE, 1);
         }
-    }
-
-    public int getRandomNumber(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
     }
 
     @Override
@@ -70,7 +64,7 @@ public class SkateRailFloorItem extends RoomItemFloor {
         }
 
         int playerId = ((PlayerEntity) entity).getPlayerId();
-        Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+        final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
         if(session == null || session.getPlayer() == null) {
             return;

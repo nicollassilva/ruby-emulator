@@ -26,7 +26,7 @@ public class RollerSkateFloorItem extends RoomItemFloor {
         int playerId = ((PlayerEntity) entity).getPlayerId();
 
         if(PlayerManager.getInstance().isOnline(playerId)) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
             if(session == null) {
                 return;
@@ -61,7 +61,7 @@ public class RollerSkateFloorItem extends RoomItemFloor {
         }
 
         int playerId = ((PlayerEntity) entity).getPlayerId();
-        Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+        final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
         if(session == null || session.getPlayer() == null) {
             return;

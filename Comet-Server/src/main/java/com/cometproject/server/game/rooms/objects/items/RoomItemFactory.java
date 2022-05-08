@@ -344,9 +344,10 @@ public class RoomItemFactory {
             put("random_state", RandomStateFloorItem.class);
 
             // Custom's
-            put("crosstrainer", CrossTrainerFloorItem.class);
-            put("trampoline", TrampolineFloorItem.class);
-            put("jogger", JoggerFloorItem.class);
+            put("crosstrainer", GymEquipmentFloorItem.class);
+            put("trampoline", GymEquipmentFloorItem.class);
+            put("jogger", GymEquipmentFloorItem.class);
+
             put("iceskate", IceSkateFloorItem.class);
             put("rollerskate", RollerSkateFloorItem.class);
             put("skaterail", SkateRailFloorItem.class);
