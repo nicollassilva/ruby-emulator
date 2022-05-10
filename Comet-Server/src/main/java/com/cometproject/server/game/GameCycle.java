@@ -6,6 +6,7 @@ import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.api.utilities.Initialisable;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.moderation.BanManager;
+import com.cometproject.server.game.players.data.PlayerData;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
@@ -13,7 +14,6 @@ import com.cometproject.server.network.messages.outgoing.user.details.UserObject
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import com.cometproject.server.storage.queries.system.StatisticsDao;
-import com.cometproject.server.game.players.data.PlayerData;
 import com.cometproject.server.tasks.CometTask;
 import com.cometproject.server.tasks.CometThreadManager;
 import org.apache.logging.log4j.LogManager;
@@ -28,11 +28,8 @@ import java.util.concurrent.TimeUnit;
 
 public class GameCycle implements CometTask, Initialisable {
     private static final int interval = 1;
-
-    private static GameCycle gameThreadInstance;
-
     private static final Logger log = LogManager.getLogger(GameCycle.class.getName());
-
+    private static GameCycle gameThreadInstance;
     private ScheduledFuture gameFuture;
 
     private boolean active = false;
@@ -140,20 +137,22 @@ public class GameCycle implements CometTask, Initialisable {
                     final boolean needsReward = (Comet.getTime() - client.getPlayer().getLastReward()) >= (60L * CometSettings.onlineRewardInterval);
 
                     if (needsReward) {
-                            if (CometSettings.onlineRewardDiamonds > 0) {
-                                client.getPlayer().getData().increaseVipPoints(CometSettings.onlineRewardDiamonds);
-                                client.sendQueue(new NotificationMessageComposer("diamonds", String.format("¡Has recibido %d Diamantes!", CometSettings.onlineRewardDiamonds)));
-                            }
-                            if (CometSettings.onlineRewardCredits > 0) {
-                                client.getPlayer().getData().increaseCredits(CometSettings.onlineRewardCredits * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
-                                client.sendQueue(new NotificationMessageComposer("cred", String.format("¡Has recibido %d Créditos!", CometSettings.onlineRewardCredits)));
-                            }
-                                if (CometSettings.onlineRewardDuckets > 0) {
-                                    client.getPlayer().getData().increaseActivityPoints(CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
-                                    client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Has recibido " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " P\u00edxeles por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBonus VIP: " + (clubReward ? "S\u00ed" : "No") + "\nBonus Especial: " + (doubleRewards ? "S\u00ed" : "No")));
-                                }
+                        if (CometSettings.onlineRewardDiamonds > 0) {
+                            client.getPlayer().getData().increaseVipPoints(CometSettings.onlineRewardDiamonds);
+                            client.sendQueue(new NotificationMessageComposer("diamonds", String.format("Você recebeu %d diamantes!", CometSettings.onlineRewardDiamonds)));
+                        }
 
-                        PlayerData playerData = (PlayerData) client.getPlayer().getData();
+                        if (CometSettings.onlineRewardCredits > 0) {
+                            client.getPlayer().getData().increaseCredits(CometSettings.onlineRewardCredits * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
+                            client.sendQueue(new NotificationMessageComposer("cred", String.format("Você recebeu %d moedas!", CometSettings.onlineRewardCredits)));
+                        }
+
+                        if (CometSettings.onlineRewardDuckets > 0) {
+                            client.getPlayer().getData().increaseActivityPoints(CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
+                            client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado") + "\nBônus Especial: " + (doubleRewards ? "Ativo" : "Desativado")));
+                        }
+
+                        final PlayerData playerData = (PlayerData) client.getPlayer().getData();
                         playerData.increaseBonusPoints(1);
                         client.getPlayer().getData().save();
 

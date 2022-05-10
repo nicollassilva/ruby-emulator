@@ -22,7 +22,8 @@ public class MaxFloorCommand extends ChatCommand {
 
         final int maxLength = 64;
 
-        StringBuilder map = new StringBuilder();
+        final StringBuilder map = new StringBuilder();
+
         for (int y = 0; y <= maxLength; ++y) {
             for (int x = 0; x <= maxLength; ++x) {
                 if (y == 0) {
@@ -47,18 +48,17 @@ public class MaxFloorCommand extends ChatCommand {
         final int doorRotation = 2;
         final int wallHeight = -1;
 
-        Room room = client.getPlayer().getEntity().getRoom();
-
-        CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY, doorRotation, map.toString().trim(), wallHeight);
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY, doorRotation, map.toString().trim(), wallHeight);
 
         room.getData().setHeightmap(JsonUtil.getInstance().toJson(floorMapData));
 
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
 
-        RoomReloadListener reloadListener = new RoomReloadListener(room, (players, newRoom) -> {
+        final RoomReloadListener reloadListener = new RoomReloadListener(room, (players, newRoom) -> {
 
             for (final Player player : players) {
-                if (player.getEntity() != null) continue;
+                if (player.getEntity() == null) continue;
 
                 player.getSession().send(new NotificationMessageComposer("furni_placement_error", Locale.get("command.floor.complete")));
                 player.getSession().send(new RoomForwardMessageComposer(newRoom.getId()));
