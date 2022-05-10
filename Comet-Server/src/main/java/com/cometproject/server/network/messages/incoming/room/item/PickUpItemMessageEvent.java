@@ -29,33 +29,23 @@ public class PickUpItemMessageEvent implements Event {
 
         boolean isFloorItem = msg.readInt() == 2;
 
-        Long id = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
+        final Long id = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
 
-        if (id == null) {
+        if (id == null)
             return;
-        }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
-        if (room == null) {
+        if (room == null)
             return;
-        }
 
-        RoomItemFloor item = room.getItems().getFloorItem(id);
-
-        /*if(item.getItemData().getOwnerId() == client.getPlayer().getId()) {
-
-        } else*/
-        if (!room.getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl()) {
-            return;
-        }
+        final RoomItemFloor item = room.getItems().getFloorItem(id);
 
         if (item == null) {
             final RoomItemWall wItem = room.getItems().getWallItem(id);
 
-            if (wItem == null || wItem instanceof PostItWallItem) {
+            if (wItem == null || wItem instanceof PostItWallItem)
                 return;
-            }
 
             if(wItem.getItemData().getOwnerId() == client.getPlayer().getId()) {
                 room.getItems().removeItem(wItem, client.getPlayer().getId(), client);

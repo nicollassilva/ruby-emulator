@@ -88,6 +88,8 @@ public class ChangeFloorItemStateMessageEvent implements Event {
 
                 if(floorItem.getDefinition().getId() != item.getDefinition().getId()) continue;
 
+                floorItem.onPickup();
+
                 room.getItems().removeItem(floorItem, client);
                 count++;
             }

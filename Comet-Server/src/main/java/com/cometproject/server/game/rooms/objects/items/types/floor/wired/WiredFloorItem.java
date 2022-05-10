@@ -83,31 +83,29 @@ public abstract class WiredFloorItem extends AdvancedFloorItem<WiredItemEvent> i
             return true;
         }
 
-        PlayerEntity p = (PlayerEntity) entity;
+        final PlayerEntity p = (PlayerEntity) entity;
 
         if (!this.getRoom().getRights().hasRights(p.getPlayerId()) && !p.getPlayer().getPermissions().getRank().roomFullControl()) {
             return true;
         }
 
-        //this.flash();
+        this.flash();
         ((PlayerEntity) entity).getPlayer().getSession().send(this.getDialog());
         return true;
     }
 
     public void UpdateListItem() {
+        final List<Long> toRemove = Lists.newArrayList();
 
-        List<Long> toRemove = Lists.newArrayList();
         if (this.getWiredData() != null) {
-            for (long itemId : this.getWiredData().getSelectedIds()) {
-                RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            for (final long itemId : this.getWiredData().getSelectedIds()) {
+                final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
-                if (floorItem == null) {
+                if (floorItem == null)
                     toRemove.add(itemId);
-                    continue;
-                }
             }
 
-            for (long itemToRemove : toRemove) {
+            for (final long itemToRemove : toRemove) {
                 this.getWiredData().getSelectedIds().remove(itemToRemove);
             }
 
@@ -117,24 +115,28 @@ public abstract class WiredFloorItem extends AdvancedFloorItem<WiredItemEvent> i
 
     @Override
     public void refreshSnapshots() {
-        List<Long> toRemove = Lists.newArrayList();
+        final List<Long> toRemove = Lists.newArrayList();
+
         this.getWiredData().getSnapshots().clear();
 
-        for (long itemId : this.getWiredData().getSelectedIds()) {
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+        for (final long itemId : this.getWiredData().getSelectedIds()) {
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
             if (floorItem == null) {
                 toRemove.add(itemId);
                 continue;
             }
+
             WiredItemSnapshot snapshot = new WiredItemSnapshot(floorItem);
+
             if (floorItem instanceof WiredActionMatchToSnapshot) {
                 snapshot = new WiredItemSnapshot(floorItem);
             }
+
             this.getWiredData().getSnapshots().put(itemId, snapshot);
         }
 
-        for (long itemToRemove : toRemove) {
+        for (final long itemToRemove : toRemove) {
             this.getWiredData().getSelectedIds().remove(itemToRemove);
         }
 
@@ -245,7 +247,6 @@ public abstract class WiredFloorItem extends AdvancedFloorItem<WiredItemEvent> i
     }
 
     public void resetExecute() {
-
         if (this.getRoom() != null) {
             this.getRoom().setExecutedEvent(0);
         }

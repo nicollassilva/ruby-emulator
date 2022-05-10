@@ -6,6 +6,7 @@ import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.items.RoomItem;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
+import com.cometproject.server.game.rooms.objects.items.types.wall.PostItWallItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.sessions.Session;
@@ -19,9 +20,9 @@ public class PickAllCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] message) {
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
-        if (room == null || !room.getData().getOwner().equals(client.getPlayer().getData().getUsername())) {
+        if (room == null || room.getData().getOwnerId() != client.getPlayer().getId()) {
             sendNotif(Locale.getOrDefault("command.need.rights", "You have no rights to use this command in this room."), client);
             return;
         }
@@ -32,7 +33,11 @@ public class PickAllCommand extends ChatCommand {
         itemsToRemove.addAll(room.getItems().getWallItems().values());
 
         for (final RoomItem item : itemsToRemove) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(item.getItemData().getOwnerId());
+            if(item instanceof PostItWallItem) continue;
+
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(item.getItemData().getOwnerId());
+
+            item.onPickup();
 
             if (item instanceof RoomItemFloor && item.getItemData().getOwnerId() == client.getPlayer().getId()) {
                 room.getItems().removeItem((RoomItemFloor) item, client);

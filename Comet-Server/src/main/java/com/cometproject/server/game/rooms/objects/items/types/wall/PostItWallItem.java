@@ -27,8 +27,8 @@ public class PostItWallItem extends RoomItemWall {
     }
 
     public void setExtraData(String extraData) {
-        String[] data = extraData.split(" ");
-        String colour = data[0];
+        final String[] data = extraData.split(" ");
+        final String colour = data[0];
 
         if (!this.isValidColour(colour)) {
             return;
