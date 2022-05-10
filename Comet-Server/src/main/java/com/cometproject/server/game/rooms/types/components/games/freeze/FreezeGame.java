@@ -6,10 +6,7 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeBlockFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeExitFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTimerFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerGameEnds;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerGameStarts;
@@ -195,6 +192,7 @@ public class FreezeGame extends RoomGame {
 
         if (teams == 1) {
             this.gameComplete();
+            this.getGameComponent().stop();
         }
     }
 

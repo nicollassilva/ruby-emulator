@@ -137,7 +137,7 @@ public class GameComponent {
     }
 
     public GameTeam getTeam(int userId) {
-        for (Map.Entry<GameTeam, List<Integer>> entry : this.getTeams().entrySet()) {
+        for (final Map.Entry<GameTeam, List<Integer>> entry : this.getTeams().entrySet()) {
             if (entry.getValue().contains(userId)) {
                 return entry.getKey();
             }
@@ -188,11 +188,11 @@ public class GameComponent {
     }
 
     private void scoreUpdated(GameTeam team) {
-        for (RoomItemFloor scoreItem : this.getRoom().getItems().getByClass(FootballScoreFloorItem.class)) {
+        for (final RoomItemFloor scoreItem : this.getRoom().getItems().getByClass(FootballScoreFloorItem.class)) {
             scoreItem.sendUpdate();
         }
 
-        for (RoomItemFloor scoreboard : this.getRoom().getItems().getByInteraction("%_score%")) {
+        for (final RoomItemFloor scoreboard : this.getRoom().getItems().getByInteraction("%_score%")) {
             if (team == null || scoreboard.getDefinition().getInteraction().toUpperCase().startsWith(team.name()) || scoreboard.getDefinition().getItemName().endsWith("score_" + team.getTeamLetter())) {
                 scoreboard.getItemData().setData(team == null ? "0" : this.getScore(team) + "");
                 scoreboard.sendUpdate();
@@ -203,19 +203,18 @@ public class GameComponent {
     }
 
     public void updateTeamCountGate(GameTeam team) {
-        for (RoomItemFloor floorItem : this.getRoom().getItems().getByInteraction("bb_" + team.toString().toLowerCase() + "_gate")) {
+        for (final RoomItemFloor floorItem : this.getRoom().getItems().getByInteraction("bb_" + team.toString().toLowerCase() + "_gate")) {
             floorItem.getItemData().setData("" + this.teams.get(team).size());
             floorItem.sendUpdate();
         }
 
-        for (RoomItemFloor floorItem : this.getRoom().getItems().getByInteraction("freeze_" + team.toString().toLowerCase() + "_gate")) {
+        for (final RoomItemFloor floorItem : this.getRoom().getItems().getByInteraction("freeze_" + team.toString().toLowerCase() + "_gate")) {
             floorItem.getItemData().setData("" + this.teams.get(team).size());
             floorItem.sendUpdate();
         }
     }
 
     public void removeFromTeam(GameTeam team, PlayerEntity playerEntity) {
-
         if (team == GameTeam.NONE || team == null || playerEntity == null)
             return;
 

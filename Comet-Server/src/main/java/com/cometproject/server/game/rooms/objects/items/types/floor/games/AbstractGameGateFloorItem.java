@@ -29,20 +29,19 @@ public abstract class AbstractGameGateFloorItem extends DefaultFloorItem {
     public void onEntityStepOn(RoomEntity entity) {
         if (!(entity instanceof PlayerEntity)) return;
 
-        PlayerEntity playerEntity = (PlayerEntity) entity;
+        final PlayerEntity playerEntity = (PlayerEntity) entity;
 
         boolean isLeaveTeam = false;
 
         if (playerEntity.getGameTeam() != GameTeam.NONE && playerEntity.getGameTeam() != this.getTeam()) {
-            GameTeam oldTeam = playerEntity.getGameTeam();
+            final GameTeam oldTeam = playerEntity.getGameTeam();
 
             this.getRoom().getGame().removeFromTeam(playerEntity);
 
-            for (AbstractGameGateFloorItem timer : this.getRoom().getGame().getGates().get(this.getTeam())) {
+            for (final AbstractGameGateFloorItem timer : this.getRoom().getGame().getGates().get(oldTeam)) {
                 timer.getItemData().setData(this.getRoom().getGame().getTeams().get(oldTeam).size());
                 timer.sendUpdate();
             }
-
         } else if (playerEntity.getGameTeam() == this.getTeam()) {
             this.getRoom().getGame().removeFromTeam(playerEntity);
 
