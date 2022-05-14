@@ -13,6 +13,8 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 
 
 public class SaveStackToolMessageEvent implements Event {
+    private static final int MAX_HEIGHT = 100;
+
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
         Room room = client.getPlayer().getEntity().getRoom();
@@ -31,29 +33,22 @@ public class SaveStackToolMessageEvent implements Event {
         }
 
         int itemId = msg.readInt();
-        int height = msg.readInt();
+        double height = msg.readInt() / 100f;
 
-        if (height < 0 && height != -100) {
-            return;
-        }
 
         RoomItemFloor floorItem = room.getItems().getFloorItem(itemId);
-
         if (!(floorItem instanceof MagicStackFloorItem)) return;
 
         MagicStackFloorItem magicStackFloorItem = ((MagicStackFloorItem) floorItem);
 
-        if (height == -100) {
-            magicStackFloorItem.setOverrideHeight(
-                    magicStackFloorItem.getRoom().getMapping().getTile(
-                            magicStackFloorItem.getPosition().getX(),
-                            magicStackFloorItem.getPosition().getY()
-                    ).getOriginalHeight());
-        } else {
-            double heightf = height / 100.0d;
-
-            magicStackFloorItem.setOverrideHeight(heightf);
+        // height >= floor height
+        if(height < magicStackFloorItem.getTile().getTileHeight()){
+            height = magicStackFloorItem.getTile().getTileHeight();
         }
+        // height <= 100
+        height = Math.min(height, MAX_HEIGHT);
+
+        magicStackFloorItem.setOverrideHeight(height);
 
         for (AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(
                 magicStackFloorItem.getDefinition().getLength(),
@@ -64,6 +59,7 @@ public class SaveStackToolMessageEvent implements Event {
 
             RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
 
+            // TODO: check this if is usefull and how it works.
             if (tile != null && !client.getPlayer().getEntity().hasAttribute("setz.height")) {
                 tile.reload();
 

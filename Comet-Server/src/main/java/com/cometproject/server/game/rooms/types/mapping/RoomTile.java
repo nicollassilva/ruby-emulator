@@ -417,7 +417,7 @@ public class RoomTile {
         return hasItems;
     }
 
-    public double getTileHeight() {
+    public int getTileHeight() {
         return this.mappingInstance.getModel().getSquareHeight()[this.position.getX()][this.position.getY()];
     }
 
