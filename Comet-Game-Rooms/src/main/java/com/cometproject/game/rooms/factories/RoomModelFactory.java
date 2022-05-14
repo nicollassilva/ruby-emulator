@@ -16,8 +16,10 @@ public class RoomModelFactory implements IRoomModelFactory {
         final int mapSizeY = axes.length;
         final int[][] tileHeights = new int[mapSizeX][mapSizeY];
         final RoomTileState[][] tileStates = new RoomTileState[mapSizeX][mapSizeY];
-        StringBuilder map = new StringBuilder(roomModelData.getHeightmap().length());
+        String map = "";
+
         int maxTileHeight = 0;
+        int doorZ = 0;
 
         try {
             for (int y = 0; y < mapSizeY; y++) {
@@ -29,12 +31,12 @@ public class RoomModelFactory implements IRoomModelFactory {
                         throw new InvalidModelException();
                     }
 
-                    final boolean isDoor = (x == roomModelData.getDoorX() && y == roomModelData.getDoorY());
                     if (String.valueOf(tile).equals("x")) {
-                        tileStates[x][y] =  isDoor ? RoomTileState.VALID : RoomTileState.INVALID;
+                        tileStates[x][y] = (x == roomModelData.getDoorX() && y == roomModelData.getDoorY()) ? RoomTileState.VALID : RoomTileState.INVALID;
                     } else {
                         tileStates[x][y] = RoomTileState.VALID;
                         tileHeights[x][y] = ModelUtils.getHeight(tile);
+
                         if (tileHeights[x][y] > maxTileHeight) {
                             maxTileHeight = (int) Math.ceil(tileHeights[x][y]);
                         }
@@ -44,14 +46,14 @@ public class RoomModelFactory implements IRoomModelFactory {
                 }
             }
 
-            tileHeights[roomModelData.getDoorX()][roomModelData.getDoorY()] = roomModelData.getDoorZ();
+            doorZ = tileHeights[roomModelData.getDoorX()][roomModelData.getDoorY()];
 
             for (final String mapLine : roomModelData.getHeightmap().split("\r\n")) {
                 if (mapLine.isEmpty()) {
                     continue;
                 }
 
-                map.append(mapLine).append((char) 13);
+                map += mapLine + (char) 13;
             }
         } catch (Exception e) {
             if (e instanceof InvalidModelException) {
@@ -65,6 +67,6 @@ public class RoomModelFactory implements IRoomModelFactory {
             roomModelData.setWallHeight(15);
         }
 
-        return new RoomModel(roomModelData, tileStates, map.toString(), tileHeights);
+        return new RoomModel(roomModelData, tileStates, map, tileHeights, doorZ);
     }
 }

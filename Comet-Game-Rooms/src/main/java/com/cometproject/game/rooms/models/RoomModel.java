@@ -11,17 +11,19 @@ public class RoomModel implements IRoomModel {
     private final RoomTileState[][] squareStates;
     private final int[][] squareHeights;
     private final String roomMap;
+    private final int doorZ;
 
     private final int sizeX;
     private final int sizeY;
 
     private String relativeHeightmap;
 
-    public RoomModel(RoomModelData roomModelData, RoomTileState[][] squareStates, String map, int[][] squareHeights) {
+    public RoomModel(RoomModelData roomModelData, RoomTileState[][] squareStates, String map, int[][] squareHeights, int doorZ) {
         this.roomModelData = roomModelData;
         this.squareStates = squareStates;
         this.squareHeights = squareHeights;
         this.roomMap = map;
+        this.doorZ = doorZ;
 
         this.sizeY = this.squareStates[0].length;
         this.sizeX = this.squareStates.length;
@@ -33,7 +35,8 @@ public class RoomModel implements IRoomModel {
             return this.relativeHeightmap;
         }
 
-        StringBuilder builder = new StringBuilder(this.sizeY * this.sizeX);
+        StringBuilder builder = new StringBuilder();
+
         for (int y = 0; y < this.sizeY; y++) {
             for (int x = 0; x < this.sizeX; x++) {
                 if (this.getSquareState()[x][y] == RoomTileState.INVALID) {
@@ -86,7 +89,7 @@ public class RoomModel implements IRoomModel {
 
     @Override
     public int getDoorZ() {
-        return this.getRoomModelData().getDoorZ();
+        return this.doorZ;
     }
 
     @Override

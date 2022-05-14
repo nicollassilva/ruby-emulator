@@ -48,10 +48,9 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
             final String heightmap = data.readString("heightmap");
             final int doorX = data.readInteger("door_x");
             final int doorY = data.readInteger("door_y");
-            final int doorZ = data.readInteger("door_z");
             final int doorRotation = data.readInteger("door_dir");
 
-            roomModels.put(id, this.roomModelDataFactory.createData(id, heightmap, doorX, doorY, doorZ, doorRotation));
+            roomModels.put(id, this.roomModelDataFactory.createData(id, heightmap, doorX, doorY, doorRotation));
         });
 
         modelConsumer.accept(roomModels);

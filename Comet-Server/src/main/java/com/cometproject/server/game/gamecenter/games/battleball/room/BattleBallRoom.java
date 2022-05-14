@@ -20,39 +20,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BattleBallRoom {
-    private static final String CoralBeachMap =
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xtxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "x2222xxx00000000xxx00000000xxx2222\r" +
-            "x2222xxx00000000xxx00000000xxx2222\r" +
-            "x222221000000000xxx000000000122222\r" +
-            "x222221000000000xxx000000000122222\r" +
-            "x2222xxx00000000xxx00000000xxx2222\r" +
-            "x2222xxx00000000xxx00000000xxx2222\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx0000000000000000000xxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
-            "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r";
-
 
     public int roomId;
     public int result;
@@ -122,8 +89,44 @@ public class BattleBallRoom {
 
         switch(name) {
             case "Coral Beach":
+
+                String model = "" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xtxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "x2222xxx00000000xxx00000000xxx2222\r" +
+                        "x2222xxx00000000xxx00000000xxx2222\r" +
+                        "x222221000000000xxx000000000122222\r" +
+                        "x222221000000000xxx000000000122222\r" +
+                        "x2222xxx00000000xxx00000000xxx2222\r" +
+                        "x2222xxx00000000xxx00000000xxx2222\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx0000000000000000000xxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxx00000000xxx00000000xxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r" +
+                        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r";
+
+
                 int creationTime = (int) Comet.getTime();
-                mapId = RoomManager.getInstance().createRoom(name, "Battle Ball game arena", new CustomFloorMapData(1, 2, 0,2, CoralBeachMap, 1), 9, 8, 0, creationTime,0, 0, "", true);
+
+                mapId = RoomManager.getInstance().createRoom(name, "Battle Ball game arena", new CustomFloorMapData(1, 2, 2, model, 1), 9, 8, 0, creationTime,0, 0, "", true);
                 map = RoomManager.getInstance().get(mapId);
                 map.getData().setAccess(RoomAccessType.INVISIBLE);
 

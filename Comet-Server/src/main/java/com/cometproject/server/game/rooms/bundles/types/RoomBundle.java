@@ -42,7 +42,7 @@ public class RoomBundle implements IRoomBundle {
 
     public static RoomBundle create(Room room, String alias) {
         final CustomFloorMapData modelData = new CustomFloorMapData(
-                room.getModel().getDoorX(), room.getModel().getDoorY(), room.getModel().getDoorZ(),
+                room.getModel().getDoorX(), room.getModel().getDoorY(),
                 room.getModel().getDoorRotation(), room.getModel().getMap(), room.getModel().getRoomModelData().getWallHeight());
 
         final List<RoomBundleItem> bundleItems = new ArrayList<>();
