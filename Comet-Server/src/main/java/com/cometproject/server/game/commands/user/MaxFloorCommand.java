@@ -21,8 +21,7 @@ public class MaxFloorCommand extends ChatCommand {
         }
 
         final int maxLength = 64;
-
-        StringBuilder map = new StringBuilder();
+        StringBuilder map = new StringBuilder(maxLength * maxLength);
         for (int y = 0; y <= maxLength; ++y) {
             for (int x = 0; x <= maxLength; ++x) {
                 if (y == 0) {
@@ -44,12 +43,13 @@ public class MaxFloorCommand extends ChatCommand {
 
         final int doorX = 0;
         final int doorY = 1;
+        final int doorZ = 0;
         final int doorRotation = 2;
         final int wallHeight = -1;
 
         Room room = client.getPlayer().getEntity().getRoom();
 
-        CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY, doorRotation, map.toString().trim(), wallHeight);
+        CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY,doorZ, doorRotation, map.toString().trim(), wallHeight);
 
         room.getData().setHeightmap(JsonUtil.getInstance().toJson(floorMapData));
 

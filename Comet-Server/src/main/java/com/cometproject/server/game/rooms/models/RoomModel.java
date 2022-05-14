@@ -20,15 +20,15 @@ public abstract class RoomModel {
     private final RoomTileState[][] squareState;
     private int wallHeight;
 
-    public RoomModel(String name, String heightmap, int doorX, int doorY, int doorRotation, int wallHeight) throws InvalidModelException {
+    public RoomModel(String name, String heightmap, int doorX, int doorY, int doorZ, int doorRotation, int wallHeight) throws InvalidModelException {
         this.name = name;
         this.doorX = doorX;
         this.doorY = doorY;
+        this.doorZ = doorZ;
         this.doorRotation = doorRotation;
         this.wallHeight = wallHeight;
 
         final String[] axes = heightmap.split("\r");
-
         if (axes.length == 0) throw new InvalidModelException();
 
         this.mapSizeX = axes[0].length();
@@ -36,8 +36,8 @@ public abstract class RoomModel {
         this.squareHeight = new int[mapSizeX][mapSizeY];
         this.squareState = new RoomTileState[mapSizeX][mapSizeY];
 
+        StringBuilder mapBuilder = new StringBuilder(mapSizeX * mapSizeY);
         int maxTileHeight = 0;
-
         try {
             for (int y = 0; y < mapSizeY; y++) {
                 final char[] line = axes[y].replace("\r", "").replace("\n", "").toCharArray();
@@ -49,29 +49,30 @@ public abstract class RoomModel {
                     }
 
                     final String tileVal = String.valueOf(tile);
-
+                    final boolean isDoor = (x == doorX && y == doorY);
                     if (tileVal.equals("x")) {
-                        squareState[x][y] = (x == doorX && y == doorY) ? RoomTileState.VALID : RoomTileState.INVALID;
+                        squareState[x][y] = isDoor ? RoomTileState.VALID : RoomTileState.INVALID;
                     } else {
                         squareState[x][y] = RoomTileState.VALID;
                         squareHeight[x][y] = ModelUtils.getHeight(tile);
-
                         if (squareHeight[x][y] > maxTileHeight) {
                             maxTileHeight = (int) Math.ceil(squareHeight[x][y]);
                         }
+
                     }
 
                     x++;
                 }
             }
 
-            this.doorZ = this.squareHeight[doorX][doorY];
-
+            squareHeight[doorX][doorY] = doorZ;
             for (final String mapLine : heightmap.split("\r\n")) {
                 if (mapLine.isEmpty()) continue;
 
-                map += mapLine + (char) 13;
+                mapBuilder.append(mapLine).append((char) 13);
             }
+
+            map = mapBuilder.toString();
         } catch (Exception e) {
             if (e instanceof InvalidModelException) {
                 throw e;

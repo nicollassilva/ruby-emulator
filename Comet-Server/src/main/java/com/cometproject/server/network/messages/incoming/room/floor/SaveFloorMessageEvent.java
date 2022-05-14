@@ -3,6 +3,7 @@ package com.cometproject.server.network.messages.incoming.room.floor;
 import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.GameContext;
 import com.cometproject.api.utilities.JsonUtil;
+import com.cometproject.api.utilities.ModelUtils;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.rooms.RoomManager;
@@ -57,7 +58,7 @@ public class SaveFloorMessageEvent implements Event {
 
         boolean hasTiles = false;
         boolean validDoor = false;
-
+        int doorZ = 0;
         try {
             for (int y = 0; y < sizeY; y++) {
                 String modelLine = modelData[y];
@@ -67,6 +68,7 @@ public class SaveFloorMessageEvent implements Event {
                         if (!Character.toString(modelLine.charAt(x)).equals("x")) {
                             if (x == doorX && y == doorY) {
                                 validDoor = true;
+                                doorZ = ModelUtils.getHeight(modelLine.charAt(x));
                             }
 
                             hasTiles = true;
@@ -86,7 +88,7 @@ public class SaveFloorMessageEvent implements Event {
         room.getData().setThicknessWall(wallThickness);
         room.getData().setThicknessFloor(floorThickness);
 
-        final CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY, doorRotation, model.trim(), wallHeight == 0 ? room.getModel().getRoomModelData().getWallHeight() : wallHeight);
+        final CustomFloorMapData floorMapData = new CustomFloorMapData(doorX, doorY,doorZ, doorRotation, model.trim(), wallHeight == 0 ? room.getModel().getRoomModelData().getWallHeight() : wallHeight);
 
         room.getData().setHeightmap(JsonUtil.getInstance().toJson(floorMapData));
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
