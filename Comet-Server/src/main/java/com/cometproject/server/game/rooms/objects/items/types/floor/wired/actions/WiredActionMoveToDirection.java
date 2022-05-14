@@ -26,7 +26,6 @@ public class WiredActionMoveToDirection extends WiredActionItem {
     private static final int ACTION_TURN_BACK = 5;
     private static final int ACTION_TURN_RANDOM = 6;
 
-
     public WiredActionMoveToDirection(RoomItemData itemData, Room room) {
         super(itemData, room);
     }
@@ -55,7 +54,7 @@ public class WiredActionMoveToDirection extends WiredActionItem {
 
                 if (floorItem == null) continue;
 
-                if (floorItem.getMoveDirection() == -1 || this.getLastStartDir() != startDir) {
+                if (floorItem.getMoveDirection() == -1 || floorItem.getLastStartDir() != startDir) {
                     floorItem.setMoveDirection(startDir);
                     this.setLastStartDir(startDir);
                 }
@@ -79,7 +78,6 @@ public class WiredActionMoveToDirection extends WiredActionItem {
                 this.attemptBlockedAction(floorItem, tries);
         }
     }
-
 
     private void attemptBlockedAction(RoomItemFloor floorItem, AtomicInteger tries) {
         int movementDirection = floorItem.getMoveDirection();

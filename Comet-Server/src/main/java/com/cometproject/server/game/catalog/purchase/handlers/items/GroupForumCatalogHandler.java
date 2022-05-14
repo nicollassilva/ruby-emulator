@@ -21,7 +21,7 @@ public class GroupForumCatalogHandler extends BasicItemCatalogHandler implements
         if (data.isEmpty() || !StringUtils.isNumeric(data))
             return;
 
-        if (!client.getPlayer().getGroups().contains(new Integer(data))) {
+        if (!client.getPlayer().getGroups().contains(Integer.valueOf(data))) {
             return;
         }
 
@@ -41,7 +41,7 @@ public class GroupForumCatalogHandler extends BasicItemCatalogHandler implements
 
         String extraData = "" + groupId;
 
-        super.execute(item, client, amount, page, giftData, definition, bundledItem, data, extraData);
+        super.execute(item, client, amount, page, giftData, definition, bundledItem, data, extraData + ";0");
     }
 
     @Override

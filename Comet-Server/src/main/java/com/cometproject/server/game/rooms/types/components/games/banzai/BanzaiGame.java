@@ -37,14 +37,14 @@ public class BanzaiGame extends RoomGame {
             this.timer = this.gameLength;
         }
 
-        for (RoomItemFloor item : room.getItems().getByClass(BanzaiTimerFloorItem.class)) {
+        for (final RoomItemFloor item : room.getItems().getByClass(BanzaiTimerFloorItem.class)) {
             item.getItemData().setData((gameLength - timer) + "");
             item.sendUpdate();
         }
 
-        for (RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
+        for (final RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
             if (entity.getEntityType().equals(RoomEntityType.PLAYER)) {
-                PlayerEntity playerEntity = (PlayerEntity) entity;
+                final PlayerEntity playerEntity = (PlayerEntity) entity;
 
                 if (this.getGameComponent().getTeam(playerEntity.getPlayerId()) != GameTeam.NONE) {
                     if (playerEntity.getBanzaiPlayerAchievement() >= 60) {
@@ -56,7 +56,6 @@ public class BanzaiGame extends RoomGame {
                 }
             }
         }
-
     }
 
     @Override
@@ -65,9 +64,9 @@ public class BanzaiGame extends RoomGame {
 
         this.banzaiTileCount = 0;
 
-        for (RoomItemFloor item : this.room.getItems().getByClass(BanzaiTileFloorItem.class)) {
+        for (final BanzaiTileFloorItem item : this.room.getItems().getByClass(BanzaiTileFloorItem.class)) {
             this.banzaiTileCount++;
-            ((BanzaiTileFloorItem) item).onGameStarts();
+            item.onGameStarts();
         }
 
         this.startBanzaiTileCount = this.banzaiTileCount;
@@ -77,39 +76,39 @@ public class BanzaiGame extends RoomGame {
 
     @Override
     public void onGameEnds() {
-        GameTeam winningTeam = this.winningTeam();
+        final GameTeam winningTeam = this.winningTeam();
 
-        for (RoomItemFloor item : this.room.getItems().getByClass(BanzaiTileFloorItem.class)) {
-            if (item instanceof BanzaiTileFloorItem) {
-                if (((BanzaiTileFloorItem) item).getTeam() == winningTeam && winningTeam != GameTeam.NONE) {
-                    ((BanzaiTileFloorItem) item).flash();
-                } else {
-                    ((BanzaiTileFloorItem) item).onGameEnds();
-                }
+        for (final BanzaiTileFloorItem item : this.room.getItems().getByClass(BanzaiTileFloorItem.class)) {
+            if (item == null) continue;
+
+            if (item.getTeam() == winningTeam && winningTeam != GameTeam.NONE) {
+                item.flash();
+            } else {
+                item.onGameEnds();
             }
         }
 
         final List<HighscoreFloorItem> scoreboards = this.room.getItems().getByClass(HighscoreFloorItem.class);
 
         if (scoreboards.size() != 0) {
-            List<Integer> winningPlayers = this.room.getGame().getTeams().get(this.winningTeam());
-            List<String> winningPlayerUsernames = Lists.newArrayList();
+            final List<Integer> winningPlayers = this.room.getGame().getTeams().get(this.winningTeam());
+            final List<String> winningPlayerUsernames = Lists.newArrayList();
             final int score = this.getScore(winningTeam);
 
-            for (int playerId : winningPlayers) {
+            for (final int playerId : winningPlayers) {
                 winningPlayerUsernames.add(this.room.getEntities().getEntityByPlayerId(playerId).getUsername());
             }
 
             if (winningPlayerUsernames.size() != 0) {
-                for (HighscoreFloorItem scoreboard : scoreboards) {
+                for (final HighscoreFloorItem scoreboard : scoreboards) {
                     scoreboard.onTeamWins(winningPlayerUsernames, score);
                 }
             }
         }
 
-        for (RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
+        for (final RoomEntity entity : this.room.getEntities().getAllEntities().values()) {
             if (entity.getEntityType().equals(RoomEntityType.PLAYER)) {
-                PlayerEntity playerEntity = (PlayerEntity) entity;
+                final PlayerEntity playerEntity = (PlayerEntity) entity;
 
                 if (this.getGameComponent().getTeam(playerEntity.getPlayerId()).equals(winningTeam) && winningTeam != GameTeam.NONE) {
                     playerEntity.getPlayer().getAchievements().progressAchievement(AchievementType.BB_WINNER, 1);
@@ -130,7 +129,7 @@ public class BanzaiGame extends RoomGame {
     public void updateScoreboard(GameTeam team) {
         //for (RoomItemFloor scoreboard : this.getGameComponent().getRoom().getItems().getByInteraction("%banzai_score")) {
         //Probably fix of count of banzai
-        for (RoomItemFloor scoreboard : this.getGameComponent().getRoom().getItems().getByInteraction("%_score")) {
+        for (final RoomItemFloor scoreboard : this.getGameComponent().getRoom().getItems().getByInteraction("%_score")) {
             if (team == null || scoreboard.getDefinition().getInteraction().toUpperCase().startsWith(team.name())) {
                 scoreboard.getItemData().setData(team == null ? "0" : this.getScore(team) + "");
                 scoreboard.sendUpdate();
@@ -155,7 +154,7 @@ public class BanzaiGame extends RoomGame {
     public GameTeam winningTeam() {
         Map.Entry<GameTeam, Integer> winningTeam = null;
 
-        for (Map.Entry<GameTeam, Integer> score : this.getGameComponent().getScores().entrySet()) {
+        for (final Map.Entry<GameTeam, Integer> score : this.getGameComponent().getScores().entrySet()) {
             if (winningTeam == null || winningTeam.getValue() < score.getValue()) {
                 winningTeam = score;
             }

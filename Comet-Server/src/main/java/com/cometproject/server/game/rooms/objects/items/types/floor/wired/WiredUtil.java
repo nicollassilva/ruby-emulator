@@ -14,7 +14,8 @@ public class WiredUtil {
     public static final int PARAM_POSITION = 2;
 
     public static <T> T getRandomElement(List<T> elements) {
-        int size = elements.size();
+        final int size = elements.size();
+
         if (size > 0) {
             return elements.get(ThreadLocalRandom.current().nextInt(size));
         } else {
@@ -23,7 +24,7 @@ public class WiredUtil {
     }
 
     public static <T> T getRandomElement(Collection<T> elements) {
-        List<T> list = new ArrayList<>(elements);
+        final List<T> list = new ArrayList<>(elements);
 
         return getRandomElement(list);
     }

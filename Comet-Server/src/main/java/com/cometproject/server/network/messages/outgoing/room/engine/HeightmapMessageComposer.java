@@ -35,42 +35,20 @@ public class HeightmapMessageComposer extends MessageComposer {
 
         for (int y = 0; y < room.getModel().getSizeY(); y++) {
             for (int x = 0; x < room.getModel().getSizeX(); x++) {
-                final RoomTile tile = room.getMapping().getTile(x, y);
+                RoomTile tile = room.getMapping().getTile(x, y);
 
                 if (room.getModel().getSquareState()[x][y] == RoomTileState.INVALID) {
                     msg.writeShort(16191);
-//                } else if (room.getModel().getDoorY() == y && room.getModel().getDoorX() == x) {
-//                    msg.writeShort(0);
+                } else if (room.getModel().getDoorY() == y && room.getModel().getDoorX() == x) {
+                    msg.writeShort(0);
                 } else {
 
-                    /*if (this.modebuild) {
-                        msg.writeShort((short) room.getModel().getSquareHeight()[x][y] * 256);
+                    if (tile != null) {
+                        int height = (int) ((tile.getStackHeight()) * 256);
 
-                    } else if (this.modeconstruit != -1) {
-
-                        int height = (int) ((tile.getStackHeight() + this.modeconstruit) * 256);
                         msg.writeShort(height);
-
-                    } */
-
-                    if (this.modesetz) {
-                        int height;
-
-                        if(this.setz < 0) {
-                            height = (room.getModel().getSquareHeight()[x][y]) * 256;
-                        } else {
-                            height = (int) ((room.getModel().getSquareHeight()[x][y] + this.setz) * 256);
-                        }
-                        msg.writeShort(height);
-
                     } else {
-                        if (tile != null) {
-                            int height = (int) ((tile.getStackHeight()) * 256);
-
-                            msg.writeShort(height);
-                        } else {
-                            msg.writeShort((short) room.getModel().getSquareHeight()[x][y] * 256);
-                        }
+                        msg.writeShort((short) room.getModel().getSquareHeight()[x][y] * 256);
                     }
                 }
             }

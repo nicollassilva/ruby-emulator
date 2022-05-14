@@ -53,6 +53,6 @@ public abstract class AdvancedFloorItem<T extends FloorItemEvent> extends RoomIt
     public abstract void onEventComplete(T event);
 
     public int getMaxEvents() {
-        return 150;
+        return 5000;
     }
 }

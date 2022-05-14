@@ -23,6 +23,9 @@ public class PlayerClothingDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
+                if(clothingItems.contains(resultSet.getString("item_name")))
+                    continue;
+
                 clothingItems.add(resultSet.getString("item_name"));
             }
         } catch (SQLException e) {

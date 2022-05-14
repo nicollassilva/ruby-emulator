@@ -51,9 +51,8 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
 
     public static boolean startExecute(RoomEntity entity, Object data, List<RoomItemFloor> items, boolean requiredConditions) {
         try {
-
-            List<WiredActionItem> wiredActions = Lists.newArrayList();
-            List<WiredConditionItem> wiredConditions = Lists.newArrayList();
+            final List<WiredActionItem> wiredActions = Lists.newArrayList();
+            final List<WiredConditionItem> wiredConditions = Lists.newArrayList();
 
             boolean useRandomEffect = false;
             WiredAddonUnseenEffect unseenEffectItem = null;
@@ -88,6 +87,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
 
 
             final Map<String, AtomicBoolean> completedConditions = new HashMap<>();
+
             for (final WiredConditionItem conditionItem : wiredConditions) {
                 //conditionItem.flash();
                 if (conditionItem instanceof WiredConditionTriggererOnFurni && !(conditionItem instanceof WiredNegativeConditionTriggererOnFurni)) {
@@ -119,7 +119,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                 boolean wasSuccess = false;
 
                 if (useRandomEffect) {
-                    WiredActionItem actionItem = wiredActions.get(RandomUtil.getRandomInt(0, wiredActions.size() - 1));
+                    final WiredActionItem actionItem = wiredActions.get(RandomUtil.getRandomInt(0, wiredActions.size() - 1));
 
                     if (actionItem != null) {
                         actionItem.setUseItemsAnimation(!userNoItemsAnimationEffect);
@@ -207,7 +207,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                             executeActionDanceCount++;
                         }
 
-                            if (actionItem instanceof WiredCustomFastWalk) {
+                        if (actionItem instanceof WiredCustomFastWalk) {
                             if (executeActionFastwalkCount >= limit) {
                                 continue;
                             }

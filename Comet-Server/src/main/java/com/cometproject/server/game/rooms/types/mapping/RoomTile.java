@@ -358,7 +358,7 @@ public class RoomTile {
     }
 
     public RoomEntity getEntity() {
-        for (RoomEntity entity : this.getEntities()) {
+        for (final RoomEntity entity : this.getEntities()) {
             return entity;
         }
 

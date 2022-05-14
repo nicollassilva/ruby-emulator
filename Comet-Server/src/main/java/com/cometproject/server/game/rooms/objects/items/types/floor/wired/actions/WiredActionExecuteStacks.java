@@ -77,14 +77,14 @@ public class WiredActionExecuteStacks extends WiredActionItem {
                     actions.add(roomItemFloor);
                 }
             }
-        }
 
-        if (actions.size() > 0) {
-            WiredTriggerItem.startExecute(event.entity, event.data, actions, true);
+            if (actions.size() > 0) {
+                WiredTriggerItem.startExecute(event.entity, event.data, actions, true);
+                actions.clear();
+            }
         }
 
         tilesToExecute.clear();
-        actions.clear();
     }
 
 

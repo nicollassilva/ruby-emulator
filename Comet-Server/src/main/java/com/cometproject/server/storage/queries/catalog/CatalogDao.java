@@ -242,16 +242,16 @@ public class CatalogDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                FurnitureDefinition furnitureDefinition = ItemManager.getInstance().getDefinition(resultSet.getInt("item_ide"));
+                final FurnitureDefinition furnitureDefinition = ItemManager.getInstance().getDefinition(resultSet.getInt("item_ide"));
+
                 if (furnitureDefinition != null) {
                     if(CatalogManager.getInstance().prizes.get(resultSet.getInt("rarity")) == null) {
                         CatalogManager.getInstance().prizes.put(resultSet.getInt("rarity"), new THashSet<>());
                     }
 
                     CatalogManager.getInstance().prizes.get(resultSet.getInt("rarity")).add(furnitureDefinition);
-                } else {
-                    //CatalogManager.getInstance().log.error("Cannor load item with ID: {} as recycler reward!", resultSet.getInt("item_id"));
                 }
+
             }
         } catch (SQLException e) {
             SqlHelper.handleSqlException(e);
@@ -306,7 +306,7 @@ public class CatalogDao {
 
                 final String itemName = resultSet.getString("item_name");
                 final String[] itemsStrArray = itemsStr.split(",");
-                int[] items = new int[itemsStrArray.length];
+                final int[] items = new int[itemsStrArray.length];
 
                 for (int i = 0; i < itemsStrArray.length; i++) {
                     items[i] = Integer.parseInt(itemsStrArray[i]);

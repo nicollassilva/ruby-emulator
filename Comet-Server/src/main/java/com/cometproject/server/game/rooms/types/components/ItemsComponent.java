@@ -363,11 +363,11 @@ public class ItemsComponent {
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
-        if (autoheight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
+        if(item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
             return false;
         }
 
-        if(item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
+        if (autoheight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
             return false;
         }
 

@@ -9,6 +9,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiPuckFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.components.games.GameTeam;
 import com.cometproject.server.game.rooms.types.mapping.RoomEntityMovementNode;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.api.game.rooms.models.RoomTileState;
@@ -55,7 +56,14 @@ public abstract class RollableFloorItem extends RoomItemFloor {
         }
 
         if (entity instanceof PlayerEntity && this instanceof BanzaiPuckFloorItem) {
-            this.getItemData().setData((((PlayerEntity) entity).getGameTeam().getTeamId() + 1) + "");
+            final PlayerEntity playerEntity = (PlayerEntity) entity;
+
+            if(playerEntity.getGameTeam().getTeamId() == GameTeam.NONE.getTeamId()) {
+                this.getItemData().setData("0");
+            } else {
+                this.getItemData().setData(playerEntity.getGameTeam().getTeamId() + "");
+            }
+
             this.sendUpdate();
         }
 
@@ -153,8 +161,10 @@ public abstract class RollableFloorItem extends RoomItemFloor {
             double distanceMoved = position.distanceTo(this.getPosition());
             this.rollStage += distanceMoved;
 
-            this.getItemData().setData("55");
-            this.sendUpdate();
+            if(!(this instanceof BanzaiPuckFloorItem)) {
+                this.getItemData().setData("55");
+                this.sendUpdate();
+            }
 
             this.moveTo(position, position.getFlag());
             // System.out.println(tiles);
@@ -177,8 +187,10 @@ public abstract class RollableFloorItem extends RoomItemFloor {
                 newPosition.setFlag(kickerEntity.getBodyRotation());
             }
 
-            this.getItemData().setData((KICK_POWER - (this.rollStage - 1) == 0 ? 3 : (KICK_POWER - (this.rollStage - 1)) * 11));
-            this.sendUpdate();
+            if(!(this instanceof BanzaiPuckFloorItem)) {
+                this.getItemData().setData((KICK_POWER - (this.rollStage - 1) == 0 ? 3 : (KICK_POWER - (this.rollStage - 1)) * 11));
+                this.sendUpdate();
+            }
 
             this.moveTo(newPosition, newPosition.getFlag());
             this.setTicks(RoomItemFactory.getProcessTime(this.getDelay(this.rollStage)));

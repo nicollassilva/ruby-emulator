@@ -188,14 +188,14 @@ public class ItemDao {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
-        List<Long> data = new ArrayList<>();
+        final List<Long> data = new ArrayList<>();
 
         try {
             sqlConnection = SqlHelper.getConnection();
 
             preparedStatement = SqlHelper.prepare("INSERT into items (`user_id`, `room_id`, `base_item`, `extra_data`, `x`, `y`, `z`, `rot`, `wall_pos`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);", sqlConnection, true);
 
-            for (CatalogPurchase purchase : catalogPurchases) {
+            for (final CatalogPurchase purchase : catalogPurchases) {
                 preparedStatement.setInt(1, purchase.getPlayerId());
                 preparedStatement.setInt(2, 0);
                 preparedStatement.setInt(3, purchase.getItemBaseId());

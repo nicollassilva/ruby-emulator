@@ -29,7 +29,7 @@ public class WiredConditionMessageComposer extends MessageComposer {
 
         msg.writeInt(wiredConditionItem.getWiredData().getSelectedIds().size());
 
-        for (Long itemId : wiredConditionItem.getWiredData().getSelectedIds()) {
+        for (final Long itemId : wiredConditionItem.getWiredData().getSelectedIds()) {
             msg.writeInt(ItemManager.getInstance().getItemVirtualId(itemId));
         }
 
@@ -40,7 +40,7 @@ public class WiredConditionMessageComposer extends MessageComposer {
 
         msg.writeInt(wiredConditionItem.getWiredData().getParams().size());
 
-        for (int param : wiredConditionItem.getWiredData().getParams().values()) {
+        for (final int param : wiredConditionItem.getWiredData().getParams().values()) {
             msg.writeInt(param);
         }
 

@@ -42,26 +42,26 @@ public class CatalogPageMessageComposer extends MessageComposer {
 
         msg.writeInt(this.catalogPage.getImages().size());
 
-        for (String image : this.catalogPage.getImages()) {
+        for (final String image : this.catalogPage.getImages()) {
             msg.writeString(image);
         }
 
         msg.writeInt(this.catalogPage.getTexts().size());
 
-        for (String text : this.catalogPage.getTexts()) {
+        for (final String text : this.catalogPage.getTexts()) {
             msg.writeString(text);
         }
 
         if (this.catalogPage.getType() == CatalogPageType.RECENT_PURCHASES) {
             msg.writeInt(player.getRecentPurchases().size());
 
-            for (ICatalogItem item : player.getRecentPurchases()) {
+            for (final ICatalogItem item : player.getRecentPurchases()) {
                 item.compose(msg);
             }
         } else if (!this.catalogPage.getTemplate().equals("frontpage") && !this.catalogPage.getTemplate().equals("vip_buy")) {
             msg.writeInt(this.catalogPage.getItems().size());
 
-            for (ICatalogItem item : this.catalogPage.getItems().values()) {
+            for (final ICatalogItem item : this.catalogPage.getItems().values()) {
                 item.compose(msg);
             }
         } else {
