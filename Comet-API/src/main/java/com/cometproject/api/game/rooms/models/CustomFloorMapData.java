@@ -21,6 +21,10 @@ public class CustomFloorMapData {
         return doorY;
     }
 
+    public int getDoorZ() {
+        return doorZ;
+    }
+
     public int getDoorRotation() {
         return doorRotation;
     }
@@ -31,9 +35,5 @@ public class CustomFloorMapData {
 
     public int getWallHeight() {
         return wallHeight;
-    }
-
-    public int getDoorZ() {
-        return this.doorZ;
     }
 }

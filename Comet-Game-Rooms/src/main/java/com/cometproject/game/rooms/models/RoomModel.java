@@ -3,10 +3,9 @@ package com.cometproject.game.rooms.models;
 import com.cometproject.api.game.rooms.models.IRoomModel;
 import com.cometproject.api.game.rooms.models.RoomModelData;
 import com.cometproject.api.game.rooms.models.RoomTileState;
+import com.cometproject.api.utilities.ModelUtils;
 
 public class RoomModel implements IRoomModel {
-    private static final char[] characters = "0123456789abcdefghijklmnopqrstuvwxyz".toCharArray();
-
     private final RoomModelData roomModelData;
     private final RoomTileState[][] squareStates;
     private final int[][] squareHeights;
@@ -39,7 +38,7 @@ public class RoomModel implements IRoomModel {
                 if (this.getSquareState()[x][y] == RoomTileState.INVALID) {
                     builder.append("x");
                 } else {
-                    builder.append(characters[(int) Math.floor(this.getSquareHeight()[x][y] + 0.5d)]);
+                    builder.append(ModelUtils.heightToMap(this.getSquareHeight()[x][y]));
                 }
             }
 

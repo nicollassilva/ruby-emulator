@@ -44,8 +44,7 @@ public class RoomModelFactory implements IRoomModelFactory {
                 }
             }
 
-            doorZ = tileHeights[roomModelData.getDoorX()][roomModelData.getDoorY()];
-
+            tileHeights[roomModelData.getDoorX()][roomModelData.getDoorY()] = roomModelData.getDoorZ();
             for (final String mapLine : roomModelData.getHeightmap().split("\r\n")) {
                 if (mapLine.isEmpty()) {
                     continue;
