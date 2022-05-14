@@ -41,7 +41,7 @@ public class MaintenanceCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "%hour% %minute%";
+        return "(horas) (minutos)";
     }
 
     @Override

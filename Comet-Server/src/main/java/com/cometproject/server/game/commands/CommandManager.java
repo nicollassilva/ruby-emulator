@@ -121,8 +121,8 @@ public class CommandManager implements Initialisable {
      */
     private void loadUserCommands() {
         this.addCommand(Locale.get("command.commands.name"), new CommandsCommand());
-        this.addCommand(Locale.getOrDefault("command.tagprofile.name", "tagprofile"), new TagProfileCommand());
-        this.addCommand(Locale.getOrDefault("command.mimicoff.name", "mimicoff"), new MimicOfflineCommand());
+        this.addCommand(Locale.get("command.tagprofile.name"), new TagProfileCommand());
+        this.addCommand(Locale.get("command.mimicoff.name"), new MimicOfflineCommand());
         this.addCommand(Locale.get("command.about.name"), new AboutCommand());
         this.addCommand(Locale.get("command.pickall.name"), new PickAllCommand());
         this.addCommand(Locale.get("command.ejectall.name"), new EjectAllCommand());
@@ -141,7 +141,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.addlookwardrobe.name", "addlook"), new AddLookToWardrobeCommand());
         this.addCommand("screenshot", new ScreenshotCommand());
         this.addCommand(Locale.getOrDefault("command.logsclient.name", "logsclient"), new LogsClientCommand());
-        this.addCommand("look", new LookCommand());
+        this.addCommand(Locale.get("command.look.name"), new LookCommand());
         this.addCommand(Locale.get("command.colour.name"), new ColourCommand());
         this.addCommand(Locale.get("command.flagme.name"), new FlagMeCommand());
         this.addCommand(Locale.get("command.flaguser.name"), new FlagUserCommand());
@@ -201,11 +201,11 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.smoke.name"), new SmokeCommand());
         this.addCommand(Locale.get("command.kill.name"), new KillCommand());
         this.addCommand(Locale.get("command.online.name"), new OnlineCommand());
-        this.addCommand(Locale.getOrDefault("command.build_websocket.name", "buildvue"), new BuildCommand());
+        this.addCommand(Locale.get("command.build.name"), new BuildCommand());
         this.addCommand(Locale.getOrDefault("command.event_alert_websocket.name", "eventvue"), new EventAlertVueCommand());
 
-        this.addCommand(Locale.getOrDefault("command.listdisabledcommand.name", "listcommands"), new ListDisabledCommandsCommand());
-        this.addCommand(Locale.getOrDefault("command.toggleshoot.name", "toggleshoot"), new ToggleShootCommand());
+        this.addCommand(Locale.getOrDefault("command.disabledcommands.name", "listcommands"), new ListDisabledCommandsCommand());
+        this.addCommand(Locale.get("command.toggleshoot.name"), new ToggleShootCommand());
 
         this.addCommand(Locale.get("command.sell_room.name"), new SellRoomCommand());
         this.addCommand(Locale.get("command.buy_room.name"), new BuyRoomCommand());
@@ -304,7 +304,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.reminderevent.name", "re"), new ReminderEventCommand());
         this.addCommand(Locale.getOrDefault("command.senduser.name", "sendto"), new SendUserCommand());
         this.addCommand(Locale.getOrDefault("command.toggletrade.name", "trades"), new ToggleTradeCommand());
-        this.addCommand(Locale.getOrDefault("command.winner.name", "winner"), new WinnerCommand());
+        this.addCommand(Locale.get("command.winner.name"), new WinnerCommand());
         this.addCommand(Locale.getOrDefault("command.pickallwired.name", "pickallwired"), new PickAllWiredCommand());
         this.addCommand("addfilter", new FilterWordsCommand());
         this.addCommand("searchfurni", new SearchFurniCommand());
@@ -419,7 +419,7 @@ public class CommandManager implements Initialisable {
                 if (LogManager.ENABLED && CometExternalSettings.enableStaffMessengerLogs) {
                     LogManager.getInstance().getStore().getLogEntryContainer().put(new CommandLogEntry(client.getPlayer().getEntity().getRoom().getId(), client.getPlayer().getId(), message));
 
-                    if (chatCommand != null && client.getPlayer().getData().getRank() >= Integer.parseInt(Locale.getOrDefault("logchat.minrank", "5")) && chatCommand.isLoggable()) {
+                    if (chatCommand != null && client.getPlayer().getData().getRank() >= Integer.parseInt(Locale.getOrDefault("logchat.minrank", "10")) && chatCommand.isLoggable()) {
                         for (final Session player : ModerationManager.getInstance().getLogChatUsers()) {
                             player.send(new InstantChatMessageComposer(chatCommand.getLoggableDescription(), Integer.MAX_VALUE - 1));
                         }

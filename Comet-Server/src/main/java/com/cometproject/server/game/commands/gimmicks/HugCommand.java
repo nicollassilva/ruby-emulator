@@ -18,7 +18,7 @@ public class HugCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Invalid username!"), client);
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
             return;
         }
 
@@ -27,12 +27,12 @@ public class HugCommand extends ChatCommand {
         final RoomEntity entity = client.getPlayer().getEntity().getRoom().getEntities().getEntityByName(huggedPlayer, RoomEntityType.PLAYER);
 
         if (entity == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
         if (entity.getUsername().equals(client.getPlayer().getData().getUsername())) {
-            sendNotif(Locale.getOrDefault("command.hug.himself", "You can't hug yourself!"), client);
+            sendNotif(Locale.getOrDefault("command.hug.himself", "Você não pode abraçar a si mesmo!"), client);
             return;
         }
 
@@ -49,12 +49,12 @@ public class HugCommand extends ChatCommand {
 
             client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.hug.message", "abraçou %username%").replace("%username%", huggedPlayer), ChatEmotion.SMILE, 16));
 
-            entity.applyEffect(new PlayerEffect(168));
+            entity.applyEffect(new PlayerEffect(9));
 
-            client.getPlayer().getEntity().applyEffect(new PlayerEffect(168));
+            client.getPlayer().getEntity().applyEffect(new PlayerEffect(9));
             client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
         } else {
-            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% não está por perto.").replace("%playername%", entity.getUsername()), 16));
+            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Ops! %playername% não está próximo, caminhe até este jogador.").replace("%playername%", entity.getUsername()), 16));
         }
     }
 
@@ -65,11 +65,11 @@ public class HugCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.hug.description", "Abraza a un usuario");
+        return Locale.getOrDefault("command.hug.description", "Abraça um usuário");
     }
 }

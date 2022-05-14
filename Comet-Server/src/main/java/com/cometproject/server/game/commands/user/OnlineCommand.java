@@ -15,7 +15,7 @@ public class OnlineCommand extends ChatCommand {
         final int OnlineRoomsCount = cometStats.getRooms();
 
         if(params.length < 1) {
-            client.send(new WhisperMessageComposer(client.getPlayer().getId(), "En estos momentos somos " + OnlineCount + " usuarios conectados con " + OnlineRoomsCount + " salas activas" , 34));
+            client.send(new WhisperMessageComposer(client.getPlayer().getId(), "Neste momento, somos <b>" + OnlineCount + "</b> usuários conectados com <b>" + OnlineRoomsCount + "</b> quartos ativos." , 34));
         }
 
     }
@@ -30,6 +30,6 @@ public class OnlineCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        { return Locale.getOrDefault("command.about.description", "Revisa las estadísticas del hotel a tiempo real"); }
+        { return Locale.getOrDefault("command.online.description", "Revisa las estadísticas del hotel a tiempo real"); }
     }
 }

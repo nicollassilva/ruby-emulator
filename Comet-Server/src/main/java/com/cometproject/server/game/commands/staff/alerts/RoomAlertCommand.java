@@ -19,7 +19,7 @@ public class RoomAlertCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c executed roomalert in -d. [-e]"
+        this.logDesc = "-c enviou um alerta de quarto em -d. [-e]"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", client.getPlayer().getEntity().getRoom().getData().getName())
                 .replace("-e", this.merge(params));
@@ -32,7 +32,7 @@ public class RoomAlertCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.parameter.message", "(mensagem)");
     }
 
     @Override

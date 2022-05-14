@@ -13,7 +13,7 @@ public class PublicRoomCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if(params.length < 1) {
-            client.getPlayer().sendNotif("error", Locale.get("command.param.missing"));
+            client.getPlayer().sendNotif("Erro", Locale.get("command.param.missing"));
             return;
         }
 
@@ -30,22 +30,22 @@ public class PublicRoomCommand extends ChatCommand {
                     NavigatorDao.insertPublicRoom(room.getId(), room.getData().getName(), room.getData().getDescription());
                     NavigatorManager.getInstance().loadPublicRooms();
                     room.reload();
-                    client.getPlayer().sendNotif("success", Locale.getOrDefault("command.publicroom.add.success", "The room was added to Public Rooms!"));
+                    client.getPlayer().sendNotif("Sucesso", Locale.getOrDefault("command.publicroom.add.success", "The room was added to Public Rooms!"));
                 } else {
-                    client.getPlayer().sendNotif("Error", Locale.getOrDefault("command.publicroom.alreadypublic", "The room is already public!"));
+                    client.getPlayer().sendNotif("Erro", Locale.getOrDefault("command.publicroom.alreadypublic", "The room is already public!"));
                 }
                 break;
             }
-            case "remove": {
+            case "remover": {
                 if(NavigatorManager.getInstance().getPublicRoom(room.getId()) != null) {
                     room.getData().setType(RoomType.PRIVATE);
                     GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
                     NavigatorDao.removePublicRoom(room.getId());
                     NavigatorManager.getInstance().loadPublicRooms();
                     room.reload();
-                    client.getPlayer().sendNotif("success", Locale.getOrDefault("command.publicroom.remove.success", "The room was removed from Public Rooms!"));
+                    client.getPlayer().sendNotif("Sucesso", Locale.getOrDefault("command.publicroom.remove.success", "The room was removed from Public Rooms!"));
                 } else {
-                    client.getPlayer().sendNotif("error", Locale.getOrDefault("command.publicroom.notpublic", "The room is not public!"));
+                    client.getPlayer().sendNotif("Erro", Locale.getOrDefault("command.publicroom.notpublic", "The room is not public!"));
                 }
             }
         }
@@ -58,7 +58,7 @@ public class PublicRoomCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "";
+        return Locale.getOrDefault("command.publicroom.param", "(add/remover)");
     }
 
     @Override

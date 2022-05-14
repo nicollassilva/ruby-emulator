@@ -44,10 +44,10 @@ public class RoomActionCommand extends ChatCommand {
         final String action = params[0];
 
         switch (action) {
-            case "list":
-                sendAlert("- effect %effectid% \n- say %msg% \n- dance %danceid%\n- sign %signid%\n- bots %count% <i>(To remove, say \"minions leave\")</i>\n- handitem %itemid%", client);
+            case "lista":
+                sendAlert("- efeito (número) \n- fala (mensagem) \n- danca (número)\n- sinal (número)\n- bots %count% <i>(Para remover, diga \"saiam minions\")</i>\n- item (número)", client);
                 break;
-            case "effect":
+            case "efeito":
                 if (!StringUtils.isNumeric(params[1])) {
                     return;
                 }
@@ -59,7 +59,7 @@ public class RoomActionCommand extends ChatCommand {
                 }
                 break;
 
-            case "say":
+            case "fala":
                 String msg = this.merge(params, 1);
 
                 for (final PlayerEntity playerEntity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
@@ -67,7 +67,7 @@ public class RoomActionCommand extends ChatCommand {
                 }
                 break;
 
-            case "dance":
+            case "danca":
                 if (!StringUtils.isNumeric(params[1])) {
                     return;
                 }
@@ -80,7 +80,7 @@ public class RoomActionCommand extends ChatCommand {
                 }
                 break;
 
-            case "sign":
+            case "sinal":
                 if (!StringUtils.isNumeric(params[1])) {
                     return;
                 }
@@ -140,7 +140,7 @@ public class RoomActionCommand extends ChatCommand {
                 client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new AvatarsMessageComposer(addedEntities));
                 break;
 
-            case "handitem":
+            case "item":
                 final int handItem = Integer.parseInt(params[1]);
 
                 for (final PlayerEntity playerEntity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
@@ -165,7 +165,7 @@ public class RoomActionCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "";
+        return Locale.getOrDefault("command.roomaction.parameters", "%evento%");
     }
 
     @Override

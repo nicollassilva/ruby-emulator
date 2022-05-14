@@ -24,7 +24,6 @@ public class WinnerCommand extends ChatCommand {
             case "medio":
                 credits = Integer.parseInt(Locale.getOrDefault("premio.facil", "5"));
                 break;
-            case "duro":
             case "dificil":
                 credits = Integer.parseInt(Locale.getOrDefault("premio.facil", "7"));
                 break;

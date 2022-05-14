@@ -12,7 +12,7 @@ public class MimicOfflineCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Invalid username!"), client);
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
             return;
         }
 
@@ -40,16 +40,16 @@ public class MimicOfflineCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "about_command";
+        return "mimicoff_command";
     }
 
     @Override
     public String getParameter() {
-        return "(usuario)";
+        return Locale.getOrDefault("command.parameter.username", "(usuário");
     }
 
     @Override
     public String getDescription() {
-        return "Copia el look de un usuario aún esté online u offline";
+        return Locale.getOrDefault("command.mimicoff.description", "Copia o visual de um usuário.");
     }
 }

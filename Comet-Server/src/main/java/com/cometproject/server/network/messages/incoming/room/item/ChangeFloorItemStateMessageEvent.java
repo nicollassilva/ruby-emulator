@@ -108,18 +108,18 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             ICatalogPage page = CatalogManager.getInstance().getPage(catalogItem == null ? 0 : catalogItem.getPageId());
 
 
-            final String devInfo = "<b>Información del furni que estás buscando.</b>\r\r" +
+            final String devInfo = "<b>Informações do Mobi que está procurando.</b>\r\r" +
                     //"<b>ID Base:</b> " + itemData.getId() + "\r" + "<b>Nombre:</b>" + itemData.getItemName() + "\r" +
                     //"<b>Sprite ID:</b> " + itemData.getSpriteId() + "\r" +
                     //"<b>Interacción:</b> " + itemData.getInteraction() + "\r" +
                     //"<b>Cycle count:</b> " + itemData.getInteractionCycleCount() + "\r\r" +
-                    "<b>Información del producto en catálogo:</b>\r\r" +
+                    "<b>Informação do item no Catálogo:</b>\r\r" +
                     //"<b>ID Catálogo:</b> " + (catalogItem == null ? "ID no encontrada." : catalogItem.getId()) + "\r" +
-                    "<b>Nombre:</b> " + (catalogItem == null ? "Nombre no encontrado." : catalogItem.getDisplayName()) + "\r" +
+                    "<b>Mobi:</b> " + (catalogItem == null ? "Nome não encontrado." : catalogItem.getDisplayName()) + "\r" +
                     //"<b>ID Página:</b> " + (page == null ? "Página no encontrada." : page.getId()) +
-                    "<b>Nombre de página:</b> " + (page == null ? "Página no encontrada." : page.getCaption());
+                    "<b>Página:</b> " + (page == null ? "Página não encontrada." : page.getCaption());
 
-            client.send(new AdvancedAlertMessageComposer("Información de " + itemData.getItemName(), devInfo, "Abrir página del catálogo", "event:catalog/open/" + page.getId(), ""));
+            client.send(new AdvancedAlertMessageComposer("Informação de " + itemData.getItemName(), devInfo, "Abrir página do catálogo", "event:catalog/open/" + page.getId(), ""));
             return;
         }
 

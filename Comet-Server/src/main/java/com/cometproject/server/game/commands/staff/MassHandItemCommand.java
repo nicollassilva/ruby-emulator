@@ -30,7 +30,7 @@ public class MassHandItemCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has used <b>massHandItem</b> in room '%b'"
+        this.logDesc = "%s usou <b>massHandItem</b> no quarto '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
     }

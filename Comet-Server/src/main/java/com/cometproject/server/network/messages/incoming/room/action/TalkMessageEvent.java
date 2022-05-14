@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class TalkMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
         if (client.getPlayer().getPermissions().getRank().modTool() && !client.getPlayer().getSettings().isPinSuccess()) {
-            client.getPlayer().sendBubble("pincode", Locale.getOrDefault("pin.code.required", "Debes verificar tu PIN antes de realizar cualquier acción."));
+            client.getPlayer().sendBubble("pincode", Locale.getOrDefault("pin.code.required", "Você deve inserir o PIN antes de fazer qualquer ação."));
             client.send(new EmailVerificationWindowMessageComposer(1, 1));
             return;
         }
@@ -84,7 +84,7 @@ public class TalkMessageEvent implements Event {
             final FilterResult filterResult = RoomManager.getInstance().getFilter().filter(filteredMessage);
 
             if (filterResult.isBlocked()) {
-                filterResult.sendLogToStaffs(client, "<Room: " + playerEntity.getRoom().getData().getId() + ">");
+                filterResult.sendLogToStaffs(client, "<Quarto: " + playerEntity.getRoom().getData().getId() + ">");
                 //client.send(new AdvancedAlertMessageComposer(Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                 client.sendQueue(new NotificationMessageComposer("filter", Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                 client.getPlayer().getEntity().increaseCountFilter(1);
@@ -94,7 +94,7 @@ public class TalkMessageEvent implements Event {
                     PlayerDao.addTimeMute(client.getPlayer().getData().getId(), timeMuted);
                     client.getPlayer().getData().setTimeMuted(timeMuted);
 
-                    client.sendQueue(new NotificationMessageComposer("filter", "Has sido muteado por el sistema de moderación automático por no respetar el filtro " + client.getPlayer().getEntity().getCountFilter() + " veces"));
+                    client.sendQueue(new NotificationMessageComposer("filter", "Foi silenciado pela moderação automática por não respeitar o filtro " + client.getPlayer().getEntity().getCountFilter() + " vezes"));
                 }
 
                 // Logs in to client bubble
@@ -102,7 +102,7 @@ public class TalkMessageEvent implements Event {
                     if (!player.getPlayer().getLogsClientStaff()) continue;
 
                     if (client.getPlayer().getEntity() != null) {
-                        player.sendQueue(new NotificationMessageComposer("filter", "El usuario " + client.getPlayer().getData().getUsername() + " ha saltado el filtro diciendo la palabra " + filterResult.getMessage() + " tiene " + client.getPlayer().getEntity().getCountFilter() + " oportunidades de 3"));
+                        player.sendQueue(new NotificationMessageComposer("filter", "O usuário " + client.getPlayer().getData().getUsername() + " ativou o filtro dizendo " + filterResult.getMessage() + ", tem " + client.getPlayer().getEntity().getCountFilter() + " oportunidades de 3"));
                     }
                 }
                 return;
@@ -125,7 +125,7 @@ public class TalkMessageEvent implements Event {
                         return;
 
                     if (finalName.equals(client.getPlayer().getEntity().getUsername())) {
-                        client.send(new WhisperMessageComposer(client.getPlayer().getData().getId(), Locale.getOrDefault("mention.himself", "No te puedes mencionar a ti mismo"), 34));
+                        client.send(new WhisperMessageComposer(client.getPlayer().getData().getId(), Locale.getOrDefault("mention.himself", "Você não pode mencionar a si mesmo."), 34));
                         return;
                     }
 
@@ -134,24 +134,24 @@ public class TalkMessageEvent implements Event {
                     }
 
                     if (player.getPlayer().getEntity() == null) {
-                        client.send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "No puedes mencionar a este usuario por que no se encuentra en ninguna sala en este momento", ChatEmotion.NONE, 1));
+                        client.send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você não pode mencionar este usuário porque ele não está em nenhum quarto no momento.", ChatEmotion.NONE, 1));
                         return;
                     }
 
                     final MentionType mentionSetting = player.getPlayer().getSettings().getMentionType();
 
                     if (mentionSetting == MentionType.FRIENDS && player.getPlayer().getMessenger().getFriendById(client.getPlayer().getEntity().getPlayerId()) != null || mentionSetting == MentionType.ALL) {
-                        player.send(new WhisperMessageComposer(player.getPlayer().getEntity().getId(), "El usuario " + client.getPlayer().getData().getUsername() + " dice: " + "<b>" + message + "</b>", 1));
+                        player.send(new WhisperMessageComposer(player.getPlayer().getEntity().getId(), "O usuário " + client.getPlayer().getData().getUsername() + " disse: " + "<b>" + message + "</b>", 1));
                         //player.send(new JavascriptCallbackMessageComposer(new MentionComposer(client.getPlayer().getData().getUsername(), message, client.getPlayer().getData().getFigure())));
                         final String name = String.format("@%s", finalName);
                         filteredMessage = filteredMessage.replace(String.format("@%s", finalName), String.format("%s", name));
                     } else {
                         if (mentionSetting == MentionType.FRIENDS) {
-                            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getPlayerId(), Locale.getOrDefault("mention.notfriend", "You must be friends to mention a player!").replace("%s", finalName), 34));
+                            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getPlayerId(), Locale.getOrDefault("mention.notfriend", "Você deve ser amigo para enviar a menção!").replace("%s", finalName), 34));
                         } else if (mentionSetting == MentionType.NONE) {
-                            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getPlayerId(), Locale.getOrDefault("mention.disabled", "This player is not acepting mentions!").replace("%s", finalName), 34));
+                            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getPlayerId(), Locale.getOrDefault("mention.disabled", "Este usuário não aceita menções!").replace("%s", finalName), 34));
                         } else if (player.getPlayer().getEntity().getRoom() == null) {
-                            client.send(new WhisperMessageComposer(client.getPlayer().getData().getId(), Locale.getOrDefault("mention.notexist", "El usuario %s no existe o está desconectado")
+                            client.send(new WhisperMessageComposer(client.getPlayer().getData().getId(), Locale.getOrDefault("mention.notexist", "O usuário %s não existe ou está offline.")
                                     .replace("%s", finalName), 34));
                             return;
                         }

@@ -13,7 +13,7 @@ public class DanceCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif("Debes poner el numero de baile deseado", client);
+            sendNotif("Você deve colocar o número de dança desejado.", client);
             return;
         }
 
@@ -31,7 +31,7 @@ public class DanceCommand extends ChatCommand {
             entity.getRoom().getEntities().broadcastMessage(new DanceMessageComposer(entity.getId(), danceId));
 
         } catch (Exception e) {
-            sendNotif("Debes poner un numero de baile correcto!", client);
+            sendNotif("Você deve colocar um número de dança correto!", client);
         }
     }
 
@@ -42,7 +42,7 @@ public class DanceCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.number", "número 1-4");
+        return Locale.getOrDefault("command.dance.param", "(número de 1 a 4)");
     }
 
     @Override

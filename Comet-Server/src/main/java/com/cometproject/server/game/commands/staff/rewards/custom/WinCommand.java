@@ -52,11 +52,11 @@ public class WinCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "%user%";
+        return "(usuário)";
     }
 
     @Override
     public String getDescription() {
-        return "Envia 1 ponto do hall, diamante e o próximo nível de emblema para o usuário.";
+        return "Envia ponto no hall, diamante e próximo nível do emblema.";
     }
 }

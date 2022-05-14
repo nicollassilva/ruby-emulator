@@ -15,7 +15,7 @@ public class RoomOptionCommand extends ChatCommand {
                 return;
             }
             if (params.length != 1) {
-                sendWhisper(Locale.getOrDefault("command.roomoption.none", "To change the room option type :roomoption %option% (You're able to use: shake & disco)"), client);
+                sendWhisper(Locale.getOrDefault("command.roomoption.none", "Para alterar o tipo de opção de quarto :roomoption %option% (Você pode usar: shake & disco)"), client);
                 return;
             }
 
@@ -34,7 +34,7 @@ public class RoomOptionCommand extends ChatCommand {
                 return;
             }
 
-            sendWhisper(Locale.getOrDefault("command.roomoption.none", "To change the room option type :roomoption %option% (You're able to use: shake & disco)"), client);
+            sendWhisper(Locale.getOrDefault("command.roomoption.none", "Para alterar o tipo de opção de quarto :roomoption %option% (Você pode usar: shake & disco)"), client);
         }
     }
 
@@ -43,7 +43,7 @@ public class RoomOptionCommand extends ChatCommand {
     }
 
     public String getParameter() {
-        return "%option%";
+        return "(shake/disco/rotate)";
     }
 
     public String getDescription() {

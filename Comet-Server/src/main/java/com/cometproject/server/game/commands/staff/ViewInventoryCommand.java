@@ -50,7 +50,7 @@ public class ViewInventoryCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has viewed the inventory for user: '%b'"
+        this.logDesc = "%s olhou o inventário de '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", username);
     }
@@ -62,7 +62,7 @@ public class ViewInventoryCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

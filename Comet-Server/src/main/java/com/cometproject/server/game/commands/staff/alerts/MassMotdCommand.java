@@ -19,7 +19,7 @@ public class MassMotdCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "<b>-s</b> has sent an alert of type <i>MOTD</i> to the hotel. [<b>-c</b>]"
+        this.logDesc = "<b>-s</b> enviou um alerta <i>MOTD</i> para o hotel. [<b>-c</b>]"
                 .replace("-s", client.getPlayer().getData().getUsername())
                 .replace("-c", this.merge(message));
     }
@@ -31,7 +31,7 @@ public class MassMotdCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.parameter.message", "(mensagem)");
     }
 
     @Override

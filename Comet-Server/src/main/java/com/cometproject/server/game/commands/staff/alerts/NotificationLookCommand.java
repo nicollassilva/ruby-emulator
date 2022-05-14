@@ -19,11 +19,11 @@ public class NotificationLookCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(mensaje)";
+        return "(mensagem)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.notificationlook.description", "Envía una notificación al hotel con el look de tu usuario.");
+        return Locale.getOrDefault("command.notificationlook.description", "Envia uma mensagem de canto com seu visual.");
     }
 }

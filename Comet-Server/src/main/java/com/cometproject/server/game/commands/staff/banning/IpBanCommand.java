@@ -21,7 +21,7 @@ public class IpBanCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 2) {
-            sendNotif(Locale.getOrDefault("command.params.length", "Oops! You did something wrong!"), client);
+            sendNotif(Locale.getOrDefault("command.params.length", "Ops! Você fez algo errado!"), client);
             return;
         }
 
@@ -31,12 +31,12 @@ public class IpBanCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (user == client || !user.getPlayer().getPermissions().getRank().bannable() || user.getPlayer().getPermissions().getRank().getId() >= client.getPlayer().getPermissions().getRank().getId()) {
-            sendNotif(Locale.getOrDefault("command.user.notbannable", "You're not able to ban this user!"), client);
+            sendNotif(Locale.getOrDefault("command.user.notbannable", "Você não pode banir esse usuário!"), client);
             return;
         }
 
@@ -45,13 +45,13 @@ public class IpBanCommand extends ChatCommand {
         final String ipAddress = user.getIpAddress();
 
         if (BanManager.getInstance().hasBan(ipAddress, BanType.IP)) {
-            sendNotif("IP: " + ipAddress + " is already banned.", client);
+            sendNotif("IP: " + ipAddress + " já está banido.", client);
             return;
         }
 
         BanManager.getInstance().banPlayer(BanType.IP, user.getIpAddress(), user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
 
-        sendNotif("User has been IP banned (IP: " + ipAddress + ")", client);
+        sendNotif("Usuário foi banido por IP. (IP: " + ipAddress + ")", client);
 
         final List<Integer> playerIds = PlayerManager.getInstance().getPlayerIdsByIpAddress(ipAddress);
 
@@ -69,7 +69,7 @@ public class IpBanCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has given IPBan to user -d"
+        this.logDesc = "-c deu ban por IP em -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", username);
     }
@@ -81,7 +81,7 @@ public class IpBanCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.ban", "%username% %time% %reason%");
+        return Locale.getOrDefault("command.parameter.ban", "(usuário) (tempo) (razão)");
     }
 
     @Override

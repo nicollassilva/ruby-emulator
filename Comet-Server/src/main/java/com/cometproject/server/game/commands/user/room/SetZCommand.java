@@ -19,14 +19,14 @@ public class SetZCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
 
         if (params.length != 1) {
-            sendWhisper("Vous avez mal formulé la commande. :setz [valeur] ~ :setz stop.", client);
+            sendWhisper("Você digitou errado o comando. :lj [valor] ~ :lj stop.", client);
             return;
         }
 
         if(params[0].equals("stop")) {
             if(client.getPlayer().getEntity().hasAttribute("setz.height")) {
                 client.getPlayer().getEntity().removeAttribute("setz.height");
-                sendWhisper("Setz desactivado.", client);
+                sendWhisper("Altura desativada.", client);
                 for (RoomTile[] pTile : client.getPlayer().getEntity().getRoom().getMapping().getTiles()) {
 
                     for (RoomTile tile : pTile) {
@@ -43,7 +43,7 @@ public class SetZCommand extends ChatCommand {
                 client.flush();
                 return;
             }
-            sendWhisper("Setz desactivado", client);
+            sendWhisper("Altura desativada.", client);
             return;
         }
 
@@ -52,7 +52,7 @@ public class SetZCommand extends ChatCommand {
                 double height = Double.parseDouble(params[0]);
 
                 if (height > 100 || height < -100) {
-                    sendWhisper("La altura debe ser entre 100 y -100.", client);
+                    sendWhisper("A altura deve estar entre 100 e -100.", client);
                     return;
                 }
 
@@ -69,7 +69,7 @@ public class SetZCommand extends ChatCommand {
                 }
 
 
-                sendWhisper("Estableciste la altura en " + height + ".", client);
+                sendWhisper("A altura estabelecida foi " + height + ".", client);
                 client.getPlayer().getEntity().setAttribute("setz.height", height);
                 client.sendQueue(new HeightmapMessageComposer(client.getPlayer().getEntity().getRoom(), true, height));
                 client.sendQueue(new RelativeHeightmapMessageComposer(client.getPlayer().getEntity().getRoom().getModel()));
@@ -77,7 +77,7 @@ public class SetZCommand extends ChatCommand {
 
 
             } catch (Exception e) {
-                sendWhisper("Vous avez mal formulé la commande. :setz [valeur] ~ :setz stop.", client);
+                sendWhisper("Você digitou errado o comando. :lj [valor] ~ :lj stop.", client);
             }
         }
 
@@ -96,6 +96,6 @@ public class SetZCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.setz.description", "Usa este comando en lugar de una baldosa apilable, alturas disponibles en un rango entre -100 y 100");
+        return Locale.getOrDefault("command.setz.description", "Use este comando em vez de um bloco empilhável, alturas disponíveis em um intervalo entre -100 e 100");
     }
 }

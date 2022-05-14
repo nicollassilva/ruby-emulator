@@ -14,7 +14,7 @@ public class DisconnectCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.disconnect.none", "Who do you want to disconnect?"), client);
+            sendNotif(Locale.getOrDefault("command.disconnect.none", "Quem você quer desconectar?"), client);
             return;
         }
 
@@ -28,7 +28,7 @@ public class DisconnectCommand extends ChatCommand {
         }
 
         if(session.getPlayer().getData().getRank() > client.getPlayer().getData().getRank()) {
-            sendNotif(Locale.getOrDefault("command.disconnect.rank", "No puedes desconectar a una persona de mayor rango que el tuyo"), client);
+            sendNotif(Locale.getOrDefault("command.disconnect.rank", "Você não pode desconectar uma pessoa de cargo superior ao seu"), client);
             return;
         }
 
@@ -43,7 +43,7 @@ public class DisconnectCommand extends ChatCommand {
         }
 
         if(CometExternalSettings.enableStaffMessengerLogs) {
-            this.logDesc = "-c has disconnected user -d"
+            this.logDesc = "-c desconectou -d"
                     .replace("-c", client.getPlayer().getData().getUsername())
                     .replace("-d", session.getPlayer().getData().getUsername());
         }
@@ -61,7 +61,7 @@ public class DisconnectCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

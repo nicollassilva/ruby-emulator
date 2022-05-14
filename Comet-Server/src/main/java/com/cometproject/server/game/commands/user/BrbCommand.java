@@ -12,7 +12,7 @@ public class BrbCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
         client.getPlayer().getEntity().setAway();
 
-        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "* " + client.getPlayer().getData().getUsername() + " voy AFK! *", ChatEmotion.SMILE, 34));
+        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Vou ficar AFK.", ChatEmotion.NONE, 0));
     }
 
     @Override

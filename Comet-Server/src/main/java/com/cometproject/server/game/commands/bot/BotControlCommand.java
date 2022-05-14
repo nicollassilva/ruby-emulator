@@ -53,14 +53,14 @@ public class BotControlCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "botcontrol_command";
     }
 
     @Override
-    public String getDescription() { return "gg"; }
+    public String getDescription() { return "(nome do bot)"; }
 
     @Override
     public String getParameter() {
-        return "";
+        return Locale.get("command.botcontrol.description");
     }
 }

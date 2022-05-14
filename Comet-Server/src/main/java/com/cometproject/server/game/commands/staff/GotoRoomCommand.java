@@ -29,7 +29,7 @@ public class GotoRoomCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.roomid", "%roomid%");
+        return Locale.getOrDefault("command.parameter.roomid", "(id do quarto)");
     }
 
     @Override

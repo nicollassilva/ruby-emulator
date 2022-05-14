@@ -29,12 +29,12 @@ public class ClearHighscoreCommand extends ChatCommand {
             }
         }
 
-        client.send(new NotificationMessageComposer("highscore", "Has reiniciado correctamente la clasificación de la sala."));
+        client.send(new NotificationMessageComposer("highscore", "Você redefiniu com sucesso os classificadores do quarto."));
     }
 
     @Override
     public String getPermission() {
-        return "superwired_command";
+        return "highschore_command";
     }
 
     @Override

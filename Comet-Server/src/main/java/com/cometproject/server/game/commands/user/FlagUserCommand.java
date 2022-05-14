@@ -13,7 +13,7 @@ public class FlagUserCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.flaguser.none", "Who do you want to change his name?"), client);
+            sendNotif(Locale.getOrDefault("command.flaguser.none", "Você quer mudar o nome de quem?"), client);
             return;
         }
 
@@ -38,7 +38,7 @@ public class FlagUserCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

@@ -12,7 +12,7 @@ public class MimicCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Invalid username!"), client);
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
             return;
         }
 
@@ -20,7 +20,7 @@ public class MimicCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
@@ -29,7 +29,7 @@ public class MimicCommand extends ChatCommand {
         }
 
         if (!user.getPlayer().getSettings().getAllowMimic()) {
-            sendNotif(Locale.getOrDefault("command.mimic.disabled", "You can't steal the look of this user."), client);
+            sendNotif(Locale.getOrDefault("command.mimic.disabled", "Você não pode copiar o visual desse usuário."), client);
             return;
         }
 
@@ -51,11 +51,11 @@ public class MimicCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario");
+        return Locale.getOrDefault("command.parameter.username", "(usuário");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.mimic.description", "Copia el look de un usuario que no tenga protección");
+        return Locale.getOrDefault("command.mimic.description", "Copia o visual de um usuário.");
     }
 }

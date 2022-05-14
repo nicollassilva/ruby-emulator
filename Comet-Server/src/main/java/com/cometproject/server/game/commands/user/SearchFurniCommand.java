@@ -13,14 +13,14 @@ public class SearchFurniCommand extends ChatCommand {
         String mode = params[0];
 
         switch(mode) {
-            case "activar":
+            case "on":
                 client.getPlayer().setIsSearchFurni(true);
-                client.getPlayer().getSession().send(new NotificationMessageComposer("", "Has activado el modo de buscar furni satisfactoriamente"));
+                client.getPlayer().getSession().send(new NotificationMessageComposer("", "Você ativou com sucesso o modo de busca de mobis"));
                 break;
 
-            case "desactivar":
+            case "off":
                 client.getPlayer().setIsSearchFurni(false);
-                client.getPlayer().getSession().send(new NotificationMessageComposer("", "Has desactivado el modo de buscar furni satisfactoriamente"));
+                client.getPlayer().getSession().send(new NotificationMessageComposer("", "Você desativou com sucesso o modo de pesquisa de mobis"));
                 break;
         }
     }
@@ -37,6 +37,6 @@ public class SearchFurniCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Activa este comando y dale doble click a un furni que estés buscando y te llevará a la ubicación exacta";
+        return "Clique duas vezes em um mobi que você está procurando e ele o levará ao local exato";
     }
 }

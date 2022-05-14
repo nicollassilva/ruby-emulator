@@ -43,7 +43,7 @@ public class GiveBadgeCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has given badge -d to user -e"
+        this.logDesc = "-c deu o emblema -d para o usuário -e"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", badge)
                 .replace("-e", username);

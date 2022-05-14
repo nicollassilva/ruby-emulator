@@ -18,7 +18,7 @@ public class LookTestCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "about_command";
+        return "looktest_command";
     }
 
     @Override
@@ -28,6 +28,6 @@ public class LookTestCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return "";
     }
 }

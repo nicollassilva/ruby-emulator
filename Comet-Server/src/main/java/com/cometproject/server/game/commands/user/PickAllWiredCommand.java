@@ -39,7 +39,7 @@ public class PickAllWiredCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "El staff %s ha hecho pickallwireds en la sala '%b', cuyo dueño es %c"
+        this.logDesc = "O Staff %s recolheu todos os wireds do quarto '%b', no qual o proprietário é %c"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", room.getData().getName())
                 .replace("%c", room.getData().getOwner());

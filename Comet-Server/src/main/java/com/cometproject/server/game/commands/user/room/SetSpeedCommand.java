@@ -10,7 +10,7 @@ public class SetSpeedCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendWhisper(Locale.getOrDefault("command.setspeed.none", "To change the roller speed type :setspeed %number%"), client);
+            sendWhisper(Locale.getOrDefault("command.setspeed.none", "Para mudar a velocidade digite :setspeed (número)"), client);
             return;
         }
 
@@ -38,7 +38,7 @@ public class SetSpeedCommand extends ChatCommand {
                 RoomDao.rollerSpeedRoom(speed, client.getPlayer().getEntity().getRoom().getId());
                 RoomDao.rollerSpeed(client.getPlayer().getEntity().getRoom().getId());
             } catch (Exception e) {
-                sendNotif(Locale.getOrDefault("command.setspeed.invalid", "Please, use numbers only!"), client);
+                sendNotif(Locale.getOrDefault("command.setspeed.invalid", "Por favor, utilize somente números!"), client);
             }
         }
     }
@@ -50,7 +50,7 @@ public class SetSpeedCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.number", "(numero)");
+        return Locale.getOrDefault("command.parameter.number", "(número)");
     }
 
     @Override

@@ -31,7 +31,7 @@ public class MakeSayCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.message", "%username% %message%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.message", "(usuário) (mensagem)");
     }
 
     @Override

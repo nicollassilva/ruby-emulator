@@ -6,7 +6,7 @@ import com.cometproject.server.config.Locale;
 public class MassSeasonalCommand extends MassCurrencyCommand {
     @Override
     public String getPermission() {
-        return "mass_seasonal_command";
+        return "massrubis_command";
     }
 
     @Override

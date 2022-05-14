@@ -14,7 +14,7 @@ public class FreezeCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.freeze.none", "Who do you want to freeze?"), client);
+            sendNotif(Locale.getOrDefault("command.freeze.none", "Quem você quer congelar?"), client);
             return;
         }
 
@@ -22,7 +22,7 @@ public class FreezeCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
@@ -31,7 +31,7 @@ public class FreezeCommand extends ChatCommand {
         }
 
         if (user.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
@@ -40,7 +40,7 @@ public class FreezeCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed freeze in room '%b'"
+        this.logDesc = "%s congelou alguém no quarto '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
     }

@@ -20,7 +20,7 @@ public class UnBanCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length == 0) {
-            sendNotif(Locale.getOrDefault("command.params.length", "Oops! You did something wrong!"), client);
+            sendNotif(Locale.getOrDefault("command.params.length", "Ops! Você fez algo errado!"), client);
             return;
         }
 
@@ -28,17 +28,17 @@ public class UnBanCommand extends ChatCommand {
         final int playerId = PlayerDao.getIdByUsername(username);
 
         if(BanManager.getInstance().unBan(playerId + "")) {
-            sendNotif(Locale.getOrDefault("command.unban.success", "You unbanned %s successfully!")
+            sendNotif(Locale.getOrDefault("command.unban.success", "Você desbaniu %s com sucesso!")
                     .replace("%s", username), client);
 
             PunishmentWebhook.sendUnBan(client.getPlayer().getData().getUsername(), username);
         } else {
-            sendNotif(Locale.getOrDefault("command.unban.notbanned", "Oops! Maybe this user isn't banned or has machine ban."), client);
+            sendNotif(Locale.getOrDefault("command.unban.notbanned", "Ops! Talvez este usuário não tenha sido banido ou tenha a máquina banida."), client);
         }
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has unbanned user -d"
+        this.logDesc = "-c desbaniu o usuário -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", username);
     }
@@ -50,7 +50,7 @@ public class UnBanCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.unban", "%username%");
+        return Locale.getOrDefault("command.parameter.unban", "(usuário)");
     }
 
     @Override

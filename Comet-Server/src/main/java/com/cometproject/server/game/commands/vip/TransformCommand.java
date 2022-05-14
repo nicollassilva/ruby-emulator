@@ -51,7 +51,7 @@ public class TransformCommand extends ChatCommand {
             final String data = PetManager.getInstance().getTransformationData(params[0].toLowerCase());
 
             if (data == null || data.isEmpty()) {
-                sendWhisper(Locale.getOrDefault("command.transform.notexists", "Oops! This Pet name does not exists."), client);
+                sendWhisper(Locale.getOrDefault("command.transform.notexists", "Ops! Esse nome de Pet não existe."), client);
                 return;
             }
 
@@ -71,12 +71,12 @@ public class TransformCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(nombre de mascota)";
+        return "(nome do pet)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.transform.description", "Transformate en un animal");
+        return Locale.getOrDefault("command.transform.description", "Transforme-se em um Pet");
     }
 
     @Override

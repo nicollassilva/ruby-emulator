@@ -34,21 +34,21 @@ public abstract class MassCurrencyCommand extends ChatCommand {
                 } else if (this instanceof MassDucketsCommand) {
                     session.getPlayer().getData().increaseActivityPoints(amount);
                     currencyType = "activity.points";
-                    this.logDesc = "%s has given %n duckets to the hotel"
+                    this.logDesc = "%s enviou %n duckets para o hotel"
                             .replace("%n", Integer.toString(amount));
 
                     MassCurrencyWebhook.send(client.getPlayer().getData().getUsername(), amount, "duckets");
                 } else if (this instanceof MassPointsCommand) {
                     session.getPlayer().getData().increaseVipPoints(amount);
                     currencyType = "vip.points";
-                    this.logDesc = "%s has given %n diamonds to the hotel"
+                    this.logDesc = "%s enviou %n diamantes para o hotel"
                             .replace("%n", Integer.toString(amount));
 
                     MassCurrencyWebhook.send(client.getPlayer().getData().getUsername(), amount, "diamantes");
                 } else if (this instanceof MassSeasonalCommand) {
                     session.getPlayer().getData().increaseSeasonalPoints(amount);
                     currencyType = "seasonal";
-                    this.logDesc = "%s has given %n boolares to the hotel"
+                    this.logDesc = "%s enviou %n rubis para o hotel"
                             .replace("%n", Integer.toString(amount));
 
                     MassCurrencyWebhook.send(client.getPlayer().getData().getUsername(), amount, "rubis");
@@ -56,7 +56,7 @@ public abstract class MassCurrencyCommand extends ChatCommand {
 
                 if(!currencyType.equals("coins")) {
                     session.send(session.getPlayer().composeCurrenciesBalance());
-                    this.logDesc = "%s has given %n credits to the hotel"
+                    this.logDesc = "%s enviou %n moedas para o hotel"
                             .replace("%n", Integer.toString(amount));
                 }
 

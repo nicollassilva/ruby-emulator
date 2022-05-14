@@ -91,7 +91,7 @@ public class PointsCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has given %c %l to user '%u'"
+        this.logDesc = "%s enviou %c %l para o usuário '%u'"
                 .replace("%l", Locale.get("command.points.currency." + currency))
                 .replace("%c", params[1])
                 .replace("%s", client.getPlayer().getData().getUsername())
@@ -105,7 +105,7 @@ public class PointsCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "%username% %amount%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "(usuário) (quantia)");
     }
 
     @Override

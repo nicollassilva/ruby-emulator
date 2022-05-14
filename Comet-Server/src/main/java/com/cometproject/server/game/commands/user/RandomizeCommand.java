@@ -13,7 +13,7 @@ public class RandomizeCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 2) {
-            sendNotif(Locale.getOrDefault("command.randomize.none", "Between which 2 numbers do you want to randomize?"), client);
+            sendNotif(Locale.getOrDefault("command.randomize.none", "Entre quais 2 números você quer randomizar?"), client);
             return;
         }
 
@@ -22,17 +22,17 @@ public class RandomizeCommand extends ChatCommand {
             final int max = Integer.parseInt(params[1]);
 
             if (min > 1000 || max > 1000) {
-                sendNotif(Locale.getOrDefault("command.randomize.toohigh", "Your min or max number is too high. Choose one between 0 and 1000!"), client);
+                sendNotif(Locale.getOrDefault("command.randomize.toohigh", "O número mínimo ou máximo não é válido. Escolha entre 0 e 1000!"), client);
                 return;
             } else if (min < 0 || max < 0) {
-                sendNotif(Locale.getOrDefault("command.randomize.negative", "You can only use positive numbers!"), client);
+                sendNotif(Locale.getOrDefault("command.randomize.negative", "Você só pode usar números positivos!"), client);
                 return;
             }
 
             final Room room = client.getPlayer().getEntity().getRoom();
             final PlayerEntity playerEntity = room.getEntities().getEntityByPlayerId(client.getPlayer().getId());
 
-            room.getEntities().broadcastMessage(new TalkMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.randomize.done", "I randomized the number: %output% between %min% and %max%!").replace("%output%", "" + (int) Math.floor(Math.random() * (max - min) + min)).replace("%min%", min + "").replace("%max%", max + ""), ChatEmotion.NONE, 8));
+            room.getEntities().broadcastMessage(new TalkMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.randomize.done", "O número escolhido entre %min% e %max% foi '<b>%output%</b>'!").replace("%output%", "" + (int) Math.floor(Math.random() * (max - min) + min)).replace("%min%", min + "").replace("%max%", max + ""), ChatEmotion.NONE, 8));
             isExecuted(client);
         } catch (Exception e) {
             sendNotif(Locale.get("command.randomize.invalidnumbers"), client);
@@ -46,11 +46,11 @@ public class RandomizeCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.randomize", "%min% %max%");
+        return Locale.getOrDefault("command.parameter.randomize", "(mín) (máx)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.randomize.description", "Obten números al azar");
+        return Locale.getOrDefault("command.randomize.description", "Obtém números aleatórios");
     }
 }

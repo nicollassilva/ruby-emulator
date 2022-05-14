@@ -41,27 +41,27 @@ public class ReloadCommand extends ChatCommand {
                 client.send(new MotdNotificationMessageComposer(
                         Locale.getOrDefault("command.reload.title", "Here's a list of what you can reload using the :reload <type> command!") +
                                 "\n\n" +
-                                "- bans\n" +
-                                "- catalog\n" +
-                                "- navigator\n" +
-                                "- permissions\n" +
-                                "- news\n" +
-                                "- config\n" +
-                                "- items\n" +
-                                "- filter\n" +
-                                "- locale\n" +
-                                "- modpresets\n" +
-                                "- groupitems\n" +
-                                "- models\n" +
-                                "- music\n" +
-                                "- quests\n" +
                                 "- achievements\n" +
+                                "- bans\n" +
+                                "- bundles\n" +
+                                "- catalog\n" +
+                                "- config\n" +
+                                "- emojis\n" +
+                                "- filter\n" +
+                                "- groupitems\n" +
+                                "- items\n" +
+                                "- locale\n" +
+                                "- models\n" +
+                                "- modpresets\n" +
+                                "- music\n" +
+                                "- namecolors\n" +
+                                "- navigator\n" +
+                                "- news\n" +
+                                "- notifications\n" +
+                                "- permissions\n" +
                                 "- pets\n" +
                                 "- polls\n" +
-                                "- bundles\n" +
-                                "- namecolors\n" +
-                                "- emojis\n" +
-                                "- notifications"
+                                "- quests"
                 ));
 
                 break;
@@ -204,17 +204,20 @@ public class ReloadCommand extends ChatCommand {
             }
             case "namecolors": {
                 RoomManager.getInstance().reloadNameColors();
+                sendNotif(Locale.get("command.reload.namecolors"), client);
             }
             case "emojis": {
                 RoomManager.getInstance().reloadEmojis();
+                sendNotif(Locale.get("command.reload.emojis"), client);
             }
             case "notification": {
                 CommandManager.getInstance().reloadAllCommands();
+                sendNotif(Locale.get("command.reload.notification"), client);
             }
 
             case "gamecenter": {
                 GameCenterManager.getInstance().initialize();
-                sendNotif("GameCenter Reiniciado con éxito", client);
+                sendNotif("GameCenter reiniciado com sucesso.", client);
             }
         }
     }
