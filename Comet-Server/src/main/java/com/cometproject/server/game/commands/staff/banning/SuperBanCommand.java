@@ -39,7 +39,7 @@ public class SuperBanCommand extends ChatCommand {
 
         user.disconnect("banned");
 
-        final int expire = 4102444800; // Approximately latest timestamp
+        final int expire = 2147472000; // Approximately latest timestamp
 
         BanManager.getInstance().banPlayer(BanType.USER, Integer.toString(user.getPlayer().getId()), user.getPlayer().getEntity().getUsername(), expire, expire, "Superban", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
 
