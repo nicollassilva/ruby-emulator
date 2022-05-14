@@ -67,7 +67,7 @@ public class BanzaiTileFloorItem extends RoomItemFloor {
             final int nextY = y + nextYStep;
 
             if (room.getMapping().getTile(nextX, nextY) != null) {
-                RoomItemFloor obj = room.getItems().getFloorItem(room.getMapping().getTile(nextX, nextY).getTopItem());
+                final RoomItemFloor obj = room.getItems().getFloorItem(room.getMapping().getTile(nextX, nextY).getTopItem());
 
                 if (obj instanceof BanzaiTileFloorItem) {
                     final BanzaiTileFloorItem item = (BanzaiTileFloorItem) obj;
@@ -126,12 +126,11 @@ public class BanzaiTileFloorItem extends RoomItemFloor {
         if (!(entity instanceof PlayerEntity) || ((PlayerEntity) entity).getGameTeam() == GameTeam.NONE || !(this.getRoom().getGame().getInstance() instanceof BanzaiGame)) {
             return;
         }
+
         if(!this.getRoom().getGame().getInstance().getState().equals(GameState.RUNNING)) return;
 
-        if (this.points == 3) {
-            // It's locked, what you doing?!?
+        if (this.points == 3)
             return;
-        }
 
         if (((PlayerEntity) entity).getGameTeam() == this.gameTeam) {
             this.points++;
@@ -148,13 +147,12 @@ public class BanzaiTileFloorItem extends RoomItemFloor {
             final List<BanzaiTileFloorItem> rectangle = buildBanzaiRectangle(this, this.getPosition().getX(), this.getPosition().getY(), 0, 0, -1, 4, gameTeam);
 
             if (rectangle != null) {
-                for (RoomItemFloor floorItem : this.getRoom().getItems().getByClass(BanzaiTileFloorItem.class)) {
-                    BanzaiTileFloorItem tileItem = ((BanzaiTileFloorItem) floorItem);
-                    if (tileItem.getPoints() == 3) continue;
+                for (final BanzaiTileFloorItem floorItem : this.getRoom().getItems().getByClass(BanzaiTileFloorItem.class)) {
+                    if(floorItem == null || floorItem.getPoints() == 3) continue;
 
                     final boolean[] borderCheck = new boolean[4];
 
-                    for (BanzaiTileFloorItem rectangleItem : rectangle) {
+                    for (final BanzaiTileFloorItem rectangleItem : rectangle) {
                         if (rectangleItem.getPosition().getY() == floorItem.getPosition().getY()) {
                             if (rectangleItem.getPosition().getX() > floorItem.getPosition().getX()) {
                                 borderCheck[0] = true;
@@ -171,14 +169,14 @@ public class BanzaiTileFloorItem extends RoomItemFloor {
                     }
 
                     if (borderCheck[0] && borderCheck[1] && borderCheck[2] && borderCheck[3]) {
-                        if (tileItem.getId() != this.getId()) {
-                            tileItem.setPoints(3);
-                            tileItem.setTeam(this.gameTeam);
+                        if (floorItem.getId() != this.getId()) {
+                            floorItem.setPoints(3);
+                            floorItem.setTeam(this.gameTeam);
 
                             ((PlayerEntity) entity).getPlayer().getAchievements().progressAchievement(AchievementType.BB_TILES_LOCKED, 1);
                             ((BanzaiGame) this.getRoom().getGame().getInstance()).increaseScore(gameTeam, 1);
                             ((BanzaiGame) this.getRoom().getGame().getInstance()).decreaseTileCount();
-                            tileItem.updateTileData();
+                            floorItem.updateTileData();
                         }
                     }
                 }

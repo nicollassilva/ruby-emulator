@@ -15,7 +15,9 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameTeam;
 import com.cometproject.server.game.rooms.types.components.games.GameType;
 import com.cometproject.server.game.rooms.types.components.games.RoomGame;
+import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.room.avatar.ActionMessageComposer;
+import com.cometproject.server.network.sessions.Session;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -112,9 +114,17 @@ public class BanzaiGame extends RoomGame {
 
                 if (this.getGameComponent().getTeam(playerEntity.getPlayerId()).equals(winningTeam) && winningTeam != GameTeam.NONE) {
                     playerEntity.getPlayer().getAchievements().progressAchievement(AchievementType.BB_WINNER, 1);
+                    playerEntity.getPlayer().getAchievements().progressAchievement(AchievementType.GAME_PLAYER_EXPERIENCE, this.getGameComponent().getScore(winningTeam));
+
                     this.room.getEntities().broadcastMessage(new ActionMessageComposer(playerEntity.getId(), PlayerAvatarActions.EXPRESSION_WAVE.getValue())); // wave o/
                 }
             }
+        }
+
+        final Session ownerSession = NetworkManager.getInstance().getSessions().fromPlayer(this.getGameComponent().getRoom().getData().getOwnerId());
+
+        if (ownerSession != null && winningTeam != null) {
+            ownerSession.getPlayer().getAchievements().progressAchievement(AchievementType.GAME_AUTHOR_EXPERIENCE, this.getGameComponent().getScore(winningTeam));
         }
 
         this.getGameComponent().resetScores();
@@ -127,8 +137,6 @@ public class BanzaiGame extends RoomGame {
     }
 
     public void updateScoreboard(GameTeam team) {
-        //for (RoomItemFloor scoreboard : this.getGameComponent().getRoom().getItems().getByInteraction("%banzai_score")) {
-        //Probably fix of count of banzai
         for (final RoomItemFloor scoreboard : this.getGameComponent().getRoom().getItems().getByInteraction("%_score")) {
             if (team == null || scoreboard.getDefinition().getInteraction().toUpperCase().startsWith(team.name())) {
                 scoreboard.getItemData().setData(team == null ? "0" : this.getScore(team) + "");
