@@ -44,7 +44,7 @@ public class DucketsCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has given %c duckets to user '%u'"
+        this.logDesc = "%s enviou %c duckets para o usuário '%u'"
                 .replace("%c", Integer.toString(duckets))
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%u", username);
@@ -57,7 +57,7 @@ public class DucketsCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "%username% %amount%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "(usuário) (quantia)");
     }
 
     @Override

@@ -27,7 +27,7 @@ public class RollCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed roll in room '%b' and gotten result: %r"
+        this.logDesc = "%s girou os dados no quarto '%b' e o resultado foi: %r"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName())
                 .replace("%r", Integer.toString(number));

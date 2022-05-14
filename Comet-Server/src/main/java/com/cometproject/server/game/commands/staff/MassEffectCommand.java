@@ -39,7 +39,7 @@ public class MassEffectCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s executed masseffect'%b'"
+        this.logDesc = "%s deu um efeito a todos no quarto '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
     }

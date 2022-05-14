@@ -23,7 +23,7 @@ public class InvisibleCommand extends ChatCommand {
 
         this.logDesc = "-c -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
-                .replace("-d", (isVisible) ? "has become visible" : "has become invisible");
+                .replace("-d", (isVisible) ? "ficou visível" : "ficou invisível");
     }
 
     @Override

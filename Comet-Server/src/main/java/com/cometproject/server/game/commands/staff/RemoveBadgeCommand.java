@@ -27,12 +27,12 @@ public class RemoveBadgeCommand extends ChatCommand {
 
             BadgeWebhook.sendRemoval(client.getPlayer().getData().getUsername(), username, badge);
         } else {
-            sendNotif(Locale.getOrDefault("command.removebadge.userisoff", "This user is not online, you can only remove badges from online users"), client);
+            sendNotif(Locale.getOrDefault("command.removebadge.userisoff", "Esse usuário está offline, você só pode remover emblemas de usuários onlines."), client);
         }
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has removed badge -d from user -e"
+        this.logDesc = "-c removeu o emblema -d do usuário -e"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", badge)
                 .replace("-e", username);
@@ -45,7 +45,7 @@ public class RemoveBadgeCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.badge", "%username% %badge%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.badge", "(usuário) (emblema)");
     }
 
     @Override

@@ -27,7 +27,7 @@ public class RoomMuteCommand extends ChatCommand {
                     PlayerEntity playerEntity = (PlayerEntity) entity;
 
 
-                    playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.room.unmute", "You are now able to chat again :-)")));
+                    playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.room.unmute", "Você pode falar agora :)")));
                 }
             }
 
@@ -42,14 +42,14 @@ public class RoomMuteCommand extends ChatCommand {
             for (final RoomEntity entity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
                 if (entity.getEntityType() == RoomEntityType.PLAYER) {
                     PlayerEntity playerEntity = (PlayerEntity) entity;
-                        playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.room.muted", "A staff member has muted the room.")));
+                        playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("command.room.muted", "Um membro da equipe mutou o quarto.")));
                 }
             }
         }
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has muted room '%b'"
+        this.logDesc = "%s mutou o quarto '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
 

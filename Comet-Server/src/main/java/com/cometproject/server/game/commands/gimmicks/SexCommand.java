@@ -19,12 +19,12 @@ public class SexCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.sex.none", "Who do you want to rape?"), client);
+            sendNotif(Locale.getOrDefault("command.sex.none", "Com quem você quer fazer amor?"), client);
             return;
         }
 
         if (client.getPlayer().getEntity().isRoomMuted() || client.getPlayer().getEntity().getRoom().getRights().hasMute(client.getPlayer().getId())) {
-                sendNotif(Locale.getOrDefault("command.user.muted", "Estás muteado!"), client);
+                sendNotif(Locale.getOrDefault("command.user.muted", "Você está mutado!"), client);
             return;
         }
 
@@ -33,17 +33,17 @@ public class SexCommand extends ChatCommand {
         int timeSinceLastUpdate = ((int) Comet.getTime() - client.getPlayer().getLastCommandRoleplay());
 
         if (sexedSession == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "El usuario está desconectado!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (sexedSession.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "El usuario no está en la sala."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
         if (sexedSession.getPlayer().getData().getUsername().equals(client.getPlayer().getData().getUsername())) {
-            sendNotif(Locale.getOrDefault("command.sex.himself", "No puedes tener sexo contigo mismo!"), client);
+            sendNotif(Locale.getOrDefault("command.sex.himself", "Você não pode fazer amor com você mesmo!"), client);
             return;
         }
 
@@ -79,15 +79,15 @@ public class SexCommand extends ChatCommand {
                     }
 
                     Room room = client.getPlayer().getEntity().getRoom();
-                    room.getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "* " + Locale.getOrDefault("command.sex.word.1", " Gets horny and starts humping %username%").replace("%username%", sexedSession.getPlayer().getData().getUsername()) + " *", ChatEmotion.NONE, 16));
-                    room.getEntities().broadcastMessage(new TalkMessageComposer(sexedSession.getPlayer().getEntity().getId(), " * " + Locale.getOrDefault("command.sex.word.2", " Give it to me harder baby").replace("%username%", client.getPlayer().getData().getUsername()) + " *", ChatEmotion.NONE, 16));
+                    room.getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "* " + Locale.getOrDefault("command.sex.word.1", " Fica com tesão e começa a transar com %username%").replace("%username%", sexedSession.getPlayer().getData().getUsername()) + " *", ChatEmotion.NONE, 16));
+                    room.getEntities().broadcastMessage(new TalkMessageComposer(sexedSession.getPlayer().getEntity().getId(), " * " + Locale.getOrDefault("command.sex.word.2", " Me dê mais, baby").replace("%username%", client.getPlayer().getData().getUsername()) + " *", ChatEmotion.NONE, 16));
                     client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
                 } else {
-                    client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 30 segundos para volver a ejecutar otro comando roleplay", ChatEmotion.NONE, 1));
+                    client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você deve esperar 30 segundos para executar esse comando novamente.", ChatEmotion.NONE, 1));
                     return;
                 }
             } else {
-                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% is not near, walk to this player.").replace("%playername%", sexedSession.getPlayer().getData().getUsername()), 16));
+                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Ops! %playername% não está próximo, caminhe até este jogador.").replace("%playername%", sexedSession.getPlayer().getData().getUsername()), 16));
             }
     }
 
@@ -98,11 +98,11 @@ public class SexCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.sex.description", "Ten sexo con un usuario");
+        return Locale.getOrDefault("command.sex.description", "Faça amor con um usuário");
     }
 }

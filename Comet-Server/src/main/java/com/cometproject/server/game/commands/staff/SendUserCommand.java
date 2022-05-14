@@ -20,7 +20,7 @@ public class SendUserCommand extends ChatCommand {
         final Session session = NetworkManager.getInstance().getSessions().getByPlayerUsername(player);
 
         if(session == null) {
-            client.getPlayer().getSession().send(new TalkMessageComposer(-1, Locale.getOrDefault("command.send_user.user_not_found", "Este usuario está desconectado"), ChatEmotion.NONE, 1));
+            client.getPlayer().getSession().send(new TalkMessageComposer(-1, Locale.getOrDefault("command.send_user.user_not_found", "Esse usuário está offline."), ChatEmotion.NONE, 1));
             return;
         }
 
@@ -35,7 +35,7 @@ public class SendUserCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.send_user.parameters", "%roomId% %username%");
+        return Locale.getOrDefault("command.send_user.parameters", "(id do quarto) (usuário)");
     }
 
     @Override

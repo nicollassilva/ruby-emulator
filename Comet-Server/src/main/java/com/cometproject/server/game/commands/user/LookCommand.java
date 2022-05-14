@@ -32,7 +32,7 @@ public class LookCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(numero de slot)";
+        return "(número do slot)";
     }
 
     @Override

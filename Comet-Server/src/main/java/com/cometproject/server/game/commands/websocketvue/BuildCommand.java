@@ -40,7 +40,7 @@ public class BuildCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "build_command";
     }
 
     @Override
@@ -50,6 +50,6 @@ public class BuildCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return Locale.getOrDefault("command.build.description", "Ferramenta com intuito de facilitar construções.");
     }
 }

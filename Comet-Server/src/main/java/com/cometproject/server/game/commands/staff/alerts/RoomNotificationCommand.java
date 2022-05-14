@@ -18,7 +18,7 @@ public class RoomNotificationCommand extends NotificationCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has sent a roomnotification in room '%b' with parameter %p"
+        this.logDesc = "%s enviou uma notificação no quarto '%b' com a mensagem %p"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName())
                 .replace("%p", message);

@@ -18,7 +18,7 @@ public class MachineBanCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 2) {
-            sendNotif(Locale.getOrDefault("command.params.length", "Oops! You did something wrong!"), client);
+            sendNotif(Locale.getOrDefault("command.params.length", "Ops! Você fez algo errado!"), client);
             return;
         }
 
@@ -28,12 +28,12 @@ public class MachineBanCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (user == client || !user.getPlayer().getPermissions().getRank().bannable() || user.getPlayer().getPermissions().getRank().getId() >= client.getPlayer().getPermissions().getRank().getId()) {
-            sendNotif(Locale.getOrDefault("command.user.notbannable", "You're not able to ban this user!"), client);
+            sendNotif(Locale.getOrDefault("command.user.notbannable", "Você não pode banir esse usuário!"), client);
             return;
         }
 
@@ -42,12 +42,12 @@ public class MachineBanCommand extends ChatCommand {
         final String uniqueId = user.getUniqueId();
 
         if (BanManager.getInstance().hasBan(uniqueId, BanType.MACHINE)) {
-            sendNotif("Machine ID: " + uniqueId + " is already banned.", client);
+            sendNotif("ID da máquina: " + uniqueId + " já está banido.", client);
             return;
         }
 
         BanManager.getInstance().banPlayer(BanType.MACHINE, user.getUniqueId(), user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
-        sendNotif("User has been machine ID banned (" + uniqueId + ")", client);
+        sendNotif("Usuário foi banido pela máquina (" + uniqueId + ")", client);
 
         user.disconnect("banned");
 
@@ -55,7 +55,7 @@ public class MachineBanCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed machineban on user '%u'"
+        this.logDesc = "%s baniu a máquina do usuário '%u'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%u", username);
     }
@@ -67,7 +67,7 @@ public class MachineBanCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.ban", "%username% %time% %reason%");
+        return Locale.getOrDefault("command.parameter.ban", "(usuário) (tempo) (razão)");
     }
 
     @Override

@@ -30,10 +30,10 @@ public class PrefixCommand extends ChatCommand {
         boolean prefixesFilter = prefixes.stream().anyMatch(prefix::equalsIgnoreCase);
 
         if(prefixesFilter) {
-            client.send(new NotificationMessageComposer("generic", "El prefijo: " + prefix + " está prohibido en nuestro filtro de prefijos"));
+            client.send(new NotificationMessageComposer("generic", "O prefixo: " + prefix + " está proibido em nosso filtro."));
             return;
         } else if (prefix.length() < 1 || prefix.length() > 5) {
-            client.send(new NotificationMessageComposer("generic", "Los prefijos tienen longitud desde 1 a 5 carácteres, y tu prefijo excede el máximo o no tiene nada"));
+            client.send(new NotificationMessageComposer("generic", "O prefixo deve ter de 1 a 5 dígitos, o seu prefixo possui mais de 5 ou não possui nenhum dígito."));
             return;
         }
 
@@ -49,11 +49,11 @@ public class PrefixCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(prefijo)";
+        return "(prefixo)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.prefix.name", "Añade un prefijo a tu nombre");
+        return Locale.getOrDefault("command.prefix.description", "Adicione um prefixo a seu nome");
     }
 }

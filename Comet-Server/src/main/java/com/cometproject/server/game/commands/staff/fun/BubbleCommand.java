@@ -9,7 +9,7 @@ public class BubbleCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.params.invalid", "You must supply the bubble id!"), client);
+            sendNotif(Locale.getOrDefault("command.params.invalid", "Você deve inserir o número do balão!"), client);
             return;
         }
 
@@ -33,7 +33,7 @@ public class BubbleCommand extends ChatCommand {
             }
         }
         client.getPlayer().setBubbleId(bubble);
-        sendNotif(Locale.getOrDefault("command.bubble.success", "Chat bubble was changed successfully!"), client);
+        sendNotif(Locale.getOrDefault("command.bubble.success", "O balão de falas foi trocado com sucesso!"), client);
 
     }
 
@@ -44,7 +44,7 @@ public class BubbleCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "%bubble%";
+        return "(número)";
     }
 
     @Override

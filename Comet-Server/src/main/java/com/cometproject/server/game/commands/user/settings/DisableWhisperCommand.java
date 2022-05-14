@@ -14,8 +14,8 @@ public class DisableWhisperCommand extends ChatCommand {
 
         playerSettings.setDisableWhisper(!playerSettings.disableWhisper());
 
-        final String msg = playerSettings.disableWhisper() ? "desactivados" : "activados";
-        sendNotif(Locale.getOrDefault("command.disablewhisper." + msg, String.format("Whispers are now %s", msg)), client);
+        final String msg = playerSettings.disableWhisper() ? "desativados" : "ativados";
+        sendNotif(Locale.getOrDefault("command.disablewhisper." + msg, String.format("Sussurros agora estão %s", msg)), client);
         PlayerDao.updateDisableWhisper(playerSettings.disableWhisper(), client.getPlayer().getId());
     }
 

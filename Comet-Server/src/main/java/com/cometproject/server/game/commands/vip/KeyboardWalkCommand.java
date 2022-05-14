@@ -10,16 +10,16 @@ public class KeyboardWalkCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
         if(!client.getPlayer().getEntity().isKeyboardWalkEnabled()) {
             client.getPlayer().getEntity().setKeyboardEnabled(true);
-            client.getPlayer().getSession().send(new NotificationMessageComposer("command.keyboard_walk.enabled", "Has activado el movimiento con las flechas de tu teclado"));
+            client.getPlayer().getSession().send(new NotificationMessageComposer("command.keyboard_walk.enabled", "Você ativou o movimento com as setas do teclado."));
         } else {
             client.getPlayer().getEntity().setKeyboardEnabled(false);
-            client.getPlayer().getSession().send(new NotificationMessageComposer("command.keyboard_walk.disabled", "Has desactivado el movimiento con las flechas de tu teclado"));
+            client.getPlayer().getSession().send(new NotificationMessageComposer("command.keyboard_walk.disabled", "Você desativou o movimento com as setas do teclado."));
         }
     }
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "keyboard_command";
     }
 
     @Override

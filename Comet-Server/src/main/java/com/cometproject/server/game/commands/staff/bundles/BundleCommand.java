@@ -20,7 +20,7 @@ public class BundleCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 2) {
-            client.send(new AlertMessageComposer(Locale.getOrDefault("command.bundle.create", "Use :bundle create [alias] to create a bundle.")));
+            client.send(new AlertMessageComposer(Locale.getOrDefault("command.bundle.create", "Utilize ':bundle create [nome]' para criar o bundle.")));
             return;
         }
 
@@ -46,7 +46,7 @@ public class BundleCommand extends ChatCommand {
 
                 if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-                this.logDesc = "%s has executed bundle in room '%b' with name %n"
+                this.logDesc = "%s executou o comando bundle no quarto '%b' com o nome %n"
                         .replace("%s", client.getPlayer().getData().getUsername())
                         .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName())
                         .replace("%n", alias);

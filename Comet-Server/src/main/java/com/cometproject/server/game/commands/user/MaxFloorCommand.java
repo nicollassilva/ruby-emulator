@@ -71,7 +71,7 @@ public class MaxFloorCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "build_command";
+        return "maxfloor_command";
     }
 
     @Override

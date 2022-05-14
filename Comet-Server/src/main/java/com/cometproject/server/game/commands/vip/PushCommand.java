@@ -34,7 +34,7 @@ public class PushCommand extends ChatCommand {
         }
 
         if (client.getPlayer().getEntity().isRoomMuted() || client.getPlayer().getEntity().getRoom().getRights().hasMute(client.getPlayer().getId())) {
-            sendNotif(Locale.getOrDefault("command.user.muted", "You are muted."), client);
+            sendNotif(Locale.getOrDefault("command.user.muted", "Você está mutado."), client);
             return;
         }
 
@@ -42,12 +42,12 @@ public class PushCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (user.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
@@ -130,7 +130,7 @@ public class PushCommand extends ChatCommand {
                     new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.get("command.push.message").replace("%playername%", entity.getUsername()), ChatEmotion.NONE, 0)
             );
         } else {
-            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% is not near, walk to this player.").replace("%playername%", entity.getUsername()), 34));
+            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Ops! %playername% não está próximo, caminhe até este jogador.").replace("%playername%", entity.getUsername()), 34));
         }
     }
 
@@ -141,12 +141,12 @@ public class PushCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.push.description", "Empuja a un usuario 1 baldoa hacia adelante");
+        return Locale.getOrDefault("command.push.description", "Empurra um usuário 1 piso à frente");
     }
 
     @Override

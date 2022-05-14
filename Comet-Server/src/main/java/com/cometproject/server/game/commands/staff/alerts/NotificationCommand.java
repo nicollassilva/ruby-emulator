@@ -27,7 +27,7 @@ public class NotificationCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s ha enviado una notificación con el parametro '%p'"
+        this.logDesc = "%s enviou uma notificação com a mensagem '%p'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%p", message);
     }
@@ -43,7 +43,7 @@ public class NotificationCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.notification.parameter", "%message%");
     }
 
     @Override

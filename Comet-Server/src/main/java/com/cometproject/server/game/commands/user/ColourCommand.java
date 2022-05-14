@@ -11,7 +11,7 @@ public class ColourCommand extends ChatCommand {
         if (params.length != 1) {
             client.getPlayer().setChatMessageColour(null);
 
-            sendNotif(Locale.getOrDefault("command.colour.reset", "Your chat has been returned to normal!"), client);
+            sendNotif(Locale.getOrDefault("command.colour.reset", "Seu chat voltou ao normal!"), client);
             return;
         }
 
@@ -45,7 +45,7 @@ public class ColourCommand extends ChatCommand {
         if (params[0].toLowerCase().equals(Locale.getOrDefault("command.colour.reset.word", "normal"))) {
             client.getPlayer().setChatMessageColour(null);
 
-            sendNotif(Locale.getOrDefault("command.colour.reset", "Your chat colour has been returned to normal!"), client);
+            sendNotif(Locale.getOrDefault("command.colour.reset", "A cor do seu chat voltou ao normal!"), client);
             return;
         }
 
@@ -58,11 +58,11 @@ public class ColourCommand extends ChatCommand {
 
             sendNotif(Locale.getOrDefault(
                     "command.colour.done",
-                    "Your chat messages are now %colour%").replace("%colour%", colourString), client);
+                    "Suas mensagens de bate-papo agora são %colour%").replace("%colour%", colourString), client);
         } catch (Exception e) {
             sendNotif(Locale.getOrDefault(
                     "command.colour.invalid",
-                    "Invalid colour, available colours: %colours%").replace("%colours%", ChatMessageColour.getAllAvailable()), client);
+                    "Cor inválida, cores disponíveis: %colours%").replace("%colours%", ChatMessageColour.getAllAvailable()), client);
         }
     }
 
@@ -73,7 +73,7 @@ public class ColourCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.colour", "(color)");
+        return Locale.getOrDefault("command.parameter.colour", "(cor)");
     }
 
     @Override

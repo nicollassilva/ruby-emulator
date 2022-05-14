@@ -21,7 +21,7 @@ public class RedeemCreditsCommand extends ChatCommand {
         final List<Long> itemsToRemove = Lists.newArrayList();
 
         if (!client.getPlayer().getInventory().itemsLoaded()) {
-            sendNotif(Locale.getOrDefault("command.redeemcredits.inventory", "Please open your inventory before executing this command!"), client);
+            sendNotif(Locale.getOrDefault("command.redeemcredits.inventory", "Abra seu inventário antes de executar o comando!"), client);
             return;
         }
 

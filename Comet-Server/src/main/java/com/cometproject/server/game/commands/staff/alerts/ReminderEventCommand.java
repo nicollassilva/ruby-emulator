@@ -13,12 +13,12 @@ public class ReminderEventCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] params) {
-        NetworkManager.getInstance().getSessions().broadcast(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("none.ishere", "[FRANK] Hay un nuevo evento creado por %username%, haz click <a href='event:navigator/goto/" + client.getPlayer().getEntity().getRoom().getId() + "'><b>aquí</b></a> para ir al evento.").replace("%message%", this.merge(params)) .replace("%username%", client.getPlayer().getData().getUsername()) + "<br><br><i> " + client.getPlayer().getData().getUsername() + "</i>", ChatEmotion.NONE, 34));
+        NetworkManager.getInstance().getSessions().broadcast(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("none.ishere", "Há um evento novo criado por %username%, clique <a href='event:navigator/goto/" + client.getPlayer().getEntity().getRoom().getId() + "'><b>aqui</b></a> para ir ao evento.").replace("%message%", this.merge(params)) .replace("%username%", client.getPlayer().getData().getUsername()) + "<br><br><i> " + client.getPlayer().getData().getUsername() + "</i>", ChatEmotion.NONE, 34));
     }
 
     @Override
     public String getPermission() {
-        return "eventalert_command";
+        return "reminder_command";
     }
 
     @Override
@@ -28,6 +28,6 @@ public class ReminderEventCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.get("command.eventalert.description");
+        return Locale.get("command.reminder.description");
     }
 }

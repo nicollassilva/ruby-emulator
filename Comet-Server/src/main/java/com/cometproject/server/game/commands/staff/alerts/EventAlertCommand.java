@@ -37,7 +37,7 @@ public class EventAlertCommand extends ChatCommand {
                             .replace("%username%", client.getPlayer().getData().getUsername()) + "<br><br><b> " + client.getPlayer().getData().getUsername() + "</b>",
                     Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent);
 
-        //if (CometSettings.hotelName.equals("Nobba")) {
+        //if (CometSettings.hotelName.equals("Ruby")) {
             for (final ISession session : NetworkManager.getInstance().getSessions().getSessions().values()) {
                 if (session.getPlayer() != null && !session.getPlayer().getSettings().ignoreEvents()) {
                     session.send(msg);
@@ -52,7 +52,7 @@ public class EventAlertCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "Event alert created %s '%b'"
+        this.logDesc = "Alerta de evento criado por %s no quarto '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
     }

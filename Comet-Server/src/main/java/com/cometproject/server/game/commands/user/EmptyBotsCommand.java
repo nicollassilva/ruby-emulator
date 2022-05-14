@@ -14,12 +14,12 @@ public class EmptyBotsCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendAlert(Locale.getOrDefault("command.emptypets.confirm", "<b>Warning!</b>\rAre you sure you want to delete all of your bots?\r\rIf you are sure type  <b>:" + Locale.get("command.emptypets.name") + " yes</b>"), client);
+            sendAlert(Locale.getOrDefault("command.emptybots.confirm", "<b>Warning!</b>\rAre you sure you want to delete all of your bots?\r\rIf you are sure type  <b>:" + Locale.get("command.emptybots.name") + " yes</b>"), client);
         } else {
             final String yes = Locale.getOrDefault("command.empty.yes", "yes");
 
             if (!params[0].equals(yes)) {
-                sendAlert(Locale.getOrDefault("command.emptybots.confirm", "<b>Warning!</b>\rAre you sure you want to delete all of your bots?\r\rIf you are sure type  <b>:" + Locale.get("command.emptypets.name") + " yes</b>"), client);
+                sendAlert(Locale.getOrDefault("command.emptybots.confirm", "<b>Warning!</b>\rAre you sure you want to delete all of your bots?\r\rIf you are sure type  <b>:" + Locale.get("command.emptybots.name") + " yes</b>"), client);
             } else {
                 PetDao.deletePets(client.getPlayer().getId());
                 client.getPlayer().getPets().clearPets();

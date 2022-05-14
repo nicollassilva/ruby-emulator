@@ -17,13 +17,13 @@ public class ListDisabledCommandsCommand extends ChatCommand {
 
         final List<String> listCommands = Collections.singletonList(room.getData().getDisabledCommands().toString());
 
-        client.send(new MotdNotificationMessageComposer("Esta es la lista de los comandos deshabilitados en tu sala: \n\n" + listCommands + "\n"));
+        client.send(new MotdNotificationMessageComposer("Esta é a lista de comandos desativados no seu quarto: \n\n" + listCommands + "\n"));
 
     }
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "disabledcommands_command";
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ListDisabledCommandsCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.listoffcommands.description", "Ve la lista de los comandos inhabilitados en tu sala.");
+        return Locale.getOrDefault("command.disabledcommands.description", "Ve la lista de los comandos inhabilitados en tu sala.");
     }
 }

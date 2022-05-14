@@ -12,7 +12,7 @@ import com.cometproject.server.network.sessions.Session;
 public class StaffAlertCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] message) {
-        final MotdNotificationMessageComposer msg = new MotdNotificationMessageComposer(Locale.getOrDefault("message.staffalert", "Staff Alert: ") + " " + this.merge(message) + "\n\n- " + client.getPlayer().getData().getUsername());
+        final MotdNotificationMessageComposer msg = new MotdNotificationMessageComposer(Locale.getOrDefault("message.staffalert", "Alerta Staff: ") + " " + this.merge(message) + "\n\n- " + client.getPlayer().getData().getUsername());
         if (message.length == 0) {
             return;
         }

@@ -17,7 +17,7 @@ public class SoftBanCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.params.length", "Oops! You did something wrong!"), client);
+            sendNotif(Locale.getOrDefault("command.params.length", "Ops! Você fez algo errado!"), client);
             return;
         }
 
@@ -26,12 +26,12 @@ public class SoftBanCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (user == client || !user.getPlayer().getPermissions().getRank().bannable() || user.getPlayer().getPermissions().getRank().getId() >= client.getPlayer().getPermissions().getRank().getId()) {
-            sendNotif(Locale.getOrDefault("command.user.notbannable", "You're not able to ban this user!"), client);
+            sendNotif(Locale.getOrDefault("command.user.notbannable", "Você não pode banir esse usuário!"), client);
             return;
         }
 
@@ -45,7 +45,7 @@ public class SoftBanCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed softBan in room '%b' to user %u"
+        this.logDesc = "%s deu softban no quarto '%b' ao usuário %u"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName())
                 .replace("%u", username);
@@ -58,7 +58,7 @@ public class SoftBanCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.softban", "%username% %reason%");
+        return Locale.getOrDefault("command.parameter.softban", "(usuário) (razão)");
     }
 
     @Override

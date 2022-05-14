@@ -12,7 +12,7 @@ public class TagProfileCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
         final String tag = params[0];
 
-        client.send(new NotificationMessageComposer("tag_profile", Locale.getOrDefault("command.tag_profile.message", "Has añadido un tag profile exitosamente")));
+        client.send(new NotificationMessageComposer("tag_profile", Locale.getOrDefault("command.tag_profile.message", "Adicionou uma tag ao perfil corretamente.")));
 
         PlayerDao.addPlayerTag(client.getPlayer().getId(), tag);
         client.getPlayer().getData().save();
@@ -24,12 +24,12 @@ public class TagProfileCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "about_command";
+        return "tagprofile_command";
     }
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.tag_profile.parameters", "%tag%");
+        return Locale.getOrDefault("command.tag_profile.parameters", "(tag)");
     }
 
     @Override

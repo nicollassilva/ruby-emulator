@@ -13,8 +13,8 @@ public class SuperWiredCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
 
             client.getPlayer().getSession().send(new MotdNotificationMessageComposer(
-                    "COMANDOS DEL SUPERWIRED EN " + CometSettings.hotelName + " \n" +
-                    "- handitem: " + "Aplica un handitem en especial al usuario afectado"
+                    "<b>Comandos do SuperWired no Ruby</b>" \n" +
+                    "- handitem: " + "Dá um handitem especial ao usuário afetado"
             ));
     }
 

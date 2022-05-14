@@ -18,7 +18,7 @@ public class VerClonesCommand extends ChatCommand {
 
         String username = PlayerDao.getUsernameByRegIp(getRegIp);
 
-        client.send(new MotdNotificationMessageComposer("Clones del usuario: " + target + "\n\n" + "\n" + " Nombre del usuario: " + target + "\n\n" + "IP de registro del usuario: " + getRegIp + "\n\n" + "Clones del usuario: " + username));
+        client.send(new MotdNotificationMessageComposer("Fakes do usuário: " + target + "\n\n" + "\n" + " Usuário: " + target + "\n\n" + "IP de registro do usuário: " + getRegIp + "\n\n" + "Fakes do usuário: " + username));
     }
 
     @Override
@@ -28,11 +28,11 @@ public class VerClonesCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(usuario)";
+        return "(usuário)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.verclones.description", "Revisa los clones de x usuario");
+        return Locale.getOrDefault("command.verclones.description", "Verifica as fake do usuário");
     }
 }

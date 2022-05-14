@@ -15,12 +15,12 @@ public class PunchCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.punch.none", "Who do you want to punch?"), client);
+            sendNotif(Locale.getOrDefault("command.punch.none", "Em quem você quer dar um soco?"), client);
             return;
         }
 
         if (client.getPlayer().getEntity().isRoomMuted() || client.getPlayer().getEntity().getRoom().getRights().hasMute(client.getPlayer().getId())) {
-            sendNotif(Locale.getOrDefault("command.user.muted", "You are muted."), client);
+            sendNotif(Locale.getOrDefault("command.user.muted", "Você está mutado."), client);
             return;
         }
 
@@ -30,17 +30,17 @@ public class PunchCommand extends ChatCommand {
         Session punchedSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(punchedPlayer);
 
         if (punchedSession == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (punchedSession.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
         if (punchedSession.getPlayer().getData().getUsername().equals(client.getPlayer().getData().getUsername())) {
-            sendNotif(Locale.getOrDefault("command.punch.himself", "You can't punch yourself!"), client);
+            sendNotif(Locale.getOrDefault("command.punch.himself", "Você não pode dar um soco em si mesmo!"), client);
             return;
         }
 
@@ -51,15 +51,15 @@ public class PunchCommand extends ChatCommand {
 
             if (!((Math.abs((posX - playerX)) >= 2) || (Math.abs(posY - playerY) >= 2))) {
                 if(timeSinceLastUpdate >= 30) {
-                    client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "* " + client.getPlayer().getData().getUsername() + " " + Locale.getOrDefault("command.punch.word", "punched") + " " + punchedSession.getPlayer().getData().getUsername() + " *", 1));
+                    client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "* " + client.getPlayer().getData().getUsername() + " " + Locale.getOrDefault("command.punch.word", "socou") + " " + punchedSession.getPlayer().getData().getUsername() + " *", 1));
                     punchedSession.getPlayer().getEntity().applyEffect(new PlayerEffect(157));
                     client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
                 } else {
-                    client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 30 segundos para volver a ejecutar otro comando roleplay", ChatEmotion.NONE, 1));
+                    client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você deve esperar 30 segundos para executar esse comando novamente.", ChatEmotion.NONE, 1));
                     return;
                 }
             } else {
-                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% is not near, walk to this player.").replace("%playername%", punchedSession.getPlayer().getData().getUsername()), 34));
+                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Ops! %playername% não está próximo, caminhe até este jogador.").replace("%playername%", punchedSession.getPlayer().getData().getUsername()), 34));
             }
     }
 
@@ -70,11 +70,11 @@ public class PunchCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.punch.description", "Golpea a un usuario");
+        return Locale.getOrDefault("command.punch.description", "Dá um soco em um usuário");
     }
 }

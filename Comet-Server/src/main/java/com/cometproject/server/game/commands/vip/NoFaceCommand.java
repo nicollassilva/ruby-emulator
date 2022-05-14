@@ -45,6 +45,6 @@ public class NoFaceCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.noface.description", "Elimina la cara de tu usuario");
+        return Locale.getOrDefault("command.noface.description", "Deixa seu usuário sem rosto");
     }
 }
