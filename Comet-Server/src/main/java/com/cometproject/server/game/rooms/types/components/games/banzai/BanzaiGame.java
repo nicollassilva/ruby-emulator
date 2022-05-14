@@ -127,7 +127,7 @@ public class BanzaiGame extends RoomGame {
             ownerSession.getPlayer().getAchievements().progressAchievement(AchievementType.GAME_AUTHOR_EXPERIENCE, this.getGameComponent().getScore(winningTeam));
         }
 
-        this.getGameComponent().resetScores();
+        this.getGameComponent().resetScores(true);
         WiredTriggerGameEnds.executeTriggers(this.room);
     }
 
