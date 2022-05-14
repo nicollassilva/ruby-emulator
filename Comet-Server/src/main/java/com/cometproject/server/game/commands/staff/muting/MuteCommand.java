@@ -19,7 +19,7 @@ public class MuteCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 2) {
-            sendNotif(Locale.getOrDefault("command.mute.none", "Who do you want to mute?"), client);
+            sendNotif(Locale.getOrDefault("command.mute.none", "Quem você quer mutar?"), client);
             return;
         }
 
@@ -29,17 +29,17 @@ public class MuteCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (user.getPlayer().getPermissions().getRank().roomFilterBypass()) {
-            sendNotif(Locale.getOrDefault("command.mute.unmutable", "You can't mute this player!"), client);
+            sendNotif(Locale.getOrDefault("command.mute.unmutable", "Você não pode mutar esse usuário!"), client);
             return;
         }
 
         if(username.equals(client.getPlayer().getEntity().getUsername())) {
-            sendNotif(Locale.getOrDefault("command.mute.himself", "No te puedes mutear a ti mismo"), client);
+            sendNotif(Locale.getOrDefault("command.mute.himself", "Você não pode mutar a si mesmo."), client);
             return;
         }
 
@@ -47,7 +47,7 @@ public class MuteCommand extends ChatCommand {
             final int time = Integer.parseInt(params[1]);
 
             if (time < 0) {
-                sendNotif(Locale.getOrDefault("command.mute.negative", "You can only use positive numbers!"), client);
+                sendNotif(Locale.getOrDefault("command.mute.negative", "Você pode usar apenas números positivos!"), client);
                 return;
             }
 
@@ -56,7 +56,7 @@ public class MuteCommand extends ChatCommand {
             PlayerDao.addTimeMute(playerId, timeMuted);
             user.getPlayer().getData().setTimeMuted(timeMuted);
 
-            final String msg = Locale.getOrDefault("command.mute.muted", "You are muted for violating the rules! Your mute will expire in %timeleft% minutes").replace("%timeleft%", time + "");
+            final String msg = Locale.getOrDefault("command.mute.muted", "Você está mutado por violar as regras! Seu mute expira em %timeleft% minutos").replace("%timeleft%", time + "");
                 user.send(new AdvancedAlertMessageComposer(msg));
 
             isExecuted(client);
@@ -64,12 +64,12 @@ public class MuteCommand extends ChatCommand {
 
             if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-            this.logDesc = "%s muted player '%u' for %t minutes"
+            this.logDesc = "%s mutou o usuário '%u' por %t minutos"
                     .replace("%s", client.getPlayer().getData().getUsername())
                     .replace("%u", user.getPlayer().getData().getUsername())
                     .replace("%t", Integer.toString(time));
         } catch (Exception e) {
-            sendNotif(Locale.getOrDefault("command.mute.invalid", "Please, use numbers only!"), client);
+            sendNotif(Locale.getOrDefault("command.mute.invalid", "Por favor, somente números!"), client);
         }
 
     }

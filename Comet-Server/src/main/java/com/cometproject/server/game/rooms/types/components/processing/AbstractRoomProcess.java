@@ -386,7 +386,7 @@ public class AbstractRoomProcess implements CometTask {
                     final long currentTime = Comet.getTime();
 
                     if ((currentTime - ((PlayerEntity) entity).getLastAwayReminder()) >= 60) {
-                        this.getRoom().getEntities().broadcastChatMessage(new TalkMessageComposer(entity.getId(), String.format("I've been away for %s", TimeSpan.millisecondsToDate(((PlayerEntity) entity).getAwayTime())), ChatEmotion.NONE, 0), ((PlayerEntity) entity));
+                        this.getRoom().getEntities().broadcastChatMessage(new TalkMessageComposer(entity.getId(), String.format("Eu já estou fora por %s", TimeSpan.millisecondsToDate(((PlayerEntity) entity).getAwayTime())), ChatEmotion.NONE, 0), ((PlayerEntity) entity));
                         ((PlayerEntity) entity).setLastAwayReminder(currentTime);
                     }
                 }

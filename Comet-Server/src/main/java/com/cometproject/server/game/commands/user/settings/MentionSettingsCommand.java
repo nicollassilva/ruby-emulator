@@ -22,13 +22,13 @@ public class MentionSettingsCommand extends ChatCommand {
 
         if (mentionType.equals(mentionAll)) {
             playerSettings.setMentionType(MentionType.ALL);
-            sendNotif(Locale.getOrDefault("mention.all.set", "Mentions are now open to everyone!"), client);
+            sendNotif(Locale.getOrDefault("mention.all.set", "As menções serão recebidas de todos!"), client);
         } else if (mentionType.equals(mentionFriends)) {
             playerSettings.setMentionType(MentionType.FRIENDS);
-            sendNotif(Locale.getOrDefault("mention.friends.set", "Mentions are now open to friends only!"), client);
+            sendNotif(Locale.getOrDefault("mention.friends.set", "As menções serão recebidas apenas de amigos."), client);
         } else {
             playerSettings.setMentionType(MentionType.NONE);
-            sendNotif(Locale.getOrDefault("mention.friends.set", "Mentions are now disabled"), client);
+            sendNotif(Locale.getOrDefault("mention.friends.set", "As menções estão desativadas."), client);
         }
 
         PlayerDao.saveMentionType(client.getPlayer().getId(), playerSettings.getMentionType());

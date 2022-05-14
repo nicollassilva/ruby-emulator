@@ -25,10 +25,9 @@ public class BuildCommand extends ChatCommand {
         final JSONObject output = new JSONObject();
 
         final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenBuildToolMessage);
-        OutgoingMessage message = null;
 
         try {
-            message = classMessage.getDeclaredConstructor().newInstance();
+            final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
             message.client = client.getPlayer().getData().getWebsocketSession();
             message.data = output;
 
@@ -40,7 +39,7 @@ public class BuildCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "build_command";
     }
 
     @Override
@@ -50,6 +49,6 @@ public class BuildCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return null;
+        return Locale.getOrDefault("command.build.description", "Ferramenta com intuito de facilitar construções.");
     }
 }

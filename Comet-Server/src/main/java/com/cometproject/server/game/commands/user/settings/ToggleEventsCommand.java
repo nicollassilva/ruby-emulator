@@ -18,7 +18,7 @@ public class ToggleEventsCommand extends ChatCommand {
 
         playerSettings.setIgnoreInvites(!playerSettings.ignoreEvents());
 
-        final String msg = playerSettings.ignoreEvents() ? "You are now ignoring event notifications!" : "Event notifications are now enabled.";
+        final String msg = playerSettings.ignoreEvents() ? "Agora você está ignorando as notificações de eventos!" : "As notificações de eventos agora estão ativadas.";
         sendNotif(Locale.getOrDefault("command.toggleevents.msg." + playerSettings.ignoreEvents(), msg), client);
 
         PlayerDao.saveIgnoreEvents(playerSettings.ignoreEvents(), client.getPlayer().getId());

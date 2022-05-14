@@ -40,7 +40,7 @@ public class MassFreezeCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s executed massfreeze"
+        this.logDesc = "%s executou massfreeze"
                 .replace("%s", client.getPlayer().getData().getUsername());
     }
 

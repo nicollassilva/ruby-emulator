@@ -10,7 +10,7 @@ public class SetBetCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes colocar un número válido para apostar, :setbet 1-50", ChatEmotion.NONE, 34));
+            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você deve inserir um número válido para apostar, :apostar 1-50", ChatEmotion.NONE, 34));
             return;
         }
 
@@ -20,14 +20,14 @@ public class SetBetCommand extends ChatCommand {
             if (amount < 0) {
                 amount = 5;
             } else if (amount > 50) {
-                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "No puedes apostar más de 50 diamantes", ChatEmotion.NONE, 34));
+                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você não pode apostar mais de 50 diamantes,", ChatEmotion.NONE, 34));
                 amount = 50;
             }
 
             client.getPlayer().getEntity().setBetAmount(amount);
-            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Haz colocado tu apuesta en " + amount, ChatEmotion.NONE, 34));
+            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você fez sua aposta em " + amount, ChatEmotion.NONE, 34));
         } catch (Exception e) {
-            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Por favor introduce valores numéricos", ChatEmotion.NONE, 34));
+            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Insira valores numéricos", ChatEmotion.NONE, 34));
         }
     }
 

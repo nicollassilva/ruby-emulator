@@ -23,7 +23,7 @@ public class HotelAlertLinkCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has sent an alert with link '%e' and message '%m'"
+        this.logDesc = "%s enviou um alerta com link '%e' e mensagem '%m'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%e", link)
                 .replace("%m", this.merge(params, 1));

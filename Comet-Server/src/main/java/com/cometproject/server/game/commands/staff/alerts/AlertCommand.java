@@ -14,14 +14,14 @@ public class AlertCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 2) {
-            sendNotif(Locale.getOrDefault("command.alert.none", "Who do you want to send a alert?"), client);
+            sendNotif(Locale.getOrDefault("command.alert.none", "Para quem você deseja enviar um alerta?"), client);
             return;
         }
 
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(params[0]);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
@@ -29,7 +29,7 @@ public class AlertCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has sent an alert to -d<. [-e]"
+        this.logDesc = "-c enviou um alerta para -d. [-e]"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", user.getPlayer().getData().getUsername())
                 .replace("-e", this.merge(params));
@@ -42,7 +42,7 @@ public class AlertCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.name" + " " + "command.parameter.message", "%username% %message%");
+        return Locale.getOrDefault("command.parameter.name" + " " + "command.parameter.message", "(usuário) (mensagem)");
     }
 
     @Override

@@ -45,7 +45,7 @@ public class PlayerInfoCommand extends ChatCommand {
 
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.username", "Usuario") + "</b>: " + playerData.getUsername() + "<br>");
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.motto", "Misión") + "</b>: " + playerData.getMotto() + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.gender", "Genero") + "</b>: " + (playerData.getGender().equalsIgnoreCase("m") ? Locale.getOrDefault("command.playerinfo.male", "Male") : Locale.getOrDefault("command.playerinfo.female", "Female")) + "<br>");
+        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.gender", "Genero") + "</b>: " + (playerData.getGender().equalsIgnoreCase("m") ? Locale.getOrDefault("command.playerinfo.male", "Homem") : Locale.getOrDefault("command.playerinfo.female", "Mulher")) + "<br>");
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.status", "Estado") + "</b>: " + (session == null ? Locale.getOrDefault("command.playerinfo.offline", "Offline") : Locale.getOrDefault("command.playerinfo.online", "Online")) + "<br>");
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.achievementPoints", "IAchievement Points") + "</b>: " + playerData.getAchievementPoints() + "<br>");
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.vip", "VIP") + "</b>: " + playerData.isVip() + "<br>");
@@ -61,7 +61,7 @@ public class PlayerInfoCommand extends ChatCommand {
             userInfo.append("<i>" + playerData.getVipPoints() + " " + Locale.getOrDefault("command.playerinfo.diamonds", "diamonds") + "</i><br>");
         }
 
-        userInfo.append("<i>" + playerData.getActivityPoints() + " " + Locale.getOrDefault("command.playerinfo.activityPoints", "duckets") + "</i><br><br>");
+        userInfo.append("<i>" + playerData.getActivityPoints() + " " + Locale.getOrDefault("command.playerinfo.activityPoints", "duckets") + "</i><br>");
 
         userInfo.append("<i>" + playerData.getSeasonalPoints() + " " + Locale.getOrDefault("command.playerinfo.seasonalPoints", "Calabazas") + "</i><br><br>");
 

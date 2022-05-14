@@ -21,7 +21,7 @@ public class HandItemCommand extends ChatCommand {
                 client.getPlayer().getEntity().carryItem(0);
             }
         } catch (Exception e) {
-            sendNotif(Locale.getOrDefault("command.handitem.invalid", "Please, use numbers only!"), client);
+            sendNotif(Locale.getOrDefault("command.handitem.invalid", "Por favor, use somente números!"), client);
         }
     }
 
@@ -32,11 +32,11 @@ public class HandItemCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.number", "(numero)");
+        return Locale.getOrDefault("command.parameter.number", "(número)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.handitem.description", "Obten un item de mano");
+        return Locale.getOrDefault("command.handitem.description", "Obtém um item de mão");
     }
 }

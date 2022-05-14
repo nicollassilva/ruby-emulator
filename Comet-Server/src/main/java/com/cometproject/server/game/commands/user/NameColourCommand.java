@@ -28,7 +28,7 @@ public class NameColourCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "";
+        return Locale.get("command.namecolour.param");
     }
 
     @Override

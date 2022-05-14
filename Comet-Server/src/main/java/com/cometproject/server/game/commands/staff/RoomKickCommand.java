@@ -28,7 +28,7 @@ public class RoomKickCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has used RoomKick in room -d"
+        this.logDesc = "-c usou o roomkick no quarto -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", client.getPlayer().getEntity().getRoom().getData().getName());
     }
@@ -40,7 +40,7 @@ public class RoomKickCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.parameter.message", "(mensagem)");
     }
 
     @Override

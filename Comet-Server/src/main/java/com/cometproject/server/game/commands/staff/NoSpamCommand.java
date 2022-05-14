@@ -18,7 +18,7 @@ public class NoSpamCommand extends ChatCommand {
         final int iterator = Integer.parseInt(Locale.getOrDefault("number.iterator.nospam", "25"));
 
         while (i < iterator) {
-            room.getEntities().broadcastMessage(new TalkMessageComposer(entity.getId(), "NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM NO SPAM", ChatEmotion.NONE, 34));
+            room.getEntities().broadcastMessage(new TalkMessageComposer(entity.getId(), "SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM SEM SPAM", ChatEmotion.NONE, 34));
             i++;
         }
     }
@@ -36,6 +36,6 @@ public class NoSpamCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "null";
+        return Locale.get("command.nospam.description");
     }
 }

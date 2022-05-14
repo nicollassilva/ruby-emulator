@@ -20,7 +20,7 @@ public class EventWonCommand extends NotificationCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed eventwon on user '%b'"
+        this.logDesc = "%s executou o comando de vitória de evento para o usuário '%b'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", params[0]);
     }

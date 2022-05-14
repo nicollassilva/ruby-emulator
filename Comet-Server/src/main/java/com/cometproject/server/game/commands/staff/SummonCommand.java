@@ -12,26 +12,26 @@ public class SummonCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.summon.none", "Who do you want to follow you?"), client);
+            sendNotif(Locale.getOrDefault("command.summon.none", "Quem você quer puxar?"), client);
             return;
         }
 
         final String username = params[0];
 
         if (!PlayerManager.getInstance().isOnline(username)) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         final Session session = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (session == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (username == client.getPlayer().getEntity().getUsername()) {
-            sendNotif(Locale.getOrDefault("command.user.himself", "No te puedes hacer summon a ti mismo"), client);
+            sendNotif(Locale.getOrDefault("command.user.himself", "Você não pode puxar a si mesmo."), client);
             return;
         }
 
@@ -49,7 +49,7 @@ public class SummonCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

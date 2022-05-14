@@ -34,6 +34,6 @@ public class StandCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.stand.description", "Parate en una sala");
+        return Locale.getOrDefault("command.stand.description", "Fique em pé");
     }
 }

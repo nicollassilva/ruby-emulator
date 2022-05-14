@@ -10,16 +10,16 @@ import com.cometproject.server.network.sessions.Session;
 public class StaffInfoCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] message) {
-        final StringBuilder staffinfo = new StringBuilder("Current online staffs:\r\r");
+        final StringBuilder staffinfo = new StringBuilder("Staffs online:\r\r");
 
         for (final Session player : ModerationManager.getInstance().getModerators()) {
-            staffinfo.append("* Username: ")
+            staffinfo.append("* Nome: ")
                     .append(player.getPlayer().getData().getUsername())
-                    .append(" / Room: ")
+                    .append(" / Quarto: ")
                     .append(player.getPlayer().getEntity() != null
                             && player.getPlayer().getEntity().getRoom() != null
                             ? player.getPlayer().getEntity().getRoom().getData().getName() : "none")
-                    .append(" / Rank: ")
+                    .append(" / Cargo: ")
                     .append(player.getPlayer().getData().getRank())
                     .append("\r");
         }

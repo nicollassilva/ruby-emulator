@@ -17,11 +17,11 @@ public class FilterWordsCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if(params.length < 1) {
-            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.filter_words.incorrect_param", "Parámetro incorrecto"), ChatEmotion.NONE, 34));
+            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.filter_words.incorrect_param", "Parâmetro incorreto"), ChatEmotion.NONE, 34));
             return;
         }
 
-        saveWordfilter(params[0], "**********");
+        saveWordfilter(params[0], "*****");
         isExecuted(client);
         RoomManager.getInstance().getFilter().loadFilter();
     }
@@ -54,11 +54,11 @@ public class FilterWordsCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.filter_words.parameters", "%word%");
+        return Locale.getOrDefault("command.filter_words.parameters", "(palavra)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.filter_words.description", "Añade una palabra al filtro");
+        return Locale.getOrDefault("command.filter_words.description", "Adiciona uma palavra ao filtro do hotel.");
     }
 }

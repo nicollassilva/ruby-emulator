@@ -22,7 +22,7 @@ public class RobCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Invalid username!"), client);
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
             return;
         }
         int timeSinceLastUpdate = ((int) Comet.getTime() - client.getPlayer().getLastCommandRoleplay());
@@ -51,7 +51,7 @@ public class RobCommand extends ChatCommand {
             }, 2, TimeUnit.SECONDS);
             client.getPlayer().setLastCommandRoleplay(timeSinceLastUpdate);
         } else {
-            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 30 segundos para volver a ejecutar otro comando roleplay", ChatEmotion.NONE, 1));
+            client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você deve esperar 30 segundos para executar esse comando novamente.", ChatEmotion.NONE, 1));
             return;
         }
     }

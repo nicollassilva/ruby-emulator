@@ -20,26 +20,26 @@ public class WarpCommand extends ChatCommand {
         }
 
         if ((room.getData().getOwnerId() != client.getPlayer().getId() && !client.getPlayer().getPermissions().getRank().roomFullControl())) {
-            sendNotif(Locale.getOrDefault("command.need.rights", "You have no rights to use this command in this room."), client);
+            sendNotif(Locale.getOrDefault("command.need.rights", "Você não tem direitos para usar esse comando no quarto."), client);
             return;
         }
 
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.warp.none", "Who do you want to warp?"), client);
+            sendNotif(Locale.getOrDefault("command.warp.none", "Quem você quer remover daqui?"), client);
             return;
         }
 
         final String username = params[0].toUpperCase();
 
         if (!PlayerManager.getInstance().isOnline(username)) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         final PlayerEntity target = (PlayerEntity) room.getEntities().getEntityByName(username, RoomEntityType.PLAYER);
 
         if(target == null){
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in this room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está no quarto."), client);
             return;
         }
 
@@ -53,7 +53,7 @@ public class WarpCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

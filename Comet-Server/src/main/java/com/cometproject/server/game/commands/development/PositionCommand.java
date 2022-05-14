@@ -18,10 +18,10 @@ public class PositionCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] params) {
-        sendNotif(("X: " + client.getPlayer().getEntity().getPosition().getX() + "\r\n") +
-                        "Y: " + client.getPlayer().getEntity().getPosition().getY() + "\r\n" +
-                        "Z: " + client.getPlayer().getEntity().getPosition().getZ() + "\r\n" +
-                        "Rotation: " + client.getPlayer().getEntity().getBodyRotation() + "\r\n",
+        sendNotif(("Posição X: " + client.getPlayer().getEntity().getPosition().getX() + "\r\n") +
+                        "Posição Y: " + client.getPlayer().getEntity().getPosition().getY() + "\r\n" +
+                        "Posição Z: " + client.getPlayer().getEntity().getPosition().getZ() + "\r\n" +
+                        "Rotação: " + client.getPlayer().getEntity().getBodyRotation() + "\r\n",
                 client);
     }
 

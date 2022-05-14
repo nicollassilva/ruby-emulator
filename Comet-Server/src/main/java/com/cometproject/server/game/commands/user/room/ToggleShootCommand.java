@@ -21,7 +21,7 @@ public class ToggleShootCommand extends ChatCommand
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "toggleshoot_command";
     }
 
     @Override

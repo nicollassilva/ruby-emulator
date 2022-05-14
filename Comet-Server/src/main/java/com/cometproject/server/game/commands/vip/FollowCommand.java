@@ -11,21 +11,21 @@ public class FollowCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendWhisper(Locale.getOrDefault("command.follow.none", "Who you want to follow?"), client);
+            sendWhisper(Locale.getOrDefault("command.follow.none", "Quem você deseja seguir?"), client);
             return;
         }
 
         final Session leader = NetworkManager.getInstance().getSessions().getByPlayerUsername(params[0]);
 
         if (leader == client) {
-            sendNotif(Locale.getOrDefault("command.follow.playerhimself", "You can't follow yourself!"), client);
+            sendNotif(Locale.getOrDefault("command.follow.playerhimself", "Você não pode seguir a si mesmo!"), client);
             return;
         }
 
 
         if (leader != null && leader.getPlayer() != null && leader.getPlayer().getEntity() != null) {
             if (!leader.getPlayer().getSettings().getAllowFollow() && !client.getPlayer().getPermissions().getRank().modTool()) {
-                sendNotif(Locale.getOrDefault("command.follow.disabled", "This user has follow disabled."), client);
+                sendNotif(Locale.getOrDefault("command.follow.disabled", "Esse usuário desativou a opção de ser seguido."), client);
                 return;
             }
 
@@ -46,11 +46,11 @@ public class FollowCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.follow.description", "Sigue a un usuario a la sala en la que esté");
+        return Locale.getOrDefault("command.follow.description", "Segue um usuário até o quarto que ele esteja");
     }
 }

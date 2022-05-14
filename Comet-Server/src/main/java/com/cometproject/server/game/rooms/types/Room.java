@@ -102,9 +102,13 @@ public class Room implements Attributable, IRoom {
                     roomModelData = RoomModelDataFactory.instance.createData(
                             JsonUtil.getInstance().fromJson(this.getData().getHeightmap(), CustomFloorMapData.class));
                 } else {
-                    roomModelData = RoomModelDataFactory.instance.createData("dynamic_heightmap", this.getData().getHeightmap(),
-                            this.getModel().getRoomModelData().getDoorX(), this.getModel().getRoomModelData().getDoorY(),
-                            this.getModel().getRoomModelData().getDoorRotation());
+                    roomModelData = RoomModelDataFactory.instance.createData("dynamic_heightmap",
+                            this.getData().getHeightmap(),
+                            this.getModel().getRoomModelData().getDoorX(),
+                            this.getModel().getRoomModelData().getDoorY(),
+                            this.getModel().getRoomModelData().getDoorZ(),
+                            this.getModel().getRoomModelData().getDoorRotation()
+                    );
                 }
 
                 if (roomModelData != null) {

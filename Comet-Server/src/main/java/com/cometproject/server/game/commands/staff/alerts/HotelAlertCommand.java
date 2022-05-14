@@ -25,11 +25,11 @@ public class HotelAlertCommand extends ChatCommand {
 
         final String realMessage = merge(message);
 
-        NetworkManager.getInstance().getSessions().broadcast(new AlertMessageComposer(String.format("Alerta del Equipo Administrativo:<br><br>%s<br><br>- %s", realMessage, client.getPlayer().getData().getUsername())));
+        NetworkManager.getInstance().getSessions().broadcast(new AlertMessageComposer(String.format("Alerta da Equipe Ruby:<br><br>%s<br><br>- %s", realMessage, client.getPlayer().getData().getUsername())));
 
         if (!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "El Staff -c ha mandado una alerta a todo el hotel. [-s]"
+        this.logDesc = "-c enviou um alerta para o hotel. [-s]"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-s", this.merge(message));
 

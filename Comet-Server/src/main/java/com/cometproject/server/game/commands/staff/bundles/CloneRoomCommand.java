@@ -52,12 +52,12 @@ public class CloneRoomCommand extends ChatCommand {
 
             if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-            this.logDesc = "%s has executed cloneroom in room '%b'"
+            this.logDesc = "%s executou o comando duplicar quarto no quarto '%b'"
                     .replace("%s", client.getPlayer().getData().getUsername())
                     .replace("%b", client.getPlayer().getEntity().getRoom().getData().getName());
 
         } catch (Exception e) {
-            client.send(new MotdNotificationMessageComposer("Invalid room bundle data, please contact an administrator."));
+            client.send(new MotdNotificationMessageComposer("Dados de pacote de quarto inválidos, entre em contato com um administrador."));
             client.send(new BoughtItemMessageComposer(BoughtItemMessageComposer.PurchaseType.BADGE));
         }
     }

@@ -17,37 +17,37 @@ import java.util.function.Consumer;
 
 public class MinionAI extends AbstractBotAI {
     private final static Map<String, Consumer<BotEntity>> speechCommands = new HashMap<String, Consumer<BotEntity>>() {{
-        put("minions leave", (entity) -> entity.leaveRoom(false, false, false));
+        put("saiam minions", (entity) -> entity.leaveRoom(false, false, false));
 
-        put("minions dance", (entity) -> {
+        put("minions dancem", (entity) -> {
             int danceId = RandomUtil.getRandomInt(1, 4);
 
             entity.setDanceId(danceId);
             entity.getRoom().getEntities().broadcastMessage(new DanceMessageComposer(entity.getId(), danceId));
         });
 
-        put("minions stop dancing", (entity) -> {
+        put("minions parem", (entity) -> {
             entity.setDanceId(0);
             entity.getRoom().getEntities().broadcastMessage(new DanceMessageComposer(entity.getId(), 0));
         });
 
-        put("minions sit", (entity) -> {
+        put("minions sentem", (entity) -> {
             entity.addStatus(RoomEntityStatus.SIT, "0.5");
             entity.markNeedsUpdate();
 
             entity.getData().setMode(BotMode.RELAXED);
         });
 
-        put("minions relax", (entity) -> entity.getData().setMode(BotMode.RELAXED));
+        put("minions relaxem", (entity) -> entity.getData().setMode(BotMode.RELAXED));
 
-        put("minions stand", (entity) -> {
+        put("minions de pe", (entity) -> {
             entity.removeStatus(RoomEntityStatus.SIT);
             entity.markNeedsUpdate();
 
             entity.getData().setMode(BotMode.DEFAULT);
         });
 
-        put("minions follow", (entity) -> {
+        put("minions sigam", (entity) -> {
             PlayerEntity playerEntity = entity.getRoom().getEntities().getEntityByPlayerId(entity.getData().getOwnerId());
 
             if (playerEntity != null) {

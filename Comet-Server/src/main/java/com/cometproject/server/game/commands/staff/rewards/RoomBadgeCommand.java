@@ -24,7 +24,7 @@ public class RoomBadgeCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has executed roombadge with code '%c' in room %r"
+        this.logDesc = "%s enviou o emblema '%c' no quarto %r"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%c", badge)
                 .replace("%r", client.getPlayer().getEntity().getRoom().getData().getName());

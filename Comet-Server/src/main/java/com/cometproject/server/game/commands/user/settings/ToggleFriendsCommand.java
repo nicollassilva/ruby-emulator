@@ -10,10 +10,10 @@ public class ToggleFriendsCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
         if (client.getPlayer().getSettings().getAllowFriendRequests()) {
             client.getPlayer().getSettings().setAllowFriendRequests(false);
-            sendNotif(Locale.getOrDefault("command.togglefriends.disabled", "You have disabled friend requests."), client);
+            sendNotif(Locale.getOrDefault("command.togglefriends.disabled", "Você desativou as solicitações de amizade."), client);
         } else {
             client.getPlayer().getSettings().setAllowFriendRequests(true);
-            sendNotif(Locale.getOrDefault("command.togglefriends.enabled", "You have enabled friend requests."), client);
+            sendNotif(Locale.getOrDefault("command.togglefriends.enabled", "Você ativou solicitações de amizade."), client);
 
         }
 

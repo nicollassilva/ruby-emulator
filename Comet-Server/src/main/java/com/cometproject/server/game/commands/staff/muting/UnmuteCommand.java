@@ -19,7 +19,7 @@ public class UnmuteCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.unmute.none", "Who do you want to unmute?"), client);
+            sendNotif(Locale.getOrDefault("command.unmute.none", "Quem você quer desmutar?"), client);
             return;
         }
 
@@ -27,13 +27,13 @@ public class UnmuteCommand extends ChatCommand {
         final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
         if (session == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         final int timeMuted = 0;
 
-        session.send(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.unmute.unmuted", "You has been unmuted.")));
+        session.send(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.unmute.unmuted", "Você foi desmutado.")));
 
         if (session.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
             PlayerDao.addTimeMute(playerId, timeMuted);
@@ -51,7 +51,7 @@ public class UnmuteCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s unmuted '%u'"
+        this.logDesc = "%s desmutou '%u'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%u", params[0]);
     }

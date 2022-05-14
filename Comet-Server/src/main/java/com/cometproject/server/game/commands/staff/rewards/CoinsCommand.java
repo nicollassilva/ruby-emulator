@@ -49,7 +49,7 @@ public class CoinsCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has given -e credits to user -d"
+        this.logDesc = "-c enviou -e moedas para o usuário -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-e", credits_)
                 .replace("-d", username);
@@ -62,7 +62,7 @@ public class CoinsCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "%username% %amount%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.amount", "(usuário) (quantia)");
     }
 
     @Override

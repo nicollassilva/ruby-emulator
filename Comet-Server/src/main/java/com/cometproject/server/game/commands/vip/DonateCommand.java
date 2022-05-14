@@ -13,7 +13,7 @@ public class DonateCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 3) {
-            sendWhisper(Locale.getOrDefault("command.donate.error.params", "You must supply the username, amount, and currency"), client);
+            sendWhisper(Locale.getOrDefault("command.donate.error.params", "Você deve fornecer o nome de usuário, valor e tipo de moeda."), client);
             return;
         }
 
@@ -23,18 +23,18 @@ public class DonateCommand extends ChatCommand {
         PlayerData playerData = PlayerDao.getDataByUsername(playerName);
 
         if (playerData == null) {
-            sendWhisper(Locale.getOrDefault("command.donate.error.playernotfound", "Player %username% was not found")
+            sendWhisper(Locale.getOrDefault("command.donate.error.playernotfound", "Usuário '%username%' não encontrado.")
                     .replace("%player%", playerName), client);
             return;
         }
 
         if(playerName.equals(client.getPlayer().getData().getUsername())) {
-            sendWhisper(Locale.getOrDefault("command.donate.himself", "No es posible enviarte monedas a ti mismo"), client);
+            sendWhisper(Locale.getOrDefault("command.donate.himself", "Não é possível enviar moedas para si mesmo."), client);
             return;
         }
 
         if (!StringUtils.isNumeric(strAmount)) {
-            sendWhisper(Locale.getOrDefault("command.donate.error.amount", "The amount must be a number"), client);
+            sendWhisper(Locale.getOrDefault("command.donate.error.amount", "O valor deve ser um número."), client);
             return;
         }
 
@@ -42,8 +42,7 @@ public class DonateCommand extends ChatCommand {
         Session targetSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(playerName);
 
         switch (currency) {
-            case "credits":
-            case "creditos":
+            case "moedas":
                 if (client.getPlayer().getData().getCredits() < amount) {
                     sendWhisper(Locale.get("command.donate.error.notenough"), client);
                     return;
@@ -65,27 +64,6 @@ public class DonateCommand extends ChatCommand {
                 }
                 break;
             case "diamantes":
-                if (client.getPlayer().getData().getActivityPoints() < amount) {
-                    sendWhisper(Locale.get("command.donate.error.notenough"), client);
-                    return;
-                }
-
-                client.getPlayer().getData().decreaseActivityPoints(amount);
-                client.getPlayer().getData().save();
-
-                client.send(client.getPlayer().composeCurrenciesBalance());
-
-                if (targetSession != null) {
-                    targetSession.getPlayer().getData().increaseActivityPoints(amount);
-                    targetSession.getPlayer().getData().save();
-
-                    targetSession.send(targetSession.getPlayer().composeCurrenciesBalance());
-                } else {
-                    playerData.increaseActivityPoints(amount);
-                    playerData.save();
-                }
-                break;
-            case "aerocash":
                 if (client.getPlayer().getData().getVipPoints() < amount) {
                     sendWhisper(Locale.get("command.donate.error.notenough"), client);
                     return;
@@ -103,6 +81,27 @@ public class DonateCommand extends ChatCommand {
                     targetSession.send(targetSession.getPlayer().composeCurrenciesBalance());
                 } else {
                     playerData.increaseVipPoints(amount);
+                    playerData.save();
+                }
+                break;
+            case "rubis":
+                if (client.getPlayer().getData().getSeasonalPoints() < amount) {
+                    sendWhisper(Locale.get("command.donate.error.notenough"), client);
+                    return;
+                }
+
+                client.getPlayer().getData().decreaseSeasonalPoints(amount);
+                client.getPlayer().getData().save();
+
+                client.send(client.getPlayer().composeCurrenciesBalance());
+
+                if (targetSession != null) {
+                    targetSession.getPlayer().getData().increaseSeasonalPoints(amount);
+                    targetSession.getPlayer().getData().save();
+
+                    targetSession.send(targetSession.getPlayer().composeCurrenciesBalance());
+                } else {
+                    playerData.increaseSeasonalPoints(amount);
                     playerData.save();
                 }
                 break;
@@ -131,7 +130,7 @@ public class DonateCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(usuario) (cantidad) (tipo de moneda)";
+        return "(usuário) (quantidade) (câmbio)";
     }
 
     @Override

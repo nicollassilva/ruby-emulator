@@ -13,7 +13,7 @@ public class KickCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.kick.none", "Who do you want to kick?"), client);
+            sendNotif(Locale.getOrDefault("command.kick.none", "Quem você quer expulsar?"), client);
             return;
         }
 
@@ -21,7 +21,7 @@ public class KickCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
@@ -30,12 +30,12 @@ public class KickCommand extends ChatCommand {
         }
 
         if (user.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
         if (!user.getPlayer().getPermissions().getRank().roomKickable()) {
-            sendNotif(Locale.getOrDefault("command.kick.unkickable", "You can't kick this player!"), client);
+            sendNotif(Locale.getOrDefault("command.kick.unkickable", "Você não pode expulsar esse usuário!"), client);
             return;
         }
 
@@ -44,7 +44,7 @@ public class KickCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c has kicked user -d"
+        this.logDesc = "-c expulsou o usuário -d"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-d", user.getPlayer().getData().getUsername());
     }
@@ -56,7 +56,7 @@ public class KickCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "%username%");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override

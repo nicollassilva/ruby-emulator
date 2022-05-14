@@ -31,7 +31,7 @@ public class FreezeBotCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "freezebot_command";
     }
 
     @Override

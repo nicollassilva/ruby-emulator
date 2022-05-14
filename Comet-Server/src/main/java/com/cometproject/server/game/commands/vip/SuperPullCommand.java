@@ -19,12 +19,12 @@ public class SuperPullCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length == 0) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Invalid username!"), client);
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
             return;
         }
 
         if (client.getPlayer().getEntity().isRoomMuted() || client.getPlayer().getEntity().getRoom().getRights().hasMute(client.getPlayer().getId())) {
-            sendNotif(Locale.getOrDefault("command.user.muted", "You are muted."), client);
+            sendNotif(Locale.getOrDefault("command.user.muted", "Você está mutado."), client);
             return;
         }
 
@@ -32,12 +32,12 @@ public class SuperPullCommand extends ChatCommand {
         final Session pulledSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (pulledSession == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (pulledSession.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
@@ -73,12 +73,12 @@ public class SuperPullCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.superpull.description", "Atrae fuertemente a un usuario");
+        return Locale.getOrDefault("command.superpull.description", "Puxa um usuário que esteja longe para sua frente.");
     }
 
     @Override

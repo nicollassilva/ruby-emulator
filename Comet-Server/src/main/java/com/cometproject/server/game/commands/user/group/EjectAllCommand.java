@@ -94,7 +94,7 @@ public class EjectAllCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "El usuario %s ha hecho ejectall en la sala '%b', cuyo dueño es %c"
+        this.logDesc = "O usuário %s deu ejectall no quarto '%b', cujo proprietário é %c"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%b", room.getData().getName())
                 .replace("%c", room.getData().getOwner());
@@ -112,7 +112,7 @@ public class EjectAllCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.ejectall.description", "Expulsa todos los furnis de tu sala");
+        return Locale.getOrDefault("command.ejectall.description", "Ejeta todos os mobis do quarto.");
     }
 
     @Override

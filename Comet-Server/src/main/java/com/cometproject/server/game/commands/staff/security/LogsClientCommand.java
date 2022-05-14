@@ -14,28 +14,28 @@ public class LogsClientCommand extends ChatCommand {
             default:
             case "on":
                 client.getPlayer().setLogsClientStaff(true);
-                client.send(new NotificationMessageComposer("generic", "Activaste los logs de client"));
+                client.send(new NotificationMessageComposer("generic", "Ativa os logs do client"));
                 break;
 
             case "off":
                 client.getPlayer().setLogsClientStaff(false);
-                client.send(new NotificationMessageComposer("generic", "Desactivaste los logs de client"));
+                client.send(new NotificationMessageComposer("generic", "Desativa os logs do client"));
                 break;
         }
     }
 
     @Override
     public String getPermission() {
-        return "hotelalert_command";
+        return "logsclient_command";
     }
 
     @Override
     public String getParameter() {
-        return "(on / off)";
+        return "(on/off)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.logsclient.description", "Logs de lo que se realice dentro del hotel en burbujas");
+        return Locale.getOrDefault("command.logsclient.description", "Logs do que é feito dentro do hotel em notificações.");
     }
 }

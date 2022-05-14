@@ -18,7 +18,7 @@ public class TradeBanCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length < 2) {
-            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.length", "Recuerda introducir %usuario% %tiempo% %raz\u00f3n%."), client);
+            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.length", "Lembre-se de inserir (usuário) (tempo) (razão)."), client);
             return;
         }
 
@@ -27,12 +27,12 @@ public class TradeBanCommand extends ChatCommand {
         final Session user = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if (user == null) {
-            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.offline", "El usuario est\u00e1 desconectado."), client);
+            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.offline", "O usuário está offline."), client);
             return;
         }
 
         if (user == client || !user.getPlayer().getPermissions().getRank().bannable() || user.getPlayer().getPermissions().getRank().getId() >= client.getPlayer().getPermissions().getRank().getId()) {
-            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.notbannable", "No tienes permisos para banear a este usuario."), client);
+            TradeBanCommand.sendNotif(Locale.getOrDefault("command.tradeban.notbannable", "Você não tem permissão para banir esse usuário."), client);
             return;
         }
 
@@ -44,8 +44,8 @@ public class TradeBanCommand extends ChatCommand {
         user.getPlayer().getStats().addBan();
         user.getPlayer().getStats().save();
 
-        user.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked", "Se ha detectado una actividad sospechosa en tu cuenta y tus tradeos han sido bloqueados durante " + length + " minutos.")));
-        client.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked.success", "Has bloqueado correctamente los tradeos de " + username + " durante " + length + " minutos.")));
+        user.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked", "Atividade suspeita foi detectada em sua conta e suas negociações foram bloqueadas por " + length + " minutos.")));
+        client.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked.success", "Você bloqueou com sucesso negociações de " + username + " durante " + length + " minutos.")));
 
         BanManager.getInstance().banPlayer(BanType.TRADE, user.getPlayer().getId() + "", user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
 
@@ -53,7 +53,7 @@ public class TradeBanCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "El Staff -c ha bloqueado los tradeos a -d por -e minutos.".replace("-c", client.getPlayer().getData().getUsername()).replace("-d", user.getPlayer().getData().getUsername()).replace("-e", Integer.toString(length));
+        this.logDesc = "O Staff -c bloqueou as trocas de -d por -e minutos.".replace("-c", client.getPlayer().getData().getUsername()).replace("-d", user.getPlayer().getData().getUsername()).replace("-e", Integer.toString(length));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class TradeBanCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.ban", "%username% %time% %reason%");
+        return Locale.getOrDefault("command.parameter.ban", "(usuário) (tempo) (razão)");
     }
 
     @Override

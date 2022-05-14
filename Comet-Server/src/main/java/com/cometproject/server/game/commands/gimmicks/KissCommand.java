@@ -17,12 +17,12 @@ public class KissCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length != 1) {
-            sendNotif(Locale.getOrDefault("command.kiss.none", "Who do you want to kiss?"), client);
+            sendNotif(Locale.getOrDefault("command.kiss.none", "Quem você quer beijar?"), client);
             return;
         }
 
         if (client.getPlayer().getEntity().isRoomMuted() || client.getPlayer().getEntity().getRoom().getRights().hasMute(client.getPlayer().getId())) {
-            sendNotif(Locale.getOrDefault("command.user.muted", "You are muted."), client);
+            sendNotif(Locale.getOrDefault("command.user.muted", "Você está mutado."), client);
             return;
         }
 
@@ -31,17 +31,17 @@ public class KissCommand extends ChatCommand {
         Session kissedSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(kissedPlayer);
 
         if (kissedSession == null) {
-            sendNotif(Locale.getOrDefault("command.user.offline", "This user is offline!"), client);
+            sendNotif(Locale.getOrDefault("command.user.offline", "Esse usuário está offline!"), client);
             return;
         }
 
         if (kissedSession.getPlayer().getEntity() == null) {
-            sendNotif(Locale.getOrDefault("command.user.notinroom", "This user is not in a room."), client);
+            sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
             return;
         }
 
         if (kissedSession.getPlayer().getData().getUsername().equals(client.getPlayer().getData().getUsername())) {
-            sendNotif(Locale.getOrDefault("command.kiss.himself", "You can't kiss yourself!"), client);
+            sendNotif(Locale.getOrDefault("command.kiss.himself", "Você não pode beijar a si mesmo!"), client);
             return;
         }
 
@@ -52,16 +52,16 @@ public class KissCommand extends ChatCommand {
 
         if (!((Math.abs((posX - playerX)) >= 2) || (Math.abs(posY - playerY) >= 2))) {
             if(timeSinceLastUpdated >= 30) {
-                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "* " + client.getPlayer().getData().getUsername() + " " + Locale.getOrDefault("command.kiss.word", "snogs") + " " + kissedSession.getPlayer().getData().getUsername() + " *", ChatEmotion.NONE, 16));
+                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "* " + client.getPlayer().getData().getUsername() + " " + Locale.getOrDefault("command.kiss.word", "beijou") + " " + kissedSession.getPlayer().getData().getUsername() + " *", ChatEmotion.NONE, 16));
                 client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new ActionMessageComposer(client.getPlayer().getEntity().getId(), PlayerAvatarActions.EXPRESSION_BLOW_A_KISS.getValue()));
                 client.getPlayer().getEntity().applyEffect(new PlayerEffect(9));
                 kissedSession.getPlayer().getEntity().applyEffect(new PlayerEffect(9));
             } else {
-                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Debes esperar 30 segundos para volver a ejecutar otro comando roleplay", ChatEmotion.NONE, 1));
+                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você deve esperar 30 segundos para executar esse comando novamente.", ChatEmotion.NONE, 1));
                 return;
             }
         } else {
-            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Oops! %playername% is not near, walk to this player.").replace("%playername%", kissedSession.getPlayer().getData().getUsername()), 16));
+            client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.notaround", "Ops! %playername% não está próximo, caminhe até este jogador.").replace("%playername%", kissedSession.getPlayer().getData().getUsername()), 16));
         }
     }
 
@@ -72,11 +72,11 @@ public class KissCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username", "(usuario)");
+        return Locale.getOrDefault("command.parameter.username", "(usuário)");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.kiss.description", "Besa a un usuario");
+        return Locale.getOrDefault("command.kiss.description", "Beija um usuário");
     }
 }

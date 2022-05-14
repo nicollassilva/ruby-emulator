@@ -13,7 +13,7 @@ public class MentionsCommand extends ChatCommand {
         for(final PlayerMention mention : client.getPlayer().getMentions()) {
             mention.getUsername().replace("%username%", mention.getUsername());
             mention.getMessage().replace("%message%", mention.getMessage());
-            builder.append("Estas son tus últimas menciones: " + "\n\n")
+            builder.append("Essas foram suas últimas menções: " + "\n\n")
                     .append(mention.getUsername()).append(": ").append(mention.getMessage()).append("\n");
         }
 

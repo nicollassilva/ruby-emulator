@@ -31,7 +31,7 @@ public class CloseDiceCommand extends ChatCommand {
         }
 
         if (diceAmount > 0) {
-            String filteredMessage = Locale.getOrDefault("command.closedice.message", "* %username% closed %amount% dices *").replace("%username%", playerEntity.getUsername()).replace("%amount%", "" + diceAmount);
+            String filteredMessage = Locale.getOrDefault("command.closedice.message", "* %username% fechou %amount% dados *").replace("%username%", playerEntity.getUsername()).replace("%amount%", "" + diceAmount);
                 playerEntity.getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, ChatEmotion.NONE, 1));
         }
     }
@@ -48,6 +48,6 @@ public class CloseDiceCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Cierra los dados";
+        return "Fecha os dados";
     }
 }

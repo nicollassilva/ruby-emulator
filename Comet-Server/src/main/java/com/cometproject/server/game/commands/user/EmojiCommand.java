@@ -17,7 +17,7 @@ public class EmojiCommand extends ChatCommand {
 
         client.getPlayer().getData().setEmojiEnabled(!client.getPlayer().getData().isEmojiEnabled());
         //client.getPlayer().sendNotif("Ajustes de emoji", "Los emojis ahora están " + (client.getPlayer().getData().isEmojiEnabled() ? "activados" : "desactivados"));
-        client.getPlayer().getSession().send(new NotificationMessageComposer("generic", "Los emojis ahora están " + (client.getPlayer().getData().isEmojiEnabled() ? "activados" : "desactivados")));
+        client.getPlayer().getSession().send(new NotificationMessageComposer("emojis", "Os emojis estão " + (client.getPlayer().getData().isEmojiEnabled() ? "ativados" : "desativados")));
     }
 
     @Override

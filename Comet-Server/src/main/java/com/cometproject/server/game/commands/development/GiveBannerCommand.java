@@ -29,11 +29,11 @@ public class GiveBannerCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.give_banner.parameters", "%user% %bannerName%");
+        return Locale.getOrDefault("command.give_banner.parameters", "%usuário% %banner%");
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.give_banner.description", "");
+        return Locale.getOrDefault("command.give_banner.description", "Envia um banner para um usuário");
     }
 }

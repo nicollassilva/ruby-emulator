@@ -24,24 +24,23 @@ public class AutoFloorCommand extends ChatCommand {
         final int sizeX = room.getMapping().getModel().getSizeX();
         final int sizeY = room.getMapping().getModel().getSizeY();
 
-        final StringBuilder text = new StringBuilder();
-
+        final StringBuilder text = new StringBuilder(sizeX * sizeY);
+        final StringBuilder slice = new StringBuilder(sizeX);
         for (int i = 0; i < sizeY; i++) {
-            final StringBuilder text2 = new StringBuilder();
-
             for (int j = 0; j < sizeX; j++) {
                 if (!room.getMapping().getTile(j, i).hasItems()) {
-                    text2.append("x");
+                    slice.append("x");
                 } else {
-                    text2.append(parseInvers(room.getMapping().getTile(j, i).getTileHeight()));
+                    slice.append(parseInvers(room.getMapping().getTile(j, i).getTileHeight()));
                 }
             }
 
-            text.append(text2);
+            text.append(slice);
             text.append('\r');
+            slice.setLength(0);
         }
 
-        final CustomFloorMapData floorMapData = new CustomFloorMapData(room.getModel().getDoorX(), room.getModel().getDoorY(), room.getModel().getDoorRotation(), text.toString().trim(), room.getModel().getRoomModelData().getWallHeight());
+        final CustomFloorMapData floorMapData = new CustomFloorMapData(room.getModel().getDoorX(), room.getModel().getDoorY(), room.getModel().getDoorZ(), room.getModel().getDoorRotation(), text.toString().trim(), room.getModel().getRoomModelData().getWallHeight());
 
         room.getData().setHeightmap(JsonUtil.getInstance().toJson(floorMapData));
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
