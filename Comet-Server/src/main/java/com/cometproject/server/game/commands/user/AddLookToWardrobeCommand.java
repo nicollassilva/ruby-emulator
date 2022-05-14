@@ -2,6 +2,7 @@ package com.cometproject.server.game.commands.user;
 
 import com.cometproject.api.game.players.data.types.IWardrobeItem;
 import com.cometproject.api.utilities.JsonUtil;
+import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.players.components.types.settings.WardrobeItem;
 import com.cometproject.server.network.messages.outgoing.user.wardrobe.WardrobeMessageComposer;
@@ -50,4 +51,5 @@ public class AddLookToWardrobeCommand extends ChatCommand {
     @Override
     public String getDescription() {
         return Locale.get("command.addlook.description");
+    }
 }

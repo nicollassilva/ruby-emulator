@@ -22,13 +22,9 @@ public class EmptyPetsCommand extends ChatCommand {
                 sendAlert(Locale.getOrDefault("command.emptypets.confirm", "<b>Warning!</b>\rAre you sure you want to delete all of your pets?\r\rIf you are sure type  <b>:" + Locale.get("command.emptypets.name") + " yes</b>"), client);
             } else {
                 PetDao.deletePets(client.getPlayer().getId());
+
                 client.getPlayer().getPets().clearPets();
-
                 client.send(new PetInventoryMessageComposer(client.getPlayer().getPets().getPets()));
-
-                PlayerBotDao.deleteBots(client.getPlayer().getId());
-                client.getPlayer().getBots().clearBots();
-                client.send(new BotInventoryMessageComposer());
 
                 sendNotif(Locale.getOrDefault("command.emptypets.emptied", "Your pets inventory was cleared."), client);
             }

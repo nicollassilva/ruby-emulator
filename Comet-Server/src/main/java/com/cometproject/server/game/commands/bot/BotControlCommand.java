@@ -61,6 +61,6 @@ public class BotControlCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "command.botcontrol.description";
+        return Locale.get("command.botcontrol.description");
     }
 }

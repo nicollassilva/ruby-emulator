@@ -25,10 +25,9 @@ public class BuildCommand extends ChatCommand {
         final JSONObject output = new JSONObject();
 
         final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenBuildToolMessage);
-        OutgoingMessage message = null;
 
         try {
-            message = classMessage.getDeclaredConstructor().newInstance();
+            final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
             message.client = client.getPlayer().getData().getWebsocketSession();
             message.data = output;
 

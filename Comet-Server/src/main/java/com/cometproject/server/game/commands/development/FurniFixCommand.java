@@ -6,10 +6,10 @@ import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
-import org.apache.commons.lang.StringUtils;
 import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.rooms.FurniFixDao;
+import org.apache.commons.lang.StringUtils;
 
 public class FurniFixCommand extends ChatCommand {
 
@@ -30,7 +30,7 @@ public class FurniFixCommand extends ChatCommand {
         String option = params[1];
         String name = this.merge(params, 1);
 
-        switch(type) {
+        switch (type) {
             case "name":
                 FurniFixDao.changeName(name, itemId);
                 client.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Você modificou o mobi do ID " + itemId + ", para validar as modificações, recolha o item e coloque novamente no quarto.", ChatEmotion.NONE, 34));
@@ -60,7 +60,7 @@ public class FurniFixCommand extends ChatCommand {
                 break;
 
             case "width":
-                if(StringUtils.isNumeric(option)) {
+                if (StringUtils.isNumeric(option)) {
                     FurniFixDao.changeWidth(option, itemId);
                     client.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Você modificou o mobi do ID " + itemId + ", para validar as modificações, recolha o item e coloque novamente no quarto.", ChatEmotion.NONE, 34));
                     ItemManager.getInstance().loadItemDefinitions();
@@ -71,7 +71,7 @@ public class FurniFixCommand extends ChatCommand {
                 break;
 
             case "length":
-                if(StringUtils.isNumeric(option)) {
+                if (StringUtils.isNumeric(option)) {
                     FurniFixDao.changeLength(option, itemId);
                     client.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Você modificou o mobi do ID " + itemId + ", para validar as modificações, recolha o item e coloque novamente no quarto.", ChatEmotion.NONE, 34));
                     ItemManager.getInstance().loadItemDefinitions();
@@ -82,7 +82,7 @@ public class FurniFixCommand extends ChatCommand {
                 break;
 
             case "interaction":
-                if(!StringUtils.isNumeric(option)) {
+                if (!StringUtils.isNumeric(option)) {
                     FurniFixDao.changeInteractionType(option, itemId);
                     client.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Você modificou o mobi do ID " + itemId + ", para validar as modificações, recolha o item e coloque novamente no quarto.", ChatEmotion.NONE, 34));
                     ItemManager.getInstance().loadItemDefinitions();
@@ -93,7 +93,7 @@ public class FurniFixCommand extends ChatCommand {
                 break;
 
             case "interactioncount":
-                if(StringUtils.isNumeric(option)) {
+                if (StringUtils.isNumeric(option)) {
                     FurniFixDao.changeInteractionCount(option, itemId);
                     client.getPlayer().getSession().send(new TalkMessageComposer(playerEntity.getId(), "Você modificou o mobi do ID " + itemId + ", para validar as modificações, recolha o item e coloque novamente no quarto.", ChatEmotion.NONE, 34));
                     ItemManager.getInstance().loadItemDefinitions();
