@@ -38,12 +38,12 @@ public class DeleteRoomMessageEvent implements Event {
             return;
         }
 
-        PlayerEntity entity = client.getPlayer().getEntity();
+        final PlayerEntity entity = client.getPlayer().getEntity();
 
         if (entity == null)
             return;
 
-        Room room = entity.getRoom();
+        final Room room = entity.getRoom();
 
         if (room == null || (room.getData().getOwnerId() != client.getPlayer().getId() && !client.getPlayer().getPermissions().getRank().roomFullControl())) {
             return;
@@ -56,11 +56,14 @@ public class DeleteRoomMessageEvent implements Event {
             return;
         }
 
-        List<RoomItem> itemsToRemove = new ArrayList<>();
+        final List<RoomItem> itemsToRemove = new ArrayList<>();
+
         itemsToRemove.addAll(room.getItems().getFloorItems().values());
         itemsToRemove.addAll(room.getItems().getWallItems().values());
 
-        for (RoomItem item : itemsToRemove) {
+        for (final RoomItem item : itemsToRemove) {
+            item.onPickup();
+
             if (item instanceof RoomItemFloor) {
                 room.getItems().removeItem((RoomItemFloor) item, client);
             } else if (item instanceof RoomItemWall) {
@@ -68,13 +71,13 @@ public class DeleteRoomMessageEvent implements Event {
             }
         }
 
-        for (BotEntity bot : room.getEntities().getBotEntities()) {
+        for (final BotEntity bot : room.getEntities().getBotEntities()) {
             client.getPlayer().getBots().addBot(bot.getData());
 
             RoomBotDao.setRoomId(0, bot.getData().getId());
         }
 
-        for (PetEntity pet : room.getEntities().getPetEntities()) {
+        for (final PetEntity pet : room.getEntities().getPetEntities()) {
             client.getPlayer().getPets().addPet(pet.getData());
 
             RoomPetDao.updatePet(0, 0, 0, pet.getData().getId());

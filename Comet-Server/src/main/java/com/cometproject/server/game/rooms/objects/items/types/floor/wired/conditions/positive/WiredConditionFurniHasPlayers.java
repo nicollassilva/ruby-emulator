@@ -24,7 +24,6 @@ public class WiredConditionFurniHasPlayers extends WiredConditionItem {
     public boolean evaluate(RoomEntity entity, Object data) {
         int itemsWithPlayers = 0;
 
-
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 

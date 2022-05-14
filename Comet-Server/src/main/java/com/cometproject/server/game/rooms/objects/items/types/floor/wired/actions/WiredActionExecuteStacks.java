@@ -3,10 +3,13 @@ package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actio
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredUtil;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredAddonNoItemsAnimateEffect;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredCustomForwardRoom;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredCustomShowMessageRoom;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonRandomEffect;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonUnseenEffect;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredConditionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredTriggerItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
@@ -14,9 +17,7 @@ import com.cometproject.server.utilities.RandomUtil;
 import com.google.common.collect.Lists;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class WiredActionExecuteStacks extends WiredActionItem {
 
@@ -28,6 +29,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
     public void onEventComplete(WiredItemEvent event) {
         final List<Position> tilesToExecute = Lists.newArrayList();
         final List<RoomItemFloor> actions = Lists.newArrayList();
+        int nbEffectMsg = 0;
 
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
@@ -45,10 +47,10 @@ public class WiredActionExecuteStacks extends WiredActionItem {
             final List<RoomItemFloor> itemsOnTile = this.getRoom().getMapping().getTile(tileToUpdate).getItems();
             final boolean hasAddonRandomEffect = itemsOnTile.stream().anyMatch(item -> item instanceof WiredAddonRandomEffect);
 
-            if(hasAddonRandomEffect) {
+            if (hasAddonRandomEffect) {
                 final List<RoomItemFloor> randomEffect = itemsOnTile.stream().filter(item -> item instanceof WiredActionItem).collect(Collectors.toList());
 
-                if(randomEffect.size() > 0) {
+                if (randomEffect.size() > 0) {
                     actions.add(randomEffect.get(RandomUtil.getRandomInt(0, randomEffect.size() - 1)));
                 }
             }
@@ -57,16 +59,28 @@ public class WiredActionExecuteStacks extends WiredActionItem {
                 if (actions.size() > 1000)
                     break;
 
-                if (!(roomItemFloor instanceof WiredCustomForwardRoom)) {
-                    if(roomItemFloor instanceof WiredActionItem && !hasAddonRandomEffect) {
-                        actions.add(roomItemFloor);
+                if (roomItemFloor instanceof WiredCustomForwardRoom)
+                    continue;
+
+                if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
+                    continue;
+
+                if (roomItemFloor instanceof WiredActionItem || roomItemFloor instanceof WiredConditionItem || roomItemFloor instanceof WiredAddonUnseenEffect || roomItemFloor instanceof WiredAddonRandomEffect || roomItemFloor instanceof WiredAddonNoItemsAnimateEffect) {
+                    if (roomItemFloor instanceof WiredActionShowMessage || roomItemFloor instanceof WiredCustomShowMessageRoom) {
+                        if (nbEffectMsg >= 10) {
+                            continue;
+                        }
+
+                        nbEffectMsg++;
                     }
+
+                    actions.add(roomItemFloor);
                 }
             }
         }
 
         if (actions.size() > 0) {
-            WiredTriggerItem.startExecute(event.entity, event.data, actions, false);
+            WiredTriggerItem.startExecute(event.entity, event.data, actions, true);
         }
 
         tilesToExecute.clear();
