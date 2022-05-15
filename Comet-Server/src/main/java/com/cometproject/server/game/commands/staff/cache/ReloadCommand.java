@@ -1,10 +1,13 @@
 package com.cometproject.server.game.commands.staff.cache;
 
 import com.cometproject.api.game.GameContext;
+import com.cometproject.api.game.catalog.ITargetOffer;
+import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.composers.catalog.CatalogPublishMessageComposer;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.achievements.AchievementManager;
 import com.cometproject.server.game.catalog.CatalogManager;
+import com.cometproject.server.game.catalog.TargetOffer;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.commands.CommandManager;
 import com.cometproject.server.game.gamecenter.GameCenterManager;
@@ -22,11 +25,13 @@ import com.cometproject.server.game.quests.QuestManager;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.bundles.RoomBundleManager;
 import com.cometproject.server.network.NetworkManager;
+import com.cometproject.server.network.messages.outgoing.catalog.TargetedOfferComposer;
 import com.cometproject.server.network.messages.outgoing.catalog.marketplace.MarketplaceConfigComposer;
 import com.cometproject.server.network.messages.outgoing.moderation.ModToolMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.MotdNotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.polls.InitializePollMessageComposer;
 import com.cometproject.server.network.sessions.Session;
+import com.cometproject.server.network.sessions.SessionManager;
 import com.cometproject.server.storage.queries.config.ConfigDao;
 
 
@@ -49,6 +54,7 @@ public class ReloadCommand extends ChatCommand {
                                 "- emojis\n" +
                                 "- filter\n" +
                                 "- groupitems\n" +
+                                "- targetoffers\n" +
                                 "- items\n" +
                                 "- locale\n" +
                                 "- models\n" +
@@ -64,6 +70,21 @@ public class ReloadCommand extends ChatCommand {
                                 "- quests"
                 ));
 
+                break;
+            case "targetoffers":
+                CatalogManager.getInstance().loadTargetOffers();
+
+                if(TargetOffer.ACTIVE_TARGET_OFFER_ID != 0) {
+                    final ITargetOffer offer = CatalogManager.getInstance().getTargetOffer(TargetOffer.ACTIVE_TARGET_OFFER_ID);
+
+                    final SessionManager sessionManager = NetworkManager.getInstance().getSessions();
+
+                    for (final ISession onlineSession : sessionManager.getSessions().values()) {
+                        onlineSession.send(new TargetedOfferComposer(onlineSession.getPlayer(), offer));
+                    }
+                }
+
+                sendNotif("TargetOffers recarregadas com sucesso.", client);
                 break;
             case "bans":
                 BanManager.getInstance().loadBans();

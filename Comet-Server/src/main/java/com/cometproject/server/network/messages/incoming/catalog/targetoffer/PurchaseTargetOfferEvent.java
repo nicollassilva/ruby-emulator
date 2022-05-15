@@ -17,7 +17,7 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 public class PurchaseTargetOfferEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        int offerId = msg.readInt();
+        final int offerId = msg.readInt();
         int amount = msg.readInt();
 
         if (amount <= 0) return;
@@ -27,14 +27,14 @@ public class PurchaseTargetOfferEvent implements Event {
         if(timeSinceLastUpdate >= CometSettings.playerPurchaseCooldown) {
             client.getPlayer().setLastPurchase((int) Comet.getTime());
 
-            ITargetOffer offer = CatalogManager.getInstance().getTargetOffer(offerId);
-            IPlayerOfferPurchase purchase = PlayerOfferPurchase.getOrCreate(client.getPlayer(), offerId);
+            final ITargetOffer offer = CatalogManager.getInstance().getTargetOffer(offerId);
+            final IPlayerOfferPurchase purchase = PlayerOfferPurchase.getOrCreate(client.getPlayer(), offerId);
+            final int now = (int) Comet.getTime();
 
             amount = Math.min(offer.getPurchaseLimit() - purchase.getAmount(), amount);
-            int now = (int) Comet.getTime();
 
             if(TargetOffer.ACTIVE_TARGET_OFFER_ID != offer.getId()) {
-                client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("commands.cmd_promote_offer.expired", "Essa oferta não está mais disponível!")));
+                client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("commands.cmd_promote_offer.expired", "Oferta indisponível!")));
                 return;
             }
 
@@ -46,7 +46,7 @@ public class PurchaseTargetOfferEvent implements Event {
             if(offer.getExpirationTime() > now) {
                 purchase.update(amount, now);
 
-                ICatalogItem item = CatalogManager.getInstance().getCatalogItem(offer.getCatalogItem());
+                final ICatalogItem item = CatalogManager.getInstance().getCatalogItem(offer.getCatalogItem());
 
                 if(item.getLimitedTotal() > 0) {
                     amount = 1;
@@ -55,6 +55,5 @@ public class PurchaseTargetOfferEvent implements Event {
                 CatalogManager.getInstance().getPurchaseHandler().purchaseItem(client, item.getPageId(), item.getId(), "", amount, null);
             }
         }
-
     }
 }

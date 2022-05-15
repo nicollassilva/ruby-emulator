@@ -24,7 +24,7 @@ public class TargetedOfferComposer extends MessageComposer {
 
     @Override
     public void compose(IComposer msg) {
-        IPlayerOfferPurchase purchase = PlayerOfferPurchase.getOrCreate(this.player, this.offer.getId());
+        final IPlayerOfferPurchase purchase = PlayerOfferPurchase.getOrCreate(this.player, this.offer.getId());
 
         this.offer.serialize(msg, purchase);
     }
