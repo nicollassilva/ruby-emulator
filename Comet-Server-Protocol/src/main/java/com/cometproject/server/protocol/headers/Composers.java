@@ -397,7 +397,7 @@ public class Composers {
     public static final int PetLevelUpdatedMessageComposer = 2824 ; // 3865
     public static final int MarketplaceCancelSaleMessageComposer = 3264 ; // 801
     public static final int CustomNotificationMessageComposer = 909 ; // 1838
-    public static final int UpdateStackHeightTileHeight = 2816 ; // 3890
+    public static final int UpdateStackHeightTileHeightComposer = 2816 ; // 3890
     public static final int ModToolComposerTwoMessageComposer = 2335 ; // 878
     public static final int BonusRareMessageComposer = 1533 ; // 3951
     public static final int HabboMall = 1237 ; // 897

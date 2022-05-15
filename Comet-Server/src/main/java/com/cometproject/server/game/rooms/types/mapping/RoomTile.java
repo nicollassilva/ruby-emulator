@@ -275,11 +275,11 @@ public class RoomTile {
     }
 
     public double getStackHeight() {
-        return this.getStackHeight(null, null);
+        return this.getStackHeight(null);
     }
 
-    /*public double getStackHeight(RoomItemFloor itemToStack) {
-        RoomItemFloor topItem = this.getTopItemInstance();
+    public double getStackHeight(RoomItemFloor itemToStack) {
+        final RoomItemFloor topItem = this.getTopItemInstance();
 
         double stackHeight;
 
@@ -290,41 +290,20 @@ public class RoomTile {
         }
 
         return stackHeight;
-    }*/
+    }
 
-    public double getStackHeight(RoomItemFloor itemToStack, PlayerEntity player) {
+    public double getTopHeight(RoomItemFloor exclude){
+        double highest = this.getTileHeight();
+        for (RoomItemFloor item : items) {
+            if(exclude != null && exclude.getId() == item.getId()) continue;
 
-
-        if (player != null) {
-
-            if (player.hasAttribute("ConstruitCMD")) {
-
-                if (this.getTopItem() == 0)
-                    return this.originalHeight;
-
-                stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight + (double) player.getAttribute("ConstruitCMD");
-                return stackHeight;
-            }
-
-            if (player.hasAttribute("SetzCMD")) {
-
-                stackHeight = this.mappingInstance.getModel().getSquareHeight()[this.position.getX()][this.position.getY()] + (double) player.getAttribute("SetzCMD");
-                return stackHeight;
+            final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+            if(totalHeight > highest) {
+                highest = totalHeight;
             }
         }
 
-        //RoomItemFloor topItem = this.getTopItemInstance();
-
-        double stackHeight;
-
-        if (this.hasMagicTile()/* || (topItem != null && topItem instanceof AdjustableHeightFloorItem)*/) {
-            stackHeight = this.stackHeight;
-        } else {
-
-            stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight;
-        }
-
-        return stackHeight;
+        return highest;
     }
 
     public double getWalkHeight() {
@@ -340,9 +319,9 @@ public class RoomTile {
             }
         }
 
-        /*if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
+        if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
             height += ((SeatFloorItem) roomItemFloor).getSitHeight();
-        }*/
+        }
 
         return height;
     }
@@ -417,7 +396,7 @@ public class RoomTile {
         return hasItems;
     }
 
-    public double getTileHeight() {
+    public int getTileHeight() {
         return this.mappingInstance.getModel().getSquareHeight()[this.position.getX()][this.position.getY()];
     }
 

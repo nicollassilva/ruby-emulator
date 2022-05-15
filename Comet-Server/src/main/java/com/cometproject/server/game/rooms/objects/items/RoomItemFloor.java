@@ -47,7 +47,7 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
         msg.writeInt(this.getPosition().getY());
         msg.writeInt(this.getRotation());
 
-        msg.writeString(this instanceof MagicStackFloorItem ? this.getItemData().getData() : this.getPosition().getZ());
+        msg.writeString(this instanceof MagicStackFloorItem && Double.parseDouble(this.getItemData().getData()) != 0 ? this.getItemData().getData() : this.getPosition().getZ());
         msg.writeString(this instanceof AdjustableHeightFloorItem ? this.getOverrideHeight() : this.getDefinition().getHeight());
 
         if (this.getLimitedEditionItemData() != null) {
