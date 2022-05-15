@@ -275,11 +275,11 @@ public class RoomTile {
     }
 
     public double getStackHeight() {
-        return this.getStackHeight(null, null);
+        return this.getStackHeight(null);
     }
 
-    /*public double getStackHeight(RoomItemFloor itemToStack) {
-        RoomItemFloor topItem = this.getTopItemInstance();
+    public double getStackHeight(RoomItemFloor itemToStack) {
+        final RoomItemFloor topItem = this.getTopItemInstance();
 
         double stackHeight;
 
@@ -290,11 +290,6 @@ public class RoomTile {
         }
 
         return stackHeight;
-    }*/
-
-
-    public double getTopHeight(){
-        return getTopHeight(null);
     }
 
     public double getTopHeight(RoomItemFloor exclude){
@@ -311,39 +306,6 @@ public class RoomTile {
         return highest;
     }
 
-    public double getStackHeight(RoomItemFloor itemToStack, PlayerEntity player) {
-        if (player != null) {
-
-            if (player.hasAttribute("ConstruitCMD")) {
-
-                if (this.getTopItem() == 0)
-                    return this.originalHeight;
-
-                stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight + (double) player.getAttribute("ConstruitCMD");
-                return stackHeight;
-            }
-
-            if (player.hasAttribute("SetzCMD")) {
-
-                stackHeight = this.mappingInstance.getModel().getSquareHeight()[this.position.getX()][this.position.getY()] + (double) player.getAttribute("SetzCMD");
-                return stackHeight;
-            }
-        }
-
-        //RoomItemFloor topItem = this.getTopItemInstance();
-
-        double stackHeight;
-
-        if (this.hasMagicTile()/* || (topItem != null && topItem instanceof AdjustableHeightFloorItem)*/) {
-            stackHeight = this.stackHeight;
-        } else {
-
-            stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight;
-        }
-
-        return stackHeight;
-    }
-
     public double getWalkHeight() {
         double height = this.stackHeight;
 
@@ -357,9 +319,9 @@ public class RoomTile {
             }
         }
 
-        /*if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
+        if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
             height += ((SeatFloorItem) roomItemFloor).getSitHeight();
-        }*/
+        }
 
         return height;
     }

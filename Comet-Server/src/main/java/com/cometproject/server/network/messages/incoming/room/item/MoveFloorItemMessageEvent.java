@@ -1,6 +1,5 @@
 package com.cometproject.server.network.messages.incoming.room.item;
 
-import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.config.Locale;
@@ -30,7 +29,7 @@ public class MoveFloorItemMessageEvent implements Event {
             return;
         }
 
-        Long id = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
+        final Long id = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
 
         if (id == null) {
             return;
