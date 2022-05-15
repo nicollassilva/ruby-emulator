@@ -386,7 +386,7 @@ public class ItemsComponent {
             }
         }
 
-        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 0.2)
+        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2)
             return false;
 
 
