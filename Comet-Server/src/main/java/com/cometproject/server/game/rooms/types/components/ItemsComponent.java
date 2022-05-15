@@ -988,6 +988,10 @@ public class ItemsComponent {
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
 
+        if(item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
+            height = tile.getWalkHeight();
+        }
+
         final RoomItemFloor floorItem = room.getItems().addFloorItem(item.getId(), item.getBaseId(), room, player.getId(), player.getData().getUsername(), x, y, rot, height, ExtraData, item.getLimitedEditionItem());
 
         final List<Position> tilesToUpdate = new ArrayList<>();

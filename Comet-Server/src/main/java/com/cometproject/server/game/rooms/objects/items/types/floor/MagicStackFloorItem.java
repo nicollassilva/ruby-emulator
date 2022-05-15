@@ -6,7 +6,6 @@ import com.cometproject.server.game.rooms.types.Room;
 
 import java.text.DecimalFormat;
 
-
 public class MagicStackFloorItem extends RoomItemFloor {
     private double magicHeight = 0d;
 
