@@ -16,7 +16,7 @@ public class BadgeDisplayCatalogHandler extends BasicItemCatalogHandler implemen
             return;
         }
 
-        String extraData = data + "~" + client.getPlayer().getData().getUsername() + "~" + DateTime.now().getDayOfMonth() + "-" + DateTime.now().getMonthOfYear() + "-" + DateTime.now().getYear();
+        String extraData = data + "~" + client.getPlayer().getData().getUsername() + "~" + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getMonthOfYear() + "/" + DateTime.now().getYear();
 
 
         super.execute(item, client, amount, page, giftData, definition, bundledItem, data, extraData);

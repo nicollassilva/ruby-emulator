@@ -12,7 +12,7 @@ import org.joda.time.DateTime;
 public class TrophyCatalogHandler extends BasicItemCatalogHandler implements IPurchaseHandler {
     @Override
     public void purchase(ICatalogItem item, int itemId, ISession client, int amount, ICatalogPage page, GiftData giftData, FurnitureDefinition definition, ICatalogBundledItem bundledItem, String data) {
-        String extraData = client.getPlayer().getData().getUsername() + Character.toChars(9)[0] + DateTime.now().getDayOfMonth() + "-" + DateTime.now().getMonthOfYear() + "-" + DateTime.now().getYear() + Character.toChars(9)[0] + data;
+        String extraData = client.getPlayer().getData().getUsername() + Character.toChars(9)[0] + DateTime.now().getDayOfMonth() + "/" + DateTime.now().getMonthOfYear() + "/" + DateTime.now().getYear() + Character.toChars(9)[0] + data;
         super.execute(item, client, amount, page, giftData, definition, bundledItem, data, extraData);
     }
 
