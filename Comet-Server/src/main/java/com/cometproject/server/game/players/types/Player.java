@@ -155,6 +155,7 @@ public class Player extends Observable implements IPlayer {
 
     private boolean isFurnitureEditing = false;
     private boolean isFurniturePickup = false;
+    private boolean isViewingHeight = false;
 
     private String lastPhoto = null;
     private String lastPurchasedPhoto = null;
@@ -1233,6 +1234,14 @@ public class Player extends Observable implements IPlayer {
 
     public boolean getIsFurniturePickup() {
         return isFurniturePickup;
+    }
+
+    public void setHeightView(boolean viewHeight) {
+        this.isViewingHeight = viewHeight;
+    }
+
+    public boolean viewingHeight() {
+        return isViewingHeight;
     }
 
     public void resetInteractionHandlers() {

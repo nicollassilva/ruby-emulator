@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class CatalogManager implements ICatalogService {
@@ -252,9 +253,9 @@ public class CatalogManager implements ICatalogService {
     }
 
     public List<IClubOffer> getClubOfferItems() {
-        List<IClubOffer> offers = new ArrayList<>();
+        final List<IClubOffer> offers = new ArrayList<>();
 
-        for (Map.Entry<Integer, IClubOffer> entry : this.clubOfferItems.entrySet()) {
+        for (final Map.Entry<Integer, IClubOffer> entry : this.clubOfferItems.entrySet()) {
             if (! entry.getValue().isDeal()) {
                 offers.add(entry.getValue());
             }
@@ -271,9 +272,9 @@ public class CatalogManager implements ICatalogService {
      */
     @Override
     public List<ICatalogPage> getPagesForRank(int rank) {
-        List<ICatalogPage> pages = new ArrayList<>();
+        final List<ICatalogPage> pages = new ArrayList<>();
 
-        for (ICatalogPage page : this.getPages().values()) {
+        for (final ICatalogPage page : this.getPages().values()) {
             if (rank >= page.getMinRank()) {
                 pages.add(page);
             }
@@ -285,7 +286,7 @@ public class CatalogManager implements ICatalogService {
     public void sortCatalogChildren() {
         this.parentPages.clear();
 
-        for (ICatalogPage catalogPage : this.pages.values()) {
+        for (final ICatalogPage catalogPage : this.pages.values()) {
             if (catalogPage.getParentId() != -1) {
                 final ICatalogPage parentPage = this.getPage(catalogPage.getParentId());
 
@@ -304,12 +305,13 @@ public class CatalogManager implements ICatalogService {
 
     @Override
     public ICatalogItem getCatalogItemByOfferId(int offerId) {
-        ICatalogOffer offer = getCatalogOffers().get(offerId);
+        final ICatalogOffer offer = getCatalogOffers().get(offerId);
 
         if (offer == null)
             return null;
 
-        ICatalogPage page = this.getPage(offer.getCatalogPageId());
+        final ICatalogPage page = this.getPage(offer.getCatalogPageId());
+
         if (page == null)
             return null;
 
@@ -317,28 +319,10 @@ public class CatalogManager implements ICatalogService {
     }
 
     @Override
-    public ICatalogPage getCatalogPageByCatalogItemId(int id) {
-        if (!this.catalogItemIdToPageId.containsKey(id)) {
-            return null;
-        }
-
-        return this.pages.get(this.catalogItemIdToPageId.get(id));
-    }
-
-    @Override
-    public ICatalogItem getCatalogItemByItemId(int itemId) {
-        if (!this.items.containsKey(itemId)) {
-            return null;
-        }
-
-        return this.items.get(itemId);
-    }
-
-    @Override
     public Map<Integer, ICatalogItem> getItemsForPage(int pageId) {
-        Map<Integer, ICatalogItem> items = Maps.newHashMap();
+        final Map<Integer, ICatalogItem> items = Maps.newHashMap();
 
-        for (Map.Entry<Integer, ICatalogItem> catalogItem : this.items.entrySet()) {
+        for (final Map.Entry<Integer, ICatalogItem> catalogItem : this.items.entrySet()) {
             if (catalogItem.getValue().getPageId() == pageId) {
                 items.put(catalogItem.getKey(), catalogItem.getValue());
             }

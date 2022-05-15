@@ -32,10 +32,6 @@ public interface ICatalogService {
 
     ICatalogItem getCatalogItemByOfferId(int offerId);
 
-    ICatalogPage getCatalogPageByCatalogItemId(int id);
-
-    ICatalogItem getCatalogItemByItemId(int itemId);
-
     Map<Integer, ICatalogItem> getItemsForPage(int pageId);
 
     ICatalogPage getPage(int id);

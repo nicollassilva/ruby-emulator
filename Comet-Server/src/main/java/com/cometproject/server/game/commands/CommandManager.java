@@ -209,6 +209,7 @@ public class CommandManager implements Initialisable {
 
         this.addCommand(Locale.get("command.sell_room.name"), new SellRoomCommand());
         this.addCommand(Locale.get("command.buy_room.name"), new BuyRoomCommand());
+        this.addCommand(Locale.get("command.see_height.name"), new SeeHeightCommand());
     }
 
     /**
@@ -307,7 +308,6 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.winner.name"), new WinnerCommand());
         this.addCommand(Locale.getOrDefault("command.pickallwired.name", "pickallwired"), new PickAllWiredCommand());
         this.addCommand("addfilter", new FilterWordsCommand());
-        this.addCommand("searchfurni", new SearchFurniCommand());
         this.addCommand("prefix", new PrefixCommand());
         this.addCommand("givebanner", new GiveBannerCommand());
         this.addCommand("keyboard", new KeyboardWalkCommand());

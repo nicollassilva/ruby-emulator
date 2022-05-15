@@ -62,7 +62,11 @@ public interface IPlayer {
 
     void setInRollerSkate(boolean inRollerSkate);
 
+    void setHeightView(boolean viewHeight);
+
     boolean onTheRollerSkate();
+
+    boolean viewingHeight();
 
     List<Integer> getRoomsWithRights();
 

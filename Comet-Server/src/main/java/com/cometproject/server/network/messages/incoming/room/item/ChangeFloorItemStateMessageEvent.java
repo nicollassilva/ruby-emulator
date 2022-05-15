@@ -1,38 +1,28 @@
 package com.cometproject.server.network.messages.incoming.room.item;
 
 import com.cometproject.api.config.CometExternalSettings;
-import com.cometproject.api.game.catalog.types.ICatalogItem;
-import com.cometproject.api.game.catalog.types.ICatalogPage;
-import com.cometproject.api.game.furniture.types.FurnitureDefinition;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.game.items.ItemManager;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
-import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.data.WiredItemData;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerStateChanged;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.custom.WiredTriggerCustomStateChanged;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.misc.OpenLinkMessageComposer;
-import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.UpdateStackMapMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.pin.EmailVerificationWindowMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ChangeFloorItemStateMessageEvent implements Event {
@@ -48,9 +38,8 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             return;
         }
 
-        int virtualId = msg.readInt();
-
-        Long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
+        final int virtualId = msg.readInt();
+        final Long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
 
         if (itemId == null) {
             return;
@@ -64,21 +53,31 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
-        RoomItemFloor item = room.getItems().getFloorItem(itemId);
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final RoomItemFloor item = room.getItems().getFloorItem(itemId);
 
         if (item == null) {
             return;
         }
 
         if (client.getPlayer().getIsFurnitureEditing() && !CometExternalSettings.housekeepingFurnitureEdition.isEmpty()) {
-            client.send(new OpenLinkMessageComposer(CometExternalSettings.housekeepingFurnitureEdition.replace("{id}", item.getDefinition().getId() + "")));
+            client.send(
+                    new OpenLinkMessageComposer(CometExternalSettings.housekeepingFurnitureEdition.replace("{id}", item.getDefinition().getId() + ""))
+            );
+
+            return;
+        }
+
+        if (client.getPlayer().viewingHeight() && client.getPlayer().getEntity() != null) {
+            client.send(
+                    new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "A altura do mobi é: " + item.getPosition().getZ())
+            );
 
             return;
         }
 
         if (client.getPlayer().getIsFurniturePickup()) {
-            Map<Long, RoomItemFloor> floorItems = room.getItems().getFloorItems();
+            final Map<Long, RoomItemFloor> floorItems = room.getItems().getFloorItems();
             int count = 0;
 
             for (final RoomItemFloor floorItem : floorItems.values()) {
@@ -102,43 +101,22 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             return;
         }
 
-        if (client.getPlayer().isSearchFurni()) {
-            FurnitureDefinition itemData = item.getDefinition();
-            ICatalogItem catalogItem = CatalogManager.getInstance().getCatalogItemByItemId(itemData.getId());
-            ICatalogPage page = CatalogManager.getInstance().getPage(catalogItem == null ? 0 : catalogItem.getPageId());
-
-
-            final String devInfo = "<b>Informações do Mobi que está procurando.</b>\r\r" +
-                    //"<b>ID Base:</b> " + itemData.getId() + "\r" + "<b>Nombre:</b>" + itemData.getItemName() + "\r" +
-                    //"<b>Sprite ID:</b> " + itemData.getSpriteId() + "\r" +
-                    //"<b>Interacción:</b> " + itemData.getInteraction() + "\r" +
-                    //"<b>Cycle count:</b> " + itemData.getInteractionCycleCount() + "\r\r" +
-                    "<b>Informação do item no Catálogo:</b>\r\r" +
-                    //"<b>ID Catálogo:</b> " + (catalogItem == null ? "ID no encontrada." : catalogItem.getId()) + "\r" +
-                    "<b>Mobi:</b> " + (catalogItem == null ? "Nome não encontrado." : catalogItem.getDisplayName()) + "\r" +
-                    //"<b>ID Página:</b> " + (page == null ? "Página no encontrada." : page.getId()) +
-                    "<b>Página:</b> " + (page == null ? "Página não encontrada." : page.getCaption());
-
-            client.send(new AdvancedAlertMessageComposer("Informação de " + itemData.getItemName(), devInfo, "Abrir página do catálogo", "event:catalog/open/" + page.getId(), ""));
-            return;
-        }
-
         client.getPlayer().getQuests().progressQuest(QuestType.EXPLORE_FIND_ITEM, item.getDefinition().getSpriteId());
 
         WiredTriggerStateChanged.executeTriggers(client.getPlayer().getEntity(), item);
         WiredTriggerCustomStateChanged.executeTriggers(client.getPlayer().getEntity(), item);
 
         if (item.onInteract(client.getPlayer().getEntity(), msg.readInt(), false)) {
-            List<Position> tilesToUpdate = new ArrayList<>();
+            final List<Position> tilesToUpdate = new ArrayList<>();
             tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY(), 0d));
 
-            for (AffectedTile tile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
+            for (final AffectedTile tile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
                 room.getEntities().getEntitiesAt(new Position(tile.x, tile.y));
                 tilesToUpdate.add(new Position(tile.x, tile.y, 0d));
             }
 
-            for (Position tileToUpdate : tilesToUpdate) {
-                RoomTile tile = room.getMapping().getTile(tileToUpdate);
+            for (final Position tileToUpdate : tilesToUpdate) {
+                final RoomTile tile = room.getMapping().getTile(tileToUpdate);
 
                 if (tile != null) {
                     tile.reload();
