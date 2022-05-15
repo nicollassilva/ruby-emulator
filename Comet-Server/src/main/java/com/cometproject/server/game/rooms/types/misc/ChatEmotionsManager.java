@@ -19,13 +19,17 @@ public class ChatEmotionsManager {
             put("=]", ChatEmotion.SMILE);
             put(":-)", ChatEmotion.SMILE);
             put("Comet", ChatEmotion.SMILE);
-            put("Dann", ChatEmotion.SMILE);
             put("Leon", ChatEmotion.SMILE);
-            put("Endritt", ChatEmotion.SMILE);
-            put("Skeletor", ChatEmotion.SMILE);
+            put("iNicollas", ChatEmotion.SMILE);
+            put("Pietro", ChatEmotion.SMILE);
+            put("Djinn", ChatEmotion.SMILE);
+            put("Pollak", ChatEmotion.SMILE);
+            put("Fast", ChatEmotion.SMILE);
 
             put(">:(", ChatEmotion.ANGRY);
             put(">:[", ChatEmotion.ANGRY);
+            put(":@", ChatEmotion.ANGRY);
+            put(">:@", ChatEmotion.ANGRY);
             put(">;[", ChatEmotion.ANGRY);
             put(">;(", ChatEmotion.ANGRY);
             put(">=(", ChatEmotion.ANGRY);

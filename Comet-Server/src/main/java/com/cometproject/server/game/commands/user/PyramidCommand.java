@@ -39,6 +39,6 @@ public class PyramidCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Sube o esconde las pirámides de tu sala";
+        return Locale.get("command.pyramid.description");
     }
 }

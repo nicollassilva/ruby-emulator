@@ -39,4 +39,9 @@ public class HandItemCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.handitem.description", "Obtém um item de mão");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }
