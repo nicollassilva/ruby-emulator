@@ -33,7 +33,11 @@ public class SaveStackToolMessageEvent implements Event {
         }
 
         int itemId = msg.readInt();
-        double height = msg.readInt() / 100f;
+        double height = msg.readInt();
+
+        if (height < 0 && height != -100) {
+            return;
+        }
 
 
         RoomItemFloor floorItem = room.getItems().getFloorItem(itemId);
@@ -41,15 +45,21 @@ public class SaveStackToolMessageEvent implements Event {
 
         MagicStackFloorItem magicStackFloorItem = ((MagicStackFloorItem) floorItem);
 
-        // height >= floor height
-        if(height < magicStackFloorItem.getTile().getTileHeight()){
-            height = magicStackFloorItem.getTile().getTileHeight();
+        final boolean placeOverFurni = height == -100;
+        height = height / 100d;
+        if(!placeOverFurni){
+            // height >= floor height <= 100
+            if(height < magicStackFloorItem.getTile().getTileHeight()){
+                height = magicStackFloorItem.getTile().getTileHeight();
+            }
+            if(height > MAX_HEIGHT){
+                height = MAX_HEIGHT;
+            }
+
+            magicStackFloorItem.setOverrideHeight(height);
         }
-        // height <= 100
-        height = Math.min(height, MAX_HEIGHT);
 
-        magicStackFloorItem.setOverrideHeight(height);
-
+        double highestHeight = magicStackFloorItem.getTile().getTopHeight(magicStackFloorItem);
         for (AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(
                 magicStackFloorItem.getDefinition().getLength(),
                 magicStackFloorItem.getDefinition().getWidth(),
@@ -57,17 +67,26 @@ public class SaveStackToolMessageEvent implements Event {
                 magicStackFloorItem.getPosition().getY(),
                 magicStackFloorItem.getRotation())) {
 
+
             RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
+            if(placeOverFurni) {
+                double affectedTileHeight = tile.getTopHeight(magicStackFloorItem);
+                if (affectedTileHeight > highestHeight) {
+                    highestHeight = affectedTileHeight;
+                }
+            }
 
             // TODO: check this if is usefull and how it works.
             if (tile != null && !client.getPlayer().getEntity().hasAttribute("setz.height")) {
                 tile.reload();
-
-                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tile));
             }
         }
 
-        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(magicStackFloorItem));
+        if(placeOverFurni){
+            magicStackFloorItem.setOverrideHeight(highestHeight);
+        }
+
+        magicStackFloorItem.sendUpdate();
         magicStackFloorItem.saveData();
     }
 }

@@ -292,9 +292,26 @@ public class RoomTile {
         return stackHeight;
     }*/
 
+
+    public double getTopHeight(){
+        return getTopHeight(null);
+    }
+
+    public double getTopHeight(RoomItemFloor exclude){
+        double highest = this.getTileHeight();
+        for (RoomItemFloor item : items) {
+            if(exclude != null && exclude.getId() == item.getId()) continue;
+
+            final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+            if(totalHeight > highest) {
+                highest = totalHeight;
+            }
+        }
+
+        return highest;
+    }
+
     public double getStackHeight(RoomItemFloor itemToStack, PlayerEntity player) {
-
-
         if (player != null) {
 
             if (player.hasAttribute("ConstruitCMD")) {
