@@ -91,7 +91,6 @@ public class ReloadCommand extends ChatCommand {
 
                 sendNotif(Locale.get("command.reload.bans"), client);
                 break;
-
             case "catalog":
                 CatalogManager.getInstance().loadGiftBoxes();
                 CatalogManager.getInstance().loadItemsAndPages();
@@ -101,7 +100,6 @@ public class ReloadCommand extends ChatCommand {
                 NetworkManager.getInstance().getSessions().broadcast(new CatalogPublishMessageComposer(true));
                 sendNotif(Locale.get("command.reload.catalog"), client);
                 break;
-
             case "navigator":
                 NavigatorManager.getInstance().loadCategories();
                 NavigatorManager.getInstance().loadPublicRooms();
@@ -109,7 +107,6 @@ public class ReloadCommand extends ChatCommand {
 
                 sendNotif(Locale.get("command.reload.navigator"), client);
                 break;
-
             case "permissions":
                 PermissionsManager.getInstance().loadRankPermissions();
                 PermissionsManager.getInstance().loadPerks();
@@ -121,32 +118,27 @@ public class ReloadCommand extends ChatCommand {
 
                 sendNotif(Locale.get("command.reload.permissions"), client);
                 break;
-
             case "config":
                 ConfigDao.getAll();
                 ConfigDao.getExternalConfig();
 
                 sendNotif(Locale.get("command.reload.config"), client);
                 break;
-
             case "news":
                 LandingManager.getInstance().loadArticles();
 
                 sendNotif(Locale.get("command.reload.news"), client);
                 break;
-
             case "items":
                 ItemManager.getInstance().loadItemDefinitions();
 
                 sendNotif(Locale.get("command.reload.items"), client);
                 break;
-
             case "filter":
                 RoomManager.getInstance().getFilter().loadFilter();
 
                 sendNotif(Locale.get("command.reload.filter"), client);
                 break;
-
             case "locale":
                 Locale.reload();
                 CommandManager.getInstance().reloadAllCommands();
@@ -161,34 +153,28 @@ public class ReloadCommand extends ChatCommand {
 
                 ModerationManager.getInstance().getModerators().forEach((session -> session.send(new ModToolMessageComposer())));
                 break;
-
             case "groupitems":
                 GameContext.getCurrent().getGroupService().getItemService().load();
                 sendNotif(Locale.get("command.reload.groupitems"), client);
                 break;
-
             case "models":
                 GameContext.getCurrent().getRoomModelService().loadModels();
 
                 sendNotif(Locale.get("command.reload.models"), client);
                 break;
-
             case "music":
                 ItemManager.getInstance().loadMusicData();
                 sendNotif(Locale.get("command.reload.music"), client);
                 break;
-
             case "quests":
                 QuestManager.getInstance().loadQuests();
                 sendNotif(Locale.get("command.reload.quests"), client);
                 break;
-
             case "achievements":
                 AchievementManager.getInstance().loadAchievements();
 
                 sendNotif(Locale.get("command.reload.achievements"), client);
                 break;
-
             case "pets":
                 PetManager.getInstance().loadPetRaces();
                 PetManager.getInstance().loadPetSpeech();
@@ -199,13 +185,11 @@ public class ReloadCommand extends ChatCommand {
 
                 sendNotif(Locale.get("command.reload.pets"), client);
                 break;
-
             case "crafting":
                 ItemManager.getInstance().loadCraftingMachines();
 
                 sendNotif(Locale.get("command.reload.crafting"), client);
                 break;
-
             case "polls":
                 PollManager.getInstance().initialize();
 
@@ -217,30 +201,32 @@ public class ReloadCommand extends ChatCommand {
 
                 sendNotif(Locale.get("command.reload.polls"), client);
                 break;
-            case "bundles": {
+            case "bundles":
                 RoomBundleManager.getInstance().initialize();
 
                 sendNotif(Locale.get("command.reload.bundles"), client);
 
                 break;
-            }
-            case "namecolors": {
+            case "namecolors":
                 RoomManager.getInstance().reloadNameColors();
                 sendNotif(Locale.get("command.reload.namecolors"), client);
-            }
-            case "emojis": {
+
+                break;
+            case "emojis":
                 RoomManager.getInstance().reloadEmojis();
                 sendNotif(Locale.get("command.reload.emojis"), client);
-            }
-            case "notification": {
+
+                break;
+            case "notification":
                 CommandManager.getInstance().reloadAllCommands();
                 sendNotif(Locale.get("command.reload.notification"), client);
-            }
 
-            case "gamecenter": {
+                break;
+            case "gamecenter":
                 GameCenterManager.getInstance().initialize();
                 sendNotif("GameCenter reiniciado com sucesso.", client);
-            }
+
+                break;
         }
     }
 

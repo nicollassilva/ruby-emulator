@@ -727,7 +727,11 @@ public class ItemsComponent {
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
-        final double height = tile.getStackHeight(item);
+        double height = tile.getStackHeight(item);
+
+        if(client.getPlayer().getEntity().hasAttribute("setz.height")) {
+            height = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
+        }
 
         if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
             return false;
@@ -987,6 +991,10 @@ public class ItemsComponent {
         final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : item.getExtraData();
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
+
+        if(player.getEntity().hasAttribute("setz.height")) {
+            height = (double) player.getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(x, y).getTileHeight();
+        }
 
         if(item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
             height = tile.getWalkHeight();
