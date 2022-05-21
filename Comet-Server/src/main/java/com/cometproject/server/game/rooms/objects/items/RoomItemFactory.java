@@ -71,7 +71,6 @@ public class RoomItemFactory {
         itemConstructorCache = new ConcurrentHashMap<>();
 
         itemDefinitionMap = new HashMap<String, Class<? extends RoomItemFloor>>() {{
-            put("default_usable", DefaultUsableFloorItem.class);
             put("roller", RollerFloorItem.class);
             put("oldroller", OldRollerFloorItem.class);
             put("dice", DiceFloorItem.class);
