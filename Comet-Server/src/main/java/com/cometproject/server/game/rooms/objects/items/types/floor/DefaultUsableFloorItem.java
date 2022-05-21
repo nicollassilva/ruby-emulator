@@ -1,4 +1,4 @@
-package com.cometproject.server.game.rooms.objects.items.types;
+package com.cometproject.server.game.rooms.objects.items.types.floor;
 
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.api.game.quests.QuestType;
@@ -8,12 +8,12 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 
-public class DefaultFloorItem extends RoomItemFloor {
-    public DefaultFloorItem(RoomItemData itemData, Room room) {
+public class DefaultUsableFloorItem extends RoomItemFloor {
+    public DefaultUsableFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
     }
 
-    public DefaultFloorItem(int id, int userId, PlayerItem item, String extradata, int limitedStack, int limitedSells) {
+    public DefaultUsableFloorItem(int id, int userId, PlayerItem item, String extradata, int limitedStack, int limitedSells) {
         super(id, userId, item, extradata, limitedStack, limitedSells);
     }
 
@@ -45,7 +45,7 @@ public class DefaultFloorItem extends RoomItemFloor {
             }
         }
 
-        
+
         this.toggleInteract(true);
 
         this.sendUpdate();
