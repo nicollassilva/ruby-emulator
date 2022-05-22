@@ -1,5 +1,6 @@
 package com.cometproject.server.game.rooms.types.mapping;
 
+import com.cometproject.api.game.rooms.models.RoomTileState;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.RoomObject;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
@@ -7,14 +8,12 @@ import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedT
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.types.EntityPathfinder;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.types.ItemPathfinder;
-import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeBlockFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.groups.GroupGateFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.snowboarding.SnowboardJumpFloorItem;
-import com.cometproject.api.game.rooms.models.RoomTileState;
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Lists;
 
@@ -27,9 +26,11 @@ import java.util.function.Consumer;
 
 
 public class RoomTile {
-    public Set<RoomEntity> entities;
     private final RoomMapping mappingInstance;
     private final Position position;
+    private final List<RoomItemFloor> items;
+    private final Map<Integer, Consumer<RoomEntity>> pendingEvents = new ConcurrentHashMap<>();
+    public Set<RoomEntity> entities;
     private RoomEntityMovementNode movementNode;
     private RoomTileStatusType status;
     private RoomTileState state;
@@ -44,8 +45,6 @@ public class RoomTile {
     private boolean hasMagicTile = false;
     private boolean hasAdjustableHeight = false;
     private boolean hasGate = false;
-    private final List<RoomItemFloor> items;
-    private final Map<Integer, Consumer<RoomEntity>> pendingEvents = new ConcurrentHashMap<>();
 
     public RoomTile(RoomMapping mappingInstance, Position position) {
         this.mappingInstance = mappingInstance;
@@ -174,7 +173,7 @@ public class RoomTile {
                     break;
 
                 case "gate":
-                    if(!(item instanceof GateFloorItem)) {
+                    if (!(item instanceof GateFloorItem)) {
                         movementNode = RoomEntityMovementNode.CLOSED;
                     } else {
                         movementNode = ((GateFloorItem) item).isOpen() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
@@ -190,7 +189,7 @@ public class RoomTile {
                     break;
 
                 case "freeze_block":
-                    if(!(item instanceof FreezeBlockFloorItem)) {
+                    if (!(item instanceof FreezeBlockFloorItem)) {
                         movementNode = RoomEntityMovementNode.CLOSED;
                     } else {
                         movementNode = ((FreezeBlockFloorItem) item).isDestroyed() ? RoomEntityMovementNode.OPEN : RoomEntityMovementNode.CLOSED;
@@ -292,13 +291,13 @@ public class RoomTile {
         return stackHeight;
     }
 
-    public double getTopHeight(RoomItemFloor exclude){
+    public double getTopHeight(RoomItemFloor exclude) {
         double highest = this.getTileHeight();
         for (RoomItemFloor item : items) {
-            if(exclude != null && exclude.getId() == item.getId()) continue;
+            if (exclude != null && exclude.getId() == item.getId()) continue;
 
             final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
-            if(totalHeight > highest) {
+            if (totalHeight > highest) {
                 highest = totalHeight;
             }
         }
@@ -319,9 +318,10 @@ public class RoomTile {
             }
         }
 
-        if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
-            height += ((SeatFloorItem) roomItemFloor).getSitHeight();
-        }
+//      Commented because this is a possible fix for adjustable height items with seat items inside
+//      if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
+//          height += ((SeatFloorItem) roomItemFloor).getSitHeight();
+//      }
 
         return height;
     }
@@ -404,7 +404,9 @@ public class RoomTile {
         return this.hasMagicTile;
     }
 
-    public void setMagicTile(boolean magicTile) { this.hasMagicTile = magicTile; }
+    public void setMagicTile(boolean magicTile) {
+        this.hasMagicTile = magicTile;
+    }
 
     public List<RoomItemFloor> getItems() {
         return items;

@@ -372,7 +372,7 @@ public class RoomItemFactory {
             floorItem = new SeatFloorItem(itemData, room);
         }
 
-        if (def.getItemName().startsWith(STACK_TOOL) || def.getItemName().startsWith("tile_stackmagoc")) {
+        if (def.getItemName().startsWith(STACK_TOOL)) {
             floorItem = new MagicStackFloorItem(itemData, room);
         }
 

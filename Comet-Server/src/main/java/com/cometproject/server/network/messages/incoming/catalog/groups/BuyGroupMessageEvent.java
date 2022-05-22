@@ -29,7 +29,6 @@ import java.util.List;
 
 
 public class BuyGroupMessageEvent implements Event {
-
     public void handle(Session client, MessageEvent msg) {
         if (client.getPlayer().getData().getCredits() < CometSettings.groupCost) {
             return;
@@ -39,40 +38,37 @@ public class BuyGroupMessageEvent implements Event {
         client.send(new SendCreditsMessageComposer(Integer.toString(client.getPlayer().getData().getCredits())));
         client.getPlayer().getData().save();
 
-        String name = msg.readString();
-        String desc = msg.readString();
+        final String name = msg.readString();
+        final String desc = msg.readString();
 
-        int roomId = msg.readInt();
-        int colour1 = msg.readInt();
-        int colour2 = msg.readInt();
+        final int roomId = msg.readInt();
+        final int colour1 = msg.readInt();
+        final int colour2 = msg.readInt();
 
         if (!client.getPlayer().getRooms().contains(roomId) || GameContext.getCurrent().getRoomService().getRoomData(roomId) == null) {
             return;
         }
 
-        int stateCount = msg.readInt();
+        final int stateCount = msg.readInt();
+        final int groupBase = msg.readInt();
+        final int groupBaseColour = msg.readInt();
+        final int groupItemsLength = msg.readInt() * 3;
 
-        int groupBase = msg.readInt();
-        int groupBaseColour = msg.readInt();
-        int groupItemsLength = msg.readInt() * 3;
-
-        List<Integer> groupItems = new ArrayList<>();
+        final List<Integer> groupItems = new ArrayList<>();
 
         for (int i = 0; i < (groupItemsLength); i++) {
             groupItems.add(msg.readInt());
         }
 
-        String badge = BadgeUtil.generate(groupBase, groupBaseColour, groupItems);
+        final String badge = BadgeUtil.generate(groupBase, groupBaseColour, groupItems);
 
         client.send(new BoughtItemMessageComposer(BoughtItemMessageComposer.PurchaseType.GROUP));
 
-        final IGroupItemService itemService = GameContext.getCurrent().getGroupService().getItemService();
-
         final IGroupData groupData = new GroupDataFactory().create(name, desc, badge, client.getPlayer().getId(),
                 client.getPlayer().getData().getUsername(), roomId, colour1, colour2, client.getPlayer().getData());
+
         final IGroup group = GameContext.getCurrent().getGroupService().createGroup(groupData, client.getPlayer().getId());
 
-//        group.getMembers().createMembership(new GroupMemberFactory().create(client.getPlayer().getId(), group.getId(), GroupAccessLevel.OWNER));*/
         client.getPlayer().getGroups().add(group.getId());
 
         client.getPlayer().getData().setFavouriteGroup(group.getId());
@@ -91,10 +87,10 @@ public class BuyGroupMessageEvent implements Event {
                 return;
             }
 
-            List<Integer> toRemove = new ArrayList<>();
+            final List<Integer> toRemove = new ArrayList<>();
 
-            for (Integer id : room.getRights().getAll()) {
-                PlayerEntity playerEntity = room.getEntities().getEntityByPlayerId(id);
+            for (final Integer id : room.getRights().getAll()) {
+                final PlayerEntity playerEntity = room.getEntities().getEntityByPlayerId(id);
 
                 if (playerEntity != null) {
                     playerEntity.getPlayer().getSession().send(new YouAreControllerMessageComposer(0));
@@ -105,14 +101,13 @@ public class BuyGroupMessageEvent implements Event {
                 toRemove.add(id);
             }
 
-            for (Integer id : toRemove) {
+            for (final Integer id : toRemove) {
                 room.getRights().removeRights(id);
             }
 
             toRemove.clear();
 
             room.setGroup(group);
-
             room.getData().setGroupId(group.getId());
 
             GameContext.getCurrent().getRoomService().saveRoomData(room.getData());

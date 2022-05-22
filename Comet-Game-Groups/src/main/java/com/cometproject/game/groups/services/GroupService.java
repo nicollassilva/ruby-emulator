@@ -109,7 +109,7 @@ public class GroupService implements IGroupService {
 
         boolean foundOwner = false;
 
-        for(IGroupMember member : groupMemberData.get()) {
+        for(final IGroupMember member : groupMemberData.get()) {
             if(member.getPlayerId() == groupData.getOwnerId()) {
                 foundOwner = true;
             }
@@ -141,10 +141,10 @@ public class GroupService implements IGroupService {
         this.saveGroupData(group.getData());
 
         // Add forum component to the group. - me deprimo ken te lo juro
-        Map<Integer, IForumThread> forumThreads = new HashMap<>();
-        List<Integer> pinnedThreads = new ArrayList<>();
+        final Map<Integer, IForumThread> forumThreads = new HashMap<>();
+        final List<Integer> pinnedThreads = new ArrayList<>();
 
-        ForumComponent forumComponent = new ForumComponent(
+        final ForumComponent forumComponent = new ForumComponent(
                 GroupForumSettingsFactory.createSettings(
                         group.getData().getId(),
                         ForumPermission.getById(0),

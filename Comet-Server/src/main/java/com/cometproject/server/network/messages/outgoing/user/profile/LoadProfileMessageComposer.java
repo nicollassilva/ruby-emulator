@@ -1,6 +1,7 @@
 package com.cometproject.server.network.messages.outgoing.user.profile;
 
 import com.cometproject.api.game.GameContext;
+import com.cometproject.api.game.groups.types.IGroup;
 import com.cometproject.api.game.groups.types.IGroupData;
 import com.cometproject.api.game.players.IPlayer;
 import com.cometproject.api.networking.messages.IComposer;
@@ -57,10 +58,10 @@ public class LoadProfileMessageComposer extends MessageComposer {
 
         if (this.player.getGroups() != null) {
             for (final int groupId : this.player.getGroups()) {
-                final IGroupData group = GameContext.getCurrent().getGroupService().getData(groupId);
+                final IGroup group = GameContext.getCurrent().getGroupService().getGroup(groupId);
 
-                if (group != null) {
-                    groups.add(group);
+                if (group != null && group.getData() != null) {
+                    groups.add(group.getData());
                 }
             }
         }
