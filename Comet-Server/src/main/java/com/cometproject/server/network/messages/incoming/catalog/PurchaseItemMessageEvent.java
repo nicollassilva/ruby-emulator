@@ -1,13 +1,8 @@
 package com.cometproject.server.network.messages.incoming.catalog;
 
-import com.cometproject.api.config.CometSettings;
-import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.network.messages.incoming.Event;
-import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
-import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
-import com.cometproject.server.network.messages.outgoing.notification.MotdNotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.PurchaseErrorMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.pin.EmailVerificationWindowMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -38,5 +33,6 @@ public class PurchaseItemMessageEvent implements Event {
             return;
         }
 
-        CatalogManager.getInstance().getPurchaseHandler().purchaseItem(client, pageId, itemId, data, amount, null);}
+        CatalogManager.getInstance().getPurchaseHandler().purchaseItem(client, pageId, itemId, data, amount, null);
+    }
 }
