@@ -1,5 +1,6 @@
 package com.cometproject.server.game.commands.user;
 
+import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonPyramid;
