@@ -25,7 +25,7 @@ public class KissesCatalogHandler implements IPurchaseHandler {
 
         if(!extraData[0].equalsIgnoreCase("kisses")) return;
 
-        IPlayerStatistics playerStats = client.getPlayer().getStats();
+        final IPlayerStatistics playerStats = client.getPlayer().getStats();
         final int kissesAmount = Integer.parseInt(extraData[1]);
 
         if(playerStats == null) return;
@@ -38,6 +38,8 @@ public class KissesCatalogHandler implements IPurchaseHandler {
 
             return;
         }
+
+        client.getPlayer().getInventory().addBadge(item.getBadgeId(), true);
 
         client.getPlayer().getStats().incrementTotalKisses(kissesAmount);
         client.getPlayer().getStats().save();
