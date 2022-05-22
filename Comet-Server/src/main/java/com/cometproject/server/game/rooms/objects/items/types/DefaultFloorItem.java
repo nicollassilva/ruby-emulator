@@ -8,7 +8,6 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 
-
 public class DefaultFloorItem extends RoomItemFloor {
     public DefaultFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);

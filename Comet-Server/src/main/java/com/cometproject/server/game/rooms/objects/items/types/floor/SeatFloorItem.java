@@ -9,7 +9,6 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.outgoing.room.avatar.AvatarUpdateMessageComposer;
 
-
 public class SeatFloorItem extends RoomItemFloor {
 
     public SeatFloorItem(RoomItemData itemData, Room room) {
@@ -23,7 +22,7 @@ public class SeatFloorItem extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
             if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
@@ -35,7 +34,7 @@ public class SeatFloorItem extends RoomItemFloor {
         this.sendUpdate();
 
         if (this instanceof AdjustableHeightSeatFloorItem) {
-            for (RoomEntity sitter : this.getEntitiesOnItem()) {
+            for (final RoomEntity sitter : this.getEntitiesOnItem()) {
                 this.onEntityStepOn(sitter, true);
             }
         }

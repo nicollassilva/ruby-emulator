@@ -21,7 +21,6 @@ import com.cometproject.server.game.catalog.purchase.handlers.items.*;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
-import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.PurchaseErrorMessageComposer;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 
@@ -31,8 +30,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
-    private ExecutorService executorService;
     private final Map<String, IPurchaseHandler> handlers;
+    private ExecutorService executorService;
 
     public CatalogPurchaseHandler() {
         this.handlers = new HashMap<>();
@@ -82,17 +81,37 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             ICatalogItem item;
 
             if (page != null) {
-                if(page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
+                if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
 
                 if (page.getMinRank() < client.getPlayer().getData().getRank() || page.getItems().containsKey(itemId)) {
                     item = page.getItems().get(itemId);
+
+                    if (item == null && page.getType() == CatalogPageType.RECENT_PURCHASES) {
+                        item = CatalogManager.getInstance().getCatalogItem(itemId);
+
+                        if (item == null) {
+                            client.send(new PurchaseErrorMessageComposer(2));
+                            return;
+                        }
+
+                        final ICatalogPage realCatalogPage = CatalogManager.getInstance().getPage(item.getPageId());
+
+                        if (realCatalogPage == null) {
+                            client.send(new PurchaseErrorMessageComposer(2));
+                            return;
+                        }
+
+                        if (realCatalogPage.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
+
+                        if (realCatalogPage.getMinRank() > client.getPlayer().getData().getRank() || !realCatalogPage.getItems().containsKey(itemId)) return;
+                    }
 
                     if (item == null || page.getTemplate().equals("single_bundle") || page.getType() == CatalogPageType.BUNDLE) {
                         this.purchaseHandlerByPage(page, itemId, client, amount, giftData, data);
                         return;
                     }
 
-                    if(this.itemHasCustomPurchase(item, page, client, amount)) {
+                    if (this.itemHasCustomPurchase(item, page, client, amount)) {
                         return;
                     }
 
@@ -184,7 +203,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             handleName = "subscription";
         }
 
-        if(page.getTemplate().equals("single_bundle") || page.getType() == CatalogPageType.BUNDLE) {
+        if (page.getTemplate().equals("single_bundle") || page.getType() == CatalogPageType.BUNDLE) {
             handleName = "roombundle";
         }
 
@@ -196,13 +215,13 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     }
 
     public boolean itemHasCustomPurchase(ICatalogItem item, ICatalogPage page, ISession client, int amount) {
-        if(item.hasBadge() && item.getItemId().equals("-1")) {
+        if (item.hasBadge() && item.getItemId().equals("-1")) {
 
-            if(item.getPresetData().contains("name_colour")) {
+            if (item.getPresetData().contains("name_colour")) {
                 return true;
             }
 
-            if(item.getPresetData().contains("kisses")) {
+            if (item.getPresetData().contains("kisses")) {
                 this.purchaseKisses(page, item, client, amount);
                 return true;
             }
@@ -217,9 +236,9 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     public void purchaseKisses(ICatalogPage page, ICatalogItem item, ISession client, int amount) {
         final IPurchaseHandler handler = this.handlers.get("kisses");
 
-        if(handler == null) return;
+        if (handler == null) return;
 
-        if(handler.canPurchase(item, client)) {
+        if (handler.canPurchase(item, client)) {
             handler.purchase(item, item.getId(), client, amount, page, null, null, null, "");
         } else {
             client.send(new PurchaseErrorMessageComposer(1));
@@ -229,9 +248,9 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     public void purchaseBadge(ICatalogPage page, ICatalogItem item, ISession client, int amount) {
         final IPurchaseHandler handler = this.handlers.get("badges");
 
-        if(handler == null) return;
+        if (handler == null) return;
 
-        if(handler.canPurchase(item, client)) {
+        if (handler.canPurchase(item, client)) {
             handler.purchase(item, item.getId(), client, amount, page, null, null, null, "");
         } else {
             client.send(new PurchaseErrorMessageComposer(1));

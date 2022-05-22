@@ -73,7 +73,7 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
             this.petEntity.getPetAI().applyGesture(PetGesture.SMILE.getGestureKey());
         } else {
             // failure!
-            if(this.petEntity.getMountedEntity() instanceof PlayerEntity) {
+            if (this.petEntity.getMountedEntity() instanceof PlayerEntity) {
                 ((PlayerEntity) this.petEntity.getMountedEntity()).getPlayer().setOnHorseJumpingSequence(false);
             }
 
@@ -85,7 +85,7 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
     }
 
     public void manageAchievements() {
-        if(!(this.petEntity.getMountedEntity() instanceof PlayerEntity)) return;
+        if (!(this.petEntity.getMountedEntity() instanceof PlayerEntity)) return;
 
         final PlayerEntity playerEntity = ((PlayerEntity) this.petEntity.getMountedEntity());
 
@@ -121,11 +121,9 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
         int barToFace = 0;
 
         if (this.getRotation() != 2) {
-            if (petEntity.getPosition().getX() != this.getPosition().getX())
-                barToFace = 1;
+            if (petEntity.getPosition().getX() != this.getPosition().getX()) barToFace = 1;
         } else {
-            if (petEntity.getPosition().getY() != this.getPosition().getY())
-                barToFace = 1;
+            if (petEntity.getPosition().getY() != this.getPosition().getY()) barToFace = 1;
         }
 
         final Position bar = this.getBarPositions()[barToFace];
@@ -167,8 +165,7 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
     @Override
     public boolean isMovementCancelled(RoomEntity entity, Position position) {
         final Position[] barPos = this.getBarPositions();
-        final boolean barPosEq = (barPos[0].getX() == position.getX() && barPos[0].getY() == position.getY()) ||
-                (barPos[1].getX() == position.getX() && barPos[1].getY() == position.getY());
+        final boolean barPosEq = (barPos[0].getX() == position.getX() && barPos[0].getY() == position.getY()) || (barPos[1].getX() == position.getX() && barPos[1].getY() == position.getY());
 
         return entity.getMountedEntity() == null && barPosEq;
 
@@ -187,8 +184,6 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
         b.setX(b.getX() + 1);
         b.setY(b.getY() + 1);
 
-        return new Position[]{
-                a, b
-        };
+        return new Position[]{a, b};
     }
 }

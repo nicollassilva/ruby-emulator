@@ -48,7 +48,7 @@ public class GameCenterManager implements Initialisable {
 //        this.currentWeek = GameDao.getLeaderBoard();
 //        this.lastWeek = GameDao.getLeaderBoard();
 
-        CometThreadManager.getInstance().executeSchedule(this::loadLeaderboards,1, TimeUnit.MINUTES);
+//        CometThreadManager.getInstance().executeSchedule(this::loadLeaderboards,1, TimeUnit.MINUTES);
     }
 
     public List<GamePlayer> getLeaderboardByWeek(boolean isCurrent){
@@ -77,7 +77,8 @@ public class GameCenterManager implements Initialisable {
     public GameCenterInfo getGameById(int gameId){
 
         GameCenterInfo gameInfo = null;
-        for(GameCenterInfo infoGame : this.gamesList){
+
+        for(final GameCenterInfo infoGame : this.gamesList){
             if(infoGame.getGameId() == gameId){
                 gameInfo = infoGame;
                 break;

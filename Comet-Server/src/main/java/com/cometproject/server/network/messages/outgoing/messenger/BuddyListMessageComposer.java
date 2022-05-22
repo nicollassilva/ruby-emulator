@@ -83,7 +83,7 @@ public class BuddyListMessageComposer extends MessageComposer {
             msg.writeString(playerAvatar.getMotto());
             msg.writeString("");
             msg.writeString("");
-            msg.writeBoolean(false);
+            msg.writeBoolean(true); // Receive offline messages
             msg.writeBoolean(false);
             msg.writeBoolean(false);
 
