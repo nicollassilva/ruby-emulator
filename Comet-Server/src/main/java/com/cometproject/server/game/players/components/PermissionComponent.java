@@ -1,5 +1,6 @@
 package com.cometproject.server.game.players.components;
 
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.players.data.components.PlayerPermissions;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.permissions.PermissionsManager;
@@ -42,7 +43,7 @@ public class PermissionComponent implements PlayerPermissions {
                 return true;
 
             if (permission.getMinimumRank() <= this.getPlayer().getData().getRank()) {
-                return (!permission.isVipOnly() || player.getData().isVip()) && (!permission.isRightsOnly() || player.getEntity().hasRights() || player.getPermissions().getRank().roomFullControl());
+                return (!permission.isVipOnly() || (player.getData().isVip() || player.getData().getRank() >= CometSettings.rankCanSeeVipContent)) && (!permission.isRightsOnly() || player.getEntity().hasRights() || player.getPermissions().getRank().roomFullControl());
             }
         } else if (key.equals("debug") && Comet.isDebugging) {
             return true;

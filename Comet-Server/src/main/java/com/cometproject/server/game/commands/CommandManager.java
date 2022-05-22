@@ -388,7 +388,7 @@ public class CommandManager implements Initialisable {
             return false;
         }
 
-        final boolean userIsVip = client.getPlayer().getData().getRank() == CometSettings.vipRank;
+        final boolean userIsVip = client.getPlayer().getData().getRank() == CometSettings.vipRank || client.getPlayer().getData().getRank() >= CometSettings.rankCanSeeVipContent;
         final boolean userHasCommand = client.getPlayer().getPermissions().hasCommand(commandName);
         final boolean commandIsVipOnly = PermissionsManager.getInstance().getCommands().get(commandName).isVipOnly();
 

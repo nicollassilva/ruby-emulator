@@ -16,6 +16,7 @@ public class CometSettings {
     public static int minimumBotNameLength = 30;
 
     public static int vipRank = 2;
+    public static int rankCanSeeVipContent = 13;
 
     public static boolean talentTrackEnabled = false;
     public static boolean useNewKissSystem = true;

@@ -193,7 +193,7 @@ public class CatalogManager implements ICatalogService {
         final List<ICatalogPage> pages = new ArrayList<>();
 
         for (final ICatalogPage page : this.getPages().values()) {
-            if(page.isVipOnly() && rank != CometSettings.vipRank) continue;
+            if(page.isVipOnly() && rank != CometSettings.vipRank && rank < CometSettings.rankCanSeeVipContent) continue;
 
             if (rank >= page.getMinRank() && page.getParentId() == parentId) {
                 pages.add(page);

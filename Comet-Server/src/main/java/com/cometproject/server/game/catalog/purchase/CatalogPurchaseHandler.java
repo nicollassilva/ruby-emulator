@@ -81,7 +81,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             ICatalogItem item;
 
             if (page != null) {
-                if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
+                if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank && client.getPlayer().getData().getRank() < CometSettings.rankCanSeeVipContent) return;
 
                 if (page.getMinRank() < client.getPlayer().getData().getRank() || page.getItems().containsKey(itemId)) {
                     item = page.getItems().get(itemId);
@@ -101,7 +101,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                             return;
                         }
 
-                        if (realCatalogPage.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank) return;
+                        if (realCatalogPage.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank && client.getPlayer().getData().getRank() < CometSettings.rankCanSeeVipContent) return;
 
                         if (realCatalogPage.getMinRank() > client.getPlayer().getData().getRank() || !realCatalogPage.getItems().containsKey(itemId)) return;
                     }

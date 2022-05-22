@@ -42,7 +42,7 @@ public class CatalogIndexMessageComposer extends MessageComposer {
         msg.writeInt(pages.size());
 
         for (final ICatalogPage category : pages) {
-            if(category.isVipOnly() && this.playerRank != CometSettings.vipRank) continue;
+            if(category.isVipOnly() && this.playerRank != CometSettings.vipRank && this.playerRank < CometSettings.rankCanSeeVipContent) continue;
 
             append(category, msg, false);
         }
@@ -66,7 +66,7 @@ public class CatalogIndexMessageComposer extends MessageComposer {
         msg.writeInt(category.getOfferSizeByRank(this.playerRank));
 
         for (final ICatalogItem item : category.getItems().values()) {
-            if(category.isVipOnly() && this.playerRank != CometSettings.vipRank) continue;
+            if(category.isVipOnly() && this.playerRank != CometSettings.vipRank && this.playerRank < CometSettings.rankCanSeeVipContent) continue;
 
             if (this.playerRank >= category.getMinRank() && category.getTemplate().equals("default_3x3")) {
                 msg.writeInt(item.getId());
