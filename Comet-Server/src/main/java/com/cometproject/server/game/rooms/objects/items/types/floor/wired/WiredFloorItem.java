@@ -89,7 +89,7 @@ public abstract class WiredFloorItem extends AdvancedFloorItem<WiredItemEvent> i
             return true;
         }
 
-        this.flash();
+        //this.flash();
         ((PlayerEntity) entity).getPlayer().getSession().send(this.getDialog());
         return true;
     }
