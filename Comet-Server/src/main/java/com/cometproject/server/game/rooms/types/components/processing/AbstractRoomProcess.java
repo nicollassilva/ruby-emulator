@@ -521,13 +521,12 @@ public class AbstractRoomProcess implements CometTask {
 
             if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
-
-                if (!allowWalkthrough || entity instanceof PetEntity) {
+                final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
+                if (!allowWalkthrough || entity instanceof PetEntity || nextPosIsTheGoal) {
                     isCancelled = true;
                 }
 
                 final RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
-
                 if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
                     isCancelled = false;
                 }
