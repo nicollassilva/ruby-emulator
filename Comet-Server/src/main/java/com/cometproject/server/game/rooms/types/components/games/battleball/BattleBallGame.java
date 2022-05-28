@@ -189,11 +189,10 @@ public class BattleBallGame extends RoomGame {
     }
 
     public GameTeam winningTeam() {
-
         boolean equality = false;
         Map.Entry<GameTeam, Integer> winningTeam = null;
 
-        for (Map.Entry<GameTeam, Integer> score : this.getGameComponent().getScores().entrySet()) {
+        for (final Map.Entry<GameTeam, Integer> score : this.getGameComponent().getScores().entrySet()) {
             if (winningTeam == null || winningTeam.getValue() < score.getValue()) {
 
                 winningTeam = score;

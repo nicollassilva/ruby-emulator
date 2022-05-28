@@ -131,25 +131,25 @@ public class BattleBallRoom {
 
                 for(int i = 8; i <= 13; ++i) {
                     for (int j = 1; j <= 4; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 2, "0");
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 907, j, i, 0, 2, "0");
                     }
                 }
 
                 for(int i = 1; i <= 20; ++i) {
                     for (int j = 8; j <= 15; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 0, "0");
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 907, j, i, 0, 0, "0");
                     }
                 }
 
                 for(int i = 1; i <= 20; ++i) {
                     for (int j = 19; j <= 26; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 0, "0");
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 907, j, i, 0, 0, "0");
                     }
                 }
 
                 for(int i = 8; i <= 13; ++i) {
                     for (int j = 30; j <= 33; ++j) {
-                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 1000011315, j, i, 0, 2, "0");
+                        this.addItem((int) (Math.random() * (999999999 - 9999999)), 907, j, i, 0, 2, "0");
                     }
                 }
 

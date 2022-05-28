@@ -26,36 +26,36 @@ public class SmokeCommand extends ChatCommand {
         sendNotif("Comprou 1g da verdinha", client);
 
         if(timeSinceLastUpdate >= 30) {
-            client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat1", "* Faz um baseado *"), ChatEmotion.NONE, 0));
+            client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat1", "* Faz um baseado *"), ChatEmotion.NONE, 43));
             CometThreadManager.getInstance().executeSchedule(() -> {
-                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat2", "* Dê um puxão da articulação *"), ChatEmotion.NONE, 0));
+                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat2", "* Dê um puxão da articulação *"), ChatEmotion.NONE, 43));
                 client.getPlayer().getEntity().applyEffect(new PlayerEffect(53));
             }, 2, TimeUnit.SECONDS);
 
             CometThreadManager.getInstance().executeSchedule(() -> {
                 switch (RandomUtil.getRandomInt(1, 4)) {
                     case 1: {
-                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat3", "* Estou voando pelo céu >:D *"), ChatEmotion.NONE, 0));
+                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat3", "* Estou voando pelo céu >:D *"), ChatEmotion.NONE, 43));
 
                         break;
                     }
                     case 2: {
                         client.getPlayer().getEntity().applyEffect(new PlayerEffect(70));
-                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat3", "* Isso era uma boa erva *"), ChatEmotion.NONE, 0));
+                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat3", "* Isso era uma boa erva *"), ChatEmotion.NONE, 43));
                         break;
                     }
                     case 3: {
-                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat4", "* Eu vi pandas cor de rosa *"), ChatEmotion.NONE, 0));
+                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat4", "* Eu vi pandas cor de rosa *"), ChatEmotion.NONE, 43));
                         break;
                     }
                     default: {
-                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat5", "* É a melhor erva que já usei *"), ChatEmotion.NONE, 0));
+                        client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat5", "* É a melhor erva que já usei *"), ChatEmotion.NONE, 43));
                     }
                 }
             }, 4, TimeUnit.SECONDS);
 
             CometThreadManager.getInstance().executeSchedule(() -> {
-                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat6", "* Preciso de mais *"), ChatEmotion.NONE, 0));
+                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("command.smoke.chat6", "* Preciso de mais *"), ChatEmotion.NONE, 43));
                 client.getPlayer().getEntity().applyEffect(new PlayerEffect(0));
             }, 6, TimeUnit.SECONDS);
 

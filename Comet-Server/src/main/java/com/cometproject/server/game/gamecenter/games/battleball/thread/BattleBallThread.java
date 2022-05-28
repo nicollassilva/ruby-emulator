@@ -125,9 +125,9 @@ public class BattleBallThread extends Thread {
             if (room.status == RoomStatus.TIMER_TO_LOBBY) {
                 System.out.println("TEMPS AVANT LANCEMENT: " + room.timeToStart);
 
-                if(pickedRoom.players.size() == 1) {
-                    return;
-                }
+//                if(pickedRoom.players.size() == 1) {
+//                    return;
+//                }
 
                 if(pickedRoom.players.isEmpty()) {
                     room.status = RoomStatus.CLOSE;
@@ -138,11 +138,11 @@ public class BattleBallThread extends Thread {
                 if (room.timeToStart-- == 0) {
                     future.cancel(false);
 
-                    if(pickedRoom.players.size() == 1) {
-                        room.status = RoomStatus.CLOSE;
-
-                        return;
-                    }
+//                    if(pickedRoom.players.size() == 1) {
+//                        room.status = RoomStatus.CLOSE;
+//
+//                        return;
+//                    }
 
                     //TODO: REACTIVATE WHEN FINISHED
 

@@ -92,13 +92,13 @@ public enum GameTeam {
     public int getBattleBallEffect() {
         switch (teamId) {
             case 1:
-                return 87;
+                return 2201;
             case 2:
-                return 86;
+                return 2000;
             case 3:
-                return 88;
+                return 2002;
             case 4:
-                return 89;
+                return 2003;
         }
 
         return 0;
