@@ -11,6 +11,7 @@ import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.ActionMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
+import com.cometproject.server.network.messages.outgoing.user.details.UserObjectMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
 
@@ -33,7 +34,7 @@ public class KissesMessageEvent implements Event {
 
         if(user == null || user.getPlayer() == null) return;
 
-        if(actorPosition.distanceTo(user.getPlayer().getEntity().getPosition()) > 2.0) {
+        if(actorPosition.distanceTo(user.getPlayer().getEntity().getPosition()) > 1.0) {
             client.send(new NotificationMessageComposer("action_distance_error", Locale.getOrDefault("kisses.far", "Debes estar delante de la persona para realizar la acci\u00f3n.")));
             return;
         }
@@ -51,7 +52,7 @@ public class KissesMessageEvent implements Event {
         }
 
         if(CometSettings.useNewKissSystem) {
-            if (client.getPlayer().antiSpam("SentKissesToUser", 0.5)) {
+            if (client.getPlayer().antiSpam("SentKissesToUser", 1.5)) {
                 client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("kisses.sent.too.fast", "Você está enviando beijos rápido demais.")));
                 return;
             }
@@ -68,6 +69,9 @@ public class KissesMessageEvent implements Event {
             client.getPlayer().getAchievements().progressAchievement(AchievementType.KISS_SENT, 1);
             user.getPlayer().getAchievements().progressAchievement(AchievementType.KISS_RECEIVED, 1);
 
+            user.getPlayer().getEntity().lookTo(client.getPlayer().getEntity().getPosition().getX(), client.getPlayer().getEntity().getPosition().getY(), true);
+            client.getPlayer().getEntity().lookTo(user.getPlayer().getEntity().getPosition().getX(), user.getPlayer().getEntity().getPosition().getY(), true);
+
             room.getEntities().broadcastMessage(
                     new TalkMessageComposer(
                             client.getPlayer().getEntity().getId(),
@@ -83,7 +87,5 @@ public class KissesMessageEvent implements Event {
 
         room.getEntities().broadcastMessage(new ActionMessageComposer(client.getPlayer().getEntity().getId(), 2));
         room.getEntities().broadcastMessage(new ActionMessageComposer(user.getPlayer().getEntity().getId(), 2));
-
-        user.getPlayer().getEntity().lookTo(client.getPlayer().getEntity().getPosition().getX(), client.getPlayer().getEntity().getPosition().getY());
     }
 }
