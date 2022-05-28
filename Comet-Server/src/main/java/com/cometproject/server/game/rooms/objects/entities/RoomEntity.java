@@ -520,6 +520,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             if (this.idleTime >= 600) {
                 if (!this.isIdle) {
                     this.isIdle = true;
+                    WiredTriggerCustomIdle.executeTriggers((PlayerEntity) this);
                     this.getRoom().getEntities().broadcastMessage(new IdleStatusMessageComposer((PlayerEntity) this, true));
                 }
             }
