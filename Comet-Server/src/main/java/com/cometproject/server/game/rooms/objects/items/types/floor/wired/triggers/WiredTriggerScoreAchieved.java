@@ -30,7 +30,7 @@ public class WiredTriggerScoreAchieved extends WiredTriggerItem {
 
     @Override
     public boolean suppliesPlayer() {
-        return false;
+        return true;
     }
 
     @Override
