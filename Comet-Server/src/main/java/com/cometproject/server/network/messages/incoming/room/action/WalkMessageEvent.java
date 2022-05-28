@@ -43,10 +43,10 @@ public class WalkMessageEvent implements Event {
                 final Position newPosition = new Position(goalX, goalY);
                 final RoomTile tile = client.getPlayer().getEntity().getRoom().getMapping().getTile(newPosition);
 
-                newPosition.setZ(tile.getWalkHeight());
-
+                entity.cancelWalk();
                 entity.unIdle();
 
+                newPosition.setZ(tile.getWalkHeight());
                 entity.warpImmediately(newPosition);
                 return;
             }

@@ -96,7 +96,7 @@ public class RoomItemFactory {
 
             put("wf_act_flee", WiredActionFlee.class);
             put("wf_act_match_to_sshot", WiredActionMatchToSnapshot.class);
-            put("wf_act_teleport_to", WiredActionTeleportPlayer.class);
+            put("wf_act_teleport_to", WiredActionTeleportPlayerNew.class);
             put("wf_act_show_message", WiredActionShowMessage.class);
             put("wf_act_toggle_state", WiredActionToggleState.class);
             put("wf_act_give_reward", WiredActionGiveReward.class);

@@ -757,12 +757,57 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.isBodyRotating = value;
     }
 
+    public void teleportToItemImmediately(RoomItemFloor itemFloor) {
+        this.teleportToObjectImmediately(itemFloor);
+    }
+
     public void teleportToItem(RoomItemFloor itemFloor) {
         this.teleportToObject(itemFloor);
     }
 
     public void teleportToEntity(RoomEntity entity) {
         this.teleportToObject(entity);
+    }
+
+    public void teleportToObjectImmediately(RoomObject roomObject) {
+        this.applyEffect(new PlayerEffect(4, 5));
+
+        this.warpedTile = this.getRoom().getMapping().getTile(this.getPosition());
+
+        final Position position = roomObject.getPosition().copy();
+        position.setZ(roomObject.getTile().getWalkHeight());
+
+        this.cancelWalk();
+        this.newWarpImmediately(position, false);
+    }
+
+    public void newWarpImmediately(Position position, boolean cancelNextUpdate) {
+        if (cancelNextUpdate) {
+            this.cancelNextUpdate();
+        } else {
+            this.updatePhase = 1;
+        }
+
+        this.needsForcedUpdate = true;
+        this.updateAndSetPosition(position);
+        this.markNeedsUpdate();
+
+        final RoomTile tile = this.getRoom().getMapping().getTile(position);
+
+        if (tile != null) {
+            this.addToTile(tile);
+
+            if (tile.getTopItemInstance() != null) {
+                if (tile.getTopItemInstance() instanceof SeatFloorItem) {
+                    ((SeatFloorItem) tile.getTopItemInstance()).onEntityStepOn(this, false);
+                }
+                else {
+                    tile.getTopItemInstance().onEntityStepOn(this);
+                }
+            }
+
+            tile.getEntities().add(this);
+        }
     }
 
     public void teleportToObject(RoomObject roomObject) {

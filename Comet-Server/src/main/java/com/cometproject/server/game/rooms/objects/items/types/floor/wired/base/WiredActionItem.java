@@ -33,7 +33,7 @@ public abstract class WiredActionItem extends WiredFloorItem {
     }
 
     @Override
-    public final boolean evaluate(RoomEntity entity, Object data) {
+    public boolean evaluate(RoomEntity entity, Object data) {
         if (!CometSettings.WIRED_WORKING_ACTIVE) return false;
 
         final WiredItemEvent itemEvent = new WiredItemEvent(entity, data);
