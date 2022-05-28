@@ -61,10 +61,10 @@ public class WhisperMessageEvent implements Event {
                 if (!client.getPlayer().getPermissions().getRank().roomFilterBypass()) {
                     FilterResult filterResult = RoomManager.getInstance().getFilter().filter(message);
                     if (filterResult.isBlocked()) {
-                        filterResult.sendLogToStaffs(client, "Whisper: " + playerEntity.getRoom().getData().getId() + "");
+                        filterResult.sendLogToStaffs(client, "Sussurro: " + playerEntity.getRoom().getData().getId() + "");
                         //client.send(new AdvancedAlertMessageComposer(Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                         client.sendQueue(new NotificationMessageComposer("filter", Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
-                        client.getLogger().info(("Filter detected a blacklisted word in message: \"" + message + "\""));
+                        client.getLogger().info(("O filtro detectou uma palavra proibida na mensagem: \"" + message + "\""));
                         continue;
                     }
                     if (filterResult.wasModified()) {
@@ -72,9 +72,9 @@ public class WhisperMessageEvent implements Event {
                     }
                     filteredMessage2 = playerEntity.getRoom().getFilter().filter(playerEntity, filteredMessage2);
                 }
-                whisperedPlayer.getSession().send(new WhisperMessageComposer(-1, "<b>" + client.getPlayer().getData().getUsername() + "</b>, al grupo: " + filteredMessage2, 1));
+                whisperedPlayer.getSession().send(new WhisperMessageComposer(-1, "<b>" + client.getPlayer().getData().getUsername() + "</b>, disse ao grupo: " + filteredMessage2, 1));
             }
-            client.send(new WhisperMessageComposer(playerEntity.getId(), "<b>" + client.getPlayer().getData().getUsername() + "</b>, al grupo: " + message, bubbleId));
+            client.send(new WhisperMessageComposer(playerEntity.getId(), "<b>" + client.getPlayer().getData().getUsername() + "</b>, disse ao grupo: " + message, bubbleId));
             playerEntity.postChat(message);
             return;
         }
@@ -86,7 +86,7 @@ public class WhisperMessageEvent implements Event {
             return;
 
         if(userTo.getPlayer().getSettings().disableWhisper() && !(client.getPlayer().getData().getRank() > Integer.parseInt(Locale.getOrDefault("whisper.minrank.force", "5")))) {
-            client.send(new WhisperMessageComposer(client.getPlayer().getId(), Locale.getOrDefault("whisper.disabled", "Oops!, the user who you're trying to whisper has whispers disabled!")));
+            client.send(new WhisperMessageComposer(client.getPlayer().getId(), Locale.getOrDefault("whisper.disabled", "Ops! O usuário que você tentou enviar mensagem possui sussurros desativados!")));
             return;
         }
 
@@ -108,10 +108,10 @@ public class WhisperMessageEvent implements Event {
             FilterResult filterResult = RoomManager.getInstance().getFilter().filter(message);
 
             if (filterResult.isBlocked()) {
-                filterResult.sendLogToStaffs(client, "<Whisper: " + playerEntity.getRoom().getData().getId() + ">");
+                filterResult.sendLogToStaffs(client, "<Sussurro: " + playerEntity.getRoom().getData().getId() + ">");
                 //client.send(new AdvancedAlertMessageComposer(Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                 client.sendQueue(new NotificationMessageComposer("filter", Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
-                client.getLogger().info("Filter detected a blacklisted word in message: \"" + message + "\"");
+                client.getLogger().info("O filtro detectou uma palavra proibida na mensagem: \"" + message + "\"");
                 return;
             } else if (filterResult.wasModified()) {
                 filteredMessage = filterResult.getMessage();
@@ -123,7 +123,7 @@ public class WhisperMessageEvent implements Event {
         if (playerEntity.onChat(filteredMessage)) {
             try {
                 if (LogManager.ENABLED)
-                    LogManager.getInstance().getStore().getLogEntryContainer().put(new RoomChatLogEntry(room.getId(), client.getPlayer().getId(), Locale.getOrDefault("game.logging.whisper", "<Whisper to %username%>").replace("%username%", user) + " " + message));
+                    LogManager.getInstance().getStore().getLogEntryContainer().put(new RoomChatLogEntry(room.getId(), client.getPlayer().getId(), Locale.getOrDefault("game.logging.whisper", "<Sussurro para %username%>").replace("%username%", user) + " " + message));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,7 +133,7 @@ public class WhisperMessageEvent implements Event {
 
             for (PlayerEntity entity : playerEntity.getRoom().getEntities().getWhisperSeers()) {
                 if (entity.getPlayer().getId() != client.getPlayer().getId() && !user.equals(entity.getUsername()))
-                    entity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("game.whispering", "Whisper to %username%: %message%").replace("%username%", user).replace("%message%", filteredMessage)));
+                    entity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), Locale.getOrDefault("game.whispering", "Sussurro para %username%: %message%").replace("%username%", user).replace("%message%", filteredMessage)));
             }
         }
 

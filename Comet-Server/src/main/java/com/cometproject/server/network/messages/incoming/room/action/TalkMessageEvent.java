@@ -266,7 +266,7 @@ public class TalkMessageEvent implements Event {
                     ((PrivateChatFloorItem) floorItem).broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble));
                 }
             } else if (message.startsWith("@") && !UsingColourCode(message)) {
-                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "[TU MENSAJE] " + filteredMessage, bubble));
+                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "[SUA MENSAGEM] " + filteredMessage, bubble));
             } else {
                 if(UsingColourCode(message)) {
                     filteredMessage = "<font color=\"%clrHr\">" + filteredMessage + "</font>";
