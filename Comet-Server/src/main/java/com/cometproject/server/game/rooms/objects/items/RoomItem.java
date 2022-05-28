@@ -153,7 +153,7 @@ public abstract class RoomItem extends BigRoomFloorObject implements Attributabl
         msg.writeInt(1);
         msg.writeInt(0);
 
-        msg.writeString((this instanceof FootballGateFloorItem) ? "" :
+        msg.writeString((this instanceof FootballGateFloorItem) ? this.getItemData().getData() :
                 (this instanceof WiredFloorItem) ? ((WiredFloorItem) this).getState() ? "1" : "0" :
                         (this instanceof SoundMachineFloorItem) ? ((SoundMachineFloorItem) this).getState() ? "1" : "0" :
                                 this.getItemData().getData());

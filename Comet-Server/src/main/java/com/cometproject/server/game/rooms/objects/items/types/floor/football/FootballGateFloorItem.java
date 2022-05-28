@@ -6,8 +6,6 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 
-import java.util.Arrays;
-
 
 public class FootballGateFloorItem extends RoomItemFloor {
     public FootballGateFloorItem(RoomItemData roomItemData, Room room) {
@@ -24,27 +22,34 @@ public class FootballGateFloorItem extends RoomItemFloor {
         if (!(entity instanceof PlayerEntity))
             return;
 
-        PlayerEntity playerEntity = ((PlayerEntity) entity);
 
-        String newFigure = "";
+        final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
-        for (String playerFigurePart : playerEntity.getFigure().split("\\.")) {
+        final StringBuilder newFigure = new StringBuilder();
+
+        for (final String playerFigurePart : playerEntity.getFigure().split("\\.")) {
             if (!playerFigurePart.startsWith("ch") && !playerFigurePart.startsWith("lg"))
-                newFigure += playerFigurePart + ".";
+                newFigure.append(playerFigurePart).append(".");
         }
 
         String newFigureParts = this.getFigure(playerEntity.getGender());
 
-        for (String newFigurePart : newFigureParts.split("\\.")) {
+        for (final String newFigurePart : newFigureParts.split("\\.")) {
             if (newFigurePart.startsWith("hd"))
                 newFigureParts = newFigureParts.replace(newFigurePart, "");
         }
 
         if (newFigureParts.equals("")) return;
 
-        playerEntity.getPlayer().getData().setFigure(newFigure + newFigureParts);
-        playerEntity.getPlayer().poof();
+        if (playerEntity.hasAttribute("originalFigure")) {
+            playerEntity.getPlayer().getData().setFigure(playerEntity.getAttribute("originalFigure").toString());
+            playerEntity.removeAttribute("originalFigure");
+        } else {
+            playerEntity.setAttribute("originalFigure", playerEntity.getPlayer().getData().getFigure());
+            playerEntity.getPlayer().getData().setFigure(newFigure + newFigureParts);
+        }
 
+        playerEntity.getPlayer().poof();
         playerEntity.getPlayer().getData().save();
     }
 
@@ -65,7 +70,7 @@ public class FootballGateFloorItem extends RoomItemFloor {
             return "hd-99999-99999.ch-3030-63.lg-275-1408";
         }
 
-        String[] figureData = this.getItemData().getData().split(",");
+        final String[] figureData = this.getItemData().getData().split(",");
         String figure;
 
         if (gender.equalsIgnoreCase("M")) {

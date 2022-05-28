@@ -11,28 +11,27 @@ public class SaveFootballGateMessageEvent implements Event {
 
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null) {
             return;
         }
+
         if (!room.getRights().hasRights(client.getPlayer().getEntity().getPlayerId()) && !client.getPlayer().getPermissions().getRank().roomFullControl()) {
             client.disconnect();
             return;
         }
 
-        int itemId = msg.readInt();
+        final int itemId = msg.readInt();
 
         if (room.getItems().getFloorItem(itemId) == null || !(room.getItems().getFloorItem(itemId) instanceof FootballGateFloorItem))
             return;
 
-        FootballGateFloorItem floorItem = ((FootballGateFloorItem) room.getItems().getFloorItem(itemId));
+        final FootballGateFloorItem floorItem = ((FootballGateFloorItem) room.getItems().getFloorItem(itemId));
+        final String gender = msg.readString().toUpperCase();
+        final String figure = msg.readString();
 
-        String gender = msg.readString().toUpperCase();
-        String figure = msg.readString();
-
-        floorItem.setFigure(gender.toUpperCase(), figure.contains(";") ?
-                figure.split(";")[gender.equals("M") ? 0 : 1] : figure);
+        floorItem.setFigure(gender, figure.contains(";") ? figure.split(";")[gender.equals("M") ? 0 : 1] : figure);
         floorItem.saveData();
 
         floorItem.sendUpdate();

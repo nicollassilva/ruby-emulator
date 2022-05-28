@@ -27,10 +27,10 @@ public class PlayerFigureValidator {
     private static List<Integer> listexeptioncolors;
 
     public static boolean CheckFilterChar(String data) {
-        char[] letters = data.toLowerCase().toCharArray();
-        String allowedCharacters = "abcdefghijklmnopqrstuvwxyz1234567890-.";
+        final char[] letters = data.toLowerCase().toCharArray();
+        final String allowedCharacters = "abcdefghijklmnopqrstuvwxyz1234567890-.";
 
-        for (char chr : letters) {
+        for (final char chr : letters) {
             if (!allowedCharacters.contains(chr + "")) {
                 return true;
             }

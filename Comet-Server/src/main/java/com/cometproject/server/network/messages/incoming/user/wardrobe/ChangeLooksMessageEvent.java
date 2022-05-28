@@ -9,6 +9,7 @@ import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
+import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.details.AvatarAspectUpdateMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
@@ -16,7 +17,7 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 
 public class ChangeLooksMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        String gender = msg.readString();
+        final String gender = msg.readString();
         String figure = msg.readString();
 
         if(client.getPlayer().getData() == null)
@@ -44,7 +45,7 @@ public class ChangeLooksMessageEvent implements Event {
             return;
         }
 
-        int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastFigureUpdate();
+        final int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastFigureUpdate();
 
         if (timeSinceLastUpdate >= CometSettings.playerChangeFigureCooldown) {
             client.getPlayer().getData().setGender(gender);
@@ -53,10 +54,12 @@ public class ChangeLooksMessageEvent implements Event {
 
             client.getPlayer().poof();
             client.getPlayer().setLastFigureUpdate((int) Comet.getTime());
-        }
 
-        client.getPlayer().getAchievements().progressAchievement(AchievementType.AVATAR_LOOKS, 1);
-        client.getPlayer().getQuests().progressQuest(QuestType.PROFILE_CHANGE_LOOK);
-        client.send(new AvatarAspectUpdateMessageComposer(figure, gender));
+            client.getPlayer().getAchievements().progressAchievement(AchievementType.AVATAR_LOOKS, 1);
+            client.getPlayer().getQuests().progressQuest(QuestType.PROFILE_CHANGE_LOOK);
+            client.send(new AvatarAspectUpdateMessageComposer(figure, gender));
+        } else {
+            client.send(new NotificationMessageComposer("generic", "Suas alterações não foram salvas. Você está trocando roupa rápido demais!"));
+        }
     }
 }
