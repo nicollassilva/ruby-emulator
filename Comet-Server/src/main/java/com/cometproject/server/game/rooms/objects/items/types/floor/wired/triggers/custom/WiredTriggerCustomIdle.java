@@ -16,11 +16,8 @@ public class WiredTriggerCustomIdle extends WiredTriggerItem {
 
     public static boolean executeTriggers(PlayerEntity playerEntity) {
         boolean wasExecuted = false;
-
-        for (RoomItemFloor wiredItem : getTriggers(playerEntity.getRoom(), WiredTriggerCustomIdle.class)) {
-            WiredTriggerCustomIdle trigger = ((WiredTriggerCustomIdle) wiredItem);
-
-            wasExecuted = trigger.evaluate(playerEntity, trigger);
+        for (WiredTriggerCustomIdle trigger : getTriggers(playerEntity.getRoom(), WiredTriggerCustomIdle.class)) {
+            wasExecuted |= trigger.evaluate(playerEntity, trigger);
         }
 
         return wasExecuted;
