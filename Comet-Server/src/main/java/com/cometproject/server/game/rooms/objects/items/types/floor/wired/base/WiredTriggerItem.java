@@ -2,9 +2,11 @@ package com.cometproject.server.game.rooms.objects.items.types.floor.wired.base;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionExecuteStacks;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionShowMessage;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonOrEffect;
@@ -121,7 +123,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                 if (useRandomEffect) {
                     final WiredActionItem actionItem = wiredActions.get(RandomUtil.getRandomInt(0, wiredActions.size() - 1));
 
-                    if (actionItem != null) {
+                    if (actionItem != null && !(actionItem instanceof WiredActionExecuteStacks)) {
                         actionItem.setUseItemsAnimation(!userNoItemsAnimationEffect);
                         actionItem.setUsesPlayersAnimations(!playerNoAnimationEffect);
 
@@ -135,7 +137,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                     wiredActions.sort(comparator.reversed());
 
                     for (final WiredActionItem actionItem : wiredActions) {
-                        if (!unseenEffectItem.getSeenEffects().contains(actionItem.getId())) {
+                        if (!unseenEffectItem.getSeenEffects().contains(actionItem.getId()) && !(actionItem instanceof WiredActionExecuteStacks)) {
                             unseenEffectItem.getSeenEffects().add(actionItem.getId());
 
                             actionItem.setUseItemsAnimation(!userNoItemsAnimationEffect);
@@ -161,7 +163,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                     wiredActions.sort(comparator.reversed());
 
                     for (final WiredActionItem actionItem : wiredActions) {
-                        if (actionItem.requiresPlayer() && entity == null)
+                        if (actionItem.requiresPlayer() && entity == null || actionItem instanceof WiredActionExecuteStacks)
                             continue;
 
                         if (actionItem instanceof WiredActionShowMessage || actionItem instanceof WiredCustomShowMessageRoom) {
@@ -225,14 +227,11 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
             }
 
         } catch (Exception e) {
-            /*
-            e.printStackTrace();
-            log.error("Error during WiredTrigger evaluation", e);
-
-             */
+            if(Comet.isDebugging) {
+                log.error("Error during WiredTrigger evaluation", e);
+            }
         }
 
-        // tell the event that called the trigger that it was not a success!
         return false;
     }
 
