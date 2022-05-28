@@ -1,6 +1,7 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredTriggerItem;
 import com.cometproject.server.game.rooms.types.Room;
@@ -14,14 +15,13 @@ public class WiredTriggerScoreAchieved extends WiredTriggerItem {
         super(itemData, room);
     }
 
-    public static boolean executeTriggers(int score, GameTeam team, Room room) {
+    public static boolean executeTriggers(int score, RoomEntity entity) {
         boolean wasExecuted = false;
-
-        for (final WiredTriggerScoreAchieved floorItem : getTriggers(room, WiredTriggerScoreAchieved.class)) {
+        for (final WiredTriggerScoreAchieved floorItem : getTriggers(entity.getRoom(), WiredTriggerScoreAchieved.class)) {
             if(floorItem == null) continue;
 
-            if (floorItem.scoreToAchieve() == score) {
-                wasExecuted = floorItem.evaluate(null, team);
+            if (score >= floorItem.scoreToAchieve()) {
+                wasExecuted |= floorItem.evaluate(entity, null);
             }
         }
 

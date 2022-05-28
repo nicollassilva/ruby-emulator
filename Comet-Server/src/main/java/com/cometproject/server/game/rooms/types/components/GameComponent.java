@@ -199,7 +199,10 @@ public class GameComponent {
             }
         }
 
-        WiredTriggerScoreAchieved.executeTriggers(this.getRoom().getGame().getScore(team), team, this.getRoom());
+        for (final int playerId : this.getRoom().getGame().getTeams().get(team)) {
+            final PlayerEntity player = this.room.getEntities().getEntityByPlayerId(playerId);
+            WiredTriggerScoreAchieved.executeTriggers(this.getRoom().getGame().getScore(team), player);
+        }
     }
 
     public void updateTeamCountGate(GameTeam team) {
