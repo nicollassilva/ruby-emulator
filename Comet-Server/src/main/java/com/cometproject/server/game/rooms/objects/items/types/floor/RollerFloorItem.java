@@ -16,20 +16,21 @@ import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 
 public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     private final RollerFloorItemEvent event;
     private boolean cycleCancelled;
     private final Set<RoomEntity> movedEntities;
+    private final ArrayList<RoomEntity> stepOnRoller;
 
     public RollerFloorItem(final RoomItemData itemData, final Room room) {
         super(itemData, room);
         this.cycleCancelled = false;
         this.movedEntities = new ConcurrentHashSet<>();
+        this.stepOnRoller = new ArrayList<>();
 
         this.queueEvent(this.event = new RollerFloorItemEvent(this.getTickCount()));
     }
@@ -49,6 +50,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     @Override
     public void onEntityStepOn(final RoomEntity entity) {
         event.setTotalTicks(this.getTickCount());
+        this.stepOnRoller.add(entity);
     }
 
     @Override
@@ -72,6 +74,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
         }
 
         this.movedEntities.clear();
+        this.stepOnRoller.clear();
 
         event.setTotalTicks(this.getTickCount());
         this.queueEvent(event);
@@ -86,10 +89,16 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
         final RoomTile tile = this.getRoom().getMapping().getTile(sqInfront);
         boolean retry = false;
-        final List<RoomEntity> entities = this.getRoom().getEntities().getEntitiesAt(this.getPosition());
+        final List<RoomEntity> entities = this.stepOnRoller.size() > 0
+                ? this.stepOnRoller
+                : this.getRoom().getEntities().getEntitiesAt(this.getPosition());
 
-        for (final RoomEntity entity : entities) {
-            if (entity.getPosition().getX() != this.getPosition().getX() && entity.getPosition().getY() != this.getPosition().getY()) {
+        final Iterator<RoomEntity> entityIterator = entities.iterator();
+        while (entityIterator.hasNext()) {
+            final RoomEntity entity = entityIterator.next();
+            final boolean isNotOnRoller = entity.getPosition().getX() != this.getPosition().getX() || entity.getPosition().getY() != this.getPosition().getY();
+            final boolean hasEntityHoldingRoller = entityIterator.hasNext();
+            if (isNotOnRoller && !hasEntityHoldingRoller) {
                 continue;
             }
 
@@ -110,10 +119,11 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 entity.leaveRoom(false, false, true);
             } else {
                 WiredTriggerWalksOffFurni.executeTriggers(entity, this);
-
                 final double toHeight = this.getRoom().getMapping().getTile(sqInfront.getX(), sqInfront.getY()).getWalkHeight();
+                final Position entityPos = this.getPosition().copy();
+                entityPos.setZ(entity.getPosition().getZ());
 
-                this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entity.getPosition().copy(), new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
+                this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(entityPos, new Position(sqInfront.getX(), sqInfront.getY(), toHeight), this.getVirtualId(), entity.getId(), 0));
 
                 if (tile.getStatus() == RoomTileStatusType.SIT) {
                     entity.setRolling(true);
@@ -124,6 +134,10 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
                 entity.updateAndSetPosition(new Position(sqInfront.getX(), sqInfront.getY(), toHeight));
                 entity.markNeedsUpdate(false);
+            }
+
+            if(hasEntityHoldingRoller){
+                break;
             }
         }
 
