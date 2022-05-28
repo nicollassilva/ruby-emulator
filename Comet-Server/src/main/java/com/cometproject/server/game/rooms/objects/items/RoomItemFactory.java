@@ -172,11 +172,12 @@ public class RoomItemFactory {
             put("wf_pyramid", WiredAddonPyramid.class);
             put("wf_visual_timer", WiredAddonVisualTimer.class);
             put("wf_blob", WiredAddonBlob.class);
-            put("wf_puzzlebox", WiredAddonNewPuzzleBox.class); // old: WiredAddonPuzzleBox
+            put("wf_puzzlebox", WiredAddonNewPuzzleBox.class);
 
-            put("wf_act_collision_case", WiredCustomCollisionCase.class); // action new
-            put("wf_act_unfreeze", WiredCustomUnfreeze.class); // action new
-            put("wf_cstm_set_speed", WiredCustomSetSpeed.class); //action new
+            put("wf_act_position_collision", WiredCustomCollisionPosition.class);
+            put("wf_act_collision_case", WiredCustomCollisionCase.class);
+            put("wf_act_unfreeze", WiredCustomUnfreeze.class);
+            put("wf_cstm_set_speed", WiredCustomSetSpeed.class);
 
             put("slot_machine", SlotMachineFloorItem.class); // slot machine
             put("slot_machine_credits", SlotMachineCreditsFloorItem.class); // slot machine credits
