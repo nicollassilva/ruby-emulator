@@ -9,7 +9,7 @@ public class FillCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         BuildingComponent buildings = client.getPlayer().getEntity().getRoom().getBuilderComponent();
-        if (buildings.getBuilderId() != client.getPlayer().getId()) {
+        if (buildings.getBuilderId() != client.getPlayer().getId() && buildings.getBuilderId() != -1 && !buildings.getBuilderName().isEmpty()) {
             sendWhisper("O usuário '" + buildings.getBuilderName() + "' já está usando esse comando.", client);
             return;
         }
