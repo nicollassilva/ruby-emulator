@@ -21,6 +21,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorIte
 import com.cometproject.server.game.rooms.objects.items.types.floor.GiftFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.MagicStackFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiTileFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
@@ -843,6 +844,14 @@ public class ItemsComponent {
 
             if (!tile.canPlaceItemHere()) {
                 return false;
+            }
+
+            if(item.getInteraction().equals("bb_patch")) {
+                final long banzaiFloorItemCount = tile.getItems().stream().filter(filteredItem -> filteredItem instanceof BanzaiTileFloorItem).count();
+
+                if(banzaiFloorItemCount >= CometSettings.maxBanzaiTilesInStack) {
+                    return false;
+                }
             }
 
             if (!tile.canStack() && tile.getTopItem() != 0) {

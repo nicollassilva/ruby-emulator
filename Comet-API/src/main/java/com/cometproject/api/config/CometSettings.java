@@ -18,6 +18,8 @@ public class CometSettings {
     public static int dailyRespects = 3;
     public static int dailyScratchs = 3;
 
+    public static int maxBanzaiTilesInStack = 15;
+
     public static int vipRank = 2;
     public static int rankCanSeeVipContent = 13;
 
