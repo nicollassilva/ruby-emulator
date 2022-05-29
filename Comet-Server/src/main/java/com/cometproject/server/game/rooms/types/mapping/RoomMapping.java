@@ -14,6 +14,7 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.utilities.RandomUtil;
 import com.google.common.collect.Lists;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,7 +149,6 @@ public class RoomMapping {
     }
 
     public boolean positionHasUser(Integer entityId, Position position) {
-        boolean hasMountedPet = false;
         int entitySize = 0;
         boolean hasMe = false;
 
@@ -167,23 +167,8 @@ public class RoomMapping {
             if (entity instanceof PetEntity && entity.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
                 return false;
             }
-//
-//            if (entity.hasMount()) {
-//                if(entity.getMountedEntity() != null && entity.getMountedEntity().getId() == entityId) {
-//                    return false;
-//                }
-//            } else if(entity instanceof PlayerEntity) {
-//                RoomEntity myEntity = this.getRoom().getEntities().getEntity(entityId);
-//
-//                if(myEntity != null) {
-//                    if (myEntity.getMountedEntity() != null && myEntity.getMountedEntity() == entity)) {
-//                        return false;
-//                    }
-//                }
-//
-//            }
 
-            // Do we need a null check here? Not sure yet..
+            // TODO: clean up this
             if (entityId != 0 && entity.getId() == entityId) {
                 hasMe = true;
             }
@@ -191,10 +176,6 @@ public class RoomMapping {
 
         return !(hasMe && entitySize == 1) && entitySize > 0;
     }
-
-    /*public boolean canStepUpwards(double height0, double height1) {
-        return (height0 - height1) <= 1.5;
-    }*/
 
     public boolean positionCanWalkUser(Position position) {
         final List<RoomEntity> entities = this.room.getEntities().getEntitiesAt(position);
@@ -218,11 +199,11 @@ public class RoomMapping {
         return true;
     }
 
+    public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove,boolean isRetry) {
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden());
+    }
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove) {
-        if (entity != null)
-            return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true);
-        else
-            return isValidStep(0, currentPosition, toPosition, isFinalMove, true, true);
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden());
     }
 
     public boolean isValidStep(Position from, Position to, boolean lastStep) {
@@ -233,11 +214,42 @@ public class RoomMapping {
         return isValidStep(null, from, to, lastStep, isFloorItem, false);
     }
 
-    public boolean isValidStep(Integer entity, Position from, Position to, boolean lastStep, boolean isFloorItem, boolean isRetry) {
-        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, false, false);
+    public boolean isValidStep(@Nullable Integer entity, Position from, Position to, boolean lastStep, boolean isFloorItem, boolean isRetry) {
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, false);
+    }
+    public boolean isValidStep(@Nullable Integer entity,
+                               Position from,
+                               Position to,
+                               boolean lastStep,
+                               boolean isFloorItem,
+                               boolean isRetry,
+                               boolean ignoreHeight) {
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, false);
+    }
+    public boolean isValidStep(
+            @Nullable Integer entity,
+            Position from,
+            Position to,
+            boolean lastStep,
+            boolean isFloorItem,
+            boolean isRetry,
+            boolean ignoreHeight,
+            boolean isItemOnRoller
+    ) {
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false);
     }
 
-    public boolean isValidStep(Integer entity, Position from, Position to, boolean lastStep, boolean isFloorItem, boolean isRetry, boolean ignoreHeight, boolean isItemOnRoller) {
+    public boolean isValidStep(
+            Integer entity,
+            Position from,
+            Position to,
+            boolean lastStep,
+            boolean isFloorItem,
+            boolean isRetry,
+            boolean ignoreHeight,
+            boolean isItemOnRoller,
+            boolean isOverriding
+    ) {
         if (from.getX() == to.getX() && from.getY() == to.getY()) {
             return true;
         }
@@ -316,9 +328,13 @@ public class RoomMapping {
             }
         }
 
-
+/*
         if (!positionCanWalkUser(to)) {
             return false;
+        }*/
+
+        if(isOverriding){
+            return true;
         }
 
         final boolean positionHasUser = positionHasUser(entityId, to);

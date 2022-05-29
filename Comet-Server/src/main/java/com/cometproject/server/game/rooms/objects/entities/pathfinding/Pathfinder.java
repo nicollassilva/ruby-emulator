@@ -4,6 +4,7 @@ import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.RoomObject;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
+import com.cometproject.server.game.rooms.types.Room;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MinMaxPriorityQueue;
 
@@ -122,9 +123,10 @@ public abstract class Pathfinder {
         return null;
     }
 
-    public boolean isValidStep(RoomObject roomObject, Position from, Position to, boolean lastStep, boolean isRetry) {
-        return (roomObject.getRoom().getMapping().isValidStep(roomObject instanceof RoomEntity ? ((RoomEntity) roomObject).getId() : 0,
-                from, to, lastStep, roomObject instanceof RoomItemFloor, isRetry) ||
-                (roomObject instanceof RoomEntity && ((RoomEntity) roomObject).isOverriden()));
+    public boolean isValidStep(RoomObject object, Position from, Position to, boolean lastStep, boolean isRetry) {
+        if(object instanceof RoomEntity)
+            return object.getRoom().getMapping().isValidEntityStep((RoomEntity) object, from, to, lastStep, isRetry);
+        else
+            return object.getRoom().getMapping().isValidStep(0, from, to, lastStep, object instanceof RoomItemFloor, isRetry);
     }
 }
