@@ -845,9 +845,14 @@ public class ItemsComponent {
                 return false;
             }
 
-            if (!tile.canStack() && tile.getTopItem() != 0 && tile.getTopItem() != item.getId()) {
-                if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL))
+            if (!tile.canStack() && tile.getTopItem() != 0) {
+                if(floor == null && tile.getTopItem() != item.getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
                     return false;
+                }
+
+                if(floor != null && tile.getTopItem() != floor.getItemData().getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
+                    return false;
+                }
             }
 
             if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY()) {
@@ -962,10 +967,17 @@ public class ItemsComponent {
     public void placeFloorItem(PlayerItem item, int x, int y, int rot, Player player) {
         final RoomTile tile = room.getMapping().getTile(x, y);
 
-        if (tile == null)
+        if (tile == null) {
+            this.sendFurniturePlacementError(player.getSession());
             return;
+        }
 
         double height = tile.getStackHeight(null);
+
+        if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, rot)) {
+            this.sendFurniturePlacementError(player.getSession());
+            return;
+        }
 
         if (item.getDefinition().getInteraction().equals("soundmachine")) {
             if (this.soundMachineId > 0) {
@@ -997,7 +1009,7 @@ public class ItemsComponent {
         }
 
         if(item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
-            height = tile.getWalkHeight();
+            height = tile.getStackHeight();
         }
 
         final RoomItemFloor floorItem = room.getItems().addFloorItem(item.getId(), item.getBaseId(), room, player.getId(), player.getData().getUsername(), x, y, rot, height, ExtraData, item.getLimitedEditionItem());
@@ -1071,5 +1083,12 @@ public class ItemsComponent {
 
     public Map<Integer, String> getItemOwners() {
         return this.itemOwners;
+    }
+
+    protected void sendFurniturePlacementError(Session client) {
+        final Map<String, String> notificationParams = Maps.newHashMap();
+        notificationParams.put("message", "${room.error.cant_set_item}");
+
+        client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
     }
 }
