@@ -8,7 +8,6 @@ import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.room.engine.UpdateStackHeightTileHeightComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.UpdateStackMapMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
 
@@ -69,6 +68,7 @@ public class SaveStackToolMessageEvent implements Event {
         );
 
         for (final AffectedTile affectedTile : affectedTiles) {
+
             final RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
 
             if(placeOverFurni) {
@@ -78,6 +78,9 @@ public class SaveStackToolMessageEvent implements Event {
                     highestHeight = affectedTileHeight;
                 }
             }
+
+            tile.reload();
+            room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tile));
         }
 
         if(placeOverFurni){
