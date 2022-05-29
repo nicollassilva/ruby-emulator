@@ -6,6 +6,7 @@ import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
+import com.cometproject.server.game.rooms.objects.items.types.floor.pet.horse.HorseJumpFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.outgoing.room.avatar.AvatarUpdateMessageComposer;
 
@@ -48,6 +49,10 @@ public class SeatFloorItem extends RoomItemFloor {
             if(entity.getPosition().getX() == position.getX() && entity.getPosition().getY() == position.getY()) {
                 entity.sit(getSitHeight(), getRotation());
             }
+        }
+
+        if(this.getTile().hasItems() && this.getTile().getItems().stream().anyMatch(item -> item instanceof HorseJumpFloorItem) && entity instanceof PlayerEntity) {
+            entity.moveTo(this.getPosition().squareInFront(this.getRotation()));
         }
 
         if (instantUpdate || entity.isRolling()) {

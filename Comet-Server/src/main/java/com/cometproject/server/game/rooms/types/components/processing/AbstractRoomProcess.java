@@ -15,8 +15,10 @@ import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.EffectFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.SeatFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.TeleportPadFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.pet.horse.HorseJumpFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerBotReachedFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
@@ -507,7 +509,10 @@ public class AbstractRoomProcess implements CometTask {
                     }
 
                     if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-                        isCancelled = true;
+
+                        if(!(item instanceof HorseJumpFloorItem) || !(item.getTile().getTopItemInstance() instanceof SeatFloorItem)) {
+                            isCancelled = true;
+                        }
                     }
 
                     if (!isCancelled) {
