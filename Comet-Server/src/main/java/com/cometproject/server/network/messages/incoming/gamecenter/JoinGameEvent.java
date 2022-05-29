@@ -20,9 +20,8 @@ import java.util.UUID;
 public class JoinGameEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        int gameId = msg.readInt();
-        //client.getPlayer().sendBubble("", "GameID: " + gameId);
-        GameCenterInfo gameCenterInfo = GameCenterManager.getInstance().getGameById(gameId);
+        final int gameId = msg.readInt();
+        final GameCenterInfo gameCenterInfo = GameCenterManager.getInstance().getGameById(gameId);
 
         switch (gameId) {
             case 1: {
@@ -33,31 +32,16 @@ public class JoinGameEvent implements Event {
                 SnowPlayerQueue.addPlayerInQueue(client);
                 break;
             }
-            case 3: {
-                client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
-                break;
-            }
-            case 4: {
-                client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
-                break;
-            }
-            case 5: {
-                client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
-                break;
-            }
-            case 6: {
-                client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
-                break;
-            }
+            case 3:
+            case 4:
+            case 5:
+            case 6:
             case 7: {
                 client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
                 break;
             }
-            case 8: {
-                client.send(new RoomForwardMessageComposer(gameCenterInfo.getGameRoomId()));
-                break;
-            }
         }
+
         client.send(new GameStatusMessageComposer(gameId, 0));
     }
 }

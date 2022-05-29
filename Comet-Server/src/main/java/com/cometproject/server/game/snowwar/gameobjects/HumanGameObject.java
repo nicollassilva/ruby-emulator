@@ -6,6 +6,7 @@ package com.cometproject.server.game.snowwar.gameobjects;
  * ****************
  */
 
+import com.cometproject.api.game.achievements.types.AchievementType;
 import com.cometproject.server.game.snowwar.*;
 import com.cometproject.server.game.snowwar.data.SnowWarPlayerData;
 import com.cometproject.server.game.snowwar.gameevents.PickBallFromGameItem;
@@ -563,12 +564,22 @@ public class HumanGameObject extends GameItemObject {
     }
 
     public void onSnowBallHit(SnowBallGameObject snowBall) {
-        HumanGameObject attacker = snowBall.getAttacker();
+        final HumanGameObject attacker = snowBall.getAttacker();
+
         decrementHealth(attacker, snowBall.direction360()._2Hq());
         attacker.giveScorePerHit(this);
+
+        if(attacker.cn != null && attacker.cn.getPlayer() != null) {
+            attacker.cn.getPlayer().getAchievements().progressAchievement(AchievementType.SNOW_USER_HITS, 1);
+        }
+
+        if(this.cn != null && this.cn.getPlayer() != null) {
+            this.cn.getPlayer().getAchievements().progressAchievement(AchievementType.SNOW_USER_THROW, 1);
+        }
+
     }
 
     public int collisionHeight() {
-        return 5000;
+        return collisionHeight;
     }
 }

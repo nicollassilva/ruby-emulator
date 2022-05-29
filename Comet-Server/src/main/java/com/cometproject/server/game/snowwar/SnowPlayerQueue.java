@@ -16,6 +16,7 @@ import com.cometproject.server.game.snowwar.gameobjects.HumanGameObject;
 import com.cometproject.server.game.snowwar.thread.SnowWarTask;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.gamecenter.snowwar.*;
+import com.cometproject.server.network.messages.outgoing.messenger.FriendToolbarNotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.permissions.YouArePlayingGameMessageComposer;
@@ -58,7 +59,6 @@ public class SnowPlayerQueue {
         cn.snowWarPlayerData.setHumanObject(new HumanGameObject(pickRoom.room, 0));
         cn.snowWarPlayerData.humanObject.status = 0;
         cn.snowWarPlayerData.setRoom(pickRoom.room);
-//cn.getPlayer().getMessenger().sendNotification(FriendNotificationType.PLAYING_GAME, "snowwar", true, (cn.getPlayer().getEntity() != null));
         pickRoom.broadcast(new UserJoinedGameComposer(cn));
         pickRoom.players.put(playerData.getId(), cn);
         if (pickRoom.room.Owner.equals(playerData.getUsername())) {
@@ -70,7 +70,8 @@ public class SnowPlayerQueue {
         if (pickRoom.room.TimeToStart < 20 && pickRoom.room.STATUS == 1) {
             cn.send(new StartCounterComposer(pickRoom.room.TimeToStart));
         }
-        if (pickRoom.players.size() >= 1) {
+
+        if (pickRoom.players.size() > 1) {
             startLoading(pickRoom);
         }
     }

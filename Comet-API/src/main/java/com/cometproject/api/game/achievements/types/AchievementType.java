@@ -55,7 +55,11 @@ public enum AchievementType {
     HORSE_CAN_MOUNT_OWN("ACH_HorseRent"),
     TRADER_PASS("ACH_TraderPass"),
     KISS_RECEIVED("ACH_KissEarned"),
-    KISS_SENT("ACH_KissGiven");
+    KISS_SENT("ACH_KissGiven"),
+    SNOW_TOTAL_SCORE("ACH_SnowWarTotalScore"),
+    SNOW_USER_HITS("ACH_SnowStormHit"),
+    SNOW_USER_WINNER("ACH_SnowStormWin"),
+    SNOW_USER_THROW("ACH_SnowStormThrow");
 
     private final String groupName;
 

@@ -6,6 +6,7 @@ package com.cometproject.server.game.snowwar.tasks;
  * ****************
  */
 
+import com.cometproject.api.game.achievements.types.AchievementType;
 import com.cometproject.server.game.snowwar.SnowWar;
 import com.cometproject.server.game.snowwar.SnowWarRoom;
 import com.cometproject.server.game.snowwar.gameobjects.HumanGameObject;
@@ -51,10 +52,12 @@ public class SnowArenaEnd {
 
             if (player.team == room.Winner) {
                 // Snowstorm Winner
-                //player.cn.getPlayer().increaseXP(50);
+                player.cn.getPlayer().getAchievements().progressAchievement(AchievementType.SNOW_USER_WINNER, 1);
             } else {
                 //player.cn.getPlayer().increaseXP(25);
             }
+
+            player.cn.getPlayer().getAchievements().progressAchievement(AchievementType.SNOW_TOTAL_SCORE, player.team == SnowWar.TEAM_BLUE ? blueScore : redScore);
         }
 
         room.broadcast(new GameEndingComposer(room));
