@@ -83,7 +83,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             if (page != null) {
                 if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank && client.getPlayer().getData().getRank() < CometSettings.rankCanSeeVipContent) return;
 
-                if (page.getMinRank() < client.getPlayer().getData().getRank() || page.getItems().containsKey(itemId)) {
+                if (page.getMinRank() <= client.getPlayer().getData().getRank() || page.getItems().containsKey(itemId)) {
                     item = page.getItems().get(itemId);
 
                     if (item == null && page.getType() == CatalogPageType.RECENT_PURCHASES) {
