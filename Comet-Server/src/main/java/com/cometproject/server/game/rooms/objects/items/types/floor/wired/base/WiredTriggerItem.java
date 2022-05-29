@@ -170,7 +170,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                             continue;
 
                         if (actionItem instanceof WiredActionShowMessage || actionItem instanceof WiredCustomShowMessageRoom) {
-                            if (executeActionMsg >= 8) {
+                            if (executeActionMsg >= limit) {
                                 continue;
                             }
 
