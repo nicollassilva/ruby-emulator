@@ -17,7 +17,7 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 public class RideHorseMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        int entityId = msg.readInt();
+        final int entityId = msg.readInt();
 
         if (client.getPlayer().getEntity() == null) {
             return;
@@ -38,17 +38,17 @@ public class RideHorseMessageEvent implements Event {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null) return;
 
-        PetEntity horse = room.getEntities().getEntityByPetId(entityId);
+        final PetEntity horse = room.getEntities().getEntityByPetId(entityId);
 
         if (horse == null) {
             // its a user.
             if (entityId == client.getPlayer().getId()) return;
 
-            PlayerEntity playerEntity = client.getPlayer().getEntity().getRoom().getEntities().getEntityByPlayerId(entityId);
+            final PlayerEntity playerEntity = client.getPlayer().getEntity().getRoom().getEntities().getEntityByPlayerId(entityId);
 
             if (playerEntity != null) {
                 if (!playerEntity.getMotto().toLowerCase().startsWith("rideable")) {
@@ -66,7 +66,7 @@ public class RideHorseMessageEvent implements Event {
         }
 
         if (!DistanceCalculator.tilesTouching(client.getPlayer().getEntity().getPosition(), horse.getPosition())) {
-            Position closePosition = horse.getPosition().squareBehind(6);
+            final Position closePosition = horse.getPosition().squareBehind(6);
 
             client.getPlayer().getEntity().moveTo(closePosition.getX(), closePosition.getY());
 
@@ -92,7 +92,7 @@ public class RideHorseMessageEvent implements Event {
         client.getPlayer().getEntity().setBodyRotation(horse.getBodyRotation());
         client.getPlayer().getEntity().setHeadRotation(horse.getHeadRotation());
 
-        Position warpPosition = horse.getPosition().copy();
+        final Position warpPosition = horse.getPosition().copy();
 
         warpPosition.setZ(warpPosition.getZ() + 1.0);
 

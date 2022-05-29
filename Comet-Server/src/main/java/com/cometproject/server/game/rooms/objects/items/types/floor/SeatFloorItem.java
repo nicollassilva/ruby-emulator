@@ -51,10 +51,6 @@ public class SeatFloorItem extends RoomItemFloor {
             }
         }
 
-        if(this.getTile().hasItems() && this.getTile().getItems().stream().anyMatch(item -> item instanceof HorseJumpFloorItem) && entity instanceof PlayerEntity) {
-            entity.moveTo(this.getPosition().squareInFront(this.getRotation()));
-        }
-
         if (instantUpdate || entity.isRolling()) {
             entity.setRolling(false);
             this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entity));

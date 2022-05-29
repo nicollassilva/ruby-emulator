@@ -294,7 +294,7 @@ public class ItemsComponent {
 
         final List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
 
-        for (RoomEntity entity0 : affectEntities0) {
+        for (final RoomEntity entity0 : affectEntities0) {
             item.onEntityStepOff(entity0);
         }
 
@@ -310,7 +310,7 @@ public class ItemsComponent {
 
                 final List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
-                for (RoomEntity entity1 : affectEntities1) {
+                for (final RoomEntity entity1 : affectEntities1) {
                     item.onEntityStepOff(entity1);
                 }
             }

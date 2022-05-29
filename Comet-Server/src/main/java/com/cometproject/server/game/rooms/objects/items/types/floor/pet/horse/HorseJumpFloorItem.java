@@ -10,13 +10,19 @@ import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.ai.pets.PetGesture;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
-import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
+import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
+import com.cometproject.server.game.rooms.objects.items.types.AdvancedFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.SeatFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.pet.horse.event.HorseJumpFloorItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.utilities.RandomUtil;
 
-public class HorseJumpFloorItem extends DefaultFloorItem {
+import java.util.List;
+
+public class HorseJumpFloorItem extends AdvancedFloorItem<HorseJumpFloorItemEvent> {
+    private final HorseJumpFloorItemEvent event;
     private boolean restore = false;
     private PetEntity petEntity;
 
@@ -24,6 +30,30 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
         super(itemData, room);
 
         this.getItemData().setData("0");
+        this.queueEvent(this.event = new HorseJumpFloorItemEvent(this.getTickCount()));
+    }
+
+    @Override
+    public void onLoad() {
+        this.resetTicks();
+    }
+
+    @Override
+    public void onPlaced() {
+        this.resetTicks();
+    }
+
+    @Override
+    public void onItemAddedToStack(RoomItemFloor floorItem) {
+        if(floorItem instanceof SeatFloorItem) {
+            this.resetTicks();
+        }
+    }
+
+    @Override
+    public void onEventComplete(HorseJumpFloorItemEvent event) {
+        this.movementEntities();
+        this.resetTicks();
     }
 
     @Override
@@ -167,13 +197,16 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
         final Position[] barPos = this.getBarPositions();
         final boolean barPosEq = (barPos[0].getX() == position.getX() && barPos[0].getY() == position.getY()) || (barPos[1].getX() == position.getX() && barPos[1].getY() == position.getY());
 
-        return entity.getMountedEntity() == null && barPosEq;
+        return entity.getMountedEntity() == null && barPosEq && !this.hasSeatItems();
+    }
 
+    public boolean hasSeatItems() {
+        return this.getItemsOnStack().stream().anyMatch(item -> item instanceof SeatFloorItem);
     }
 
     private Position[] getBarPositions() {
-        Position a = this.getPosition().copy();
-        Position b = this.getPosition().copy();
+        final Position a = this.getPosition().copy();
+        final Position b = this.getPosition().copy();
 
         if (this.getRotation() == 2) {
             a.setX(a.getX() + 1);
@@ -185,5 +218,29 @@ public class HorseJumpFloorItem extends DefaultFloorItem {
         b.setY(b.getY() + 1);
 
         return new Position[]{a, b};
+    }
+
+    public void movementEntities() {
+        final List<RoomEntity> entities = this.getEntitiesOnItem();
+
+        if(entities.size() < 1)
+                return;
+
+        for (final RoomEntity entity : entities) {
+            if(!(entity instanceof PlayerEntity) || entity.getMountedEntity() != null || !(entity.getTile().getTopItemInstance() instanceof SeatFloorItem)) continue;
+
+            final RoomItemFloor topItemInstance = entity.getTile().getTopItemInstance();
+
+            entity.moveTo(topItemInstance.getPosition().squareInFront(topItemInstance.getRotation()));
+        }
+    }
+
+    private int getTickCount() {
+        return RoomItemFactory.getProcessTime(1);
+    }
+
+    private void resetTicks() {
+        event.setTotalTicks(this.getTickCount());
+        this.queueEvent(event);
     }
 }

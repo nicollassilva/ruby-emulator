@@ -89,13 +89,13 @@ public abstract class RoomObject implements IRoomObject, Positionable {
      * @return The closest player entity | null if one couldn't be found
      */
     public PlayerEntity nearestPlayerEntity(PlayerEntity w) {
-        PositionComparator positionComporator = new PositionComparator(this);
+        final PositionComparator positionComporator = new PositionComparator(this);
 
-        List<PlayerEntity> nearestEntities = this.getRoom().getEntities().getPlayerEntities();
+        final List<PlayerEntity> nearestEntities = this.getRoom().getEntities().getPlayerEntities();
 
-        Collections.sort(nearestEntities, positionComporator);
+        nearestEntities.sort(positionComporator);
 
-        for (PlayerEntity playerEntity : nearestEntities) {
+        for (final PlayerEntity playerEntity : nearestEntities) {
 
             //condition test possibly bypasses bug
             if ((!playerEntity.isVisible() && !playerEntity.getPlayer().isInvisible()) || !playerEntity.getPlayer().getEntity().isFinalized())
@@ -116,15 +116,15 @@ public abstract class RoomObject implements IRoomObject, Positionable {
      * @return Closest bot entity |
      */
     public BotEntity nearestBotEntity(BotType type) {
-        PositionComparator positionComparator = new PositionComparator(this);
+        final PositionComparator positionComparator = new PositionComparator(this);
 
-        List<BotEntity> bots = new ArrayList<>();
-        List<BotEntity> nearestEntities = this.getRoom().getEntities().getBotEntities();
+        final List<BotEntity> bots = new ArrayList<>();
+        final List<BotEntity> nearestEntities = this.getRoom().getEntities().getBotEntities();
 
         if (type == null) {
             bots.addAll(nearestEntities);
         } else {
-            for (BotEntity botEntity : nearestEntities) {
+            for (final BotEntity botEntity : nearestEntities) {
                 if (botEntity.getData().getBotType() == type) {
                     bots.add(botEntity);
                 }
@@ -133,7 +133,7 @@ public abstract class RoomObject implements IRoomObject, Positionable {
 
         bots.sort(positionComparator);
 
-        for (BotEntity botEntity : bots) {
+        for (final BotEntity botEntity : bots) {
             if (this.getPosition().distanceTo(botEntity.getPosition()) < 4) {
                 return botEntity;
             }

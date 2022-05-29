@@ -36,6 +36,8 @@ public class DiscordIntegration implements IDiscordIntegration {
     }
 
     public void initialize() {
+        if(Comet.isDebugging) return;
+
         this.loadWebhooks();
         this.setDefaultWebhookSettings();
     }
@@ -105,6 +107,8 @@ public class DiscordIntegration implements IDiscordIntegration {
     }
 
     public void sendCommandWebhook(String username, String command, String message) {
+        if(Comet.isDebugging) return;
+
         final Map<String, String> fields = new HashMap<>();
 
         fields.put("\u200B", "**Usuário:**\\n" + username + "\\n**Comando:**\\n" + command + "\\n**Dados do Comando:**\\n" + message);
@@ -123,6 +127,8 @@ public class DiscordIntegration implements IDiscordIntegration {
     }
 
     private void sendWebhook(String title, String webhookName, Map<String, String> fields) {
+        if(Comet.isDebugging) return;
+
         if(!this.webhooks.containsKey(webhookName)) {
             log.warn("Webhook not found: " + webhookName);
             return;
@@ -149,6 +155,8 @@ public class DiscordIntegration implements IDiscordIntegration {
     }
 
     private void sendWebhookWithThumbnail(String title, String webhookName, Map<String, String> fields, String thumbnailUrl) {
+        if(Comet.isDebugging) return;
+
         if(!this.webhooks.containsKey(webhookName)) {
             log.warn("Webhook not found: " + webhookName);
             return;

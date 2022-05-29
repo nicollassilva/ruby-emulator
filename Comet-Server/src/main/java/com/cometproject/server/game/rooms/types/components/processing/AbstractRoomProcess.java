@@ -509,10 +509,7 @@ public class AbstractRoomProcess implements CometTask {
                     }
 
                     if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-
-                        if(!(item instanceof HorseJumpFloorItem) || !(item.getTile().getTopItemInstance() instanceof SeatFloorItem)) {
-                            isCancelled = true;
-                        }
+                        isCancelled = true;
                     }
 
                     if (!isCancelled) {
