@@ -11,12 +11,6 @@ import com.cometproject.server.game.commands.bot.BotControlCommand;
 import com.cometproject.server.game.commands.bot.FreezeBotCommand;
 import com.cometproject.server.game.commands.development.*;
 import com.cometproject.server.game.commands.gimmicks.*;
-import com.cometproject.server.game.commands.staff.fun.BubbleCommand;
-import com.cometproject.server.game.commands.staff.housekeeping.EditFurniCommand;
-import com.cometproject.server.game.commands.staff.rewards.custom.WinCommand;
-import com.cometproject.server.game.commands.staff.security.LogsClientCommand;
-import com.cometproject.server.game.commands.user.MentionsCommand;
-import com.cometproject.server.game.commands.user.OnlineCommand;
 import com.cometproject.server.game.commands.notifications.NotificationManager;
 import com.cometproject.server.game.commands.staff.*;
 import com.cometproject.server.game.commands.staff.alerts.*;
@@ -25,21 +19,25 @@ import com.cometproject.server.game.commands.staff.bundles.BundleCommand;
 import com.cometproject.server.game.commands.staff.bundles.CloneRoomCommand;
 import com.cometproject.server.game.commands.staff.cache.ReloadCommand;
 import com.cometproject.server.game.commands.staff.cache.ReloadGroupCommand;
+import com.cometproject.server.game.commands.staff.fun.BubbleCommand;
 import com.cometproject.server.game.commands.staff.fun.RollCommand;
+import com.cometproject.server.game.commands.staff.housekeeping.EditFurniCommand;
 import com.cometproject.server.game.commands.staff.muting.MuteCommand;
 import com.cometproject.server.game.commands.staff.muting.RoomMuteCommand;
 import com.cometproject.server.game.commands.staff.muting.UnmuteCommand;
 import com.cometproject.server.game.commands.staff.rewards.*;
+import com.cometproject.server.game.commands.staff.rewards.custom.WinCommand;
 import com.cometproject.server.game.commands.staff.rewards.mass.*;
+import com.cometproject.server.game.commands.staff.security.LogsClientCommand;
 import com.cometproject.server.game.commands.user.*;
+import com.cometproject.server.game.commands.user.building.FillCommand;
 import com.cometproject.server.game.commands.user.group.DeleteGroupCommand;
 import com.cometproject.server.game.commands.user.group.EjectAllCommand;
 import com.cometproject.server.game.commands.user.muting.MuteBotsCommand;
 import com.cometproject.server.game.commands.user.muting.MutePetsCommand;
 import com.cometproject.server.game.commands.user.room.*;
-import com.cometproject.server.game.commands.user.room.ClearHighscoreCommand;
 import com.cometproject.server.game.commands.user.settings.*;
-import com.cometproject.server.game.commands.user.ws.*;
+import com.cometproject.server.game.commands.user.ws.RoomVideoCommand;
 import com.cometproject.server.game.commands.vip.*;
 import com.cometproject.server.game.commands.websocketvue.BuildCommand;
 import com.cometproject.server.game.commands.websocketvue.EventAlertVueCommand;
@@ -211,6 +209,8 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.buy_room.name"), new BuyRoomCommand());
         this.addCommand(Locale.get("command.see_height.name"), new SeeHeightCommand());
         this.addCommand(Locale.get("command.teleport_to_me.name"), new TeleportToMeCommand());
+
+        this.addCommand(Locale.getOrDefault("command.fill.name", "fill"), new FillCommand());
     }
 
     /**

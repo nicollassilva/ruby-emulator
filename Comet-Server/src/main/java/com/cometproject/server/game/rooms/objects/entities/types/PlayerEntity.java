@@ -15,6 +15,7 @@ import com.cometproject.api.networking.messages.IComposer;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.CommandManager;
+import com.cometproject.server.game.commands.user.building.FillType;
 import com.cometproject.server.game.commands.vip.TransformCommand;
 import com.cometproject.server.game.gamecenter.games.battleball.BattleBall;
 import com.cometproject.server.game.gamecenter.games.battleball.room.BattleBallRoom;
@@ -122,6 +123,9 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     private int points;
     private boolean wiredLimit;
     private boolean keyboardEnabled = false;
+
+    private FillType fillType = FillType.NONE;
+    private int stackCount = 0;
 
     public PlayerEntity(Player player, int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
         super(identifier, startPosition, startBodyRotation, startHeadRotation, roomInstance);
@@ -422,6 +426,10 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             trade.cancel(this.getPlayerId());
         }
 
+        if (this.getRoom().getBuilderComponent().isBuilder(this.getPlayer().getEntity())) {
+            this.getRoom().getBuilderComponent().setBuilder(null);
+        }
+
         if (this.getMountedEntity() != null) {
             this.getMountedEntity().setOverriden(false);
             this.getMountedEntity().setHasMount(false);
@@ -487,13 +495,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
             LogManager.getInstance().getStore().getRoomVisitContainer().updateExit(this.visitLogEntry);
         }
-
-//        if(Comet.isDebugging && this.getPlayer().getEntity().getRoom().hasAttribute("bb_game")) {
-//            BattleBall.PLAYERS.get(this.getPlayerId()).players.remove(this.getPlayerId());
-//            BattleBall.PLAYERS.remove(this.getPlayerId());
-//
-//            this.getPlayer().bypassRoomAuth(false);
-//        }
 
         WiredTriggerLeavesRoom.executeTriggers(this);
 
@@ -1121,5 +1122,21 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
     public boolean isKeyboardWalkEnabled() {
         return keyboardEnabled;
+    }
+
+    public FillType getFillType() {
+        return fillType;
+    }
+
+    public void setFillType(FillType fillType) {
+        this.fillType = fillType;
+    }
+
+    public int getStackCount() {
+        return stackCount;
+    }
+
+    public void setStackCount(int stackCount) {
+        this.stackCount = stackCount;
     }
 }

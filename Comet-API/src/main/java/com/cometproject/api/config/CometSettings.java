@@ -3,8 +3,8 @@ package com.cometproject.api.config;
 import com.cometproject.api.game.rooms.filter.FilterMode;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.DayOfWeek;
 import java.util.Map;
@@ -195,8 +195,13 @@ public class CometSettings {
         motdMessage = motd;
     }
 
-    public static void setCurrentEventRoom(int r){
+    public static boolean PLACE_ITEMS_ASYNC = false;
+
+    public static void setCurrentEventRoom(int r) {
         currentEventRoom = r;
     }
-    public int getEventID() { return currentEventRoom; }
+
+    public int getEventID() {
+        return currentEventRoom;
+    }
 }

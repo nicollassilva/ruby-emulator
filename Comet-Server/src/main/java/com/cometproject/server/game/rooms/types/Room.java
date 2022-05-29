@@ -62,6 +62,7 @@ public class Room implements Attributable, IRoom {
     private PetComponent pets;
     private GameComponent game;
     private EntityComponent entities;
+    private BuildingComponent buildingComponent;
     private FilterComponent filter;
     private RoomModelFactory layout;
     private IGroup group;
@@ -140,6 +141,7 @@ public class Room implements Attributable, IRoom {
         this.pets = new PetComponent(this);
         this.filter = new FilterComponent(this);
         this.youtubeJukebox = new YoutubeJukeboxComponent(this);
+        this.buildingComponent = new BuildingComponent(this);
         this.setAttribute("loadTime", System.currentTimeMillis());
 
         if (this.data.getType() == RoomType.PUBLIC) {
@@ -514,5 +516,9 @@ public class Room implements Attributable, IRoom {
 
     public void setExecutedEvent(int executedEvent) {
         this.executedEvent = executedEvent;
+    }
+
+    public BuildingComponent getBuilderComponent() {
+        return buildingComponent;
     }
 }
