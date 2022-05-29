@@ -90,19 +90,19 @@ public class GameCycle implements CometTask, Initialisable {
         }
     }
 
+    public int getHour() {
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+    }
+
+    public int getMinute() {
+        return Calendar.getInstance().get(Calendar.MINUTE);
+    }
+
     private void processSession() {
-
-        final LocalDate date = LocalDate.now();
-        final Calendar calendar = Calendar.getInstance();
-
-        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        final int minute = calendar.get(Calendar.MINUTE);
         boolean clubReward = false;
 
-        final boolean doubleRewards = CometSettings.onlineRewardDoubleDays.contains(date.getDayOfWeek());
-        final boolean updateDaily = hour == 0 && minute == 0;
-        final int dailyRespects = 3;
-        final int dailyScratches = 3;
+        final boolean doubleRewards = CometSettings.onlineRewardDoubleDays.contains(LocalDate.now().getDayOfWeek());
+        final boolean updateDaily = this.getHour() == 0 && this.getMinute() == 0;
 
         if (CometSettings.onlineRewardEnabled || updateDaily) {
             final Collection<ISession> sessionValues = NetworkManager.getInstance().getSessions().getSessions().values();
@@ -123,10 +123,9 @@ public class GameCycle implements CometTask, Initialisable {
                     }*/
 
                     if (updateDaily) {
-                        //  TODO: put this in config.
                         client.getPlayer().getData().setKisses(client.getPlayer().getData().getKisses());
-                        client.getPlayer().getStats().setDailyRespects(dailyRespects);
-                        client.getPlayer().getStats().setScratches(dailyScratches);
+                        client.getPlayer().getStats().setDailyRespects(CometSettings.dailyRespects);
+                        client.getPlayer().getStats().setScratches(CometSettings.dailyScratchs);
 
                         client.send(new UserObjectMessageComposer(((Session) client).getPlayer()));
                     }
@@ -152,10 +151,8 @@ public class GameCycle implements CometTask, Initialisable {
                             client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado") + "\nBônus Especial: " + (doubleRewards ? "Ativo" : "Desativado")));
                         }
 
-                        final PlayerData playerData = (PlayerData) client.getPlayer().getData();
-                        playerData.increaseBonusPoints(1);
                         client.getPlayer().getData().save();
-
+                        client.getPlayer().sendBalance();
                         client.getPlayer().setLastReward(Comet.getTime());
                     }
                 } catch (Exception e) {
@@ -165,7 +162,7 @@ public class GameCycle implements CometTask, Initialisable {
             }
 
             if (updateDaily) {
-                PlayerDao.dailyPlayerUpdate(dailyRespects, dailyScratches);
+                PlayerDao.dailyPlayerUpdate(CometSettings.dailyRespects, CometSettings.dailyScratchs);
             }
         }
     }

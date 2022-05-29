@@ -18,7 +18,6 @@ public class BubbleCommand extends ChatCommand {
         try {
             bubble = Integer.parseInt(params[0]);
         } catch(NumberFormatException ignored) {
-
         }
 
         if(bubble != 0) {
@@ -27,11 +26,12 @@ public class BubbleCommand extends ChatCommand {
             if(bubbleMinRank == null) {
                 bubble = 0;
             } else {
-                if(client.getPlayer().getData().getRank() < bubbleMinRank) {
+                if(client.getPlayer().getData().getRank() <= bubbleMinRank) {
                     bubble = 0;
                 }
             }
         }
+
         client.getPlayer().setBubbleId(bubble);
         sendNotif(Locale.getOrDefault("command.bubble.success", "O balão de falas foi trocado com sucesso!"), client);
 
