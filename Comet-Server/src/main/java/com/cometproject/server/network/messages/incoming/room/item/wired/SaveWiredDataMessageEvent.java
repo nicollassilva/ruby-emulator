@@ -33,15 +33,15 @@ public class SaveWiredDataMessageEvent implements Event {
             return;
         }
 
-        int virtualId = msg.readInt();
+        final int virtualId = msg.readInt();
 
         if (ItemManager.getInstance().getItemIdByVirtualId(virtualId) == null) return;
 
-        long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
+        final long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
 
         if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().getRoom() == null) return;
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         boolean isOwner = client.getPlayer().getId() == room.getData().getOwnerId();
         boolean hasRights = room.getRights().hasRights(client.getPlayer().getId());
@@ -50,7 +50,7 @@ public class SaveWiredDataMessageEvent implements Event {
             return;
         }
 
-        WiredFloorItem wiredItem = ((WiredFloorItem) room.getItems().getFloorItem(itemId));
+       final WiredFloorItem wiredItem = ((WiredFloorItem) room.getItems().getFloorItem(itemId));
 
         if (wiredItem == null) return;
 
@@ -59,7 +59,8 @@ public class SaveWiredDataMessageEvent implements Event {
             return;
         }
 
-        int paramCount = msg.readInt();
+        final int paramCount = msg.readInt();
+
         if (paramCount > 5) {
             return;
         }

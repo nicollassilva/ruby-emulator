@@ -7,6 +7,8 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionExecuteStacks;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionGiveScore;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionGiveScoreTeam;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionShowMessage;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonOrEffect;
@@ -158,6 +160,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                     int executeActionDanceCount = 0;
                     int executeActionFastwalkCount = 0;
                     int executeActionMsg = 0;
+                    int executeGiveScore = 0;
 
                     final Comparator<WiredActionItem> comparator = (x, y) -> Double.compare(y.getPosition().getZ(), x.getPosition().getZ()); // ordre décroissant
                     wiredActions.sort(comparator.reversed());
@@ -172,6 +175,14 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                             }
 
                             executeActionMsg++;
+                        }
+
+                        if(actionItem instanceof WiredActionGiveScore || actionItem instanceof WiredActionGiveScoreTeam) {
+                            if(executeGiveScore >= limit) {
+                                continue;
+                            }
+
+                            executeGiveScore++;
                         }
 
                         if (actionItem instanceof WiredCustomEnable) {

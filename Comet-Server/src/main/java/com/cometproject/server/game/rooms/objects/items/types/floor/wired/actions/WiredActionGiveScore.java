@@ -68,6 +68,6 @@ public class WiredActionGiveScore extends WiredActionItem {
     }
 
     public int getScore() {
-        return this.getWiredData().getParams().get(PARAM_SCORE);
+        return Math.min(this.getWiredData().getParams().get(PARAM_SCORE), 10);
     }
 }
