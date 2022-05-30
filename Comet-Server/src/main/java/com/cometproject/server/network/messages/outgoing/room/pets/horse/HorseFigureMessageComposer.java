@@ -52,6 +52,6 @@ public class HorseFigureMessageComposer extends MessageComposer {
         }
 
         msg.writeBoolean(this.petEntity.getData().isSaddled());
-        msg.writeBoolean(this.petEntity.getMountedEntity() != null);
+        msg.writeBoolean(this.petEntity.getData().isAnyRider());
     }
 }

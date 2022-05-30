@@ -240,6 +240,13 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         session.send(new RoomReadyMessageComposer(this.getRoom().getId(), this.getRoom().getModel().getId()));
 
+        if (session.getPlayer().getData().getTimeMuted() != 0) {
+            if (session.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
+                session.getPlayer().getSession().send(new MutedMessageComposer(session.getPlayer().getData().getTimeMuted() - (int) Comet.getTime()));
+                return;
+            }
+        }
+
         for (final Map.Entry<String, String> decoration : this.getRoom().getData().getDecorations().entrySet()) {
             if (decoration.getKey().equals("wallpaper") || decoration.getKey().equals("floor")) {
                 if (decoration.getValue().equals("0.0")) {
@@ -717,38 +724,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             }
         }
     }
-
-    /*private void sendNameChange() {
-        final StringBuilder username = new StringBuilder();
-        final String format = "<font color='#%s'>%s</font>";
-        NameColor color = RoomManager.getInstance().getNameColors().getColor(this.getPlayer().getData().getNameColour());
-
-        if(color == null)
-            return;
-
-        if (color.getColorCode().contains(",")) {
-            final String[] colours = color.getColorCode().split(",");
-            int count = 0;
-            for (char c : this.getUsername().toCharArray()) {
-                username.append(String.format(format, colours[count], c));
-                if (count != color.getColorsLength() - 1) {
-                    count++;
-                    continue;
-                }
-                count = 0;
-            }
-        } else {
-            username.append(String.format(format, color.getColorCode(), this.getUsername()));
-        }
-
-        final MessageComposer composer = new UserNameChangeMessageComposer(this.getRoom().getId(), this.getId(), username.toString());
-
-        for (PlayerEntity playerEntity : this.getRoom().getEntities().getPlayerEntities()) {
-            if (!playerEntity.getPlayer().getSettings().isUseOldChat()) {
-                playerEntity.getPlayer().getSession().send(composer);
-            }
-        }
-    }*/
 
     private void sendNameChange() {
         final StringBuilder username = new StringBuilder();
