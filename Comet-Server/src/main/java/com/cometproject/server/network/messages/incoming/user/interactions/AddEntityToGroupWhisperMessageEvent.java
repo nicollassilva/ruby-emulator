@@ -18,17 +18,17 @@ public class AddEntityToGroupWhisperMessageEvent implements Event {
         long timeSinceLastUpdate = currentTimeMs - client.getPlayer().getLastPhotoTaken();
 
         if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().getRoom() == null || timeSinceLastUpdate < (long)(client.getPlayer().getData().getRank() > 6 ? 0 : 5000)) {
-            client.send(new NotificationMessageComposer("time_error", Locale.getOrDefault("action.time.error.message", "Debes esperar 5 segundos entre cada acci\u00f3n.")));
+            client.send(new NotificationMessageComposer("time_error", Locale.getOrDefault("action.time.error.message", "Você deve esperar 5 segundos a cada ação.")));
             return;
         }
 
         boolean groupWhisperResult = client.getPlayer().handleGroupWhisper(playerName);
 
-        String actionType = groupWhisperResult ? "a\u00f1adido" : "retirado";
+        String actionType = groupWhisperResult ? "adicionou" : "retirou";
 
-        String pronounType = groupWhisperResult ? "al" : "del";
+        String pronounType = groupWhisperResult ? "ao" : "do";
 
-        client.getPlayer().sendBubble("looks/figure/" + playerName, "Has " + actionType + " a " + playerName + " " + pronounType + " chat de grupo.");
+        client.getPlayer().sendBubble("looks/figure/" + playerName, "Você " + actionType + " " + playerName + " " + pronounType + " chat de grupo.");
 
         client.getPlayer().setLastPhotoTaken(System.currentTimeMillis());
     }
