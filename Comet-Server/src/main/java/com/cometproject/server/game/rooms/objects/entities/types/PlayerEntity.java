@@ -300,14 +300,17 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         this.isFinalized = true;
         this.getPlayer().setSpectatorRoomId(0);
-        this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
+        if (!this.getPlayer().getLastRoomsIds().contains(this.getRoom().getId())) {
+            this.getPlayer().getLastRoomsIds().add(this.getRoom().getId());
+            this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
+        }
 
-        if(Comet.isDebugging && this.getRoom().hasAttribute("bb_game")) {
+        if (Comet.isDebugging && this.getRoom().hasAttribute("bb_game")) {
             this.getPlayer().getEntity().setFreeze(true);
 
             final BattleBallRoom bbroom = BattleBall.PLAYERS.get(this.getPlayer().getId());
 
-            if(bbroom.pickedTeam + 1 > BattleBallRoom.teamList.length - 1) {
+            if (bbroom.pickedTeam + 1 > BattleBallRoom.teamList.length - 1) {
                 bbroom.pickedTeam = 0;
             } else {
                 bbroom.pickedTeam = bbroom.pickedTeam + 1;

@@ -17,8 +17,6 @@ import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.server.boot.Comet;
-import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.catalog.types.CatalogItem;
 import com.cometproject.server.game.guides.GuideManager;
 import com.cometproject.server.game.guides.types.HelpRequest;
 import com.cometproject.server.game.guides.types.HelperSession;
@@ -33,12 +31,9 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.types.ChatMessageColour;
 import com.cometproject.server.network.NetworkManager;
-import com.cometproject.server.network.messages.outgoing.misc.OpenLinkMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
-import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.MotdNotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
-import com.cometproject.server.network.messages.outgoing.nux.NuxAlertComposer;
 import com.cometproject.server.network.messages.outgoing.quests.QuestStartedMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.UpdateInfoMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.HotelViewMessageComposer;
@@ -52,6 +47,7 @@ import com.cometproject.server.storage.queries.landing.LandingDao;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.cometproject.storage.api.StorageContext;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -166,6 +162,9 @@ public class Player extends Observable implements IPlayer {
 
     private final List<PlayerMention> mentions = new ArrayList<>();
     private Map<String, Long> antiSpam = new ConcurrentHashMap<>();
+
+    private long lastForwardRoomRequest = System.currentTimeMillis();
+    private final List<Integer> lastRoomsIds = Lists.newArrayList();
 
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
@@ -1249,5 +1248,20 @@ public class Player extends Observable implements IPlayer {
         this.setInRollerSkate(false);
         this.isFurniturePickup(false);
         this.isFurnitureEditing(false);
+    }
+
+    @Override
+    public long getLastForwardRoomRequest() {
+        return lastForwardRoomRequest;
+    }
+
+    @Override
+    public void setLastForwardRoomRequest(long lastForwardRoomRequest) {
+        this.lastForwardRoomRequest = lastForwardRoomRequest;
+    }
+
+    @Override
+    public List<Integer> getLastRoomsIds() {
+        return lastRoomsIds;
     }
 }
