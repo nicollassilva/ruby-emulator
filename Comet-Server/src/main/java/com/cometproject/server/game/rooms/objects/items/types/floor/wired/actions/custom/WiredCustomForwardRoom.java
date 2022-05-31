@@ -1,23 +1,16 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
-import com.cometproject.api.game.rooms.settings.RoomAccessType;
-import com.cometproject.server.boot.Comet;
-import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
-import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
-import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.network.messages.outgoing.room.avatar.DanceMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import org.apache.commons.lang.StringUtils;
 
 
 public class WiredCustomForwardRoom extends WiredActionItem {
+    private static final long DELAY = 60 * 1000L; // 1 minuto
 
     public WiredCustomForwardRoom(RoomItemData itemData, Room room) {
         super(itemData, room);
@@ -55,10 +48,19 @@ public class WiredCustomForwardRoom extends WiredActionItem {
 
         int roomId = Integer.parseInt(this.getWiredData().getText());
 
-        if(playerEntity.getPlayer().getEntity().getRoom().getId() == roomId)
+        if (playerEntity.getPlayer().getEntity().getRoom().getId() == roomId)
             return;
 
-        playerEntity.getPlayer().bypassRoomAuth(true);
+        final long diff = System.currentTimeMillis() - playerEntity.getPlayer().getLastForwardRoomRequest();
+        if (DELAY > diff) {
+            return;
+        }
+
+        playerEntity.getPlayer().setLastForwardRoomRequest(System.currentTimeMillis());
+        if (playerEntity.getPlayer().getPermissions().getRank().modTool()) {
+            playerEntity.getPlayer().bypassRoomAuth(true);
+        }
+
         playerEntity.getPlayer().getSession().send(new RoomForwardMessageComposer(roomId));
     }
 }
