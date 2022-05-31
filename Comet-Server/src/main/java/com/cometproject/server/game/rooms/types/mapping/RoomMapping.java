@@ -302,7 +302,7 @@ public class RoomMapping {
                     break;
             }
 
-            if (left != null && right != null && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ALLOW_ALL)) {
+            if (left != null && right != null && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ENABLED)) {
                 if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID) {
                     return false;
                 }

@@ -18,12 +18,22 @@ public class DiagonalCommand extends ChatCommand {
 
         final Room room = client.getPlayer().getEntity().getRoom();
         @Nullable RoomDiagonalType type = params.length > 0 ? RoomDiagonalType.parse(params[0]) : null;
-        type = type == null ? RoomDiagonalType.toggle(room.getData().getRoomDiagonalType()) : type;
+        if (params.length > 0) {
+            if (params[0].equals("?")) {
+                sendAlert("Tipos de diagonal disponíveis: \n\n- on/enable/ativar: habilita a diagonal permitindo qualquer movimento\n- off/disable/desativar: desabilita a diagonal\n- strict: habilita a diagonal como no habbo original. Só poderá andar na diagonal se o usuário também puder andar até a posição.", client);
+                return;
+            }
+            type = RoomDiagonalType.parse(params[0]);
+        }
+
+        if (type == null) {
+            type = RoomDiagonalType.toggle(room.getData().getRoomDiagonalType());
+        }
         room.getData().setRoomDiagonalType(type);
 
         switch (type) {
-            case ENABLED: {
-                sendNotif(Locale.getOrDefault("command.togglediagonal.enabled", "Diagonal ativada!"), client);
+            case STRICT: {
+                sendNotif(Locale.getOrDefault("command.togglediagonal.strict", "Diagonal strict ativada!"), client);
                 return;
             }
 
@@ -32,8 +42,8 @@ public class DiagonalCommand extends ChatCommand {
                 return;
             }
 
-            case ALLOW_ALL: {
-                sendNotif(Locale.getOrDefault("command.togglediagonal.allowall", "Regras de diagonal desativadas!"), client);
+            case ENABLED: {
+                sendNotif(Locale.getOrDefault("command.togglediagonal.enabled", "Diagonal ativada!"), client);
             }
         }
     }

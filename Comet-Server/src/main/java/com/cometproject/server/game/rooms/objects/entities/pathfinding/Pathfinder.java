@@ -31,7 +31,7 @@ public abstract class Pathfinder {
     };
 
     public List<Square> makePath(RoomObject roomFloorObject, Position end) {
-        return this.makePath(roomFloorObject, end, RoomDiagonalType.ENABLED.getKey(), false);
+        return this.makePath(roomFloorObject, end, RoomDiagonalType.STRICT.getKey(), false);
     }
 
     public List<Square> makePath(RoomObject roomFloorObject, Position end, byte pathfinderMode, boolean isRetry) {

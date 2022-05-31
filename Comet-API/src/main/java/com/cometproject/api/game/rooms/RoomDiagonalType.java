@@ -3,21 +3,23 @@ package com.cometproject.api.game.rooms;
 import javax.annotation.Nullable;
 
 public enum RoomDiagonalType {
-    ENABLED(0, "diagonal irá funcionar como no habbo original."),
-    ALLOW_ALL(1, "diagonal sem regras, simplesmente funciona."),
-    DISABLED(2, "diagonal desativada."),
+    DISABLED(0, "desativada", "diagonal desativada."),
+    STRICT(1, "strict", "diagonal irá funcionar como no habbo original."),
+    ENABLED(2, "ativa", "diagonal sem regras, simplesmente funciona."),
     ;
 
     private final String description;
     private final byte key;
+    private final String name;
 
-    RoomDiagonalType(int key, String description) {
+    RoomDiagonalType(int key, String name, String description) {
         this.key = (byte) key;
+        this.name = name;
         this.description = description;
     }
 
     public static boolean isAllowed(byte key) {
-        return RoomDiagonalType.ENABLED.key == key || RoomDiagonalType.ALLOW_ALL.key == key;
+        return RoomDiagonalType.STRICT.key == key || RoomDiagonalType.ENABLED.key == key;
     }
 
     public static RoomDiagonalType toggle(RoomDiagonalType type) {
@@ -36,23 +38,25 @@ public enum RoomDiagonalType {
     @Nullable
     public static RoomDiagonalType parse(String str) {
         switch (str.toLowerCase()) {
-            case "enabled":
-            case "ativa":
-            case "ativar":
-            case "on":
-            case "0":
-                return RoomDiagonalType.ENABLED;
-
-            case "allow": // TODO: melhor nome kkk
-            case "1":
-                return RoomDiagonalType.ALLOW_ALL;
-
             case "disable":
             case "disabled":
             case "desativar":
             case "off":
-            case "2":
+            case "0":
                 return RoomDiagonalType.DISABLED;
+
+            case "strict":
+            case "1":
+                return RoomDiagonalType.STRICT; // sim, retornamos algo com outro nome, porque os players são burros...
+            // strict apenas para internamente sabermos que é como no habbo.com.br
+
+            case "enabled":
+            case "enable":
+            case "ativar":
+            case "ativa":
+            case "on":
+            case "2":
+                return RoomDiagonalType.ENABLED;
         }
 
         return null;
@@ -64,5 +68,9 @@ public enum RoomDiagonalType {
 
     public byte getKey() {
         return key;
+    }
+
+    public String getName() {
+        return name;
     }
 }
