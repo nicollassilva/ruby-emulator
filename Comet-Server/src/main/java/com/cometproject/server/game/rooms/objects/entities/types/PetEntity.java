@@ -140,7 +140,7 @@ public class PetEntity extends RoomEntity {
         String composer = data.getLook().toLowerCase() + " ";
 
         if (this.getData().getTypeId() == 15) {
-            composer += new StringBuilder().append(this.getData().isSaddled() ? "3" : "2").append(" 2 ").append(this.getData().getHair()).append(" ").append(this.getData().getHairDye()).append(" 3 ").append(this.getData().getHair()).append(" ").append(this.getData().getHairDye()).append(this.getData().isSaddled() ? "0 4 9 0" : "").toString();
+            composer += (this.getData().isSaddled() ? "3" : "2") + " 2 " + this.getData().getHair() + " " + this.getData().getHairDye() + " 3 " + this.getData().getHair() + " " + this.getData().getHairDye() + (this.getData().isSaddled() ? "0 4 9 0" : "");
         } else {
             composer += "2 2 -1 0 3 -1 0";
         }
@@ -254,11 +254,13 @@ public class PetEntity extends RoomEntity {
     }
 
     public int daysSinceBirthday(long birthday) {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(birthday * 1000L);
-        Calendar newCalendar = Calendar.getInstance();
+
+        final Calendar newCalendar = Calendar.getInstance();
         newCalendar.setTimeInMillis(System.currentTimeMillis());
-        return newCalendar.get(6) - calendar.get(6);
+
+        return newCalendar.get(Calendar.DAY_OF_YEAR) - calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     @Override

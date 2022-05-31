@@ -76,13 +76,13 @@ public class PetAI extends AbstractBotAI {
         if (this instanceof PetMonsterPlantAI)
             return false;
 
-        int playerId = this.getPetEntity().getData().getOwnerId();
-        PlayerEntity playerEntity = this.getEntity().getRoom().getEntities().getEntityByPlayerId(playerId);
+        final int playerId = this.getPetEntity().getData().getOwnerId();
+        final PlayerEntity playerEntity = this.getEntity().getRoom().getEntities().getEntityByPlayerId(playerId);
 
         if (playerEntity != null) {
-            Position position = playerEntity.getPosition().squareInFront(playerEntity.getBodyRotation());
+            final Position position = playerEntity.getPosition().squareInFront(playerEntity.getBodyRotation());
 
-            RoomTile tile = this.getPetEntity().getRoom().getMapping().getTile(position.getX(), position.getY());
+            final RoomTile tile = this.getPetEntity().getRoom().getMapping().getTile(position.getX(), position.getY());
 
             if (tile != null) {
                 this.moveTo(position);
@@ -105,7 +105,9 @@ public class PetAI extends AbstractBotAI {
             // try find some food!
             this.applyGesture(PetGesture.HUNGRY.getGestureKey());
 
-            this.say(this.getMessage(PetMessageType.HUNGRY), ChatEmotion.SAD);
+            if(RandomUtil.getRandomInt(0, 10) < 3) {
+                this.say(this.getMessage(PetMessageType.HUNGRY), ChatEmotion.SAD);
+            }
 
             // attempt to eat food.
             this.tryEat();
@@ -117,7 +119,7 @@ public class PetAI extends AbstractBotAI {
                 this.tryNest();
             }
         } else {
-            PetAction petAction = possibleActions[RandomUtil.getRandomInt(0, possibleActions.length - 1)];
+            final PetAction petAction = possibleActions[RandomUtil.getRandomInt(0, possibleActions.length - 1)];
 
             switch (petAction) {
                 case TALK:
