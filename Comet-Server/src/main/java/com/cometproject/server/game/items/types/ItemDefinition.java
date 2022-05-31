@@ -1,5 +1,6 @@
 package com.cometproject.server.game.items.types;
 
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.furniture.types.FurnitureDefinition;
 import com.cometproject.api.game.furniture.types.ItemType;
 
@@ -219,5 +220,40 @@ public class ItemDefinition implements FurnitureDefinition {
 
     public int getSongId() {
         return this.songId;
+    }
+
+    /**
+     * Items limited in stack by tile (usually achievement items)
+     */
+    public boolean isLimitableItem() {
+        return this.getInteraction().startsWith("bb_patch")
+                || this.getInteraction().startsWith("football_goal")
+                || this.getInteraction().startsWith("horse_jump")
+                || this.getInteraction().startsWith("gym_equipment")
+                || this.getInteraction().startsWith("freeze_tile");
+    }
+
+    /**
+     * Item stack limitation by tile
+     */
+    public int getItemLimitation() {
+        switch (this.getInteraction()) {
+            case "bb_patch":
+                return CometSettings.maxBanzaiTilesInStack;
+
+            case "football_goal":
+                return CometSettings.maxFootballGatesInStack;
+
+            case "horse_jump":
+                return CometSettings.maxHorseJumpInStack;
+
+            case "gym_equipment":
+                return CometSettings.maxAcademyItemsInStack;
+
+            case "freeze_tile":
+                return CometSettings.maxFreezeTilesInStack;
+        }
+
+        return 100;
     }
 }

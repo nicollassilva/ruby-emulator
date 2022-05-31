@@ -21,7 +21,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorIte
 import com.cometproject.server.game.rooms.objects.items.types.floor.GiftFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.MagicStackFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiTileFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
@@ -57,9 +56,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ItemsComponent {
-
-    private static final int MAX_FOOTBALLS = 15;
-
     private final Logger log;
     private final Map<Long, RoomItemFloor> floorItems = new ConcurrentHashMap<>();
     private final Map<Long, RoomItemWall> wallItems = new ConcurrentHashMap<>();
@@ -846,22 +842,16 @@ public class ItemsComponent {
                 return false;
             }
 
-            if(item.getInteraction().equals("bb_patch")) {
-                final long banzaiFloorItemCount = tile.getItems().stream().filter(filteredItem -> filteredItem instanceof BanzaiTileFloorItem).count();
+            if(item.isLimitableItem()) {
+                final long itemCount = tile.getItems().stream().filter(instance -> instance.getDefinition().getInteraction().equals(item.getInteraction())).count();
 
-                if(banzaiFloorItemCount >= CometSettings.maxBanzaiTilesInStack) {
-                    return false;
-                }
+                if(itemCount >= item.getItemLimitation())
+                        return false;
             }
 
-            if (!tile.canStack() && tile.getTopItem() != 0) {
-                if(floor == null && tile.getTopItem() != item.getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
+            if (!tile.canStack() && tile.getTopItem() != 0 && tile.getTopItem() != item.getId()) {
+                if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL))
                     return false;
-                }
-
-                if(floor != null && tile.getTopItem() != floor.getItemData().getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
-                    return false;
-                }
             }
 
             if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY()) {
@@ -894,49 +884,6 @@ public class ItemsComponent {
         }
 
         return true;
-    }
-
-    private boolean verifyItemTilePosition(FurnitureDefinition item, RoomItemFloor floorItem, RoomTile tile, int rotation) {
-        if (!tile.canPlaceItemHere()) {
-            return false;
-        }
-
-        if (!tile.canStack() && tile.getTopItem() != 0 && (floorItem == null || tile.getTopItem() != floorItem.getId())) {
-            if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL))
-                return false;
-        }
-
-        if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY()) {
-            return false;
-        }
-
-        if (item.getInteraction().equals("dice")) {
-            boolean hasOtherDice = false;
-            boolean hasStackTool = false;
-
-            for (final RoomItemFloor itemFloor : tile.getItems()) {
-                if (itemFloor instanceof DiceFloorItem) {
-                    hasOtherDice = true;
-                }
-
-                if (itemFloor instanceof MagicStackFloorItem) {
-                    hasStackTool = true;
-                }
-            }
-
-            if (hasOtherDice && hasStackTool)
-                return false;
-        }
-
-        if (!CometSettings.roomCanPlaceItemOnEntity) {
-            return tile.getEntities().size() == 0;
-        }
-
-        return true;
-    }
-
-    private boolean verifyItemTilePositionSetz(FurnitureDefinition item, RoomItemFloor floorItem, RoomTile tile, int rotation) {
-        return tile.canPlaceItemHere();
     }
 
     public void placeWallItem(PlayerItem item, String position, Player player) {
