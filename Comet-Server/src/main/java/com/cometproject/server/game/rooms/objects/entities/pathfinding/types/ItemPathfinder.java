@@ -25,16 +25,16 @@ public class ItemPathfinder extends Pathfinder {
     }
 
     @Override
-    public boolean isValidStep(RoomObject roomFloorObject, Position from, Position to, boolean lastStep, boolean isRetry) {
+    public boolean isValidStep(RoomObject object, Position from, Position to, boolean lastStep, boolean isRetry) {
         if (from.getX() == to.getX() && from.getY() == to.getY()) {
             return true;
         }
 
-        if (!(to.getX() < roomFloorObject.getRoom().getModel().getSquareState().length)) {
+        if (!(to.getX() < object.getRoom().getModel().getSquareState().length)) {
             return false;
         }
 
-        if ((!roomFloorObject.getRoom().getMapping().isValidPosition(to) || (roomFloorObject.getRoom().getModel().getSquareState()[to.getX()][to.getY()] == RoomTileState.INVALID))) {
+        if ((!object.getRoom().getMapping().isValidPosition(to) || (object.getRoom().getModel().getSquareState()[to.getX()][to.getY()] == RoomTileState.INVALID))) {
             return false;
         }
 
@@ -46,23 +46,23 @@ public class ItemPathfinder extends Pathfinder {
 
             switch (rotation) {
                 case 1:
-                    left = roomFloorObject.getRoom().getMapping().getTile(from.squareInFront(rotation + 1));
-                    right = roomFloorObject.getRoom().getMapping().getTile(to.squareBehind(rotation + 1));
+                    left = object.getRoom().getMapping().getTile(from.squareInFront(rotation + 1));
+                    right = object.getRoom().getMapping().getTile(to.squareBehind(rotation + 1));
                     break;
 
                 case 3:
-                    left = roomFloorObject.getRoom().getMapping().getTile(to.squareBehind(rotation + 1));
-                    right = roomFloorObject.getRoom().getMapping().getTile(to.squareBehind(rotation - 1));
+                    left = object.getRoom().getMapping().getTile(to.squareBehind(rotation + 1));
+                    right = object.getRoom().getMapping().getTile(to.squareBehind(rotation - 1));
                     break;
 
                 case 5:
-                    left = roomFloorObject.getRoom().getMapping().getTile(from.squareInFront(rotation - 1));
-                    right = roomFloorObject.getRoom().getMapping().getTile(to.squareBehind(rotation - 1));
+                    left = object.getRoom().getMapping().getTile(from.squareInFront(rotation - 1));
+                    right = object.getRoom().getMapping().getTile(to.squareBehind(rotation - 1));
                     break;
 
                 case 7:
-                    left = roomFloorObject.getRoom().getMapping().getTile(to.squareBehind(0));
-                    right = roomFloorObject.getRoom().getMapping().getTile(from.squareInFront(rotation - 1));
+                    left = object.getRoom().getMapping().getTile(to.squareBehind(0));
+                    right = object.getRoom().getMapping().getTile(from.squareInFront(rotation - 1));
                     break;
             }
 
@@ -72,13 +72,13 @@ public class ItemPathfinder extends Pathfinder {
             }
         }
 
-        RoomTile tile = roomFloorObject.getRoom().getMapping().getTile(to.getX(), to.getY());
+        RoomTile tile = object.getRoom().getMapping().getTile(to.getX(), to.getY());
 
         if (tile == null) {
             return false;
         }
 
-        if (roomFloorObject instanceof FootballFloorItem) {
+        if (object instanceof FootballFloorItem) {
             for (RoomItemFloor floor : tile.getItems()) {
                 if (floor instanceof GroupGateFloorItem) {
                     return false;
@@ -90,8 +90,8 @@ public class ItemPathfinder extends Pathfinder {
             }
         }
 
-        if (roomFloorObject instanceof WiredActionChase) {
-            int target = ((WiredActionChase) roomFloorObject).getTargetId();
+        if (object instanceof WiredActionChase) {
+            int target = ((WiredActionChase) object).getTargetId();
 
             if (target != -1) {
                 for (RoomEntity entity : tile.getEntities()) {
@@ -102,7 +102,7 @@ public class ItemPathfinder extends Pathfinder {
             }
         }
 
-        if (roomFloorObject instanceof RollableFloorItem) {
+        if (object instanceof RollableFloorItem) {
             for (RoomEntity entity : tile.getEntities()) {
                 return false;
             }
@@ -112,8 +112,8 @@ public class ItemPathfinder extends Pathfinder {
             return false;
         }
 
-        final double fromHeight = roomFloorObject.getRoom().getMapping().getStepHeight(from);
-        final double toHeight = roomFloorObject.getRoom().getMapping().getStepHeight(to);
+        final double fromHeight = object.getRoom().getMapping().getStepHeight(from);
+        final double toHeight = object.getRoom().getMapping().getStepHeight(to);
 
         if (fromHeight < toHeight && (toHeight - fromHeight) > 1.0) return false;
 
