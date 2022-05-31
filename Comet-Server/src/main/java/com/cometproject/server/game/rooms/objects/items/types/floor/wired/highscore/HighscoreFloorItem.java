@@ -119,7 +119,7 @@ public abstract class HighscoreFloorItem extends RoomItemFloor {
         return (this.state ? "1" : "0") + JsonUtil.getInstance().toJson(this.itemData);
     }
 
-    public abstract void onTeamWins(List<String> users, int score);
+    public abstract void onTeamWins(List<String> usernames, List<PlayerEntity> players, int score);
 
     void addEntry(List<String> users, int score) {
         this.itemData.addEntry(users, score);

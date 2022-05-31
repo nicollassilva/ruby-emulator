@@ -205,15 +205,18 @@ public class FreezeGame extends RoomGame {
             if (scoreboards.size() != 0) {
                 final List<Integer> winningPlayers = this.room.getGame().getTeams().get(winningTeam);
                 final List<String> winningPlayerUsernames = Lists.newArrayList();
+                final List<PlayerEntity> playerEntities = Lists.newArrayList();
                 final int score = this.getGameComponent().getScore(winningTeam);
 
                 for (final int playerId : winningPlayers) {
-                    winningPlayerUsernames.add(this.room.getEntities().getEntityByPlayerId(playerId).getUsername());
+                    final PlayerEntity player = this.room.getEntities().getEntityByPlayerId(playerId);
+                    winningPlayerUsernames.add(player.getUsername());
+                    playerEntities.add(player);
                 }
 
                 if (winningPlayerUsernames.size() != 0) {
                     for (final HighscoreFloorItem scoreboard : scoreboards) {
-                        scoreboard.onTeamWins(winningPlayerUsernames, score);
+                        scoreboard.onTeamWins(winningPlayerUsernames, playerEntities, score);
                     }
                 }
             }
