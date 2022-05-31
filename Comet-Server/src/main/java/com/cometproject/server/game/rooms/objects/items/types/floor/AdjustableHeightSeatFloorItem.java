@@ -16,20 +16,24 @@ public class AdjustableHeightSeatFloorItem extends SeatFloorItem {
 
     @Override
     public double getSitHeight() {
-        double height;
-
-        if (!StringUtils.isNumeric(this.getItemData().getData())) {
-            height = 1.0;
-        } else {
-            height = Double.parseDouble(this.getItemData().getData());
-
-            if (height <= 1) {
-                height += 1.0;
-            } else {
-                height += 0.5;
-            }
+        if(this.getDefinition().getVariableHeights() == null) {
+            return 0D;
         }
 
-        return height;
+        final String itemData = this.getItemData().getData();
+
+        if(itemData.isEmpty() || !StringUtils.isNumeric(itemData)) {
+            return 0D;
+        }
+
+        int currentSitHeight;
+
+        try {
+            currentSitHeight = Integer.parseInt(itemData);
+        } catch (NumberFormatException e) {
+            currentSitHeight = 0;
+        }
+
+        return this.getDefinition().getVariableHeights()[currentSitHeight];
     }
 }
