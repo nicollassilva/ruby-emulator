@@ -384,7 +384,11 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     }
 
     public boolean canRateRoom() {
-        return !this.getRoom().getRatings().contains(this.getPlayerId());
+        if(this.getPlayer().getId() == this.getRoom().getData().getOwnerId()) {
+            return false;
+        }
+
+        return !this.getRoom().getRatings().contains(this.getPlayer().getId());
     }
 
     @Override

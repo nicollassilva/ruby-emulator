@@ -84,8 +84,8 @@ public class CrackableFloorItem extends RoomItemFloor {
         if(reward.getRequiredEffect() > 0 && entity.getCurrentEffect().getEffectId() != reward.getRequiredEffect())
             return;
 
-        Position posInFront = this.getPosition().squareInFront(this.getRotation());
-        boolean positionsIsEquals = posInFront.equals(entity.getPosition());
+        final Position posInFront = this.getPosition().squareInFront(this.getRotation());
+        final boolean positionsIsEquals = posInFront.equals(entity.getPosition());
 
         if (!positionsIsEquals) {
             entity.moveTo(posInFront.getX(), posInFront.getY());

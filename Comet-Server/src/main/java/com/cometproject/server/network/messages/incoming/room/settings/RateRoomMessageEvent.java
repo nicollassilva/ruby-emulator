@@ -14,7 +14,7 @@ public class RateRoomMessageEvent implements Event {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (!client.getPlayer().getEntity().canRateRoom()) {
             return;

@@ -29,8 +29,8 @@ public class OpenGiftMessageEvent implements Event {
 
         if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().getRoom() == null) return;
 
-        Room room = client.getPlayer().getEntity().getRoom();
-        RoomItemFloor floorItem = room.getItems().getFloorItem(floorItemId);
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final RoomItemFloor floorItem = room.getItems().getFloorItem(floorItemId);
 
         if (!(floorItem instanceof GiftFloorItem)) return;
 
@@ -41,9 +41,11 @@ public class OpenGiftMessageEvent implements Event {
         final GiftData giftData = ((GiftFloorItem) floorItem).getGiftData();
 
         final ICatalogPage catalogPage = CatalogManager.getInstance().getPage(giftData.getPageId());
+
         if (catalogPage == null) return;
 
         final ICatalogItem catalogItem = catalogPage.getItems().get(giftData.getItemId());
+
         if (catalogItem == null) return;
 
         final FurnitureDefinition itemDefinition = ItemManager.getInstance().getDefinition(catalogItem.getItems().get(0).getItemId());
