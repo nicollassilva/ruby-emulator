@@ -1,7 +1,7 @@
 package com.cometproject.storage.mysql.repositories;
 
-import com.cometproject.api.game.rooms.IRoom;
 import com.cometproject.api.game.rooms.IRoomData;
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.models.RoomModelData;
 import com.cometproject.api.game.rooms.settings.*;
@@ -9,7 +9,6 @@ import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.storage.api.repositories.IRoomRepository;
 import com.cometproject.storage.mysql.MySQLConnectionProvider;
 import com.cometproject.storage.mysql.data.results.IResultReader;
-import com.cometproject.storage.mysql.data.results.ResultSetReader;
 import com.cometproject.storage.mysql.models.factories.rooms.RoomDataFactory;
 import com.cometproject.storage.mysql.models.factories.rooms.RoomModelDataFactory;
 import com.google.common.collect.Lists;
@@ -17,9 +16,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +151,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                 data.getRollerSpeedLevel(),
                 data.getRollerSpeed() ? "1" : "0",
                 data.getWiredLimit() ? "1" : "0",
-                data.isRoomDiagonal() ? "1" : "0",
+                String.valueOf(data.getRoomDiagonalType().getKey()),
                 data.getType().name(),
                 data.getId());
 
@@ -226,7 +222,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final int rollerSpeedLevel = room.readInteger("roller_speed_level");
         final boolean rollerSpeed = room.readString("roller_speed").equals("1");
         final boolean wiredLimit = room.readBoolean("wired_limit");
-        final boolean roomDiagonal = room.readString("room_diagonal").equals("1");
+        final RoomDiagonalType roomDiagonal = RoomDiagonalType.parse(room.readString("room_diagonal"));
         final int songId = room.readInteger("song_id");
         final int roomPrice = room.readInteger("room_price");
 

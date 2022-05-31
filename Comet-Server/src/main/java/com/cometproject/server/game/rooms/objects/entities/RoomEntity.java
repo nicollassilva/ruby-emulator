@@ -18,7 +18,6 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.SeatFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.custom.WiredTriggerCustomIdle;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.game.rooms.types.components.games.GameTeam;
 import com.cometproject.server.game.rooms.types.mapping.RoomEntityMovementNode;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.avatar.*;
@@ -257,11 +256,11 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.setWalkingGoal(x, y);
 
         // Create a walking path
-        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().isRoomDiagonal() ? (byte) 0 : (byte) 1, false);
+        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), false);
 
         // Check returned path to see if it calculated one
         if (path == null || path.size() == 0) {
-            path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().isRoomDiagonal() ? (byte) 0 : (byte) 1, true);
+            path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
 
             if (path == null || path.size() == 0) {
                 // Reset the goal and return as no path was found
