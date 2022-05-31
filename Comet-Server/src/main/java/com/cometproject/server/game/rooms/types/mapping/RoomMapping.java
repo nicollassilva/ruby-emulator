@@ -1,5 +1,6 @@
 package com.cometproject.server.game.rooms.types.mapping;
 
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.models.IRoomModel;
 import com.cometproject.api.game.rooms.models.RoomTileState;
 import com.cometproject.api.game.utilities.Position;
@@ -313,7 +314,7 @@ public class RoomMapping {
                     break;
             }
 
-            if (left != null && right != null) {
+            if (left != null && right != null && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ENABLED)) {
                 if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID) {
                     return false;
                 }

@@ -1,6 +1,7 @@
 package com.cometproject.storage.api.data.rooms;
 
 import com.cometproject.api.game.rooms.IRoomData;
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.settings.*;
 
@@ -63,17 +64,17 @@ public class RoomData implements IRoomData {
     private boolean rollerSpeed;
     private final int creationTime;
     private boolean wiredLimit;
-    private boolean roomDiagonal;
+    private RoomDiagonalType roomDiagonalType;
     private int roomPrice;
 
     public RoomData(int id, RoomType type, String name, String description, int ownerId, String owner, int category,
                     int maxUsers, RoomAccessType access, String password, String originalPassword,
-                    RoomTradeState tradeState, int creationTime,  int score, String[] tags, Map<String, String> decorations,
+                    RoomTradeState tradeState, int creationTime, int score, String[] tags, Map<String, String> decorations,
                     String model, boolean hideWalls, int thicknessWall, int thicknessFloor, boolean allowWalkthrough,
                     boolean allowPets, String heightmap, RoomMuteState muteState, RoomKickState kickState,
                     RoomBanState banState, int bubbleMode, int bubbleType, int bubbleScroll, int chatDistance,
                     int antiFloodSettings, List<String> disabledCommands, int groupId,
-                    String requiredBadge, String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, boolean roomDiagonal, int songId, int roomPrice) {
+                    String requiredBadge, String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, RoomDiagonalType roomDiagonalType, int songId, int roomPrice) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -114,7 +115,7 @@ public class RoomData implements IRoomData {
         this.rollerSpeedLevel = rollerSpeedLevel;
         this.rollerSpeed = rollerSpeed;
         this.wiredLimit = wiredLimit;
-        this.roomDiagonal = roomDiagonal;
+        this.roomDiagonalType = roomDiagonalType;
         this.songId = songId;
         this.roomPrice = roomPrice;
     }
@@ -515,17 +516,28 @@ public class RoomData implements IRoomData {
     public boolean getRollerSpeed() { return this.rollerSpeed;}
 
     @Override
-    public boolean getWiredLimit() { return this.wiredLimit; }
+    public boolean getWiredLimit() {
+        return this.wiredLimit;
+    }
 
     @Override
-    public void setWiredLimit(boolean wiredLimit) { this.wiredLimit = wiredLimit; }
+    public void setWiredLimit(boolean wiredLimit) {
+        this.wiredLimit = wiredLimit;
+    }
 
     @Override
-    public boolean isRoomDiagonal() { return roomDiagonal;}
+    public boolean isRoomDiagonal() {
+        return !roomDiagonalType.equals(RoomDiagonalType.DISABLED);
+    }
 
     @Override
-    public void setRoomDiagonal(boolean roomDiagonal) {
-        this.roomDiagonal = roomDiagonal;
+    public RoomDiagonalType getRoomDiagonalType() {
+        return roomDiagonalType;
+    }
+
+    @Override
+    public void setRoomDiagonalType(RoomDiagonalType roomDiagonalType) {
+        this.roomDiagonalType = roomDiagonalType;
     }
 
     @Override
