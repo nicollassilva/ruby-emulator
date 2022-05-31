@@ -14,7 +14,7 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.tasks.CometThreadManager;
-import org.apache.commons.lang.NumberUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.concurrent.TimeUnit;
 

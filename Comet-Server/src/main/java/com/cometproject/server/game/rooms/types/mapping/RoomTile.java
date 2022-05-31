@@ -293,7 +293,8 @@ public class RoomTile {
 
     public double getTopHeight(RoomItemFloor exclude) {
         double highest = this.getTileHeight();
-        for (RoomItemFloor item : items) {
+
+        for (final RoomItemFloor item : items) {
             if (exclude != null && exclude.getId() == item.getId()) continue;
 
             final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
