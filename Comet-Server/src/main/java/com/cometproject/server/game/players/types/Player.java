@@ -47,6 +47,7 @@ import com.cometproject.server.storage.queries.landing.LandingDao;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.cometproject.storage.api.StorageContext;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -163,6 +164,7 @@ public class Player extends Observable implements IPlayer {
     private Map<String, Long> antiSpam = new ConcurrentHashMap<>();
 
     private long lastForwardRoomRequest = System.currentTimeMillis();
+    private final List<Integer> lastRoomsIds = Lists.newArrayList();
 
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
@@ -1256,5 +1258,10 @@ public class Player extends Observable implements IPlayer {
     @Override
     public void setLastForwardRoomRequest(long lastForwardRoomRequest) {
         this.lastForwardRoomRequest = lastForwardRoomRequest;
+    }
+
+    @Override
+    public List<Integer> getLastRoomsIds() {
+        return lastRoomsIds;
     }
 }

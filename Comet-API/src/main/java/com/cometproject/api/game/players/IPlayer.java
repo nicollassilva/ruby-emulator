@@ -207,4 +207,6 @@ public interface IPlayer {
     long getLastForwardRoomRequest();
 
     void setLastForwardRoomRequest(long lastForwardRoomRequest);
+
+    List<Integer> getLastRoomsIds();
 }
