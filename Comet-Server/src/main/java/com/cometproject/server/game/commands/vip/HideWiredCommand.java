@@ -18,38 +18,28 @@ public class HideWiredCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         final Room room = client.getPlayer().getEntity().getRoom();
-
         if (!client.getPlayer().getPermissions().getRank().roomFullControl() && !client.getPlayer().getEntity().hasRights()) {
             return;
         }
 
-        String msg;
-
-        if (client.getPlayer().getEntity().getRoom().getData().isWiredHidden()) {
-            // show wireds
-            room.getData().setIsWiredHidden(false);
-            msg = Locale.getOrDefault("command.hidewired.shown", "Wired is now visible");
-
-            for (final RoomItemFloor floorItem : room.getItems().getFloorItems().values()) {
-                if (floorItem instanceof WiredFloorItem|| floorItem instanceof WiredAddonUnseenEffect || floorItem instanceof WiredAddonRandomEffect || floorItem instanceof WiredAddonNoItemsAnimateEffect || floorItem instanceof WiredAddonKebBar) {
+        room.getData().setIsWiredHidden(!room.getData().isWiredHidden());
+        final boolean isHidden = room.getData().isWiredHidden();
+        for (final RoomItemFloor floorItem : room.getItems().getFloorItems().values()) {
+            if (floorItem instanceof WiredFloorItem || floorItem instanceof WiredAddonUnseenEffect || floorItem instanceof WiredAddonRandomEffect || floorItem instanceof WiredAddonNoItemsAnimateEffect || floorItem instanceof WiredAddonKebBar) {
+                if (isHidden) {
+                    room.getEntities().broadcastMessage(new RemoveFloorItemMessageComposer(floorItem.getVirtualId(), client.getPlayer().getId()));
+                } else {
                     room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
                 }
-            }
-        } else {
-            // hide wireds
-            room.getData().setIsWiredHidden(true);
-            msg = Locale.getOrDefault("command.hidewired.hidden", "Wired is now hidden");
 
-            for (final RoomItemFloor floorItem : room.getItems().getFloorItems().values()) {
-
-                if (floorItem instanceof WiredFloorItem || floorItem instanceof WiredAddonUnseenEffect || floorItem instanceof WiredAddonRandomEffect || floorItem instanceof WiredAddonNoItemsAnimateEffect || floorItem instanceof WiredAddonKebBar) {
-                    room.getEntities().broadcastMessage(new RemoveFloorItemMessageComposer(floorItem.getVirtualId(),
-                            client.getPlayer().getId()));
-                }
+                floorItem.getTile().reload();
             }
         }
 
-        sendNotif(msg, client);
+        sendNotif(isHidden ? Locale.getOrDefault("command.hidewired.hidden", "Wired is now hidden")
+                        : Locale.getOrDefault("command.hidewired.shown", "Wired is now visible")
+                , client
+        );
 
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
     }
