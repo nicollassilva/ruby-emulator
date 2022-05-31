@@ -7,7 +7,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.types.Room;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class HighscoreMostWinsFloorItem extends HighscoreFloorItem {
     public HighscoreMostWinsFloorItem(RoomItemData roomItemData, Room room) {
@@ -25,8 +24,9 @@ public class HighscoreMostWinsFloorItem extends HighscoreFloorItem {
             this.addEntry(usernames, score);
         }
 
+        final int totalScore = this.getScoreData().getEntryByTeam(usernames).getScore();
         for(final PlayerEntity player : players) {
-            WiredTriggerScoreAchieved.executeTriggers(this.getScoreData().getEntryByTeam(usernames).getScore(), player);
+            WiredTriggerScoreAchieved.executeTriggers(totalScore, player);
         }
     }
 

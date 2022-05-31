@@ -23,8 +23,9 @@ public class HighscorePerTeamFloorItem extends HighscoreFloorItem {
             this.addEntry(usernames, score);
         }
 
+        final int totalScore = this.getScoreData().getEntryByTeam(usernames).getScore();
         for(final PlayerEntity player : players) {
-            WiredTriggerScoreAchieved.executeTriggers(this.getScoreData().getEntryByTeam(usernames).getScore(), player);
+            WiredTriggerScoreAchieved.executeTriggers(totalScore, player);
         }
     }
 

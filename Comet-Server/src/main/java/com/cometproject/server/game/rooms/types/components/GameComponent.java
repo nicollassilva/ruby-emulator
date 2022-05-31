@@ -18,7 +18,10 @@ import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -199,9 +202,10 @@ public class GameComponent {
             }
         }
 
+        final int totalScore = this.getRoom().getGame().getScore(team);
         for (final int playerId : this.getRoom().getGame().getTeams().get(team)) {
             final PlayerEntity player = this.room.getEntities().getEntityByPlayerId(playerId);
-            WiredTriggerScoreAchieved.executeTriggers(this.getRoom().getGame().getScore(team), player);
+            WiredTriggerScoreAchieved.executeTriggers(totalScore, player);
         }
     }
 
