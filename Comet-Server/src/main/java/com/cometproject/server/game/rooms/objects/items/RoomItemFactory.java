@@ -83,6 +83,7 @@ public class RoomItemFactory {
             put("bed", BedFloorItem.class);
             put("vendingmachine", VendingMachineFloorItem.class);
             put("sideless_vending_machine", SidelessVendingMachineFloorItem.class);
+            put("fx_vendingmachine", EffectVendingMachineFloorItem.class);
             put("mannequin", MannequinFloorItem.class);
             put("beach_shower", SummerShowerFloorItem.class);
             put("halo_tile", HaloTileFloorItem.class);
