@@ -169,12 +169,14 @@ public class PetEntity extends RoomEntity {
     }
 
     public void composeUpdate(IComposer msg) {
+        final boolean isMonsterPlant = this instanceof MonsterPlantEntity;
+
         msg.writeInt(this.getId());
-        msg.writeInt(0);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
+        msg.writeInt(this.getData().isAnyRider() ? 1 : 0);
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).canBreed()));
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).isFullyGrown()));
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).isDead()));
+        msg.writeBoolean(false);
     }
 
     public void composeInformation(IComposer msg) {
@@ -182,7 +184,8 @@ public class PetEntity extends RoomEntity {
             return;
         }
 
-        PetMonsterPlantData pet = ((PetMonsterPlantData) this.getData());
+        final PetMonsterPlantData pet = ((PetMonsterPlantData) this.getData());
+
         msg.writeInt(pet.getId());
         msg.writeString(pet.getPlantName());
         msg.writeInt(pet.getGrowthStage());
