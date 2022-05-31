@@ -8,14 +8,15 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.utilities.DistanceCalculator;
 import com.cometproject.server.utilities.RandomUtil;
 
 
-public class VendingMachineFloorItem extends RoomItemFloor {
+public class SidelessVendingMachineFloorItem extends RoomItemFloor {
     private RoomEntity vendingEntity;
     private int state = -1;
 
-    public VendingMachineFloorItem(RoomItemData itemData, Room room) {
+    public SidelessVendingMachineFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
     }
 
@@ -25,21 +26,20 @@ public class VendingMachineFloorItem extends RoomItemFloor {
 
         if (isWiredTrigger || entity == null) return false;
 
-        final Position posInFront = this.getPosition().squareInFront(this.getRotation());
-
-        if (!posInFront.equals(entity.getPosition())) {
+        if(DistanceCalculator.calculate(entity.getPosition(), this.getPosition()) > 1) {
             if(!playerEntity.getPlayer().getEntity().isFreeze() && !playerEntity.hasAttribute("interacttpencours") && !playerEntity.hasAttribute("tptpencours")) {
-                entity.moveTo(posInFront.getX(), posInFront.getY());
-            }
+                final Position sqInFront = this.getPosition().squareInFront(this.getRotation());
 
-            try {
-                this.getRoom().getMapping().getTile(posInFront.getX(), posInFront.getY()).scheduleEvent(entity.getId(), (e) -> onInteract(e, requestData, false));
-            } catch (Exception ignored) {
+                entity.moveTo(sqInFront.getX(), sqInFront.getY());
+
+                try {
+                    this.getRoom().getMapping().getTile(sqInFront.getX(), sqInFront.getY()).scheduleEvent(entity.getId(), (e) -> onInteract(e, requestData, false));
+                } catch (Exception ignored) {
+                }
             }
 
             return false;
         }
-
 
         int rotation = Position.calculateRotation(entity.getPosition().getX(), entity.getPosition().getY(), this.getPosition().getX(), this.getPosition().getY(), false);
 
