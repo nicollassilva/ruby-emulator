@@ -1,5 +1,6 @@
 package com.cometproject.server.game.rooms.objects.entities.pathfinding;
 
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.RoomObject;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
@@ -12,8 +13,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public abstract class Pathfinder {
-    public static final byte DISABLE_DIAGONAL = 0;
-    public static final byte ALLOW_DIAGONAL = 1;
     private final Position[] diagonalMovePoints = {
             new Position(-1, -1),
             new Position(0, -1),
@@ -32,7 +31,7 @@ public abstract class Pathfinder {
     };
 
     public List<Square> makePath(RoomObject roomFloorObject, Position end) {
-        return this.makePath(roomFloorObject, end, ALLOW_DIAGONAL, false);
+        return this.makePath(roomFloorObject, end, RoomDiagonalType.STRICT.getKey(), false);
     }
 
     public List<Square> makePath(RoomObject roomFloorObject, Position end, byte pathfinderMode, boolean isRetry) {
@@ -71,8 +70,8 @@ public abstract class Pathfinder {
             current = openList.pollFirst();
             current.setInClosed(true);
 
-            for (int i = 0; i < (pathfinderMode == ALLOW_DIAGONAL ? diagonalMovePoints.length : movePoints.length); i++) {
-                tmp = current.getPosition().add((pathfinderMode == ALLOW_DIAGONAL ? diagonalMovePoints : movePoints)[i]);
+            for (int i = 0; i < (RoomDiagonalType.isAllowed(pathfinderMode) ? diagonalMovePoints.length : movePoints.length); i++) {
+                tmp = current.getPosition().add((RoomDiagonalType.isAllowed(pathfinderMode) ? diagonalMovePoints : movePoints)[i]);
                 final boolean isFinalMove = (tmp.getX() == end.getX() && tmp.getY() == end.getY());
 
                 if (this.isValidStep(roomFloorObject, new Position(current.getPosition().getX(), current.getPosition().getY(), current.getPosition().getZ()), tmp, isFinalMove, isRetry)) {

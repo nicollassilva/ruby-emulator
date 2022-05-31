@@ -1,11 +1,12 @@
 package com.cometproject.server.storage.queries.rooms;
 
 import com.cometproject.api.game.rooms.IRoomData;
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.RoomType;
+import com.cometproject.api.game.rooms.models.CustomFloorMapData;
 import com.cometproject.api.game.rooms.settings.*;
 import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.server.boot.Comet;
-import com.cometproject.api.game.rooms.models.CustomFloorMapData;
 import com.cometproject.server.game.rooms.models.types.StaticRoomModel;
 import com.cometproject.server.game.rooms.types.RoomPromotion;
 import com.cometproject.server.storage.SqlHelper;
@@ -780,7 +781,7 @@ public class RoomDao {
         final int rollerSpeedLevel = room.getInt("roller_speed_level");
         final boolean rollerSpeed = room.getString("roller_speed").equals("1");
         final boolean wiredLimit = room.getBoolean("wired_limit");
-        final boolean roomDiagonal = room.getString("room_diagonal").equals("1");
+        final RoomDiagonalType roomDiagonal = RoomDiagonalType.parse(room.getString("room_diagonal"));
         final int songId = room.getInt("song_id");
         final int roomPrice = room.getInt("room_price");
 
