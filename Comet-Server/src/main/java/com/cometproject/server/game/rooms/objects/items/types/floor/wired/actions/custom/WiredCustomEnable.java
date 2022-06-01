@@ -46,6 +46,8 @@ public class WiredCustomEnable extends WiredActionItem {
         }
 
         int enableId = Integer.parseInt(this.getWiredData().getText());
-        playerEntity.applyEffect(new PlayerEffect(enableId, 0));
+        if (enableId >= 0) {
+            playerEntity.applyEffect(new PlayerEffect(enableId, 0));
+        }
     }
 }
