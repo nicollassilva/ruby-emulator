@@ -70,7 +70,7 @@ public class AdjustableHeightFloorItem extends RoomItemFloor {
 
             final int currentHeight = Integer.parseInt(this.getItemData().getData());
 
-            if(this.variations[currentHeight] != null) {
+            if(this.variations != null && this.variations[currentHeight] != null) {
                 return this.variations[currentHeight];
             }
         } catch (NumberFormatException e) {
