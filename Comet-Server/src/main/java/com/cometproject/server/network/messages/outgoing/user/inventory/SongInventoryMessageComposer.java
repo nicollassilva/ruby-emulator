@@ -25,7 +25,7 @@ public class SongInventoryMessageComposer extends MessageComposer {
     public void compose(IComposer msg) {
         msg.writeInt(this.songItems.size());
 
-        for (SongItem songItem : this.songItems) {
+        for (final SongItem songItem : this.songItems) {
             msg.writeInt(ItemManager.getInstance().getItemVirtualId(songItem.getItemSnapshot().getId()));
             msg.writeInt(songItem.getSongId());
         }

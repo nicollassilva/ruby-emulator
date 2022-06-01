@@ -63,7 +63,7 @@ public class ItemsComponent {
     private final Room room;
     private final Map<Class<? extends RoomItemFloor>, Set<Long>> itemClassIndex = new ConcurrentHashMap<>();
     private final Map<String, Set<Long>> itemInteractionIndex = new ConcurrentHashMap<>();
-    private long soundMachineId = 0;
+    private RoomItemFloor soundMachineFloorItem;
     private long moodlightId;
 
     private long itemsCount = 0;
@@ -77,6 +77,7 @@ public class ItemsComponent {
         this.room = room;
         this.log = LogManager.getLogger("Room Items Component [" + room.getData().getName() + "]");
         this.itemClassIndex.put(HighscoreFloorItem.class, Sets.newConcurrentHashSet());
+        this.soundMachineFloorItem = null;
         this.loadItems();
     }
 
@@ -170,7 +171,7 @@ public class ItemsComponent {
     private void indexFloorItems() {
         for (final RoomItemFloor floorItem : this.floorItems.values()) {
             if (floorItem instanceof SoundMachineFloorItem) {
-                soundMachineId = floorItem.getId();
+                soundMachineFloorItem = floorItem;
             }
 
             if (floorItem.getDefinition().getInteraction().equals("blackhole")) {
@@ -588,7 +589,7 @@ public class ItemsComponent {
 
     public void removeItem(RoomItemFloor item, Session client, boolean toInventory) {
         if (item instanceof SoundMachineFloorItem) {
-            this.soundMachineId = 0;
+            this.soundMachineFloorItem = null;
         }
 
         if (item.getWiredItems().size() != 0) {
@@ -617,9 +618,7 @@ public class ItemsComponent {
         }
 
         if (item instanceof SoundMachineFloorItem) {
-            if (this.soundMachineId == item.getId()) {
-                this.soundMachineId = 0;
-            }
+            this.soundMachineFloorItem = null;
         }
 
         if (item.getDefinition().getInteraction().equals("blackhole")) {
@@ -935,17 +934,13 @@ public class ItemsComponent {
             return;
         }
 
-        if (item.getDefinition().getInteraction().equals("soundmachine")) {
-            if (this.soundMachineId > 0) {
-                final Map<String, String> notificationParams = Maps.newHashMap();
+        if (item.getDefinition().getInteraction().equals("soundmachine") && this.soundMachineFloorItem != null) {
+            final Map<String, String> notificationParams = Maps.newHashMap();
 
-                notificationParams.put("message", Locale.get("game.room.jukeboxExists"));
+            notificationParams.put("message", Locale.get("game.room.jukeboxExists"));
 
-                player.getSession().send(new NotificationMessageComposer("furni_placement_error", notificationParams));
-                return;
-            } else {
-                this.soundMachineId = item.getId();
-            }
+            player.getSession().send(new NotificationMessageComposer("furni_placement_error", notificationParams));
+            return;
         }
 
         final List<RoomItemFloor> floorItems = room.getItems().getItemsOnSquare(x, y);
@@ -1002,6 +997,10 @@ public class ItemsComponent {
 
         room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
 
+        if(floorItem instanceof SoundMachineFloorItem) {
+            this.soundMachineFloorItem = floorItem;
+        }
+
         floorItem.onPlaced();
         floorItem.saveData();
     }
@@ -1030,11 +1029,7 @@ public class ItemsComponent {
     }
 
     public SoundMachineFloorItem getSoundMachine() {
-        if (this.soundMachineId != 0) {
-            return ((SoundMachineFloorItem) this.getFloorItem(this.soundMachineId));
-        }
-
-        return null;
+        return (SoundMachineFloorItem) this.soundMachineFloorItem;
     }
 
     public Map<Integer, String> getItemOwners() {
