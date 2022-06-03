@@ -88,7 +88,7 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
                 return;
             }
 
-            for (PlayerEntity entity : this.getRoom().getEntities().getPlayerEntities()) {
+            for (final PlayerEntity entity : this.getRoom().getEntities().getPlayerEntities()) {
                 if (!entity.hasAttribute("traxSent") && (System.currentTimeMillis() - entity.getJoinTime() >= 1100)) {
                     entity.getPlayer().getSession().send(this.getComposer());
                     entity.setAttribute("traxSent", true);
@@ -96,10 +96,10 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
             }
 
             if (this.currentPlayingIndex != -1) {
-                SongItemData songItemData = this.getSongs().get(this.currentPlayingIndex);
+                final SongItemData songItemData = this.getSongs().get(this.currentPlayingIndex);
 
                 if (songItemData != null) {
-                    IMusicData musicData = ItemManager.getInstance().getMusicData(songItemData.getSongId());
+                    final IMusicData musicData = ItemManager.getInstance().getMusicData(songItemData.getSongId());
 
                     if (musicData != null) {
                         if (this.timePlaying() >= (musicData.getLengthSeconds() + 1.0)) {
@@ -134,7 +134,8 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
             this.playNextSong();
         }
 
-        SongItemData songItemData = this.songs.get(index);
+        final SongItemData songItemData = this.songs.get(index);
+
         this.songs.remove(index);
 
         return songItemData;
@@ -177,7 +178,7 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
             return;
         }
 
-        for (PlayerEntity entity : this.getRoom().getEntities().getPlayerEntities()) {
+        for (final PlayerEntity entity : this.getRoom().getEntities().getPlayerEntities()) {
             if (!entity.hasAttribute("traxSent")) {
                 entity.setAttribute("traxSent", true);
             }
@@ -190,13 +191,14 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
     public MessageComposer getComposer() {
         if (this.currentPlayingIndex == -1) return null;
 
-        SongItemData songItemData = this.songs.get(this.currentPlayingIndex);
+        final SongItemData songItemData = this.songs.get(this.currentPlayingIndex);
 
         if (songItemData == null) {
             return null;
         }
 
-        int songId = songItemData.getSongId();
+        final int songId = songItemData.getSongId();
+
         return new PlayMusicMessageComposer(songId, this.currentPlayingIndex, this.songTimeSync());
     }
 
@@ -209,10 +211,10 @@ public class SoundMachineFloorItem extends RoomItemFloor implements Stateable {
             return 0;
         }
 
-        SongItemData songItemData = this.getSongs().get(this.currentPlayingIndex);
+        final SongItemData songItemData = this.getSongs().get(this.currentPlayingIndex);
 
         if (songItemData != null) {
-            IMusicData musicData = ItemManager.getInstance().getMusicData(songItemData.getSongId());
+            final IMusicData musicData = ItemManager.getInstance().getMusicData(songItemData.getSongId());
 
             if (musicData != null) {
                 if (this.timePlaying() >= musicData.getLengthSeconds())

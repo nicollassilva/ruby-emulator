@@ -36,16 +36,13 @@ public class SlotMachineCreditsFloorItem extends RoomItemFloor {
         entity.cancelWalk();
         entity.lookTo(this.getPosition().squareInFront(this.getRotation()).getX() - 1, this.getPosition().squareBehind(this.getRotation()).getY() - 1);
 
-
         if (this.isInUse) {
-            ((PlayerEntity) entity).getPlayer().getSession().send(new WhisperMessageComposer(this.getVirtualId(), "Esta máquina está siendo usada, por favor espera.", 34));
+            ((PlayerEntity) entity).getPlayer().getSession().send(new WhisperMessageComposer(this.getVirtualId(), "Esta máquina está sendo usada, por favor espere.", 34));
             return false;
         }
 
         if(((PlayerEntity) entity).getPlayer().getData().getCredits() < ((PlayerEntity) entity).getBetAmount() || ((PlayerEntity) entity).getBetAmount() == 0){
-            //((PlayerEntity) entity).getPlayer().getSession().send(new MassEventMessageComposer("habbopages/users/slotmachine.txt?" + Comet.getTime()));
-            ((PlayerEntity) entity).getPlayer().getSession().send(new NuxGiftEmailViewMessageComposer(6 + "", 0, true, false, true));
-            //((PlayerEntity) entity).getPlayer().getSession().send(new WhisperMessageComposer(this.getVirtualId(), "No dispones de la cantidad que quieres apostar o tu apuesta es de 0. Ajusta tu apuesta con :setbet {CANTIDAD}", 34));
+            ((PlayerEntity) entity).getPlayer().getSession().send(new WhisperMessageComposer(this.getVirtualId(), "Você não tem o valor que deseja apostar ou sua aposta é 0. Ajuste sua aposta com :apostar (quantia)", 34));
             return false;
         }
 
@@ -82,7 +79,7 @@ public class SlotMachineCreditsFloorItem extends RoomItemFloor {
                     break;
             }
 
-            ((PlayerEntity) entity).getPlayer().getSession().send(new NotificationMessageComposer(image, Locale.getOrDefault("", "Has ganado %q Globos con la máquina tragamonedas.\n\n(%b x %m)")
+            ((PlayerEntity) entity).getPlayer().getSession().send(new NotificationMessageComposer(image, Locale.getOrDefault("", "Você ganhou %q Moedas com o caça-níqueis.\n\n(%b x %m)")
                     .replace("%q", ((PlayerEntity) entity).getBetAmount() * multiplier + "")
                     .replace("%b", ((PlayerEntity) entity).getBetAmount() + "")
                     .replace("%m", multiplier + "")));
@@ -109,7 +106,7 @@ public class SlotMachineCreditsFloorItem extends RoomItemFloor {
             case 3: rand3="ª"; break;
         }
 
-        ((PlayerEntity) entity).getPlayer().getSession().send(new TalkMessageComposer(entity.getId(), "Has sacado " + rand1 + " " + rand2 + " " + rand3 + ".", ChatEmotion.NONE, 34));
+        ((PlayerEntity) entity).getPlayer().getSession().send(new TalkMessageComposer(entity.getId(), "Você tirou " + rand1 + " " + rand2 + " " + rand3 + ".", ChatEmotion.NONE, 34));
         ((PlayerEntity) entity).getPlayer().sendBalance();
 
         this.setTicks(RoomItemFactory.getProcessTime(1));

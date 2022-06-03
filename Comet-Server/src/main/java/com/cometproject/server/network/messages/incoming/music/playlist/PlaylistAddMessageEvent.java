@@ -16,24 +16,24 @@ import com.cometproject.storage.api.StorageContext;
 public class PlaylistAddMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        Long inventoryItemId = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
+        final Long inventoryItemId = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
 
         if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().getRoom() == null) {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (client.getPlayer().getId() != room.getData().getOwnerId() && !client.getPlayer().getPermissions().getRank().roomFullControl())
             return;
 
-        SoundMachineFloorItem soundMachineFloorItem = room.getItems().getSoundMachine();
+        final SoundMachineFloorItem soundMachineFloorItem = room.getItems().getSoundMachine();
 
         if (soundMachineFloorItem == null) {
             return;
         }
 
-        InventoryItem inventoryItem = (InventoryItem) client.getPlayer().getInventory().getItem(inventoryItemId);
+        final InventoryItem inventoryItem = (InventoryItem) client.getPlayer().getInventory().getItem(inventoryItemId);
 
         if (inventoryItem == null) {
             return;

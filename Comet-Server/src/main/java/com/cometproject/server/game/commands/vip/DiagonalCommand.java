@@ -17,18 +17,22 @@ public class DiagonalCommand extends ChatCommand {
         }
 
         final Room room = client.getPlayer().getEntity().getRoom();
+
         @Nullable RoomDiagonalType type = params.length > 0 ? RoomDiagonalType.parse(params[0]) : null;
+
         if (params.length > 0) {
             if (params[0].equals("?") || params[0].equals("lista")) {
                 sendAlert("Tipos de diagonal disponíveis: \n\n- on/enable/ativar: habilita a diagonal permitindo qualquer movimento\n- off/disable/desativar: desabilita a diagonal\n- strict: habilita a diagonal como no habbo original. Só poderá andar na diagonal se o usuário também puder andar até a posição.", client);
                 return;
             }
+
             type = RoomDiagonalType.parse(params[0]);
         }
 
         if (type == null) {
             type = RoomDiagonalType.toggle(room.getData().getRoomDiagonalType());
         }
+
         room.getData().setRoomDiagonalType(type);
 
         switch (type) {
