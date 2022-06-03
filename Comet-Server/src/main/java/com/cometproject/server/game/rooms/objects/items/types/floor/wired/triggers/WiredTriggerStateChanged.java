@@ -16,7 +16,7 @@ public class WiredTriggerStateChanged extends WiredTriggerItem {
     public static boolean executeTriggers(RoomEntity entity, RoomItemFloor floorItem) {
         boolean wasExecuted = false;
 
-        for (WiredTriggerStateChanged wiredItem : getTriggers(entity.getRoom(), WiredTriggerStateChanged.class)) {
+        for (final WiredTriggerStateChanged wiredItem : getTriggers(entity.getRoom(), WiredTriggerStateChanged.class)) {
             if(wiredItem == null) continue;
 
             if (wiredItem.getWiredData().getSelectedIds().contains(floorItem.getId())) {

@@ -1,19 +1,11 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
-import com.cometproject.server.boot.Comet;
-import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
-import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.game.rooms.types.components.games.GameTeam;
-import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.avatar.DanceMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -54,10 +46,8 @@ public class WiredCustomEnable extends WiredActionItem {
         }
 
         int enableId = Integer.parseInt(this.getWiredData().getText());
-        if(playerEntity.getCurrentEffect() != null) {
-                playerEntity.applyEffect(new PlayerEffect(enableId, 0));
-        } else if (enableId == 0) {
-            playerEntity.applyEffect(new PlayerEffect(0,0));
+        if (enableId >= 0) {
+            playerEntity.applyEffect(new PlayerEffect(enableId, 0));
         }
     }
 }
