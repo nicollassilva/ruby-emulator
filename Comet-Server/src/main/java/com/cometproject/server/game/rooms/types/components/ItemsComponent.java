@@ -943,8 +943,6 @@ public class ItemsComponent {
             return;
         }
 
-        final List<RoomItemFloor> floorItems = room.getItems().getItemsOnSquare(x, y);
-
         if (item.getDefinition() != null && item.getDefinition().getInteraction() != null) {
             if (item.getDefinition().getInteraction().equals("mannequin")) {
                 rot = 2;
@@ -967,7 +965,7 @@ public class ItemsComponent {
 
         final List<Position> tilesToUpdate = new ArrayList<>();
 
-        for (final RoomItemFloor stackItem : floorItems) {
+        for (final RoomItemFloor stackItem : room.getItems().getItemsOnSquare(x, y)) {
             if (item.getId() != stackItem.getId()) {
                 stackItem.onItemAddedToStack(floorItem);
             }
@@ -1000,6 +998,8 @@ public class ItemsComponent {
         if(floorItem instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = floorItem;
         }
+
+        tilesToUpdate.clear();
 
         floorItem.onPlaced();
         floorItem.saveData();

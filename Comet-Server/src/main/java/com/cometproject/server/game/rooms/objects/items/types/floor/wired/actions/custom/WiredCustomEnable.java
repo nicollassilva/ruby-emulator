@@ -31,7 +31,7 @@ public class WiredCustomEnable extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -45,7 +45,8 @@ public class WiredCustomEnable extends WiredActionItem {
             return;
         }
 
-        int enableId = Integer.parseInt(this.getWiredData().getText());
+        final int enableId = Integer.parseInt(this.getWiredData().getText());
+
         if (enableId >= 0) {
             playerEntity.applyEffect(new PlayerEffect(enableId, 0));
         }

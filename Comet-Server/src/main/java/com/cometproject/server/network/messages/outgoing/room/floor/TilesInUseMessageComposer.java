@@ -25,7 +25,7 @@ public class TilesInUseMessageComposer extends MessageComposer {
     public void compose(IComposer msg) {
         msg.writeInt(tiles.size());
 
-        for (Position position : tiles) {
+        for (final Position position : tiles) {
             msg.writeInt(position.getX());
             msg.writeInt(position.getY());
         }

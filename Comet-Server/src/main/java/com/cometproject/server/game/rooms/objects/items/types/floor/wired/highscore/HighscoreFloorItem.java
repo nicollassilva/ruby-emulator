@@ -99,7 +99,7 @@ public abstract class HighscoreFloorItem extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
             if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {

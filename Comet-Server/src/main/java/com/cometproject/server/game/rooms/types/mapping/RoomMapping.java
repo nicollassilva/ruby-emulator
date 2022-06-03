@@ -41,10 +41,10 @@ public class RoomMapping {
 
         //System.out.print("\n");
         for (int x = 0; x < sizeX; x++) {
-            RoomTile[] xArray = new RoomTile[sizeY];
+            final RoomTile[] xArray = new RoomTile[sizeY];
 
             for (int y = 0; y < sizeY; y++) {
-                RoomTile instance = new RoomTile(this, new Position(x, y, 0d));
+                final RoomTile instance = new RoomTile(this, new Position(x, y, 0d));
                 instance.reload();
 
                 xArray[y] = instance;
@@ -70,35 +70,27 @@ public class RoomMapping {
     }
 
     public void tick() {
-
-        // clear out the entity grid
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[x].length; y++) {
+        for (final RoomTile[] roomTiles : tiles) {
+            for (final RoomTile roomTile : roomTiles) {
                 final List<RoomEntity> entitiesToRemove = new ArrayList<>();
 
                 try {
-                    final RoomTile tile = this.tiles[x][y];
-
-                    for (final RoomEntity entity : tile.getEntities()) {
+                    for (final RoomEntity entity : roomTile.getEntities()) {
                         if (entity instanceof PlayerEntity) {
                             if (((PlayerEntity) entity).getPlayer() == null) {
                                 entitiesToRemove.add(entity);
-                            }
-
-                            else if (!((PlayerEntity) entity).getPlayer().getEntity().getPosition().equals(tile.getPosition()) && !((PlayerEntity) entity).getPlayer().getEntity().getPositionToSet().copy().equals(tile.getPosition())) {
+                            } else if (!((PlayerEntity) entity).getPlayer().getEntity().getPosition().equals(roomTile.getPosition()) && !((PlayerEntity) entity).getPlayer().getEntity().getPositionToSet().copy().equals(roomTile.getPosition())) {
                                 entitiesToRemove.add(entity);
 
-                                final RoomTile newtile = this.getRoom().getMapping().getTile(((PlayerEntity) entity).getPlayer().getEntity().getPosition());
-
-                                if (newtile != null) {
-                                    newtile.getEntities().add(entity);
+                                if (entity.getTile() != null && this.getRoom().getMapping().isValidPosition(entity.getTile().getPosition())) {
+                                    entity.getTile().getEntities().add(entity);
                                 }
                             }
                         }
                     }
 
                     for (final RoomEntity entityToRemove : entitiesToRemove) {
-                        tile.getEntities().remove(entityToRemove);
+                        roomTile.getEntities().remove(entityToRemove);
                     }
                 } catch (Exception ignored) {
 
@@ -315,99 +307,76 @@ public class RoomMapping {
             }
 
             if (left != null && right != null && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ENABLED)) {
-                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID) {
+                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID)
                     return false;
-                }
 
-                if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID) {
+                if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID)
                     return false;
-                }
 
-                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN) {
+                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN)
                     return false;
-                }
             }
         }
 
-/*
-        if (!positionCanWalkUser(to)) {
-            return false;
-        }*/
-
-        if(isOverriding){
+        if(isOverriding)
             return true;
-        }
 
         final boolean positionHasUser = positionHasUser(entityId, to);
+
         if (positionHasUser) {
             if(lastStep && !isAtDoor)
                 return false;
 
-            if (!isRetry && !room.getData().getAllowWalkthrough()) {
+            if (!isRetry && !room.getData().getAllowWalkthrough())
                 return false;
-            }
 
-            if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor) {
+            if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor)
                 return false;
-            }
         }
 
         final RoomTile tile = tiles[to.getX()][to.getY()];
 
-        if (tile == null) {
+        if (tile == null)
             return false;
-        }
 
-        // todo: we need a per-item canStepOn(Entity entity) boolean or something.
         if (tile.getTopItemInstance() instanceof OneWayGateFloorItem) {
             final OneWayGateFloorItem item = (OneWayGateFloorItem) tile.getTopItemInstance();
 
-            if (entity != null && item.getInteractingEntity() != null && item.getInteractingEntity().getId() == entity) {
+            if (entity != null && item.getInteractingEntity() != null && item.getInteractingEntity().getId() == entity)
                 return true;
-            }
         }
 
-        if ((tile.getMovementNode() == RoomEntityMovementNode.CLOSED || (tile.getMovementNode() == RoomEntityMovementNode.END_OF_ROUTE && !lastStep)) && !isItemOnRoller) {
+        if ((tile.getMovementNode() == RoomEntityMovementNode.CLOSED || (tile.getMovementNode() == RoomEntityMovementNode.END_OF_ROUTE && !lastStep)) && !isItemOnRoller)
             return false;
-        }
 
-        if (ignoreHeight) {
+        if (ignoreHeight)
             return true;
-        }
 
         final double fromHeight = this.getStepHeight(from);
         final double toHeight = this.getStepHeight(to);
 
-        if (isAtDoor) return true;
+        if (isAtDoor)
+            return true;
 
-        if (fromHeight > toHeight) {
-            if (fromHeight - toHeight >= 3) {
-                return false;
-            }
-        }
+        if (fromHeight > toHeight && fromHeight - toHeight >= 3)
+            return false;
 
         return !(fromHeight < toHeight && (toHeight - fromHeight) > 1.2);
     }
 
     public double getStepHeight(Position position) {
-        if (this.tiles.length <= position.getX() || this.tiles[position.getX()].length <= position.getY()) return 0.0;
+        if (this.tiles.length <= position.getX() || this.tiles[position.getX()].length <= position.getY())
+            return 0.0;
 
         final RoomTile instance = this.tiles[position.getX()][position.getY()];
 
-        if (!isValidPosition(instance.getPosition())) {
+        if (!isValidPosition(instance.getPosition()))
             return 0.0;
-        }
 
-        final RoomTileStatusType tileStatus = instance.getStatus();
-        double height = instance.getWalkHeight();
-
-        if (tileStatus == null) {
+        if (instance.getStatus() == null)
             return 0.0;
-        }
 
-        //height = 0;
-
-        return height;
+        return instance.getWalkHeight();
     }
 
     public List<Position> tilesWithFurniture() {
@@ -436,21 +405,21 @@ public class RoomMapping {
 
     @Override
     public String toString() {
-        String mapString = "";
+        final StringBuilder mapString = new StringBuilder();
 
         for (final RoomTile[] tile : this.tiles) {
             for (final RoomTile roomTile : tile) {
                 if (roomTile.getMovementNode() == RoomEntityMovementNode.CLOSED) {
-                    mapString += " ";
+                    mapString.append(" ");
                 } else {
-                    mapString += "X";
+                    mapString.append("X");
                 }
             }
 
-            mapString += "\n";
+            mapString.append("\n");
         }
 
-        return mapString;
+        return mapString.toString();
     }
 
     public String visualiseEntityGrid() {

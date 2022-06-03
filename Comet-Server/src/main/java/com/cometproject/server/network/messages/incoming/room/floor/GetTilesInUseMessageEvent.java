@@ -16,13 +16,12 @@ public class GetTilesInUseMessageEvent implements Event {
             client.send(new TilesInUseMessageComposer(client.getPlayer().getEntity().getRoom().getMapping().tilesWithFurniture()));
 
             if (client.getPlayer().getEntity() != null) {
-                IRoomModel model = client.getPlayer().getEntity().getRoom().getModel();
+                final IRoomModel model = client.getPlayer().getEntity().getRoom().getModel();
 
                 if (model == null) return;
 
                 client.send(new FloorPlanDoorMessageComposer(model.getDoorX(), model.getDoorY(), model.getDoorRotation()));
             }
-
         }
     }
 }

@@ -55,7 +55,7 @@ public class RoomTile {
         this.mappingInstance = mappingInstance;
         this.position = position;
         this.entities = new ConcurrentHashSet<>();
-        this.items = new ArrayList<>(); // maybe change this in the future..
+        this.items = new ArrayList<>();
 
         this.reload();
     }
@@ -327,11 +327,6 @@ public class RoomTile {
                 height -= roomItemFloor.getDefinition().getHeight();
             }
         }
-
-//      Commented because this is a possible fix for adjustable height items with seat items inside
-//      if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
-//          height += ((SeatFloorItem) roomItemFloor).getSitHeight();
-//      }
 
         return height;
     }
