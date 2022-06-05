@@ -1,5 +1,6 @@
 package com.cometproject.server.network.messages.incoming.room.action;
 
+import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
@@ -48,6 +49,14 @@ public class WalkMessageEvent implements Event {
 
                 newPosition.setZ(tile.getWalkHeight());
                 entity.warpImmediately(newPosition);
+
+                entity.removeStatus(RoomEntityStatus.LAY);
+                entity.removeStatus(RoomEntityStatus.SIT);
+
+                if(tile.getTopItemInstance() != null) {
+                    tile.getTopItemInstance().onEntityStepOn(entity);
+                }
+
                 return;
             }
 

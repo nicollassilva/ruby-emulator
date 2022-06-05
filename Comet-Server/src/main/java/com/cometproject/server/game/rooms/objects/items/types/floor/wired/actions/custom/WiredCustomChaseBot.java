@@ -1,9 +1,9 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom;
 
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
-import com.cometproject.server.game.rooms.objects.entities.pathfinding.Pathfinder;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.types.ItemPathfinder;
 import com.cometproject.server.game.rooms.objects.entities.types.BotEntity;
@@ -74,10 +74,8 @@ public class WiredCustomChaseBot extends WiredActionItem {
                 List<Square> tilesToEntity = new ArrayList<>();
 
                 for (int direction : Position.COLLIDE_TILES) {
-                    if (tilesToEntity.size() == 0) {
-                        tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), Pathfinder.DISABLE_DIAGONAL, false);
-                        break;
-                    }
+                    tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), RoomDiagonalType.DISABLED.getKey(), false);
+                    break;
                 }
 
                 if (tilesToEntity != null && tilesToEntity.size() != 0) {

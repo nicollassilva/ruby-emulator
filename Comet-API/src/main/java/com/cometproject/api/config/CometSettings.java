@@ -18,6 +18,13 @@ public class CometSettings {
     public static int dailyRespects = 3;
     public static int dailyScratchs = 3;
 
+    // Achievements items stack limit
+    public static int maxBanzaiTilesInStack = 10;
+    public static int maxFootballGatesInStack = 3;
+    public static int maxHorseJumpInStack = 3;
+    public static int maxAcademyItemsInStack = 3;
+    public static int maxFreezeTilesInStack = 3;
+
     public static int vipRank = 2;
     public static int rankCanSeeVipContent = 13;
 

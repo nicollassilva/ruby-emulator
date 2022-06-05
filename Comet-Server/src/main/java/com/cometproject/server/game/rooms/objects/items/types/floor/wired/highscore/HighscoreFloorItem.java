@@ -99,7 +99,7 @@ public abstract class HighscoreFloorItem extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
             if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
@@ -119,7 +119,7 @@ public abstract class HighscoreFloorItem extends RoomItemFloor {
         return (this.state ? "1" : "0") + JsonUtil.getInstance().toJson(this.itemData);
     }
 
-    public abstract void onTeamWins(List<String> users, int score);
+    public abstract void onTeamWins(List<String> usernames, List<PlayerEntity> players, int score);
 
     void addEntry(List<String> users, int score) {
         this.itemData.addEntry(users, score);

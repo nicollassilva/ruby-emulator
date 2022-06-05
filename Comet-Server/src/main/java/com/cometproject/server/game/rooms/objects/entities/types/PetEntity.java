@@ -140,7 +140,7 @@ public class PetEntity extends RoomEntity {
         String composer = data.getLook().toLowerCase() + " ";
 
         if (this.getData().getTypeId() == 15) {
-            composer += new StringBuilder().append(this.getData().isSaddled() ? "3" : "2").append(" 2 ").append(this.getData().getHair()).append(" ").append(this.getData().getHairDye()).append(" 3 ").append(this.getData().getHair()).append(" ").append(this.getData().getHairDye()).append(this.getData().isSaddled() ? "0 4 9 0" : "").toString();
+            composer += (this.getData().isSaddled() ? "3" : "2") + " 2 " + this.getData().getHair() + " " + this.getData().getHairDye() + " 3 " + this.getData().getHair() + " " + this.getData().getHairDye() + (this.getData().isSaddled() ? "0 4 9 0" : "");
         } else {
             composer += "2 2 -1 0 3 -1 0";
         }
@@ -169,12 +169,14 @@ public class PetEntity extends RoomEntity {
     }
 
     public void composeUpdate(IComposer msg) {
+        final boolean isMonsterPlant = this instanceof MonsterPlantEntity;
+
         msg.writeInt(this.getId());
-        msg.writeInt(0);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
-        msg.writeBoolean(Boolean.FALSE);
+        msg.writeInt(this.getData().isAnyRider() ? 1 : 0);
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).canBreed()));
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).isFullyGrown()));
+        msg.writeBoolean((isMonsterPlant && ((PetMonsterPlantData) this.getData()).isDead()));
+        msg.writeBoolean(false);
     }
 
     public void composeInformation(IComposer msg) {
@@ -182,7 +184,8 @@ public class PetEntity extends RoomEntity {
             return;
         }
 
-        PetMonsterPlantData pet = ((PetMonsterPlantData) this.getData());
+        final PetMonsterPlantData pet = ((PetMonsterPlantData) this.getData());
+
         msg.writeInt(pet.getId());
         msg.writeString(pet.getPlantName());
         msg.writeInt(pet.getGrowthStage());
@@ -251,11 +254,13 @@ public class PetEntity extends RoomEntity {
     }
 
     public int daysSinceBirthday(long birthday) {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(birthday * 1000L);
-        Calendar newCalendar = Calendar.getInstance();
+
+        final Calendar newCalendar = Calendar.getInstance();
         newCalendar.setTimeInMillis(System.currentTimeMillis());
-        return newCalendar.get(6) - calendar.get(6);
+
+        return newCalendar.get(Calendar.DAY_OF_YEAR) - calendar.get(Calendar.DAY_OF_YEAR);
     }
 
     @Override

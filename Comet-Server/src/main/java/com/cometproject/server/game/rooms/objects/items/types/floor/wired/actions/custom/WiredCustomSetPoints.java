@@ -9,6 +9,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -53,12 +54,10 @@ public class WiredCustomSetPoints extends WiredActionItem {
         final String finalText = this.getWiredData().getText();
 
         final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
-
-        ArrayList<String> score = new ArrayList<>();
-        score.add(playerEntity.getUsername());
-
+        final ArrayList<PlayerEntity> players = Lists.newArrayList(playerEntity);
+        final ArrayList<String> usernames =Lists.newArrayList(playerEntity.getUsername());
         for (final HighscoreFloorItem scoreboard : scoreboards) {
-            scoreboard.onTeamWins(score, Integer.parseInt(finalText));
+            scoreboard.onTeamWins(usernames, players, Integer.parseInt(finalText));
         }
     }
 }

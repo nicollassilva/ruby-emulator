@@ -23,9 +23,7 @@ public class ChangeLooksMessageEvent implements Event {
         if(client.getPlayer().getData() == null)
             return;
 
-        if (figure == null) return;
-
-        if (gender == null) return;
+        if (figure.isEmpty() || gender.isEmpty()) return;
 
         if (PlayerFigureValidator.CheckFilterChar(figure)) {
             figure = "lg-3023-1335.hr-828-45.sh-295-1332.hd-180-4.ea-3168-89.ca-1813-62.ch-235-1332";

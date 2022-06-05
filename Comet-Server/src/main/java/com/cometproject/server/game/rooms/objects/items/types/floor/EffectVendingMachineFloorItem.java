@@ -4,6 +4,7 @@ import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
+import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -11,11 +12,11 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.utilities.RandomUtil;
 
 
-public class VendingMachineFloorItem extends RoomItemFloor {
+public class EffectVendingMachineFloorItem extends RoomItemFloor {
     private RoomEntity vendingEntity;
     private int state = -1;
 
-    public VendingMachineFloorItem(RoomItemData itemData, Room room) {
+    public EffectVendingMachineFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
     }
 
@@ -70,9 +71,8 @@ public class VendingMachineFloorItem extends RoomItemFloor {
             }
 
             case 1: {
-                if (this.getDefinition().getVendingIds().length != 0) {
-                    int vendingId = Integer.parseInt(this.getDefinition().getVendingIds()[RandomUtil.getRandomInt(0, this.getDefinition().getVendingIds().length - 1)].trim());
-                    vendingEntity.carryItem(vendingId);
+                if (this.getDefinition().getEffectId() != 0) {
+                    vendingEntity.applyEffect(new PlayerEffect(this.getDefinition().getEffectId(), 0));
                 }
 
                 this.state = 2;

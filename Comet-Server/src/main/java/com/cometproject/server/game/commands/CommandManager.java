@@ -173,7 +173,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.mentionsettings.name", "mentionsettings"), new MentionSettingsCommand());
         this.addCommand(Locale.get("command.redeemcredits.name"), new RedeemCreditsCommand());
         this.addCommand(Locale.get("command.handitem.name"), new HandItemCommand());
-        this.addCommand(Locale.get("command.togglediagonal.name"), new ToggleDiagonalCommand());
+        this.addCommand(Locale.get("command.togglediagonal.name"), new DiagonalCommand());
         this.addCommand(Locale.get("command.fastwalk.name"), new FastWalkCommand());
         this.addCommand(Locale.get("command.hidewired.name"), new HideWiredCommand());
         this.addCommand(Locale.get("command.disablewhisper.name"), new DisableWhisperCommand());

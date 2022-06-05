@@ -6,6 +6,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.W
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,10 +49,10 @@ public class WiredCustomRemoveScore extends WiredActionItem {
          */
         final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
-        ArrayList<String> score = new ArrayList<>();
-        score.add(playerEntity.getUsername());
+        final ArrayList<PlayerEntity> players = Lists.newArrayList(playerEntity);
+        final ArrayList<String> usernames =Lists.newArrayList(playerEntity.getUsername());
         for (HighscoreFloorItem scoreboard : scoreboards) {
-            scoreboard.onTeamWins(score, this.getScore());
+            scoreboard.onTeamWins(usernames, players, this.getScore());
         }
 
         /*

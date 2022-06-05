@@ -366,6 +366,8 @@ public class EntityComponent {
 
     public void refreshScore() {
         for (final PlayerEntity entity : getPlayerEntities()) {
+            if(entity.getPlayer() == null || entity.getPlayer().getSession() == null) continue;
+
             entity.getPlayer().getSession().send(new RoomRatingMessageComposer(room.getData().getScore(), entity.canRateRoom()));
         }
     }

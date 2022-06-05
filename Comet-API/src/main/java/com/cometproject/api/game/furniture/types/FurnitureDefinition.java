@@ -62,5 +62,9 @@ public interface FurnitureDefinition {
 
    int getSongId();
 
-    ItemType getItemType();
+   ItemType getItemType();
+
+   boolean isLimitableItem();
+
+   int getItemLimitation();
 }

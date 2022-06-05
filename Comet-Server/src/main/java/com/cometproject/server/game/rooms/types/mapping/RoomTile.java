@@ -14,6 +14,11 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze
 import com.cometproject.server.game.rooms.objects.items.types.floor.groups.GroupGateFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.snowboarding.SnowboardJumpFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredAddonNoItemsAnimateEffect;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonKebBar;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonRandomEffect;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonUnseenEffect;
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Lists;
 
@@ -50,7 +55,7 @@ public class RoomTile {
         this.mappingInstance = mappingInstance;
         this.position = position;
         this.entities = new ConcurrentHashSet<>();
-        this.items = new ArrayList<>(); // maybe change this in the future..
+        this.items = new ArrayList<>();
 
         this.reload();
     }
@@ -141,8 +146,12 @@ public class RoomTile {
 
             this.hasItems = true;
 
-            final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+            final boolean isWired = item instanceof WiredFloorItem || item instanceof WiredAddonUnseenEffect || item instanceof WiredAddonRandomEffect || item instanceof WiredAddonNoItemsAnimateEffect || item instanceof WiredAddonKebBar;
+            final boolean isHideWiredActive = item.getRoom().getData().isWiredHidden();
 
+            final double totalHeight = isWired && isHideWiredActive
+                    ? -1D
+                    : item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
             if (totalHeight > highestHeight) {
                 highestHeight = totalHeight;
                 highestItem = item.getId();
@@ -293,7 +302,8 @@ public class RoomTile {
 
     public double getTopHeight(RoomItemFloor exclude) {
         double highest = this.getTileHeight();
-        for (RoomItemFloor item : items) {
+
+        for (final RoomItemFloor item : items) {
             if (exclude != null && exclude.getId() == item.getId()) continue;
 
             final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
@@ -317,11 +327,6 @@ public class RoomTile {
                 height -= roomItemFloor.getDefinition().getHeight();
             }
         }
-
-//      Commented because this is a possible fix for adjustable height items with seat items inside
-//      if (this.hasAdjustableHeight && roomItemFloor instanceof SeatFloorItem) {
-//          height += ((SeatFloorItem) roomItemFloor).getSitHeight();
-//      }
 
         return height;
     }

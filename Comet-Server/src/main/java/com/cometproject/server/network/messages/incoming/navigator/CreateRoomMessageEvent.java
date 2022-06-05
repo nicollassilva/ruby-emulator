@@ -48,12 +48,12 @@ public class CreateRoomMessageEvent implements Event {
         int lastRoomCreatedDifference = ((int) Comet.getTime()) - client.getPlayer().getLastRoomCreated();
 
         if (lastRoomCreatedDifference < 30) {
-            client.send(new MotdNotificationMessageComposer(Locale.getOrDefault("room.creation.time", "Due to abuse, you can only create 1 room every 30 seconds (You have " + (30 - lastRoomCreatedDifference) + " seconds left)!")));
+            client.send(new MotdNotificationMessageComposer(Locale.getOrDefault("room.creation.time", "Você pode criar somente um quarto a cada 30 segundos. (Você ainda tem " + (30 - lastRoomCreatedDifference) + " segundos restantes).")));
             return;
         }
 
         if (GameContext.getCurrent().getRoomModelService().getModel(model) == null) {
-            client.send(new MotdNotificationMessageComposer("Invalid room model"));
+            client.send(new MotdNotificationMessageComposer("Modelo de quarto inválido."));
             return;
         }
 

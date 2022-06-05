@@ -509,10 +509,7 @@ public class AbstractRoomProcess implements CometTask {
                     }
 
                     if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-
-                        if(!(item instanceof HorseJumpFloorItem) || !(item.getTile().getTopItemInstance() instanceof SeatFloorItem)) {
-                            isCancelled = true;
-                        }
+                        isCancelled = true;
                     }
 
                     if (!isCancelled) {
@@ -527,7 +524,8 @@ public class AbstractRoomProcess implements CometTask {
             if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
                 final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
-                if (!allowWalkthrough || entity instanceof PetEntity || nextPosIsTheGoal) {
+                final boolean isOverriding = isPlayer && entity.isOverriden();
+                if (!isOverriding && (!allowWalkthrough || nextPosIsTheGoal)) {
                     isCancelled = true;
                 }
 

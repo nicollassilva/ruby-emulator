@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 
 public class WordFilter {
@@ -37,11 +38,11 @@ public class WordFilter {
         }
 
         for (final Map.Entry<String, String> word : wordfilter.entrySet()) {
-            if (message.toLowerCase().contains(word.getKey())) {
+            if (Pattern.compile("(?i)" + word.getKey()).matcher(message).find()) {
                 if (CometSettings.wordFilterMode == FilterMode.STRICT)
                     return new FilterResult(true, word.getKey());
 
-                filteredMessage = filteredMessage.replace(word.getKey(), word.getValue());
+                filteredMessage = filteredMessage.replaceAll("(?i)" + word.getKey(), word.getValue());
             }
         }
 

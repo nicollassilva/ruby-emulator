@@ -59,6 +59,7 @@ public class SaveStackToolMessageEvent implements Event {
         }
 
         double highestHeight = magicStackFloorItem.getTile().getTopHeight(magicStackFloorItem);
+
         final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(
                 magicStackFloorItem.getDefinition().getLength(),
                 magicStackFloorItem.getDefinition().getWidth(),

@@ -36,7 +36,7 @@ public class UpdateStackMapMessageComposer extends MessageComposer {
             return;
         }
 
-        for (RoomTile tile : tilesToUpdate) {
+        for (final RoomTile tile : tilesToUpdate) {
             this.composeUpdate(tile, msg);
         }
     }

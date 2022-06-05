@@ -18,7 +18,7 @@ public class ModifyWhoCanRideHorseMessageEvent implements Event {
 
         final Room room = client.getPlayer().getEntity().getRoom();
 
-        PetEntity petEntity = room.getEntities().getEntityByPetId(petId);
+        final PetEntity petEntity = room.getEntities().getEntityByPetId(petId);
 
         if (petEntity == null || petEntity.getData().getOwnerId() != client.getPlayer().getId()) {
             return;
@@ -28,6 +28,7 @@ public class ModifyWhoCanRideHorseMessageEvent implements Event {
 
         petEntity.getData().saveHorseData();
         petEntity.markNeedsUpdate();
+
         room.getEntities().broadcastMessage(new HorseFigureMessageComposer(petEntity));
     }
 }

@@ -29,9 +29,11 @@ public class PickAllWiredCommand extends ChatCommand {
             return;
         }
 
-        for (final RoomItem item : room.getItems().getFloorItems().values()) {
+        for (final RoomItemFloor item : room.getItems().getFloorItems().values()) {
             if (item instanceof WiredFloorItem && item.getItemData().getOwnerId() == client.getPlayer().getId()) {
-                room.getItems().removeItem((RoomItemFloor) item, client,true);
+                item.onPickup();
+
+                room.getItems().removeItem(item, client,true);
             }
         }
 

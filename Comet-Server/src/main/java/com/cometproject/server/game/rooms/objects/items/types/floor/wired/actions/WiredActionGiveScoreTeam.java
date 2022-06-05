@@ -7,6 +7,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameTeam;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,12 +47,13 @@ public class WiredActionGiveScoreTeam extends WiredActionItem {
             return;
 
         final ArrayList<String> teamUsernames = new ArrayList<>();
-
+        final ArrayList<PlayerEntity> players = new ArrayList<>();
         this.getRoom().getGame().getTeams().get(gameTeam).forEach( member -> {
             final PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(member);
 
             if(player != null)  {
                 teamUsernames.add(player.getUsername());
+                players.add(player);
             }
         });
 
@@ -59,11 +61,10 @@ public class WiredActionGiveScoreTeam extends WiredActionItem {
         This is not how it should work, but it's how people want it
          */
         if(teamUsernames.size() < 1) return;
-        
-        final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
 
+        final List<HighscoreFloorItem> scoreboards = getRoom().getItems().getByClass(HighscoreFloorItem.class);
         for (final HighscoreFloorItem scoreboard : scoreboards) {
-            scoreboard.onTeamWins(teamUsernames, this.getScore());
+            scoreboard.onTeamWins(teamUsernames, players, this.getScore());
         }
 
         /*

@@ -25,7 +25,7 @@ public class PlaylistMessageComposer extends MessageComposer {
         msg.writeInt(SoundMachineFloorItem.MAX_CAPACITY);
         msg.writeInt(songItemDatas.size());
 
-        for (SongItemData songItemData : this.songItemDatas) {
+        for (final SongItemData songItemData : this.songItemDatas) {
             msg.writeInt(songItemData.getItemSnapshot().getBaseItemId());
             msg.writeInt(songItemData.getSongId());
         }

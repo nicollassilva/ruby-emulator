@@ -232,7 +232,7 @@ public class MessageHandler {
 
     private void registerSnowstorm() {
         this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6009, new CheckGameDirectoryStatusParser());
-//        this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6011, new UnknowLatestParser());
+        //this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6011, new UnknowLatestParser());
         this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6016, new LoadStageReadyParser());
         this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6022, new SetUserMoveTargetParser());
         this.getMessages().put(Events.UNKNOWN_SNOWSTORM_6025, new RequestFullStatusUpdateParser());
@@ -461,7 +461,7 @@ public class MessageHandler {
         this.getMessages().put(Events.PickupObjectMessageEvent, new PickUpItemMessageEvent());
         this.getMessages().put(Events.UseFurnitureMessageEvent, new ChangeFloorItemStateMessageEvent());
         this.getMessages().put(Events.UseOneWayGateMessageEvent, new ChangeFloorItemStateMessageEvent());
-        this.getMessages().put(Events.DiceOffMessageEvent, new OpenDiceMessageEvent());
+        this.getMessages().put(Events.DiceOffMessageEvent, new CloseDiceMessageEvent());
         this.getMessages().put(Events.ThrowDiceMessageEvent, new RunDiceMessageEvent());
 
         this.getMessages().put(Events.SaveWiredEffectConfigMessageEvent, new SaveWiredDataMessageEvent());

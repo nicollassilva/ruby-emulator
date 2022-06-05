@@ -45,7 +45,6 @@ public class TalkMessageEvent implements Event {
 
         int bubble = msg.readInt();
 
-        final int timeMutedExpire = client.getPlayer().getData().getTimeMuted() - (int) Comet.getTime();
         final PlayerEntity playerEntity = client.getPlayer().getEntity();
 
         if (playerEntity == null || playerEntity.getRoom() == null || playerEntity.getRoom().getEntities() == null)
@@ -57,7 +56,7 @@ public class TalkMessageEvent implements Event {
 
         if (client.getPlayer().getData().getTimeMuted() != 0) {
             if (client.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
-                client.getPlayer().getSession().send(new MutedMessageComposer(timeMutedExpire));
+                client.getPlayer().getSession().send(new MutedMessageComposer(client.getPlayer().getData().getTimeMuted() - (int) Comet.getTime()));
                 return;
             }
         }
@@ -85,7 +84,6 @@ public class TalkMessageEvent implements Event {
 
             if (filterResult.isBlocked()) {
                 filterResult.sendLogToStaffs(client, "<Quarto: " + playerEntity.getRoom().getData().getId() + ">");
-                //client.send(new AdvancedAlertMessageComposer(Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                 client.sendQueue(new NotificationMessageComposer("filter", Locale.get("game.message.blocked").replace("%s", filterResult.getMessage())));
                 client.getPlayer().getEntity().increaseCountFilter(1);
 

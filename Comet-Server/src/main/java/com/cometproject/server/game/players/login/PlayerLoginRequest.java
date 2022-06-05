@@ -143,18 +143,6 @@ public class PlayerLoginRequest implements CometTask {
 
             player.setOnline(true);
 
-            if (player.getSubscription().isValid()) {
-                player.getData().setVip(true);
-                PlayerDao.updateSubscription(true, player.getId());
-            } else {
-                player.getData().setTag("");
-                PlayerDao.updateSubscription(false, player.getId());
-            }
-
-            /*if(!player.getSubscription().isValid()) {
-                player.getSession().send(new PickMontlyClubGiftNotificationMessageComposer(1));
-            }*/
-
             PlayerDao.updatePlayerStatus(player, player.isOnline(), true);
 
             client.sendQueue(new AuthenticationOKMessageComposer()).
@@ -244,10 +232,6 @@ public class PlayerLoginRequest implements CometTask {
                 player.getData().setAchievementPoints(0);
                 player.getData().save();
             }
-
-            /*if (!Comet.isDebugging) {
-                PlayerDao.nullifyAuthTicket(player.getData().getId());
-            }*/
 
             if (ModuleManager.getInstance().getEventHandler().handleEvent(OnPlayerLoginEvent.class, new OnPlayerLoginEventArgs(client.getPlayer()))) {
                 client.disconnect();

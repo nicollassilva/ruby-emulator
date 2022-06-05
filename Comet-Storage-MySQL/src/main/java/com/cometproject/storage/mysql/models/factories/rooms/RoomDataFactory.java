@@ -1,6 +1,7 @@
 package com.cometproject.storage.mysql.models.factories.rooms;
 
 import com.cometproject.api.game.rooms.IRoomData;
+import com.cometproject.api.game.rooms.RoomDiagonalType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.settings.*;
 import com.cometproject.storage.api.data.rooms.RoomData;
@@ -17,8 +18,8 @@ public class RoomDataFactory {
                                     int thicknessFloor, boolean allowWalkthrough, boolean allowPets, String heightmap,
                                     RoomMuteState muteState, RoomKickState kickState, RoomBanState banState,
                                     int bubbleMode, int bubbleType, int bubbleScroll, int chatDistance,
-                                    int antiFloodSettings, List<String> disabledCommands, int groupId,String requiredBadge,
-                                    String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, boolean roomDiagonal, int songId, int roomPrice) {
+                                    int antiFloodSettings, List<String> disabledCommands, int groupId, String requiredBadge,
+                                    String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, RoomDiagonalType roomDiagonal, int songId, int roomPrice) {
 
         return new RoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
                 originalPassword, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,

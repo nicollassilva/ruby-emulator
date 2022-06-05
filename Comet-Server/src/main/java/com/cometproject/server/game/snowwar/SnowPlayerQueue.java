@@ -7,18 +7,12 @@ package com.cometproject.server.game.snowwar;
  */
 
 import com.cometproject.api.config.CometSettings;
-import com.cometproject.server.boot.CometServer;
-import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.players.data.PlayerData;
-import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.snowwar.gameevents.PlayerLeft;
 import com.cometproject.server.game.snowwar.gameobjects.HumanGameObject;
 import com.cometproject.server.game.snowwar.thread.SnowWarTask;
-import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.gamecenter.snowwar.*;
-import com.cometproject.server.network.messages.outgoing.messenger.FriendToolbarNotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.permissions.YouArePlayingGameMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 
@@ -92,6 +86,7 @@ public class SnowPlayerQueue {
             queue.broadcast(new UserLeftGameComposer(playerObject.userId));
             queue.players.remove(playerObject.userId);
         }
+
         playerObject.cleanData();
     }
 

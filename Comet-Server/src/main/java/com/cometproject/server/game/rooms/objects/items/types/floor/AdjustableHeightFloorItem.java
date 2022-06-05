@@ -12,8 +12,12 @@ import org.apache.commons.lang.StringUtils;
 
 
 public class AdjustableHeightFloorItem extends RoomItemFloor {
+    private final Double[] variations;
+
     public AdjustableHeightFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
+
+        this.variations = this.getDefinition().getVariableHeights();
     }
 
     @Override
@@ -23,42 +27,33 @@ public class AdjustableHeightFloorItem extends RoomItemFloor {
                 return false;
             }
 
-            PlayerEntity pEntity = (PlayerEntity) entity;
+            final PlayerEntity pEntity = (PlayerEntity) entity;
 
             if (!pEntity.getRoom().getRights().hasRights(pEntity.getPlayerId())
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
                 return false;
             }
-
-            if(pEntity != null)
-            {
-                if(pEntity.setuseok)
-                {
-                    this.getItemData().setData(pEntity.setuse - 1 + "");
-                }
-            }
         }
 
-        for (RoomItemFloor floorItem : this.getItemsOnStack()) {
+        for (final RoomItemFloor floorItem : this.getItemsOnStack()) {
             if (floorItem.getId() != this.getId() && floorItem.getPosition().getZ() >= this.getPosition().getZ())
                 return false;
         }
 
-        final double oldHeight = this.getOverrideHeight();
+        if(this.getDefinition().getVariableHeights() == null)
+            return false;
 
         this.toggleInteract(true);
         this.sendUpdate();
 
-        double newHeight = this.getOverrideHeight();
+        final double currentHeight = this.getOverrideHeight() + this.getPosition().getZ();
 
-        for (RoomEntity entityOnItem : this.getEntitiesOnItem()) {
+        for (final RoomEntity entityOnItem : this.getEntitiesOnItem()) {
             if (entityOnItem.hasStatus(RoomEntityStatus.SIT)) {
                 entityOnItem.removeStatus(RoomEntityStatus.SIT);
             }
 
-            double entityHeight = (newHeight > oldHeight) ? entityOnItem.getPosition().getZ() + (newHeight - oldHeight) : this.getTile().getTileHeight();
-
-            entityOnItem.setPosition(new Position(entityOnItem.getPosition().getX(), entityOnItem.getPosition().getY(), entityHeight));
+            entityOnItem.setPosition(new Position(entityOnItem.getPosition().getX(), entityOnItem.getPosition().getY(), currentHeight));
             this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entityOnItem));
         }
 
@@ -67,27 +62,21 @@ public class AdjustableHeightFloorItem extends RoomItemFloor {
     }
 
     @Override
-    public double getOverrideHeight() {
-        if (this.getDefinition().getVariableHeights() != null && !this.getItemData().getData().isEmpty()) {
-            if (!StringUtils.isNumeric(this.getItemData().getData())) {
-                return 0;
+    public double getOverrideHeight() throws NumberFormatException {
+        try {
+            if(this.getItemData().getData().isEmpty() || !StringUtils.isNumeric(this.getItemData().getData())) {
+                return this.variations[0];
             }
 
-            int heightIndex = Integer.parseInt(this.getItemData().getData());
+            final int currentHeight = Integer.parseInt(this.getItemData().getData());
 
-            if (heightIndex >= this.getDefinition().getVariableHeights().length) {
-                return 0;
+            if(this.variations != null && this.variations[currentHeight] != null) {
+                return this.variations[currentHeight];
             }
-
-            return this.getDefinition().getVariableHeights()[heightIndex];
-        } else if (this.getDefinition().getVariableHeights() != null && this.getDefinition().getVariableHeights().length != 0) {
-            return this.getDefinition().getVariableHeights()[0];
-        } else {
-            if (this.getItemData().getData().isEmpty() || !StringUtils.isNumeric(this.getItemData().getData())) {
-                return 0.5;
-            } else {
-                return Double.parseDouble(this.getItemData().getData());
-            }
+        } catch (NumberFormatException e) {
+            return 0D;
         }
+
+        return 0D;
     }
 }

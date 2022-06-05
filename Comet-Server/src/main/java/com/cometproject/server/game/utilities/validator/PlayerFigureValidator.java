@@ -265,7 +265,7 @@ public class PlayerFigureValidator {
 
                 final PlayerFigureSetType setTypeInstance = PlayerFigureValidator.setTypes.get(setType);
                 final Map<Integer, PlayerFigureSet> setMap = setTypeInstance.getSets();
-                final int setId = Integer.valueOf(setData[1]);
+                final int setId = Integer.parseInt(setData[1]);
 
                 if (!setMap.containsKey(setId) && !listexeptionsetmap.contains(setId)) { //exception sur certains look
                     return false;
@@ -276,7 +276,7 @@ public class PlayerFigureValidator {
                     int colorIdbug = 0;
 
                     if (setData.length > 3)
-                        colorIdbug = Integer.valueOf(setData[3]);
+                        colorIdbug = Integer.parseInt(setData[3]);
 
                     if ((!listexeptioncolors.contains(colorIdbug)) && setData.length > 3) // exception couleurs
                     {
@@ -287,7 +287,7 @@ public class PlayerFigureValidator {
                         }
 
                         for (int i = 0; i < setInstance.getColorCount(); ++i) {
-                            final int colorId = Integer.valueOf(setData[i + 2]);
+                            final int colorId = Integer.parseInt(setData[i + 2]);
 
                             if (!PlayerFigureValidator.palettes.get(setTypeInstance.getPaletteId()).containsKey(colorId)) {
                                 return false;

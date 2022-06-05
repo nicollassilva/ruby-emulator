@@ -13,6 +13,7 @@ import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItem;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -56,9 +57,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ItemsComponent {
-
-    private static final int MAX_FOOTBALLS = 15;
-
     private final Logger log;
     private final Map<Long, RoomItemFloor> floorItems = new ConcurrentHashMap<>();
     private final Map<Long, RoomItemWall> wallItems = new ConcurrentHashMap<>();
@@ -66,7 +64,7 @@ public class ItemsComponent {
     private final Room room;
     private final Map<Class<? extends RoomItemFloor>, Set<Long>> itemClassIndex = new ConcurrentHashMap<>();
     private final Map<String, Set<Long>> itemInteractionIndex = new ConcurrentHashMap<>();
-    private long soundMachineId = 0;
+    private RoomItemFloor soundMachineFloorItem;
     private long moodlightId;
 
     private long itemsCount = 0;
@@ -80,6 +78,7 @@ public class ItemsComponent {
         this.room = room;
         this.log = LogManager.getLogger("Room Items Component [" + room.getData().getName() + "]");
         this.itemClassIndex.put(HighscoreFloorItem.class, Sets.newConcurrentHashSet());
+        this.soundMachineFloorItem = null;
         this.loadItems();
     }
 
@@ -122,30 +121,15 @@ public class ItemsComponent {
     private void loadItems() {
         if (room.getCachedData() != null) {
             for (final FloorItemDataObject floorItemDataObject : room.getCachedData().getFloorItems()) {
-                final RoomItemData data = new RoomItemData(floorItemDataObject.getId(),
-                        floorItemDataObject.getItemDefinitionId(),
-                        floorItemDataObject.getOwner(),
-                        floorItemDataObject.getOwnerName(),
-                        floorItemDataObject.getPosition(),
-                        floorItemDataObject.getRotation(),
-                        floorItemDataObject.getData(), "", floorItemDataObject.getLimitedEditionItemData());
+                final RoomItemData data = new RoomItemData(floorItemDataObject.getId(), floorItemDataObject.getItemDefinitionId(), floorItemDataObject.getOwner(), floorItemDataObject.getOwnerName(), floorItemDataObject.getPosition(), floorItemDataObject.getRotation(), floorItemDataObject.getData(), "", floorItemDataObject.getLimitedEditionItemData());
 
-                this.floorItems.put(floorItemDataObject.getId(), RoomItemFactory.createFloor(
-                        data, room, ItemManager.getInstance().getDefinition(floorItemDataObject.getItemDefinitionId())));
+                this.floorItems.put(floorItemDataObject.getId(), RoomItemFactory.createFloor(data, room, ItemManager.getInstance().getDefinition(floorItemDataObject.getItemDefinitionId())));
             }
 
             for (final WallItemDataObject wallItemDataObject : room.getCachedData().getWallItems()) {
-                final RoomItemData data = new RoomItemData(wallItemDataObject.getId(),
-                        wallItemDataObject.getItemDefinitionId(),
-                        wallItemDataObject.getOwner(),
-                        wallItemDataObject.getOwnerName(),
-                        new Position(),
-                        0,
-                        wallItemDataObject.getData(), wallItemDataObject.getWallPosition(),
-                        wallItemDataObject.getLimitedEditionItemData());
+                final RoomItemData data = new RoomItemData(wallItemDataObject.getId(), wallItemDataObject.getItemDefinitionId(), wallItemDataObject.getOwner(), wallItemDataObject.getOwnerName(), new Position(), 0, wallItemDataObject.getData(), wallItemDataObject.getWallPosition(), wallItemDataObject.getLimitedEditionItemData());
 
-                this.wallItems.put(wallItemDataObject.getId(), RoomItemFactory.createWall(data, room,
-                        ItemManager.getInstance().getDefinition(wallItemDataObject.getItemDefinitionId())));
+                this.wallItems.put(wallItemDataObject.getId(), RoomItemFactory.createWall(data, room, ItemManager.getInstance().getDefinition(wallItemDataObject.getItemDefinitionId())));
             }
         } else {
             final Data<List<RoomItemData>> items = Data.createEmpty();
@@ -173,7 +157,7 @@ public class ItemsComponent {
     private void indexFloorItems() {
         for (final RoomItemFloor floorItem : this.floorItems.values()) {
             if (floorItem instanceof SoundMachineFloorItem) {
-                soundMachineId = floorItem.getId();
+                soundMachineFloorItem = floorItem;
             }
 
             if (floorItem.getDefinition().getInteraction().equals("blackhole")) {
@@ -265,8 +249,7 @@ public class ItemsComponent {
     }
 
     public boolean setMoodlight(long moodlight) {
-        if (this.moodlightId != 0)
-            return false;
+        if (this.moodlightId != 0) return false;
 
         this.moodlightId = moodlight;
         return true;
@@ -294,7 +277,7 @@ public class ItemsComponent {
 
         final List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
 
-        for (RoomEntity entity0 : affectEntities0) {
+        for (final RoomEntity entity0 : affectEntities0) {
             item.onEntityStepOff(entity0);
         }
 
@@ -310,7 +293,7 @@ public class ItemsComponent {
 
                 final List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
-                for (RoomEntity entity1 : affectEntities1) {
+                for (final RoomEntity entity1 : affectEntities1) {
                     item.onEntityStepOff(entity1);
                 }
             }
@@ -341,8 +324,7 @@ public class ItemsComponent {
             item.onEntityStepOn(entity3);
         }
 
-        if (save)
-            item.save();
+        if (save) item.save();
 
         for (final Position tileToUpdate : tilesToUpdate) {
             final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
@@ -365,20 +347,18 @@ public class ItemsComponent {
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
-        if(item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
+        if (item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
             return false;
         }
 
-        if (autoheight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
+        if (autoheight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
         double height;
 
-        if (autoheight)
-            height = tile.getStackHeight(item);
-        else
-            height = newPosition.getZ();
+        if (autoheight) height = tile.getStackHeight(item);
+        else height = newPosition.getZ();
 
         if (item instanceof WiredAddonNewPuzzleBox) {
             if (!tile.canPlaceItemHere()) {
@@ -386,12 +366,10 @@ public class ItemsComponent {
             }
         }
 
-        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2)
-            return false;
+        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2) return false;
 
 
-        if (autoheight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
-            return false;
+        if (autoheight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0) return false;
 
         return this.moveFloorItemAfter(item, newPosition, height, rotation, save);
     }
@@ -591,7 +569,7 @@ public class ItemsComponent {
 
     public void removeItem(RoomItemFloor item, Session client, boolean toInventory) {
         if (item instanceof SoundMachineFloorItem) {
-            this.soundMachineId = 0;
+            this.soundMachineFloorItem = null;
         }
 
         if (item.getWiredItems().size() != 0) {
@@ -620,9 +598,7 @@ public class ItemsComponent {
         }
 
         if (item instanceof SoundMachineFloorItem) {
-            if (this.soundMachineId == item.getId()) {
-                this.soundMachineId = 0;
-            }
+            this.soundMachineFloorItem = null;
         }
 
         if (item.getDefinition().getInteraction().equals("blackhole")) {
@@ -676,8 +652,7 @@ public class ItemsComponent {
             client.sendQueue(new UnseenItemsMessageComposer(Sets.newHashSet(playerItem)));
             client.flush();
         } else {
-            if (delete)
-                StorageContext.getCurrentContext().getRoomItemRepository().deleteItem(item.getId());
+            if (delete) StorageContext.getCurrentContext().getRoomItemRepository().deleteItem(item.getId());
         }
 
         for (final Position tileToUpdate : tilesToUpdate) {
@@ -729,11 +704,11 @@ public class ItemsComponent {
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
         double height = tile.getStackHeight(item);
 
-        if(client.getPlayer().getEntity().hasAttribute("setz.height")) {
+        if (client.getPlayer().getEntity().hasAttribute("setz.height")) {
             height = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
         }
 
-        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
+        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), client.getPlayer().getEntity())) {
             return false;
         }
 
@@ -750,7 +725,7 @@ public class ItemsComponent {
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
-        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
+        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), mover.getEntity())) {
             return false;
         }
 
@@ -819,8 +794,7 @@ public class ItemsComponent {
             log.error("Failed to update entity positions for changing item position", e);
         }
 
-        if (save)
-            item.save();
+        if (save) item.save();
 
         for (final Position tileToUpdate : tilesToUpdate) {
             final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
@@ -836,87 +810,47 @@ public class ItemsComponent {
         return true;
     }
 
-    private boolean verifyItemPosition(FurnitureDefinition item, RoomItemFloor floor, RoomTile tile, Position currentPosition, int rotation) {
-        if (tile != null) {
-            if (currentPosition != null && currentPosition.getX() == tile.getPosition().getX() && currentPosition.getY() == tile.getPosition().getY())
-                return true;
-
-            if (!tile.canPlaceItemHere()) {
-                return false;
-            }
-
-            if (!tile.canStack() && tile.getTopItem() != 0) {
-                if(floor == null && tile.getTopItem() != item.getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
-                    return false;
-                }
-
-                if(floor != null && tile.getTopItem() != floor.getItemData().getId() && !item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
-                    return false;
-                }
-            }
-
-            if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY()) {
-                return false;
-            }
-
-            if (item.getInteraction().equals("dice")) {
-                boolean hasOtherDice = false;
-                boolean hasStackTool = false;
-
-                for (final RoomItemFloor floorItem : tile.getItems()) {
-                    if (floorItem instanceof DiceFloorItem) {
-                        hasOtherDice = true;
-                    }
-
-                    if (floorItem instanceof MagicStackFloorItem) {
-                        hasStackTool = true;
-                    }
-                }
-
-                if (hasOtherDice && hasStackTool)
-                    return false;
-            }
-
-            if (!CometSettings.roomCanPlaceItemOnEntity) {
-                return tile.getEntities().size() == 0;
-            }
-        } else {
+    private boolean verifyItemPosition(FurnitureDefinition item, RoomItemFloor floor, RoomTile tile, Position currentPosition, PlayerEntity playerEntity) {
+        if (tile == null) {
             return false;
         }
 
-        return true;
-    }
+        final boolean hasStackToolCommand = playerEntity != null && playerEntity.hasAttribute("setz.height");
 
-    private boolean verifyItemTilePosition(FurnitureDefinition item, RoomItemFloor floorItem, RoomTile tile, int rotation) {
-        if (!tile.canPlaceItemHere()) {
+        if (currentPosition != null && currentPosition.getX() == tile.getPosition().getX() && currentPosition.getY() == tile.getPosition().getY())
+            return true;
+
+        if (!tile.canPlaceItemHere() && !hasStackToolCommand)
             return false;
+
+        if (item.isLimitableItem()) {
+            final long itemCount = tile.getItems().stream().filter(instance -> instance.getDefinition().getInteraction().equals(item.getInteraction())).count();
+
+            if (itemCount >= item.getItemLimitation()) return false;
         }
 
-        if (!tile.canStack() && tile.getTopItem() != 0 && (floorItem == null || tile.getTopItem() != floorItem.getId())) {
-            if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL))
-                return false;
+        if (!tile.canStack() && tile.getTopItem() != 0 && tile.getTopItem() != item.getId() && !hasStackToolCommand) {
+            if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) return false;
         }
 
-        if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY()) {
+        if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY())
             return false;
-        }
 
-        if (item.getInteraction().equals("dice")) {
+        if (item.getInteraction().equals("dice") && !hasStackToolCommand) {
             boolean hasOtherDice = false;
             boolean hasStackTool = false;
 
-            for (final RoomItemFloor itemFloor : tile.getItems()) {
-                if (itemFloor instanceof DiceFloorItem) {
+            for (final RoomItemFloor floorItem : tile.getItems()) {
+                if (floorItem instanceof DiceFloorItem) {
                     hasOtherDice = true;
                 }
 
-                if (itemFloor instanceof MagicStackFloorItem) {
+                if (floorItem instanceof MagicStackFloorItem) {
                     hasStackTool = true;
                 }
             }
 
-            if (hasOtherDice && hasStackTool)
-                return false;
+            if (hasOtherDice && hasStackTool) return false;
         }
 
         if (!CometSettings.roomCanPlaceItemOnEntity) {
@@ -926,28 +860,19 @@ public class ItemsComponent {
         return true;
     }
 
-    private boolean verifyItemTilePositionSetz(FurnitureDefinition item, RoomItemFloor floorItem, RoomTile tile, int rotation) {
-        return tile.canPlaceItemHere();
-    }
-
     public void placeWallItem(PlayerItem item, String position, Player player) {
         int roomId = this.room.getId();
 
-        StorageContext.getCurrentContext().getRoomItemRepository().placeWallItem(roomId, position, item.getExtraData().trim().isEmpty() ? "0" :
-                item.getExtraData(), item.getId());
+        StorageContext.getCurrentContext().getRoomItemRepository().placeWallItem(roomId, position, item.getExtraData().trim().isEmpty() ? "0" : item.getExtraData(), item.getId());
         player.getInventory().removeItem(item.getId());
 
-        final RoomItemWall wallItem = this.addWallItem(item.getId(), item.getBaseId(), this.room, player.getId(),
-                player.getData().getUsername(), position, (item.getExtraData().isEmpty() ||
-                        item.getExtraData().equals(" ")) ? "0" : item.getExtraData());
+        final RoomItemWall wallItem = this.addWallItem(item.getId(), item.getBaseId(), this.room, player.getId(), player.getData().getUsername(), position, (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : item.getExtraData());
 
         if (wallItem.getDefinition().getInteraction().equals("postit")) {
             this.postItCount++;
         }
 
-        this.room.getEntities().broadcastMessage(
-                new SendWallItemMessageComposer(wallItem)
-        );
+        this.room.getEntities().broadcastMessage(new SendWallItemMessageComposer(wallItem));
 
         wallItem.onPlaced();
     }
@@ -974,25 +899,19 @@ public class ItemsComponent {
 
         double height = tile.getStackHeight(null);
 
-        if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, rot)) {
+        if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, player.getEntity())) {
             this.sendFurniturePlacementError(player.getSession());
             return;
         }
 
-        if (item.getDefinition().getInteraction().equals("soundmachine")) {
-            if (this.soundMachineId > 0) {
-                final Map<String, String> notificationParams = Maps.newHashMap();
+        if (item.getDefinition().getInteraction().equals("soundmachine") && this.soundMachineFloorItem != null) {
+            final Map<String, String> notificationParams = Maps.newHashMap();
 
-                notificationParams.put("message", Locale.get("game.room.jukeboxExists"));
+            notificationParams.put("message", Locale.get("game.room.jukeboxExists"));
 
-                player.getSession().send(new NotificationMessageComposer("furni_placement_error", notificationParams));
-                return;
-            } else {
-                this.soundMachineId = item.getId();
-            }
+            player.getSession().send(new NotificationMessageComposer("furni_placement_error", notificationParams));
+            return;
         }
-
-        final List<RoomItemFloor> floorItems = room.getItems().getItemsOnSquare(x, y);
 
         if (item.getDefinition() != null && item.getDefinition().getInteraction() != null) {
             if (item.getDefinition().getInteraction().equals("mannequin")) {
@@ -1004,11 +923,11 @@ public class ItemsComponent {
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
 
-        if(player.getEntity().hasAttribute("setz.height")) {
+        if (player.getEntity().hasAttribute("setz.height")) {
             height = (double) player.getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(x, y).getTileHeight();
         }
 
-        if(item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
+        if (item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
             height = tile.getStackHeight();
         }
 
@@ -1016,7 +935,7 @@ public class ItemsComponent {
 
         final List<Position> tilesToUpdate = new ArrayList<>();
 
-        for (final RoomItemFloor stackItem : floorItems) {
+        for (final RoomItemFloor stackItem : room.getItems().getItemsOnSquare(x, y)) {
             if (item.getId() != stackItem.getId()) {
                 stackItem.onItemAddedToStack(floorItem);
             }
@@ -1046,6 +965,12 @@ public class ItemsComponent {
 
         room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
 
+        if (floorItem instanceof SoundMachineFloorItem) {
+            this.soundMachineFloorItem = floorItem;
+        }
+
+        tilesToUpdate.clear();
+
         floorItem.onPlaced();
         floorItem.saveData();
     }
@@ -1074,11 +999,7 @@ public class ItemsComponent {
     }
 
     public SoundMachineFloorItem getSoundMachine() {
-        if (this.soundMachineId != 0) {
-            return ((SoundMachineFloorItem) this.getFloorItem(this.soundMachineId));
-        }
-
-        return null;
+        return (SoundMachineFloorItem) this.soundMachineFloorItem;
     }
 
     public Map<Integer, String> getItemOwners() {

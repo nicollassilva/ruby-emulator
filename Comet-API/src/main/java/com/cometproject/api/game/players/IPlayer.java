@@ -203,4 +203,10 @@ public interface IPlayer {
     void setLogsClientStaff(boolean logsClientStaff);
 
     void flush();
+
+    long getLastForwardRoomRequest();
+
+    void setLastForwardRoomRequest(long lastForwardRoomRequest);
+
+    List<Integer> getLastRoomsIds();
 }

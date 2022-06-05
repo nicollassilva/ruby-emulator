@@ -82,6 +82,8 @@ public class RoomItemFactory {
             put("roombg", BackgroundTonerFloorItem.class);
             put("bed", BedFloorItem.class);
             put("vendingmachine", VendingMachineFloorItem.class);
+            put("sideless_vending_machine", SidelessVendingMachineFloorItem.class);
+            put("fx_vendingmachine", EffectVendingMachineFloorItem.class);
             put("mannequin", MannequinFloorItem.class);
             put("beach_shower", SummerShowerFloorItem.class);
             put("halo_tile", HaloTileFloorItem.class);
@@ -346,9 +348,7 @@ public class RoomItemFactory {
             put("random_state", RandomStateFloorItem.class);
 
             // Custom's
-            put("crosstrainer", GymEquipmentFloorItem.class);
-            put("trampoline", GymEquipmentFloorItem.class);
-            put("jogger", GymEquipmentFloorItem.class);
+            put("gym_equipment", GymEquipmentFloorItem.class);
 
             put("iceskate", IceSkateFloorItem.class);
             put("rollerskate", RollerSkateFloorItem.class);

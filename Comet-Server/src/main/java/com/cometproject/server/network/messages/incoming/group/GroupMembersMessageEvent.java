@@ -25,7 +25,7 @@ public class GroupMembersMessageEvent implements Event {
         final String searchQuery = msg.readString();
         final int requestType = msg.readInt();
 
-        IGroup group = GameContext.getCurrent().getGroupService().getGroup(groupId);
+        final IGroup group = GameContext.getCurrent().getGroupService().getGroup(groupId);
 
         if (group == null)
             return;
@@ -34,13 +34,13 @@ public class GroupMembersMessageEvent implements Event {
 
         switch (requestType) {
             default: {
-                for (IGroupMember groupMember : group.getMembers().getMembersAsList()) {
+                for (final IGroupMember groupMember : group.getMembers().getMembersAsList()) {
                     addPlayerAvatar(groupMember.getPlayerId(), playerAvatars, (playerAvatar -> playerAvatar.tempData(groupMember)));
                 }
             }
             break;
             case 1: {
-                for (Integer adminId : group.getMembers().getAdministrators()) {
+                for (final Integer adminId : group.getMembers().getAdministrators()) {
                     addPlayerAvatar(adminId, playerAvatars);
                 }
 
@@ -48,7 +48,7 @@ public class GroupMembersMessageEvent implements Event {
             break;
 
             case 2: {
-                for (Integer requestPlayerId : group.getMembers().getMembershipRequests()) {
+                for (final Integer requestPlayerId : group.getMembers().getMembershipRequests()) {
                     addPlayerAvatar(requestPlayerId, playerAvatars);
                 }
             }
@@ -59,7 +59,7 @@ public class GroupMembersMessageEvent implements Event {
         final Set<PlayerAvatar> playersToRemove = Sets.newHashSet();
 
         if (!searchQuery.isEmpty()) {
-            for (PlayerAvatar playerAvatar : playerAvatars) {
+            for (final PlayerAvatar playerAvatar : playerAvatars) {
                 if (!playerAvatar.getUsername().toLowerCase().startsWith(searchQuery.toLowerCase())) {
                     playersToRemove.add(playerAvatar);
                 }
@@ -72,7 +72,6 @@ public class GroupMembersMessageEvent implements Event {
     }
 
     private void addPlayerAvatar(final int playerId, final List<PlayerAvatar> playerAvatars, Consumer<PlayerAvatar> avatarConsumer) {
-
         final PlayerAvatar playerAvatar = PlayerManager.getInstance().getAvatarByPlayerId(playerId, PlayerAvatar.USERNAME_FIGURE);
 
         if (playerAvatar != null) {

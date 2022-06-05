@@ -244,6 +244,13 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         session.send(new RoomReadyMessageComposer(this.getRoom().getId(), this.getRoom().getModel().getId()));
 
+        if (session.getPlayer().getData().getTimeMuted() != 0) {
+            if (session.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
+                session.getPlayer().getSession().send(new MutedMessageComposer(session.getPlayer().getData().getTimeMuted() - (int) Comet.getTime()));
+                return;
+            }
+        }
+
         for (final Map.Entry<String, String> decoration : this.getRoom().getData().getDecorations().entrySet()) {
             if (decoration.getKey().equals("wallpaper") || decoration.getKey().equals("floor")) {
                 if (decoration.getValue().equals("0.0")) {
@@ -297,14 +304,17 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         this.isFinalized = true;
         this.getPlayer().setSpectatorRoomId(0);
-        this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
+        if (!this.getPlayer().getLastRoomsIds().contains(this.getRoom().getId())) {
+            this.getPlayer().getLastRoomsIds().add(this.getRoom().getId());
+            this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
+        }
 
-        if(Comet.isDebugging && this.getRoom().hasAttribute("bb_game")) {
+        if (Comet.isDebugging && this.getRoom().hasAttribute("bb_game")) {
             this.getPlayer().getEntity().setFreeze(true);
 
             final BattleBallRoom bbroom = BattleBall.PLAYERS.get(this.getPlayer().getId());
 
-            if(bbroom.pickedTeam + 1 > BattleBallRoom.teamList.length - 1) {
+            if (bbroom.pickedTeam + 1 > BattleBallRoom.teamList.length - 1) {
                 bbroom.pickedTeam = 0;
             } else {
                 bbroom.pickedTeam = bbroom.pickedTeam + 1;
@@ -381,7 +391,11 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     }
 
     public boolean canRateRoom() {
-        return !this.getRoom().getRatings().contains(this.getPlayerId());
+        if(this.getPlayer().getId() == this.getRoom().getData().getOwnerId()) {
+            return false;
+        }
+
+        return !this.getRoom().getRatings().contains(this.getPlayer().getId());
     }
 
     @Override
@@ -718,38 +732,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             }
         }
     }
-
-    /*private void sendNameChange() {
-        final StringBuilder username = new StringBuilder();
-        final String format = "<font color='#%s'>%s</font>";
-        NameColor color = RoomManager.getInstance().getNameColors().getColor(this.getPlayer().getData().getNameColour());
-
-        if(color == null)
-            return;
-
-        if (color.getColorCode().contains(",")) {
-            final String[] colours = color.getColorCode().split(",");
-            int count = 0;
-            for (char c : this.getUsername().toCharArray()) {
-                username.append(String.format(format, colours[count], c));
-                if (count != color.getColorsLength() - 1) {
-                    count++;
-                    continue;
-                }
-                count = 0;
-            }
-        } else {
-            username.append(String.format(format, color.getColorCode(), this.getUsername()));
-        }
-
-        final MessageComposer composer = new UserNameChangeMessageComposer(this.getRoom().getId(), this.getId(), username.toString());
-
-        for (PlayerEntity playerEntity : this.getRoom().getEntities().getPlayerEntities()) {
-            if (!playerEntity.getPlayer().getSettings().isUseOldChat()) {
-                playerEntity.getPlayer().getSession().send(composer);
-            }
-        }
-    }*/
 
     private void sendNameChange() {
         final StringBuilder username = new StringBuilder();

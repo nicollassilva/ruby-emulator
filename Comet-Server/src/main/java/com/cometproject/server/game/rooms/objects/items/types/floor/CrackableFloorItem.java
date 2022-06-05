@@ -14,7 +14,7 @@ import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.tasks.CometThreadManager;
-import org.apache.commons.lang.NumberUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -84,8 +84,8 @@ public class CrackableFloorItem extends RoomItemFloor {
         if(reward.getRequiredEffect() > 0 && entity.getCurrentEffect().getEffectId() != reward.getRequiredEffect())
             return;
 
-        Position posInFront = this.getPosition().squareInFront(this.getRotation());
-        boolean positionsIsEquals = posInFront.equals(entity.getPosition());
+        final Position posInFront = this.getPosition().squareInFront(this.getRotation());
+        final boolean positionsIsEquals = posInFront.equals(entity.getPosition());
 
         if (!positionsIsEquals) {
             entity.moveTo(posInFront.getX(), posInFront.getY());

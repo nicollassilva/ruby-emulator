@@ -16,6 +16,8 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonUnseenEffect;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.WiredNegativeConditionTriggererOnFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.WiredConditionTriggererOnFurni;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerPlayerSaysKeyword;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerStateChanged;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
@@ -253,7 +255,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
         for (final RoomItemFloor floorItem : room.getItems().getByClass(clazz)) {
             final Position newPosition = new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY());
 
-            if (!position.contains(newPosition) || floorItem instanceof WiredTriggerWalksOffFurni || floorItem instanceof WiredTriggerWalksOnFurni) {
+            if (!position.contains(newPosition) || triggerIsNotLimitedByTile(floorItem)) {
                 position.add(newPosition);
                 triggers.add((T) floorItem);
             }
@@ -291,6 +293,16 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
         }
 
         return incompatibleActions;
+    }
+
+    /**
+     * Used to define triggers that can be multiple on a single stack
+     */
+    public static boolean triggerIsNotLimitedByTile(RoomItemFloor floorItem) {
+        return floorItem instanceof WiredTriggerWalksOffFurni ||
+                floorItem instanceof WiredTriggerWalksOnFurni ||
+                floorItem instanceof WiredTriggerPlayerSaysKeyword ||
+                floorItem instanceof WiredTriggerStateChanged;
     }
 
     public abstract boolean suppliesPlayer();
