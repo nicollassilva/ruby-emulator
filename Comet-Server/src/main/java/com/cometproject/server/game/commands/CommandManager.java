@@ -188,6 +188,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.mentions.name", "mentions"), new MentionsCommand());
         this.addCommand(Locale.getOrDefault("command.djalert.name", "dj"), new DjAlertCommand());
         this.addCommand(Locale.getOrDefault("command.banner.name", "banner"), new BannerCommand());
+        this.addCommand(Locale.getOrDefault("command.disablemimic.name", "desativarcopiar"), new DisableMimicCommand());
 
         // Gimmick commands
         this.addCommand(Locale.get("command.rob.name"), new RobCommand());
