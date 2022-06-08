@@ -2,7 +2,7 @@ package com.cometproject.server.network.messages.incoming.room.item;
 
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.commands.user.building.FillType;
+import com.cometproject.server.game.commands.user.building.BuildingType;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.types.components.BuildingComponent;
 import com.cometproject.server.network.messages.incoming.Event;
@@ -31,8 +31,7 @@ public class PlaceItemMessageEvent implements Event {
             return;
         }
 
-        if (!client.getPlayer().getEntity().getFillType().equals(FillType.NONE)
-                && !client.getPlayer().getEntity().getRoom().getBuilderComponent().isBuilder(client.getPlayer().getEntity())) {
+        if (!client.getPlayer().getEntity().getRoom().getBuilderComponent().isBuilder(client.getPlayer().getEntity())) {
             return;
         }
 
@@ -65,26 +64,24 @@ public class PlaceItemMessageEvent implements Event {
                     return;
                 }
 
-                switch (client.getPlayer().getEntity().getFillType()) {
-                    case NONE: {
-                        buildingComponent.placeFloorItem(client, item, x, y, rot);
-                        break;
-                    }
+                if (client.getPlayer().getEntity().getBuildingType().equals(BuildingType.FILL)) {
+                    switch (client.getPlayer().getEntity().getSelectionType()) {
+                        case Stack: {
+                            buildingComponent.fillStack(client, x, y, rot, item);
+                            return;
+                        }
 
-                    case FILL_STACK: {
-                        buildingComponent.fillStack(client, x, y, rot, item);
-                        break;
-                    }
-
-                    case FILL_ALL_BLOCKS: {
-                        buildingComponent.fillArea(client, x, y, rot, item);
-                        break;
+                        case Region: {
+                            buildingComponent.fillArea(client, x, y, rot, item);
+                            return;
+                        }
                     }
                 }
+
+                buildingComponent.placeFloorItem(client, item, x, y, rot);
             }
         } catch (Exception e) {
             client.getLogger().error("Error while placing item", e);
         }
     }
-
 }

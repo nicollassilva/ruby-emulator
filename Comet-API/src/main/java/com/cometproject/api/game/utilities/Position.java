@@ -2,6 +2,9 @@ package com.cometproject.api.game.utilities;
 
 import com.cometproject.api.game.furniture.types.FurnitureDefinition;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Position {
     public static final int NORTH = 0;
@@ -321,5 +324,21 @@ public class Position {
 
     public void setFlag(int flag) {
         this.flag = flag;
+    }
+
+    public static List<Position> makeSquare(Position p1, Position p2) {
+        final List<Position> positions = new ArrayList<>();
+        final int lowerX = Math.min(p1.getX(), p2.getX());
+        final int lowerY = Math.min(p1.getY(), p2.getY());
+        final int higherX = Math.max(p1.getX(), p2.getX());
+        final int higherY = Math.max(p1.getY(), p2.getY());
+
+        for (int x = lowerX; x < higherX; x++) {
+            for (int y = lowerY; y < higherY; y++) {
+                positions.add(new Position(x, y));
+            }
+        }
+
+        return positions;
     }
 }

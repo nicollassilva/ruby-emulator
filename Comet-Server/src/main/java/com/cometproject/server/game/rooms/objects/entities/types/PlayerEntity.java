@@ -15,7 +15,8 @@ import com.cometproject.api.networking.messages.IComposer;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.CommandManager;
-import com.cometproject.server.game.commands.user.building.FillType;
+import com.cometproject.server.game.commands.user.building.BuildingType;
+import com.cometproject.server.game.commands.user.building.SelectionType;
 import com.cometproject.server.game.commands.vip.TransformCommand;
 import com.cometproject.server.game.gamecenter.games.battleball.BattleBall;
 import com.cometproject.server.game.gamecenter.games.battleball.room.BattleBallRoom;
@@ -124,7 +125,8 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     private boolean wiredLimit;
     private boolean keyboardEnabled = false;
 
-    private FillType fillType = FillType.NONE;
+    private BuildingType buildingType = BuildingType.NONE;
+    private SelectionType selectionType = SelectionType.NONE;
     private int stackCount = 0;
 
     public PlayerEntity(Player player, int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
@@ -1106,12 +1108,12 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         return keyboardEnabled;
     }
 
-    public FillType getFillType() {
-        return fillType;
+    public SelectionType getSelectionType() {
+        return selectionType;
     }
 
-    public void setFillType(FillType fillType) {
-        this.fillType = fillType;
+    public void setSelectionType(SelectionType selectionType) {
+        this.selectionType = selectionType;
     }
 
     public int getStackCount() {
@@ -1120,5 +1122,13 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
     public void setStackCount(int stackCount) {
         this.stackCount = stackCount;
+    }
+
+    public BuildingType getBuildingType() {
+        return buildingType;
+    }
+
+    public void setBuildingType(BuildingType buildingType) {
+        this.buildingType = buildingType;
     }
 }

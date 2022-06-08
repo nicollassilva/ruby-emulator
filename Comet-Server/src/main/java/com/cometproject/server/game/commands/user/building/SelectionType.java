@@ -1,8 +1,8 @@
 package com.cometproject.server.game.commands.user.building;
 
-public enum FillType {
+public enum SelectionType {
     NONE,
 
-    FILL_ALL_BLOCKS,
-    FILL_STACK
+    Region,
+    Stack
 }

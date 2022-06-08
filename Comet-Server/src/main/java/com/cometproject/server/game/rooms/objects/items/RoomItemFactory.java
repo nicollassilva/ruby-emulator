@@ -6,9 +6,11 @@ import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultWallItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
-import com.cometproject.server.game.rooms.objects.items.types.floor.academy.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.GymEquipmentFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.IceSkateFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.RollerSkateFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.SkateRailFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.boutique.MannequinFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.SlotMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.battleball.BattleBallTileFloorItem;
@@ -375,7 +377,7 @@ public class RoomItemFactory {
         }
 
         if (def.getItemName().startsWith(STACK_TOOL)) {
-            floorItem = new MagicStackFloorItem(itemData, room);
+            floorItem = new MagicMoveFloorItem(itemData, room);  //new MagicStackFloorItem(itemData, room);
         }
 
         if (def.isAdFurni()) {

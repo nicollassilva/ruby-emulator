@@ -21,7 +21,7 @@ public class FillCommand extends ChatCommand {
 
         switch (params[0].toLowerCase()) {
             default: {
-                client.getPlayer().getEntity().setFillType(FillType.FILL_ALL_BLOCKS);
+                client.getPlayer().getEntity().setSelectionType(SelectionType.Region);
                 sendNotif("Preenchimento desativado.", client);
                 buildings.setBuilder(null);
                 return;
@@ -36,7 +36,7 @@ public class FillCommand extends ChatCommand {
                 }
 
                 client.getPlayer().getEntity().setStackCount(stackCount);
-                client.getPlayer().getEntity().setFillType(FillType.FILL_STACK);
+                client.getPlayer().getEntity().setSelectionType(SelectionType.Stack);
                 sendNotif("Preenchimento de pilha definido para '" + stackCount + "' items.", client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 return;
@@ -44,7 +44,7 @@ public class FillCommand extends ChatCommand {
 
             case "area":
             case "all": {
-                client.getPlayer().getEntity().setFillType(FillType.FILL_ALL_BLOCKS);
+                client.getPlayer().getEntity().setSelectionType(SelectionType.Region);
                 sendNotif("Preenchimento por área ativo.", client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 return;
