@@ -51,6 +51,7 @@ public class SaveStackToolMessageEvent implements Event {
             if(height < magicStackFloorItem.getTile().getTileHeight()){
                 height = magicStackFloorItem.getTile().getTileHeight();
             }
+
             if(height > MAX_HEIGHT){
                 height = MAX_HEIGHT;
             }
@@ -69,7 +70,6 @@ public class SaveStackToolMessageEvent implements Event {
         );
 
         for (final AffectedTile affectedTile : affectedTiles) {
-
             final RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
 
             if(placeOverFurni) {
@@ -84,13 +84,14 @@ public class SaveStackToolMessageEvent implements Event {
             room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tile));
         }
 
-        if(placeOverFurni){
+        if(placeOverFurni) {
+            height = highestHeight;
             magicStackFloorItem.setOverrideHeight(highestHeight);
         }
 
         magicStackFloorItem.sendUpdate();
         magicStackFloorItem.saveData();
 
-        client.send(new UpdateStackHeightTileHeightComposer(itemId, height > 0 ? (int) (height * 100) : 0));
+        client.send(new UpdateStackHeightTileHeightComposer(itemId, (int) (height > 0 ? (height * 100) : 0)));
     }
 }
