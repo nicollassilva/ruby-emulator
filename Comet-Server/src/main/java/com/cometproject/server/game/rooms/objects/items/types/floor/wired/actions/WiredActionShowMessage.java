@@ -11,6 +11,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highsc
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.storage.queries.crafting.CraftingDao;
+import com.cometproject.server.utilities.MessageColorUtil;
 
 
 public class WiredActionShowMessage extends WiredActionItem {
@@ -55,6 +56,8 @@ public class WiredActionShowMessage extends WiredActionItem {
         finalText = finalText.replace("%tag%", roomEntity.getTagUser().toString());
         finalText = finalText.replace("%owner%", playerEntity.getRoom().getData().getOwner());
         finalText = finalText.replace("%points%", Integer.toString(playerEntity.getPoints()));
+
+        finalText = MessageColorUtil.getInstance().getFilteredString(finalText);
 
         playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), finalText, isWhisperBubble ? 0 : 34));
     }

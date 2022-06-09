@@ -18,6 +18,7 @@ import com.cometproject.server.network.messages.outgoing.room.avatar.MutedMessag
 import com.cometproject.server.network.messages.outgoing.room.avatar.ShoutMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
+import com.cometproject.server.utilities.MessageColorUtil;
 
 
 public class ShoutMessageEvent implements Event {
@@ -98,35 +99,13 @@ public class ShoutMessageEvent implements Event {
 
             if (playerEntity.getPrivateChatItemId() != 0) {
                 // broadcast message only to players in the tent.
-                RoomItemFloor floorItem = playerEntity.getRoom().getItems().getFloorItem(playerEntity.getPrivateChatItemId());
+                final RoomItemFloor floorItem = playerEntity.getRoom().getItems().getFloorItem(playerEntity.getPrivateChatItemId());
 
                 if (floorItem != null) {
                     ((PrivateChatFloorItem) floorItem).broadcastMessage(new ShoutMessageComposer(playerEntity.getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble));
                 }
             } else {
-                if(UsingColourCode(message)) {
-                    filteredMessage = "<font color=\"%clrHr\">" + filteredMessage + "</font>";
-
-                    if (message.contains("@red@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.RED.getColor());
-                    } else if (message.contains("@blue@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.BLUE.getColor());
-                    } else if (message.contains("@green@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.GREEN.getColor());
-                    } else if (message.contains("@yellow@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.YELLOW.getColor());
-                    } else if (message.contains("@orange@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.ORANGE.getColor());
-                    } else if (message.contains("@pink@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.PINK.getColor());
-                    } else if (message.contains("@purple@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.PURPLE.getColor());
-                    } else if (message.contains("@gray@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.GRAY.getColor());
-                    }
-
-                    filteredMessage = clearMessageColors(filteredMessage);
-                }
+                filteredMessage = MessageColorUtil.getInstance().getFilteredString(filteredMessage);
 
                 playerEntity.getRoom().getEntities().broadcastChatMessage(new ShoutMessageComposer(playerEntity.getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble), client.getPlayer().getEntity());
             }
@@ -134,28 +113,6 @@ public class ShoutMessageEvent implements Event {
 
         playerEntity.postChat(filteredMessage);
 
-    }
-
-    public static String clearMessageColors(String message) {
-        return message.replace("@red@", "")
-                .replace("@blue@", "")
-                .replace("@yellow@", "")
-                .replace("@orange@", "")
-                .replace("@green@", "")
-                .replace("@gray@", "")
-                .replace("@purple@", "")
-                .replace("@pink@", "");
-    }
-
-    public static boolean UsingColourCode(String Message) {
-        return Message.contains("@red") ||
-                Message.contains("@blue@") ||
-                Message.contains("@green@") ||
-                Message.contains("@yellow@") ||
-                Message.contains("@orange@") ||
-                Message.contains("@pink@") ||
-                Message.contains("@purple@") ||
-                Message.contains("@gray@");
     }
 
     public static int getBubble(Session client, int bubble) {
