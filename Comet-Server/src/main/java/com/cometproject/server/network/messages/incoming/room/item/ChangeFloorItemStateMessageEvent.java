@@ -111,7 +111,8 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY(), 0d));
 
             for (final AffectedTile tile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
-                room.getEntities().getEntitiesAt(new Position(tile.x, tile.y));
+                // what the fuck does this do?
+                // room.getEntities().getEntitiesAt(new Position(tile.x, tile.y));
                 tilesToUpdate.add(new Position(tile.x, tile.y, 0d));
             }
 
