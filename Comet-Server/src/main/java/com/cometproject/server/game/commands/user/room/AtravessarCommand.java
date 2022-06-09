@@ -8,10 +8,11 @@ public class AtravessarCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         client.getPlayer().getEntity().getRoom().getData().setAllowWalkthrough(!client.getPlayer().getEntity().getRoom().getData().isAllowWalkthrough());
+
         if (client.getPlayer().getEntity().getRoom().getData().isAllowWalkthrough()) {
-            sendNotif("Atravessar rubys ativado", client);
+            sendNotif("Agora você pode atravessar outros rubis.", client);
         } else {
-            sendNotif("Atravessar rubys desativado", client);
+            sendNotif("Atravessar rubis desativado.", client);
         }
 
         GameContext.getCurrent().getRoomService().saveRoomData(client.getPlayer().getEntity().getRoom().getData());

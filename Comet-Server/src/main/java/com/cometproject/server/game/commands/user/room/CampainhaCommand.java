@@ -11,15 +11,16 @@ public class CampainhaCommand extends ChatCommand {
         final RoomAccessType roomAccessType = client.getPlayer().getEntity().getRoom().getData().getAccess() == RoomAccessType.DOORBELL
                 ? RoomAccessType.OPEN
                 : RoomAccessType.DOORBELL;
+
         client.getPlayer().getEntity().getRoom().getData().setAccess(roomAccessType);
 
         switch (roomAccessType) {
             case OPEN:
-                sendNotif("Campainha desativada", client);
+                sendNotif("Quarto aberto para todos.", client);
                 break;
 
             case DOORBELL:
-                sendNotif("Campainha ativada", client);
+                sendNotif("Quarto protegido por campainha.", client);
                 break;
         }
 
