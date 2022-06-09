@@ -40,9 +40,13 @@ public class FootballGoalFloorItem extends RoomItemFloor {
         if (!(floorItem instanceof FootballFloorItem))
             return;
 
-        this.getRoom().getGame().increaseScore(this.gameTeam, 1);
 
         final FootballFloorItem ball = (FootballFloorItem) floorItem;
+
+        if(ball.getPusher() == null) return;
+
+        this.getRoom().getGame().increaseScore(this.gameTeam, 1);
+
         final int playerId = (
                 ball.getPusher() != null && ball.getPusher() instanceof PlayerEntity
                         ? ((PlayerEntity) ball.getPusher()).getPlayerId()

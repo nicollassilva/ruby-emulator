@@ -28,6 +28,6 @@ public class MarketPlaceWebhook {
                 Locale.getOrDefault("webhook.marketplace.title", "Novo item comprado na Feira Livre"),
                 "marketplace",
                 fields,
-                "https://rubyhotel.com.br/ms-swf/dcr/hof_furni/icons/" + item.getDefinition().getItemName().replace("*", "_") + "_icon.png");
+                "https://rubyhotel.com.br/apifiles/furnitures/" + item.getDefinition().getItemName().replace("*", "_"));
     }
 }

@@ -169,6 +169,8 @@ public abstract class RollableFloorItem extends RoomItemFloor {
             this.sendUpdate();
             this.moveTo(newPosition, newPosition.getFlag());
             this.setTicks(RoomItemFactory.getProcessTime(this.getDelay(this.rollStage)));
+
+            this.kickerEntity = null;
         }
     }
 
