@@ -22,6 +22,7 @@ public enum AchievementType {
     FRIENDS_LIST("ACH_FriendListSize"),
     CAMERA_PHOTO("ACH_CameraPhotoCount"),
     FOOTBALL_GOAL("ACH_FootballGoalScored"),
+    FOOTBALL_GOAL_ON_ROOM("ACH_FootballGoalScoredInRoom"),
     CROSS_TRAINER("ACH_CrossTrainer"),
     TRAMPOLINIST("ACH_Trampolinist"),
     JOGGER("ACH_Jogger"),
