@@ -1304,6 +1304,26 @@ public class PlayerDao {
         }
     }
 
+    public static void updateAllowMimic(final boolean allowMimic, int playerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = sqlConnection.prepareStatement("UPDATE player_settings SET allow_mimic = ? WHERE player_id = ?");
+            preparedStatement.setString(1, allowMimic ? "1" : "0");
+            preparedStatement.setInt(2, playerId);
+
+            SqlHelper.executeStatementSilently(preparedStatement, false);
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static int getUsernameAlreadyExist(String username) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
