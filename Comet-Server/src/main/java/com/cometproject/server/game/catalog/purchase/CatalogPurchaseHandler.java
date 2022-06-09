@@ -266,13 +266,20 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             return false;
         }
 
-        if (giftData != null) {
-            if (playerIdToDeliver == 0) {
+        if (giftData == null) {
+            return true;
+        }
+
+        if (playerIdToDeliver == 0) {
+            client.send(new GiftUserNotFoundMessageComposer());
+            return false;
+        } else {
+            if (client.getPlayer().getMessenger().getFriendById(playerIdToDeliver) == null && !client.getPlayer().getPermissions().getRank().modTool()) {
                 client.send(new GiftUserNotFoundMessageComposer());
                 return false;
-            } else {
-                client.getPlayer().getAchievements().progressAchievement(AchievementType.GIFT_GIVER, 1);
             }
+
+            client.getPlayer().getAchievements().progressAchievement(AchievementType.GIFT_GIVER, 1);
         }
 
         return true;
