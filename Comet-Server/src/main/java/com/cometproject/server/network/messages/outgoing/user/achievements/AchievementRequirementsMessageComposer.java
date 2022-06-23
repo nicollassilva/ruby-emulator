@@ -26,11 +26,11 @@ public class AchievementRequirementsMessageComposer extends MessageComposer {
     public void compose(IComposer msg) {
         msg.writeInt(this.achievementGroups.size());
 
-        for (IAchievementGroup achievementGroup : this.achievementGroups) {
+        for (final IAchievementGroup achievementGroup : this.achievementGroups) {
             msg.writeString(achievementGroup.getGroupName().replace("ACH_", ""));
             msg.writeInt(achievementGroup.getAchievements().size());
 
-            for (IAchievement achievement : achievementGroup.getAchievements().values()) {
+            for (final IAchievement achievement : achievementGroup.getAchievements().values()) {
                 msg.writeInt(achievement.getLevel());
                 msg.writeInt(achievement.getProgressNeeded());
             }

@@ -20,7 +20,7 @@ public class WiredTriggerScoreAchieved extends WiredTriggerItem {
         for (final WiredTriggerScoreAchieved floorItem : getTriggers(entity.getRoom(), WiredTriggerScoreAchieved.class)) {
             if(floorItem == null) continue;
 
-            if (score >= floorItem.scoreToAchieve()) {
+            if (score == floorItem.scoreToAchieve()) {
                 wasExecuted |= floorItem.evaluate(entity, null);
             }
         }
