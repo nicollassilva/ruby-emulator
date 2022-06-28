@@ -5,8 +5,8 @@ import com.cometproject.server.protocol.headers.Composers;
 import com.cometproject.server.protocol.messages.MessageComposer;
 
 public class EmailVerificationWindowMessageComposer extends MessageComposer {
-    private int unknown1;
-    private int unknown2;
+    private final int unknown1;
+    private final int unknown2;
 
     public EmailVerificationWindowMessageComposer(int unknown1, int unknown2) {
         this.unknown1 = unknown1;
