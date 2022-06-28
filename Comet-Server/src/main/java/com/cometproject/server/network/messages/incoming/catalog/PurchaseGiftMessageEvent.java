@@ -3,10 +3,12 @@ package com.cometproject.server.network.messages.incoming.catalog;
 import com.cometproject.api.game.catalog.types.ICatalogOffer;
 import com.cometproject.api.game.furniture.types.GiftData;
 import com.cometproject.server.boot.Comet;
+import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
+import com.cometproject.server.network.messages.outgoing.user.pin.EmailVerificationWindowMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
 import com.cometproject.server.storage.queries.crafting.CraftingDao;
@@ -17,6 +19,12 @@ public class PurchaseGiftMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) throws Exception {
         int pageId = msg.readInt();
         int itemId = msg.readInt();
+
+        if(client.getPlayer().getPermissions().getRank().modTool() && !client.getPlayer().getSettings().isPinSuccess()) {
+            client.getPlayer().sendBubble("pincode", Locale.getOrDefault("pin.code.required", "Debes verificar tu PIN antes de realizar cualquier acción."));
+            client.send(new EmailVerificationWindowMessageComposer(1,1));
+            return;
+        }
 
         if (pageId <= 0) {
             final ICatalogOffer catalogOffer = CatalogManager.getInstance().getCatalogOffers().get(itemId);

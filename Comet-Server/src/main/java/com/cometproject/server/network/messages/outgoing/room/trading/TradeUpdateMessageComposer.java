@@ -33,7 +33,7 @@ public class TradeUpdateMessageComposer extends MessageComposer {
         msg.writeInt(user1);
         msg.writeInt(items1.size());
 
-        for (PlayerItem item : items1) {
+        for (final PlayerItem item : items1) {
             ((InventoryItem) item).serializeTrade(msg);
         }
 
@@ -43,7 +43,7 @@ public class TradeUpdateMessageComposer extends MessageComposer {
         msg.writeInt(user2);
         msg.writeInt(items2.size());
 
-        for (PlayerItem item : items2) {
+        for (final PlayerItem item : items2) {
             ((InventoryItem) item).serializeTrade(msg);
         }
 
