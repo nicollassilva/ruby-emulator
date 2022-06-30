@@ -77,8 +77,12 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
         final int playerIdToDeliver = giftData == null ? -1 : PlayerDao.getIdByUsername(giftData.getReceiver());
 
         if (this.canHandle(client, amount, giftData, playerIdToDeliver)) {
-            final ICatalogPage page = CatalogManager.getInstance().getPage(pageId);
+            ICatalogPage page = CatalogManager.getInstance().getPage(pageId);
             ICatalogItem item;
+
+            if(page == null) {
+                page = CatalogManager.getInstance().getCatalogPageByCatalogItemId(itemId);
+            }
 
             if (page != null) {
                 if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank && client.getPlayer().getData().getRank() < CometSettings.rankCanSeeVipContent) return;
