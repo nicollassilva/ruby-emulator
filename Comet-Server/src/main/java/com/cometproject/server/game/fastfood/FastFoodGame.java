@@ -55,47 +55,47 @@ public class FastFoodGame extends Game {
     }
 
     public static void onPlayButton(Player player) {
-        PlayerData playerData = player.getData();
+        final PlayerData playerData = player.getData();
 
         try {
-            String postdata = "";
-            postdata += "api-key=" + URLEncoder.encode(Locale.getOrDefault("gamecenter.fastfood.api_key", "8EEB61-C03306-3101AB-84A57D-8106D1"), "UTF-8") + "&";
-            postdata += "user-id=" + URLEncoder.encode(playerData.getId() + "", "UTF-8") + "&";
-            postdata += "user-name=" + URLEncoder.encode(playerData.getUsername(), "UTF-8") + "&";
-            postdata += "user-avatar=" + URLEncoder.encode(playerData.getFigure(), "UTF-8") + "&";
-            postdata += "theme=" + URLEncoder.encode(Locale.getOrDefault("gamecenter.fastfood.theme", "default"), "UTF-8");
+            String postData = "";
+            postData += "api-key=" + URLEncoder.encode(Locale.getOrDefault("gamecenter.fastfood.api_key", "8EEB61-C03306-3101AB-84A57D-8106D1"), "UTF-8") + "&";
+            postData += "user-id=" + URLEncoder.encode(playerData.getId() + "", "UTF-8") + "&";
+            postData += "user-name=" + URLEncoder.encode(playerData.getUsername(), "UTF-8") + "&";
+            postData += "user-avatar=" + URLEncoder.encode(playerData.getFigure(), "UTF-8") + "&";
+            postData += "theme=" + URLEncoder.encode(Locale.getOrDefault("gamecenter.fastfood.theme", "default"), "UTF-8");
 
-            String url = "https://api.thefastfoodgame.com/api";
-            URL obj = new URL(url);
+            final String url = "https://api.thefastfoodgame.com/api";
+            final URL obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("User-Agent", "arcturus");
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            con.setRequestProperty("Content-Length", "" + postdata.getBytes().length);
+            con.setRequestProperty("Content-Length", "" + postData.getBytes().length);
             con.setDoOutput(true);
 
-            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(postdata.getBytes());
+            final DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.write(postData.getBytes());
             wr.flush();
             wr.close();
 
-            int responseCode = con.getResponseCode();
+            final int responseCode = con.getResponseCode();
 
             if(responseCode != 200) {
                 throw new Exception("FastFood - Invalid http response code " + responseCode);
             }
 
-            InputStream stream = con.getInputStream();
+            final InputStream stream = con.getInputStream();
 
-            byte[] d = new byte[stream.available()];
+            final byte[] d = new byte[stream.available()];
             stream.read(d,0, d.length);
-            String responseBody = new String(d);
+            final String responseBody = new String(d);
 
             stream.close();
             con.disconnect();
 
-            Gson gson = new Gson();
-            JsonObject apiResponse = gson.fromJson(responseBody, JsonObject.class);
+            final Gson gson = new Gson();
+            final JsonObject apiResponse = gson.fromJson(responseBody, JsonObject.class);
 
             if(apiResponse.get("status").getAsString().equals("success")) {
                 playerData.getPlayer().getSession().send(new GameCenterGameFrameURLComposer(apiResponse.get("url").getAsString(), 1));

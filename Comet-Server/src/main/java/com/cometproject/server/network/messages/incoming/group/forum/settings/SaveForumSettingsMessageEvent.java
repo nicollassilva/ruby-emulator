@@ -49,7 +49,7 @@ public class SaveForumSettingsMessageEvent implements Event {
 
         client.send(new GroupInformationMessageComposer(group, GameContext.getCurrent().getRoomService().getRoomData(group.getData().getRoomId()), false,
                 client.getPlayer().getId() == group.getData().getOwnerId(), group.getMembers().getAdministrators().contains(client.getPlayer().getId()),
-                group.getMembers().getAll().containsKey(client.getPlayer().getId()) ? 1 : group.getMembers().getMembershipRequests().contains(client.getPlayer().getId()) ? 2 : 0));
+                group.getMembers().getAll().containsKey(client.getPlayer().getId()) ? 1 : group.getMembers().getMembershipRequests().contains(client.getPlayer().getId()) ? 2 : 0, client.getPlayer().getData().getFavouriteGroup()));
 
         client.send(new NotificationMessageComposer("forums.forum_settings_updated"));
         client.send(new GroupForumDataMessageComposer(group, client.getPlayer().getId()));
