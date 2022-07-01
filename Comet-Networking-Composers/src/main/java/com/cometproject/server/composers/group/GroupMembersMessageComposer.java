@@ -97,7 +97,7 @@ public class GroupMembersMessageComposer extends MessageComposer {
     }
 
     private List<List<PlayerAvatar>> paginateMembers(List<PlayerAvatar> originalList, int chunkSize) {
-        List<List<PlayerAvatar>> listOfChunks = new ArrayList<>();
+        final List<List<PlayerAvatar>> listOfChunks = new ArrayList<>();
 
         for (int i = 0; i < originalList.size() / chunkSize; i++) {
             listOfChunks.add(originalList.subList(i * chunkSize, i * chunkSize + chunkSize));

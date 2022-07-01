@@ -57,7 +57,7 @@ public class CreateRoomMessageEvent implements Event {
             return;
         }
 
-        int roomId = RoomManager.getInstance().createRoom(name, description, model, category, maxVisitors, tradeState, creationTime, client);
+        final int roomId = RoomManager.getInstance().createRoom(name, description, model, category, maxVisitors, tradeState, creationTime, client);
 
         client.send(new CreateRoomMessageComposer(roomId, name));
         client.getPlayer().setLastRoomCreated((int) Comet.getTime());

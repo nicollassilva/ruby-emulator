@@ -3,17 +3,16 @@ package com.cometproject.game.groups.types.components;
 import com.cometproject.api.game.GameContext;
 import com.cometproject.api.game.groups.IGroupService;
 import com.cometproject.api.game.groups.types.components.IMembershipComponent;
+import com.cometproject.api.game.groups.types.components.membership.GroupAccessLevel;
 import com.cometproject.api.game.groups.types.components.membership.IGroupMember;
 import com.cometproject.api.game.players.data.PlayerAvatar;
 import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.api.networking.sessions.ISessionService;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class MembershipComponent implements IMembershipComponent {
 
@@ -64,7 +63,15 @@ public class MembershipComponent implements IMembershipComponent {
 
     @Override
     public List<IGroupMember> getMembersAsList() {
-        return new ArrayList<>(this.groupMembers.values());
+        final Collection<IGroupMember> groupMembers = this.groupMembers.values();
+
+        final List<IGroupMember> sortedGroupMembers = groupMembers.stream()
+                .sorted(Comparator.comparing(IGroupMember::getAccessLevel))
+                .collect(Collectors.toList());
+
+        Collections.reverse(sortedGroupMembers);
+
+        return sortedGroupMembers;
     }
 
     @Override

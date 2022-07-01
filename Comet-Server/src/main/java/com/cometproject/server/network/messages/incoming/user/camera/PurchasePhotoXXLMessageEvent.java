@@ -25,7 +25,7 @@ import java.util.Set;
 public class PurchasePhotoXXLMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        if (client.getPlayer().antiSpam("PurchasePhotoXXLMessageEvent", 0.5)) {
+        if (client.getPlayer().antiSpam("PurchasePhotoXXLMessageEvent", 2.0)) {
             client.getPlayer().sendPopup(Locale.get("game.photo.toofast.title"), Locale.get("game.photo.toofast.message"));
             return;
         }
