@@ -356,7 +356,7 @@ public class CatalogDao {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            preparedStatement = SqlHelper.prepare("SELECT DISTINCT `catalog_item` FROM player_recent_purchases WHERE player_id = ? LIMIT " + count, sqlConnection);
+            preparedStatement = SqlHelper.prepare("SELECT `catalog_item`, `purchase_date` FROM player_recent_purchases WHERE `player_id` = ? GROUP BY `catalog_item` ORDER BY `purchase_date` DESC LIMIT " + count, sqlConnection);
             preparedStatement.setInt(1, playerId);
 
             resultSet = preparedStatement.executeQuery();
