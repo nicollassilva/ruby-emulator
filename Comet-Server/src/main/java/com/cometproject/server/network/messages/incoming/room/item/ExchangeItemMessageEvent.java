@@ -12,45 +12,40 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class ExchangeItemMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) {
-        int virtualId = msg.readInt();
+        final int virtualId = msg.readInt();
+        final long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
 
-        long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
-
-        if (client.getPlayer().getEntity() == null) {
+        if (client.getPlayer().getEntity() == null)
             return;
-        }
 
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null || (!room.getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl())) {
             return;
         }
 
 
-        RoomItemFloor item = room.getItems().getFloorItem(itemId);
+        final RoomItemFloor item = room.getItems().getFloorItem(itemId);
 
-        if (item == null) {
+        if (item == null)
             return;
-        }
 
-        if (item.getItemData().getOwnerId() != client.getPlayer().getId()) {
+        if (item.getItemData().getOwnerId() != client.getPlayer().getId())
             return;
-        }
 
         int value;
         boolean isDiamond = false;
-        boolean isDucket = false;
+        boolean isRuby = false;
 
-        if (!item.getDefinition().getItemName().startsWith("CF_") && !item.getDefinition().getItemName().startsWith("CFC_")) {
+        if (!item.getDefinition().getItemName().startsWith("CF_") && !item.getDefinition().getItemName().startsWith("CFC_"))
             return;
-        }
 
         if (item.getDefinition().getItemName().contains("_diamond_")) {
             isDiamond = true;
             value = Integer.parseInt(item.getDefinition().getItemName().split("_diamond_")[1]);
-        } else if(item.getDefinition().getItemName().contains("_ducket_")) {
-            isDucket = true;
-            value = Integer.parseInt(item.getDefinition().getItemName().split("_ducket_")[1]);
+        } else if(item.getDefinition().getItemName().contains("_ruby_")) {
+            isRuby = true;
+            value = Integer.parseInt(item.getDefinition().getItemName().split("_ruby_")[1]);
         } else {
             value = Integer.parseInt(item.getDefinition().getItemName().split("_")[1]);
         }
@@ -61,16 +56,15 @@ public class ExchangeItemMessageEvent implements Event {
         if (isDiamond) {
             client.getPlayer().getData().increaseVipPoints(value);
             exchangeValue = "Diamonds: " + client.getPlayer().getData().getVipPoints();
-        } else if(isDucket){
-            client.getPlayer().getData().increaseActivityPoints(value);
-            exchangeValue = "Duckets: " + client.getPlayer().getData().getActivityPoints();
+        } else if(isRuby){
+            client.getPlayer().getData().increaseSeasonalPoints(value);
+            exchangeValue = "Rubys: " + client.getPlayer().getData().getSeasonalPoints();
         } else {
             client.getPlayer().getData().increaseCredits(value);
             exchangeValue = "Credits: " + client.getPlayer().getData().getCredits();
         }
 
         PlayerDao.saveExchangeLog(client.getPlayer().getData().getId(), itemId, item.getDefinition().getId(), exchangeValue);
-
 
         client.getPlayer().sendBalance();
         client.getPlayer().getData().save();
