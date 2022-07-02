@@ -1169,8 +1169,6 @@ public class PlayerDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                final String figure = resultSet.getString("figure");
-
                 return resultSet.getString("figure");
             }
         } catch (SQLException e) {

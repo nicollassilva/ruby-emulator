@@ -11,22 +11,21 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class MimicOfflineCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-        if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
+        if (params.length < 1 || params[0].length() < 3) {
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Nome de usuário inválido!"), client);
             return;
         }
 
         final String username = params[0];
-
-        if(username == null ) {
-            client.send(new NotificationMessageComposer("generic", "Por favor, informe o nome do usuário"));
-            return;
-        }
-
         final String figure = PlayerDao.getFigureByUsername(username);
         final String gender = PlayerDao.getGenderByUsername(username);
 
-        PlayerEntity playerEntity = client.getPlayer().getEntity();
+        if(figure == null || gender == null) {
+            sendNotif("Usuário não encontrado!", client);
+            return;
+        }
+
+        final PlayerEntity playerEntity = client.getPlayer().getEntity();
 
         playerEntity.getPlayer().getData().setFigure(figure);
         playerEntity.getPlayer().getData().setGender(gender);
