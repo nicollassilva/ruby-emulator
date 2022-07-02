@@ -152,6 +152,10 @@ public interface IPlayer {
 
     void setLastCommandRoleplay(int lastCommandRoleplay);
 
+    int getLastSlotMachineAction();
+
+    void setLastSlotMachineAction(int lastSlotMachineAction);
+
     int getLastPurchase();
 
     void setLastPurchase(int lastPurchase);

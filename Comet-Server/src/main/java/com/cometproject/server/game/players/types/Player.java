@@ -116,6 +116,7 @@ public class Player extends Observable implements IPlayer {
     private int lastPurchase = 0;
     private int lastSpin = 0;
     private int lastCommandRoleplay = 0;
+    private int lastSlotMachineAction = 0;
     private int lastRoomCreated = 0;
     private boolean isDeletingGroup = false;
     private long deletingGroupAttempt = 0;
@@ -710,8 +711,14 @@ public class Player extends Observable implements IPlayer {
         return lastCommandRoleplay;
     }
 
+    public int getLastSlotMachineAction() {
+        return lastSlotMachineAction;
+    }
+
     @Override
     public void setLastCommandRoleplay(int lastCommandRoleplay) { this.lastCommandRoleplay = lastCommandRoleplay; }
+
+    public void setLastSlotMachineAction(int lastSlotMachineAction) { this.lastSlotMachineAction = Player.this.lastSlotMachineAction; }
 
     @Override
     public void setLastPurchase(int lastPurchase) {
