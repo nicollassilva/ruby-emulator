@@ -349,6 +349,7 @@ public class RoomItemFactory {
 
             // Custom's
             put("gym_equipment", GymEquipmentFloorItem.class);
+            put("info_terminal", InfoTerminalFloorItem.class);
 
             put("iceskate", IceSkateFloorItem.class);
             put("rollerskate", RollerSkateFloorItem.class);

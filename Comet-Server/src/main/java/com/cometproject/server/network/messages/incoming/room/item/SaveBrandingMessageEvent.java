@@ -28,31 +28,65 @@ public class SaveBrandingMessageEvent implements Event {
         if(length > 1000)
             return;
 
-        final StringBuilder data = new StringBuilder("state" + (char) 9 + "0");
+        final StringBuilder data = new StringBuilder();
+        boolean hasErrors = false;
 
-        for (int i = 1; i <= length; i++) {
-            if (i < length) {
-                data.append((char) 9).append(msg.readString());
-            } else {
-                int offsetz;
+        switch (item.getDefinition().getInteraction()) {
+            case "info_terminal":
+                final String dataName = msg.readString();
 
-                try {
-                    offsetz = Integer.parseInt(msg.readString());
-                } catch (NumberFormatException e) {
-                    offsetz = 0;
+                if(!dataName.equals("internalLink")) {
+                    hasErrors = true;
+                    break;
                 }
-                if (offsetz < 140000000) {
-                    data.append((char) 9).append(offsetz);
-                } else {
-                    data.append((char) 9).append("0");
+
+                final String internalLink = msg.readString();
+
+                if(!internalLink.isEmpty() && !internalLink.startsWith("habbopages")) {
+                    hasErrors = true;
+                    break;
                 }
-            }
+
+                data.append("state" + (char) 9 + "1");
+                data.append((char) 9).append(dataName);
+                data.append((char) 9).append(internalLink.isEmpty() ? (char) 9 : internalLink);
+                break;
+            case "background":
+                data.append("state" + (char) 9 + "0");
+
+                for (int i = 1; i <= length; i++) {
+                    if (i < length) {
+                        data.append((char) 9).append(msg.readString());
+                    } else {
+                        int offsetZ;
+
+                        try {
+                            offsetZ = Integer.parseInt(msg.readString());
+                        } catch (NumberFormatException e) {
+                            offsetZ = 0;
+                        }
+                        if (offsetZ < 140000000) {
+                            data.append((char) 9).append(offsetZ);
+                        } else {
+                            data.append((char) 9).append("0");
+                        }
+                    }
+                }
+
+                final boolean isEmptyImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (char) 9);
+                final boolean securityImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (Comet.isDebugging ? "http://localhost:3000" : "https://rubyhotel.com.br"));
+
+                if(!isEmptyImageUrl && !securityImageUrl) {
+                    hasErrors = true;
+                }
+
+                break;
+            default:
+                hasErrors = true;
+                break;
         }
 
-        final boolean isEmptyImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (char) 9);
-        final boolean securityImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (Comet.isDebugging ? "http://localhost:3000" : "https://rubyhotel.com.br"));
-
-        if(!isEmptyImageUrl && !securityImageUrl)
+        if(hasErrors)
             return;
 
         item.getItemData().setData(data.toString());
