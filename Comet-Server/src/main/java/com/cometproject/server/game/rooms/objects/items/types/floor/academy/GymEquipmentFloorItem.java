@@ -91,5 +91,6 @@ public class GymEquipmentFloorItem extends RoomItemFloor {
 
         this.getItemData().setData("0");
         this.sendUpdate();
+        this.saveData();
     }
 }
