@@ -11,11 +11,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.Unpooled;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 
 public class RenderRoomMessageEvent
@@ -26,10 +25,10 @@ public class RenderRoomMessageEvent
     public void handle(Session client, MessageEvent msg) throws Exception {
         final int length = msg.readInt();
         final byte[] payload = msg.readBytes(length);
-        final int timestamp = (int)Comet.getTime();
+        final String photoName = UUID.randomUUID().toString();
 
-        String URL2 = client.getPlayer().getData().getId() + "_" + timestamp + ".png";
-        String URL_small = client.getPlayer().getData().getId() + "_" + timestamp + "_small.png";
+        final String URL2 = photoName + ".png";
+        final String URL_small = photoName + "_small.png";
         client.getPlayer().setLastPhoto(URL2);
 
         if (isPngFile(payload)) {

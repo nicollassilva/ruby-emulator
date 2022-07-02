@@ -191,7 +191,7 @@ public class PlayerManager implements IPlayerService, Initialisable {
 
     public IPlayer getPlayerById(int playerId) {
         if (this.isOnline(playerId)) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
             if (session != null && session.getPlayer() != null && session.getPlayer().getData() != null) {
                 return session.getPlayer();

@@ -770,7 +770,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public void teleportToObjectImmediately(RoomObject roomObject) {
-        this.applyEffect(new PlayerEffect(4, 5));
+        this.applyEffect(new PlayerEffect(4, 3));
 
         this.warpedTile = this.getRoom().getMapping().getTile(this.getPosition());
 

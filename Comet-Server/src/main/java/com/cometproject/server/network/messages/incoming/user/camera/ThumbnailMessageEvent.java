@@ -3,9 +3,8 @@ package com.cometproject.server.network.messages.incoming.user.camera;
 import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.GameContext;
 import com.cometproject.api.game.rooms.IRoomData;
-import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.server.network.messages.incoming.Event;
-import com.cometproject.server.network.messages.incoming.user.camera.RenderRoomMessageEvent;
+import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomDataMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.settings.ThumbnailTakenMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -28,15 +27,21 @@ public class ThumbnailMessageEvent implements Event {
             return;
         }
 
-        int length = msg.readInt();
-        byte[] payload = msg.readBytes(length);
-        IRoomData roomData = client.getPlayer().getEntity().getRoom().getData();
+        if (client.getPlayer().antiSpam("UpdateRoomThumbnail", 5)) {
+            client.send(new NotificationMessageComposer("generic", "Por favor, aguarde 5 segundos para colocar um novo thumbnail."));
+            return;
+        }
+
+        final int length = msg.readInt();
+        final byte[] payload = msg.readBytes(length);
+        final IRoomData roomData = client.getPlayer().getEntity().getRoom().getData();
+        final String thumbnailName = UUID.randomUUID().toString();
 
         if (RenderRoomMessageEvent.isPngFile(payload)) {
             try {
                 ByteBuf test = Unpooled.copiedBuffer(payload);
                 BufferedImage image = ImageIO.read(new ByteBufInputStream(test));
-                ImageIO.write(image, "png", new File(CometSettings.thumbnailUploadUrl + roomData.getId() + ".png"));
+                ImageIO.write(image, "png", new File(CometSettings.thumbnailUploadUrl + thumbnailName + ".png"));
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -45,7 +50,21 @@ public class ThumbnailMessageEvent implements Event {
                 // empty catch block
             }
 
-            roomData.setThumbnail("camera/thumbnails/" + roomData.getId() + ".png");
+            if(!roomData.getThumbnail().isEmpty() && roomData.getThumbnail().startsWith("camera")) {
+                final String[] oldThumbnailName = roomData.getThumbnail().split("/");
+
+                if(oldThumbnailName.length > 0) {
+                    final File thumbnailFile = new File(CometSettings.thumbnailUploadUrl + oldThumbnailName[oldThumbnailName.length - 1]);
+
+                    if(thumbnailFile.exists()) {
+                        try {
+                            thumbnailFile.delete();
+                        } catch (SecurityException ignored) {}
+                    }
+                }
+            }
+
+            roomData.setThumbnail("camera/thumbnails/" + thumbnailName + ".png");
             GameContext.getCurrent().getRoomService().saveRoomData(roomData);
 
             client.send(new RoomDataMessageComposer(roomData));

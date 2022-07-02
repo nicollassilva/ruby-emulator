@@ -183,6 +183,9 @@ public class SaveRoomDataMessageEvent implements Event {
             client.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_SETTINGS_CHAT_DISTANCE, 1);
         }
 
+        System.out.println(wallThick);
+        System.out.println(floorThick);
+
         data.setAccess(currentAccessState);
         data.setCategoryId(categoryId);
         data.setName(filteredName);

@@ -12,7 +12,7 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 
 public class GetProfileMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        int userId = msg.readInt();
+        final int userId = msg.readInt();
 
         final IPlayer player = userId == client.getPlayer().getId() ? client.getPlayer() : getPlayer(userId);
 
