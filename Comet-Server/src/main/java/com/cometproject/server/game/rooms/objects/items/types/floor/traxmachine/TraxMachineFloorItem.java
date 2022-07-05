@@ -1,6 +1,8 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.traxmachine;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.server.game.items.music.TraxMachineSong;
+import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -42,9 +44,14 @@ public class TraxMachineFloorItem extends RoomItemFloor {
         try {
             final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenTraxMachineWindowMessage);
             final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+            final TraxMachineSong song = RoomManager.getInstance().getTraxMachineSongFromUserAndSongId(this.getRoom().getData().getOwnerId(), this.getRoom().getData().getSongId());
 
             message.client = ((PlayerEntity) entity).getPlayer().getData().getWebsocketSession();
             message.data = new JSONObject();
+
+            if(song != null) {
+                message.data.put("songData", song.getData());
+            }
 
             message.compose();
         } catch (InstantiationException | InvocationTargetException | IllegalAccessException | IOException | NoSuchMethodException e) {

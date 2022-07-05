@@ -21,8 +21,9 @@ public class UserObjectMessageComposer extends MessageComposer {
     }
 
     public static String getDate(int timestamp) {
-        Date d = new Date(timestamp * 1000L);
-        SimpleDateFormat df = new SimpleDateFormat(Locale.getOrDefault("date.format", "MMM d yyyy 'at' HH:mm"));
+        final Date d = new Date(timestamp * 1000L);
+        final SimpleDateFormat df = new SimpleDateFormat(Locale.getOrDefault("date.format", "MMM d yyyy 'at' HH:mm"));
+
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         return df.format(d);
