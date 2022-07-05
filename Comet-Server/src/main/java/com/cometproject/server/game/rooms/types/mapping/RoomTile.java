@@ -145,20 +145,13 @@ public class RoomTile {
             }
 
             this.hasItems = true;
-
-            final boolean isWired = item instanceof WiredFloorItem || item instanceof WiredAddonUnseenEffect || item instanceof WiredAddonRandomEffect || item instanceof WiredAddonNoItemsAnimateEffect || item instanceof WiredAddonKebBar;
-            final boolean isHideWiredActive = item.getRoom().getData().isWiredHidden();
-
-            final double totalHeight = isWired && isHideWiredActive
-                    ? -1D
-                    : item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+            final double totalHeight = getTotalHeight(item);
             if (totalHeight > highestHeight) {
                 highestHeight = totalHeight;
                 highestItem = item.getId();
             }
 
             final boolean isGate = item instanceof GateFloorItem;
-
             if (item instanceof MagicStackFloorItem) {
                 this.hasMagicTile = true;
             }
@@ -261,6 +254,10 @@ public class RoomTile {
             this.originalHeight = this.stackHeight;
     }
 
+    private static double getTotalHeight(RoomItemFloor item) {
+        return item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+    }
+
     public void dispose() {
         this.pendingEvents.clear();
         this.items.clear();
@@ -306,7 +303,7 @@ public class RoomTile {
         for (final RoomItemFloor item : items) {
             if (exclude != null && exclude.getId() == item.getId()) continue;
 
-            final double totalHeight = item.getPosition().getZ() + (item.getOverrideHeight() != -1d ? item.getOverrideHeight() : item.getDefinition().getHeight());
+            final double totalHeight = getTotalHeight(item);
             if (totalHeight > highest) {
                 highest = totalHeight;
             }
