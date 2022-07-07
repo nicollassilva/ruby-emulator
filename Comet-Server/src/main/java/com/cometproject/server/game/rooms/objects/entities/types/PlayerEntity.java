@@ -300,6 +300,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         this.isFinalized = true;
         this.getPlayer().setSpectatorRoomId(0);
+
         if (!this.getPlayer().getLastRoomsIds().contains(this.getRoom().getId())) {
             this.getPlayer().getLastRoomsIds().add(this.getRoom().getId());
             this.getPlayer().getAchievements().progressAchievement(AchievementType.ROOM_ENTRY, 1);
@@ -1072,14 +1073,15 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             return RoomControllerLevel.GUILD_MEMBER;
         } else if (this.getRoom().getRights().hasRights(this.getPlayerId())) {
             return RoomControllerLevel.GUEST;
-        }
+        }   
+
         return RoomControllerLevel.NONE;
     }
 
     public boolean isAway() {
         return this.isAway;
     }
-
+    
     public void setAway() {
         this.awayTime = System.currentTimeMillis();
         this.lastAwayReminder = this.awayTime / 1000;

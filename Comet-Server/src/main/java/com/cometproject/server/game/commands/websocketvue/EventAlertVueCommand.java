@@ -21,19 +21,11 @@ public class EventAlertVueCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] params) {
-        String eventName = client.getPlayer().getEntity().getRoom().getData().getName();
-
-        if (params.length > 0) {
-            eventName = String.join(" ", params);
-        }
-
         final JSONObject output = new JSONObject();
 
-        output.put("event_name", eventName);
+        output.put("event_name", client.getPlayer().getEntity().getRoom().getData().getName());
         output.put("username", client.getPlayer().getData().getUsername());
-        output.put("text", this.merge(params, 0));
         output.put("room_id", client.getPlayer().getEntity().getRoom().getId());
-        output.put("domain", CometSettings.hotelName);
 
         try {
             final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenEventAlertMessage);
@@ -41,6 +33,9 @@ public class EventAlertVueCommand extends ChatCommand {
 
             for (final Map.Entry<Integer, ISession> map : SessionManagerAccessor.getInstance().getSessionManager().getSessions().entrySet()) {
                 final Session session = (Session) map.getValue();
+
+                if(session.getPlayer().getId() == client.getPlayer().getId() || session.getPlayer().getSettings().ignoreEvents())
+                    return;
 
                 message.client = session.getPlayer().getData().getWebsocketSession();
                 message.data = output;

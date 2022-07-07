@@ -32,9 +32,10 @@ public class Rank implements PlayerRank {
     private final boolean aboutDetailed;
     private final boolean aboutStats;
     private final boolean loginNotif;
+    private final boolean controlMpu;
 
     public Rank(int id, String name, boolean floodBypass, int floodTime, boolean disconnectable, boolean modTool, boolean alfaTool, boolean bannable, boolean roomKickable, boolean roomFullControl,
-                boolean roomMuteBypass, boolean roomFilterBypass, boolean roomIgnorable, boolean roomEnterFull, boolean roomEnterLocked, boolean roomStaffPick, boolean roomSeeWhispers, boolean messengerStaffChat, boolean messengerLogChat, boolean messengerAlfaChat, int messengerMaxFriends, boolean aboutDetailed, boolean aboutStats, boolean loginNotif) {
+                boolean roomMuteBypass, boolean roomFilterBypass, boolean roomIgnorable, boolean roomEnterFull, boolean roomEnterLocked, boolean roomStaffPick, boolean roomSeeWhispers, boolean messengerStaffChat, boolean messengerLogChat, boolean messengerAlfaChat, int messengerMaxFriends, boolean aboutDetailed, boolean aboutStats, boolean loginNotif, boolean controlMpu) {
         this.id = id;
         this.name = name;
         this.floodBypass = floodBypass;
@@ -59,6 +60,7 @@ public class Rank implements PlayerRank {
         this.aboutDetailed = aboutDetailed;
         this.aboutStats = aboutStats;
         this.loginNotif = loginNotif;
+        this.controlMpu = controlMpu;
     }
 
     @Override
@@ -177,5 +179,9 @@ public class Rank implements PlayerRank {
 
     public boolean sendLoginNotif() {
         return loginNotif;
+    }
+
+    public boolean canControlMpu() {
+        return controlMpu;
     }
 }

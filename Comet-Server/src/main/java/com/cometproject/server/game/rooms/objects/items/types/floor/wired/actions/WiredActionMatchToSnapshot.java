@@ -70,7 +70,7 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
             final Position currentPosition = floorItem.getPosition().copy();
             final Position newPosition = new Position(itemSnapshot.getX(), itemSnapshot.getY(), itemSnapshot.getZ());
 
-            if (this.getRoom().getItems().moveFloorItemWired(floorItem, !matchPosition ? currentPosition : newPosition, matchRotation ? itemSnapshot.getRotation() : floorItem.getRotation(), true, true, false)) {
+            if (this.getRoom().getItems().moveFloorItemWired(floorItem, !matchPosition ? currentPosition : newPosition, matchRotation ? itemSnapshot.getRotation() : floorItem.getRotation(), true, false, false)) {
                 if (!(floorItem instanceof WiredCustomSetSpeedRollerSelected)) {
                     if (this.useItemsAnimation()) {
                         this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));

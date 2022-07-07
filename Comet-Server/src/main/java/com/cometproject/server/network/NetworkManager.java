@@ -91,9 +91,7 @@ public class NetworkManager {
 
         gameServer.start();
 
-        if(Comet.isDebugging) {
-            Server.connect();
-        }
+        Server.connect();
     }
 
     public SessionManager getSessions() {
