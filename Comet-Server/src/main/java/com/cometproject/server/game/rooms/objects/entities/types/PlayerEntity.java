@@ -1065,7 +1065,10 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             return RoomControllerLevel.ROOM_OWNER;
         } else if (this.getRoom().getGroup() != null && this.getRoom().getGroup().getMembers().hasAdminPerm(this.getPlayerId())) {
             return RoomControllerLevel.GUILD_ADMIN;
-        } else if (this.getRoom().getGroup() != null && this.getRoom().getGroup().getMembers().hasMembership(this.getPlayerId())) {
+        } else if (this.getRoom().getGroup() != null
+                   && this.getRoom().getGroup().getMembers().hasMembership(this.getPlayerId())
+                   && this.getRoom().getGroup().getData().canMembersDecorate()
+        ) {
             return RoomControllerLevel.GUILD_MEMBER;
         } else if (this.getRoom().getRights().hasRights(this.getPlayerId())) {
             return RoomControllerLevel.GUEST;
