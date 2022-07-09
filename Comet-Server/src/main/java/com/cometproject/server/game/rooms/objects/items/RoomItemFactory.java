@@ -33,12 +33,15 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.totem.TotemP
 import com.cometproject.server.game.rooms.objects.items.types.floor.traxmachine.TraxMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.memory.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.custom.WiredConditionSuperWired;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.custom.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.memory.WiredNegativeConditionMemoryEquals;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.custom.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.memory.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreClassicFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreMostWinsFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscorePerTeamFloorItem;
@@ -355,6 +358,35 @@ public class RoomItemFactory {
             put("rollerskate", RollerSkateFloorItem.class);
             put("skaterail", SkateRailFloorItem.class);
             put("traxmachine", TraxMachineFloorItem.class);
+
+            put("wf_memory_box", WiredMemoryBox.class);
+            put("wf_memory_decrement_user", WiredMemoryDecrementUser.class);
+            put("wf_memory_increment_user", WiredMemoryIncrementUser.class);
+            put("wf_memory_set_user", WiredMemorySetUser.class);
+            put("wf_memory_increment", WiredMemoryIncrement.class);
+            put("wf_memory_set", WiredMemorySet.class);
+            put("wf_memory_decrement", WiredMemoryDecrement.class);
+            put("wf_memory_positive_user", WiredMemorySumUser.class);
+            put("wf_memory_negative_user", WiredMemorySubtractUser.class);
+            put("wf_memory_negative", WiredMemorySubtract.class);
+            put("wf_memory_positive", WiredMemorySum.class);
+
+            put("wf_memory_equal", WiredConditionMemoryEquals.class);
+            put("wf_memory_equal_user", WiredConditionMemoryUserEquals.class);
+            put("wf_memory_lessthan_user", WiredConditionMemoryLessThanUser.class);
+            put("wf_memory_greaterthan", WiredConditionMemoryGreaterThan.class);
+            put("wf_memory_greatherthan_user", WiredConditionMemoryGreaterThanUser.class);
+            put("wf_memory_lessthan", WiredConditionMemoryLessThan.class);
+            put("wf_memory_lessorequal_user", WiredConditionMemoryLessOrEqualUser.class);
+            put("wf_memory_lessorequal", WiredConditionMemoryLessOrEqual.class);
+            put("wf_memory_greaterorequal_user", WiredConditionMemoryGreaterThanOrEqualUser.class);
+            put("wf_memory_greaterorequal", WiredConditionMemoryGreaterThanOrEqual.class);
+            put("wf_memory_differentof", WiredConditionMemoryNotEquals.class);
+            put("wf_memory_differentof_user", WiredConditionMemoryNotEqualsUser.class);
+            // TODO: not equals user
+/*
+            put("wf_memory_universal_op", WiredMemoryBox.class);
+            put("wf_memory_universal", WiredMemoryBox.class);*/
         }};
     }
 
