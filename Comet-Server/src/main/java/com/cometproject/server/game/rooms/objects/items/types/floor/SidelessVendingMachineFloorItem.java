@@ -26,7 +26,7 @@ public class SidelessVendingMachineFloorItem extends RoomItemFloor {
 
         if (isWiredTrigger || entity == null) return false;
 
-        if(DistanceCalculator.calculate(entity.getPosition(), this.getPosition()) > 1) {
+        if(!this.getPosition().touching(entity.getPosition())) {
             if(!playerEntity.getPlayer().getEntity().isFreeze() && !playerEntity.hasAttribute("interacttpencours") && !playerEntity.hasAttribute("tptpencours")) {
                 final Position sqInFront = this.getPosition().squareInFront(this.getRotation());
 
