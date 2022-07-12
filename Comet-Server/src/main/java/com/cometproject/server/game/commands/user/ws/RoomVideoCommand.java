@@ -20,6 +20,15 @@ public class RoomVideoCommand extends ChatCommand {
             return;
         }
 
+        if(client.getPlayer().getEntity() == null)
+            return;
+
+        final boolean isOwner = client.getPlayer().getId() == client.getPlayer().getEntity().getRoom().getData().getOwnerId();
+        final boolean hasRights = client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId());
+
+        if(!isOwner && !hasRights && !client.getPlayer().getPermissions().getRank().roomFullControl())
+            return;
+
         String url = params[0];
 
         // Fix
