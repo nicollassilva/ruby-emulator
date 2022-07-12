@@ -26,23 +26,19 @@ public class SSOLoginEvent extends IncomingEvent {
     @Override
     public void handle() throws SQLException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException {
         final String ssoTicket = this.data.getJSONObject("data").getString("auth_ticket");
-        log.debug("SSO Ticket Event  sso='{}'", ssoTicket);
         final JSONObject output = new JSONObject();
 
         if(PlayerManager.getInstance().getSsoTicketToPlayerId().containsKey(ssoTicket)) {
             final int userId = PlayerManager.getInstance().getSsoTicketToPlayerId().get(ssoTicket);
 
-            log.debug("SSO Ticket contains key in cache, userId='{}'", userId);
             if(userId <= 0)
                 return;
 
             final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(userId);
-            log.debug("SSO Ticket userId ok, session='{}'", session == null ? "null" : session.getSessionId());
             if(session == null || session.getWsChannel() != null)
                 return;
 
             final PlayerData userData = PlayerManager.getInstance().getDataByPlayerId(userId);
-            log.debug("SSO Ticket session ok, userData='{}'", userData == null ? "null" : JsonUtil.getInstance().toJson(userData));
             if(userData == null)
                 return;
 
@@ -56,18 +52,16 @@ public class SSOLoginEvent extends IncomingEvent {
 
             Server.userMap.put(this.session, player);
             output.put("authenticated", true);
-            log.debug("SSO Ticket all ok, output='{}', player='{}'", output.toString(), JsonUtil.getInstance().toJson(player));
+            auth = true;
         } else {
             output.put("authenticated", false);
         }
 
-        log.debug("SSO Ticket authenticated='{}'", output.get("authenticated"));
         final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.SSOVerifiedMessage);
         final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
         message.client = this.session;
         message.data = output;
 
         message.compose();
-        log.debug("SSO Ticket packet sent");
     }
 }
