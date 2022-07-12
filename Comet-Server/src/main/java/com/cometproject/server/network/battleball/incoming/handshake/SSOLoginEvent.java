@@ -52,7 +52,6 @@ public class SSOLoginEvent extends IncomingEvent {
 
             Server.userMap.put(this.session, player);
             output.put("authenticated", true);
-            auth = true;
         } else {
             output.put("authenticated", false);
         }
