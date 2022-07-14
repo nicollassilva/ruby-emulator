@@ -330,6 +330,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.editfurni.name"), new EditFurniCommand());
         this.addCommand(Locale.getOrDefault("command.win.name", "win"), new WinCommand());
         this.addCommand(Locale.getOrDefault("command.pickup.name", "pickup"), new PickupCommand());
+        this.addCommand(Locale.getOrDefault("command.nitro.name", "nitro"), new NitroCommand());
     }
 
     /**

@@ -7,9 +7,12 @@ import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
+import com.cometproject.server.game.commands.user.NitroCommand;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 
 public class EventAlertCommand extends ChatCommand {
@@ -30,7 +33,15 @@ public class EventAlertCommand extends ChatCommand {
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
 
         for (final ISession session : NetworkManager.getInstance().getSessions().getSessions().values()) {
-            if (session.getPlayer() != null && !session.getPlayer().getSettings().ignoreEvents()) {
+            if(session.getPlayer() == null)
+                continue;
+
+            if(session.getPlayer().getEntity() != null && ((PlayerEntity)session.getPlayer().getEntity()).hasAttribute(NitroCommand.NITRO)){
+                session.send(new RoomForwardMessageComposer(roomId));
+                continue;
+            }
+
+            if (!session.getPlayer().getSettings().ignoreEvents()) {
                 final IMessageComposer msg = new AdvancedAlertMessageComposer(
                         Locale.get("command.eventalert.alerttitle"),
                         Locale.get("command.eventalert.message")
