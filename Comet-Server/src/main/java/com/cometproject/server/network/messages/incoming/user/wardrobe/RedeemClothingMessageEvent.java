@@ -41,7 +41,7 @@ public class RedeemClothingMessageEvent implements Event {
             return;
         }
 
-        client.getPlayer().getWardrobe().getClothing().add(clothingItem.getItemName());
+        client.getPlayer().getWardrobe().getClothing().add(clothingItem);
         PlayerClothingDao.redeemClothing(client.getPlayer().getId(), clothingItem.getItemName());
 
         room.getItems().removeItem(floorItem, client, false, true);

@@ -6,6 +6,8 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 
 
 public class MannequinFloorItem extends RoomItemFloor {
@@ -86,7 +88,10 @@ public class MannequinFloorItem extends RoomItemFloor {
         if (figure.length() > 512)
             return false;
 
-        playerEntity.getPlayer().getData().setFigure(figure);
+        if(ClothingValidationManager.isInvalidLook(playerEntity.getPlayer(), figure, FigureGender.fromString(gender)))
+            return false;
+
+        playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(playerEntity.getPlayer(),figure, FigureGender.fromString(gender)));
         playerEntity.getPlayer().getData().setGender(this.gender);
 
         playerEntity.getPlayer().getData().save();

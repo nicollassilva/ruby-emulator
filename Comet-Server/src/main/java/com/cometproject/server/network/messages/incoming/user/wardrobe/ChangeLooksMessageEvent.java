@@ -5,7 +5,8 @@ import com.cometproject.api.game.achievements.types.AchievementType;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
-import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
@@ -25,17 +26,9 @@ public class ChangeLooksMessageEvent implements Event {
 
         if (figure.isEmpty() || gender.isEmpty()) return;
 
-        if (PlayerFigureValidator.CheckFilterChar(figure)) {
-            figure = "lg-3023-1335.hr-828-45.sh-295-1332.hd-180-4.ea-3168-89.ca-1813-62.ch-235-1332";
-        }
-
+        figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
         if (figure.length() < 18) {
             client.send(new AlertMessageComposer(Locale.get("game.figure.invalid")));
-            return;
-        }
-
-        if (!PlayerFigureValidator.isValidFigureCode(figure, gender.toLowerCase())) {
-            client.send(new AlertMessageComposer(Locale.getOrDefault("game.figure.invalid", "That figure is invalid!")));
             return;
         }
 
@@ -44,8 +37,8 @@ public class ChangeLooksMessageEvent implements Event {
         }
 
         final int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastFigureUpdate();
-
         if (timeSinceLastUpdate >= CometSettings.playerChangeFigureCooldown) {
+            figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
             client.getPlayer().getData().setGender(gender);
             client.getPlayer().getData().setFigure(figure);
             client.getPlayer().getData().save();

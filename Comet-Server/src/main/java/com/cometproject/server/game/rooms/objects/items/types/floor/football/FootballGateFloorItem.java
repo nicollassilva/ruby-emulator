@@ -5,6 +5,8 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 
 
 public class FootballGateFloorItem extends RoomItemFloor {
@@ -46,7 +48,8 @@ public class FootballGateFloorItem extends RoomItemFloor {
             playerEntity.removeAttribute("originalFigure");
         } else {
             playerEntity.setAttribute("originalFigure", playerEntity.getPlayer().getData().getFigure());
-            playerEntity.getPlayer().getData().setFigure(newFigure + newFigureParts);
+            final String figure = ClothingValidationManager.validateLook(playerEntity.getPlayer(), newFigure + newFigureParts, FigureGender.fromString(playerEntity.getGender()));
+            playerEntity.getPlayer().getData().setFigure(figure);
         }
 
         playerEntity.getPlayer().poof();

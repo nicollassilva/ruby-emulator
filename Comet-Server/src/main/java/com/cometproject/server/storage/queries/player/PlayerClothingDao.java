@@ -1,5 +1,7 @@
 package com.cometproject.server.storage.queries.player;
 
+import com.cometproject.api.game.catalog.types.IClothingItem;
+import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.storage.SqlHelper;
 
 import java.sql.Connection;
@@ -10,7 +12,7 @@ import java.util.Set;
 
 public class PlayerClothingDao {
 
-    public static void getClothing(final int playerId, Set<String> clothingItems) {
+    public static void getClothing(final int playerId, Set<IClothingItem> clothingItems) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -23,10 +25,11 @@ public class PlayerClothingDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                if(clothingItems.contains(resultSet.getString("item_name")))
+                final IClothingItem item = CatalogManager.getInstance().getClothingItems().get(resultSet.getString("item_name"));
+                if(item == null || clothingItems.contains(item))
                     continue;
 
-                clothingItems.add(resultSet.getString("item_name"));
+                clothingItems.add(item);
             }
         } catch (SQLException e) {
             SqlHelper.handleSqlException(e);

@@ -3,7 +3,8 @@ package com.cometproject.server.game.commands.staff;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
-import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 import com.cometproject.server.network.messages.outgoing.user.details.AvatarAspectUpdateMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.player.PlayerDao;
@@ -25,9 +26,14 @@ public class MimicOfflineCommand extends ChatCommand {
             return;
         }
 
+        if(ClothingValidationManager.isInvalidLook(client.getPlayer(), figure, FigureGender.fromString(gender))){
+            sendNotif(Locale.getOrDefault("command.mimic.missing_clothing", "Você não pode copiar o visual desse usuário porque não possuí todas as peças de roupa que ele está vestindo."), client);
+            return;
+        }
+
         final PlayerEntity playerEntity = client.getPlayer().getEntity();
 
-        playerEntity.getPlayer().getData().setFigure(figure);
+        playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(client.getPlayer(), figure, FigureGender.fromString(gender)));
         playerEntity.getPlayer().getData().setGender(gender);
         playerEntity.getPlayer().getData().save();
 

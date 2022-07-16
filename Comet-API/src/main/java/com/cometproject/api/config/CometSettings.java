@@ -91,6 +91,7 @@ public class CometSettings {
      */
     public static int PLAYER_GIFT_COOLDOWN = 30;
     public static boolean PLAYER_FIGURE_VALIDATION_ALLOW = false;
+    public static boolean PLAYER_FIGURE_VALIDATION_ALLOW_V2 = true;
     public static int playerChangeFigureCooldown = 5;
 
     public static int messengerMaxFriends = 1100;

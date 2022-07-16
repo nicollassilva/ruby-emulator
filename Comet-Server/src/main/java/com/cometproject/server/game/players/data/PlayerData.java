@@ -4,15 +4,11 @@ import com.cometproject.api.game.players.data.IPlayerData;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
-import com.cometproject.server.storage.SqlHelper;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import org.eclipse.jetty.websocket.api.Session;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 
 
 public class PlayerData implements IPlayerData {
@@ -103,17 +99,6 @@ public class PlayerData implements IPlayerData {
         this.snowXp = snowXp;
         this.kisses = kisses;
         this.banner = banner;
-
-        if (this.figure != null) {
-            if (PlayerFigureValidator.CheckFilterChar(this.figure)) {
-                this.figure = DEFAULT_FIGURE;
-            }
-
-            if (!PlayerFigureValidator.isValidFigureCode(this.figure, this.gender.toLowerCase())) {
-                this.figure = DEFAULT_FIGURE;
-            }
-        }
-
         this.player = player;
 
         flush();

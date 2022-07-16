@@ -4,6 +4,8 @@ import com.cometproject.api.game.players.data.types.IWardrobeItem;
 import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.players.components.types.settings.WardrobeItem;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.outgoing.notification.AlertMessageComposer;
@@ -21,30 +23,24 @@ public class SaveWardrobeMessageEvent implements Event {
         String figure = msg.readString();
         String gender = msg.readString();
 
-        if(figure == null) return;
+        if(figure == null || figure.isEmpty()) return;
 
-        if(gender == null) return;
-
-        if (!PlayerFigureValidator.isValidFigureCode(figure, gender.toLowerCase())) {
-            client.send(new AlertMessageComposer(Locale.get("game.figure.invalid")));
-            // PlayerDao.loglook("ERRORLOOK", "4 " + figure, gender, client.getPlayer().getId(), (room != null ? room.getData().getId() : 0));
-            return;
-        }
+        if(gender == null || gender.isEmpty()) return;
 
         if (!gender.equalsIgnoreCase("m") && !gender.equalsIgnoreCase("f")) {
             return;
         }
 
+        figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
         List<IWardrobeItem> wardrobe = client.getPlayer().getSettings().getWardrobe();
-
         boolean wardrobeUpdated = false;
-
         for (IWardrobeItem item : wardrobe) {
             if (item.getSlot() == slot) {
                 item.setFigure(figure);
                 item.setGender(gender);
 
                 wardrobeUpdated = true;
+                break;
             }
         }
 

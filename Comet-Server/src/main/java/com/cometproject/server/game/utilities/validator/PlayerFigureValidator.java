@@ -1,41 +1,26 @@
 package com.cometproject.server.game.utilities.validator;
 
 import com.cometproject.api.config.CometSettings;
-import com.cometproject.server.boot.Comet;
-import org.apache.commons.io.FileUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import com.cometproject.api.utilities.Pair;
+import com.mysql.cj.util.StringUtils;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author Steve Winfield (IDK Project)
  */
 public class PlayerFigureValidator {
 
-    private static Map<Integer, Map<Integer, PlayerFigureColor>> palettes;
-    private static Map<String, PlayerFigureSetType> setTypes;
     private static Map<String, Map<Integer, List<String>>> mandatorySetTypes;
     private static List<Integer> listexeptionsetmap;
     private static List<Integer> listexeptioncolors;
 
-    public static boolean CheckFilterChar(String data) {
-        final char[] letters = data.toLowerCase().toCharArray();
-        final String allowedCharacters = "abcdefghijklmnopqrstuvwxyz1234567890-.";
-
-        for (final char chr : letters) {
-            if (!allowedCharacters.contains(chr + "")) {
-                return true;
-            }
-        }
-        return false;
+    private static final Pattern disallowed_chars = Pattern.compile("[^\\w\\d-.]");
+    public static boolean isInvalidFigure(final String figure) {
+        // any not allowed figure char
+        return disallowed_chars.matcher(figure.toLowerCase()).find();
     }
 
     public static List<Integer> setmapexeption() {
@@ -225,6 +210,117 @@ public class PlayerFigureValidator {
         return data;
     }
 
+    private static final List<String> requiredSets = new ArrayList<>();
+
+    static {
+        requiredSets.add("hd");
+        requiredSets.add("ch");
+        requiredSets.add("lg");
+    };
+
+    public static class FigurePart{
+        public final String partType;
+        public final int id;
+        public final int color;
+        public @Nullable Integer secondColor;
+
+        private FigurePart(String partType, int id, int color, @Nullable Integer secondColor) {
+            this.partType = partType;
+            this.id = id;
+            this.color = color;
+            this.secondColor = secondColor;
+        }
+    }
+
+    public static final Map<String, Set<Integer>> setColors = new HashMap<>();
+
+    public static @Nullable FigurePart parseFigurePart(final String part){
+        if(StringUtils.isNullOrEmpty(part)){
+            return null;
+        }
+
+        final String[] split = part.split("-");
+        if(split.length < 3){// dont have type-id-color
+            return null;
+        }
+
+        final String partType = split[0];
+        final int partId = Integer.parseInt(split[1]);
+        final int color = Integer.parseInt(split[2]);
+        final @Nullable Integer secondColor = split.length > 3 ? Integer.parseInt(split[3]) : null;
+
+        return new FigurePart(partType, partId, color, secondColor);
+    }
+/*
+    public static boolean isValidFigureCodeV2(final String figureCode, final String genderCode) {
+        if (!CometSettings.PLAYER_FIGURE_VALIDATION_ALLOW_V2) {
+            return true;
+        }
+
+        if (figureCode == null || isInvalidFigure(figureCode)) {
+            return false;
+        }
+
+        final String figure = figureCode.toLowerCase();
+        final String[] parts = figure.split("\\.");
+        final StringBuilder builder = new StringBuilder(15);
+        int i = 0;
+        do {
+            try {
+                FigurePart part = parseFigurePart(parts[i++]);
+                if (part == null)
+                    break;
+
+                if (!setTypes.containsKey(part.partType))
+                    break;
+
+                final FigureSet setType = setTypes.get(part.partType);
+                /*if(!setType.getSets().containsKey(part.id))
+                    break;*
+
+                builder.setLength(0);
+                builder.append('-');
+                builder.append(part.partType);
+                final Set<Integer> colors = setColors.get(part.partType);
+                if(colors == null || colors.isEmpty() || !colors.contains(part.color)){
+                    // TODO: random color
+                    break;
+                }
+
+                builder.append('-');
+                builder.append(part.color);
+                if(part.secondColor != null && !colors.contains(part.secondColor)){
+                    // TODO: random color
+                    break;
+                }
+
+                if(part.secondColor != null){
+                    builder.append('-');
+                    builder.append(part.secondColor);
+                }
+
+                // TODO: append
+
+            } catch (Exception ignore) {
+                break;
+            }
+        }
+        while (i < parts.length);
+
+        return true;
+    }
+
+    private static Pair<Integer, Integer> generateRandomColorsForSet(final Part set){
+        final Pair<Integer, Integer> ret = new Pair<>(0,null);
+/*
+        palettes.get(set.getPaletteId()).values()
+        if(set.getColorCount() == 1){
+            return ret;
+        }
+
+        return ret;
+    }*/
+
     public static boolean isValidFigureCode(final String figureCode, final String genderCode) {
         if (!CometSettings.PLAYER_FIGURE_VALIDATION_ALLOW) {
             return true;
@@ -233,7 +329,7 @@ public class PlayerFigureValidator {
         if (figureCode == null) {
             return false;
         }
-
+/*
         try {
             final String gender = genderCode.toLowerCase();
 
@@ -314,8 +410,8 @@ public class PlayerFigureValidator {
             return true;
         } catch (final Exception ex) {
             ex.printStackTrace();
-            return false;
-        }
+        }*/
+        return false;
     }
 
 }
