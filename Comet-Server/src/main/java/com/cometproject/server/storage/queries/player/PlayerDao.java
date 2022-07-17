@@ -1885,6 +1885,6 @@ public class PlayerDao {
             SqlHelper.closeSilently(sqlConnection);
         }
 
-        return 1;
+        return 0;
     }
 }
