@@ -9,14 +9,12 @@ public class NitroCommand extends ChatCommand {
     public final static String NITRO="command_nitro";
     @Override
     public void execute(Session client, String[] params) {
-        final boolean flag = !client.getPlayer().getEntity().hasAttribute(NITRO);
+        final boolean flag = client.getPlayer().setNitro(!client.getPlayer().getNitro());
         if(flag){
             sendWhisper(Locale.getOrDefault("command.nitro.on","Comando nitro ativo."),client);
-            client.getPlayer().getEntity().setAttribute(NITRO, "1");
         }
         else{
             sendWhisper(Locale.getOrDefault("command.nitro.off","Comando nitro desativado."), client);
-            client.getPlayer().getEntity().removeAttribute(NITRO);
         }
     }
 

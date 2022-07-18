@@ -213,4 +213,8 @@ public interface IPlayer {
     void setLastForwardRoomRequest(long lastForwardRoomRequest);
 
     List<Integer> getLastRoomsIds();
+
+    boolean getNitro();
+
+    boolean setNitro(boolean nitro);
 }
