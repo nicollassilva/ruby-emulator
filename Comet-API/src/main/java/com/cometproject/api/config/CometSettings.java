@@ -207,4 +207,5 @@ public class CometSettings {
         currentEventRoom = r;
     }
     public int getEventID() { return currentEventRoom; }
+    public static boolean FIGURE_VALIDATION = false;
 }
