@@ -1,5 +1,6 @@
 package com.cometproject.server.game.utilities.validator;
 
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.catalog.types.IClothingItem;
 import com.cometproject.server.game.players.types.Player;
 import com.google.common.collect.Lists;
@@ -69,6 +70,9 @@ public class ClothingValidationManager {
     }
 
     public static String validateLook(String look, FigureGender gender, boolean isHC, Set<IClothingItem> clothing) {
+       if(!CometSettings.FIGURE_VALIDATION)
+           return look;
+
         if(FIGUREDATA.palettes.size() == 0 || FIGUREDATA.settypes.size() == 0)
             return look;
 
