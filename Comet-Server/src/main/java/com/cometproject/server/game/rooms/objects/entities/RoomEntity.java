@@ -883,6 +883,19 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     public void warpImmediately(Position position) {
         this.setPosition(position);
         this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(this));
+
+        final RoomTile tile = this.getRoom().getMapping().getTile(position);
+
+        if (tile != null) {
+            this.addToTile(tile);
+
+            if (tile.getTopItemInstance() != null) {
+                if (tile.getTopItemInstance() instanceof SeatFloorItem)
+                    ((SeatFloorItem) tile.getTopItemInstance()).onEntityStepOn(this, false);
+                else
+                    tile.getTopItemInstance().onEntityStepOn(this);
+            }
+        }
     }
 
     public boolean needsUpdateCancel() {

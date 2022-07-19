@@ -13,6 +13,11 @@ public class NotificationCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] params) {
+        if(params.length < 1) {
+            client.send(new NotificationMessageComposer("generic", "Por favor, digite a mensagem da notificação."));
+            return;
+        }
+
         String image = Locale.getOrDefault("notification.image", "generic");
         String message;
 

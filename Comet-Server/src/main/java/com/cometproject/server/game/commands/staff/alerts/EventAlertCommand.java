@@ -7,8 +7,6 @@ import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
-import com.cometproject.server.game.commands.user.NitroCommand;
-import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
@@ -33,26 +31,30 @@ public class EventAlertCommand extends ChatCommand {
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
 
         for (final ISession session : NetworkManager.getInstance().getSessions().getSessions().values()) {
-            if(session.getPlayer() == null)
+            if (session.getPlayer() == null)
                 continue;
 
-            if(session.getPlayer().getEntity() != null && session.getPlayer().getNitro()
-            && session.getPlayer().getEntity().getRoom().getData().getId() != roomId){
+            if (session.getPlayer().getSettings().ignoreEvents())
+                continue;
+
+            if(session.getPlayer().getNitro()) {
+                if(session.getPlayer().getEntity() != null && session.getPlayer().getEntity().getRoom().getData().getId() != roomId) {
+                    continue;
+                }
+
                 session.send(new RoomForwardMessageComposer(roomId));
                 continue;
             }
 
-            if (!session.getPlayer().getSettings().ignoreEvents()) {
-                final IMessageComposer msg = new AdvancedAlertMessageComposer(
-                        Locale.get("command.eventalert.alerttitle"),
-                        Locale.get("command.eventalert.message")
-                                .replace("%message%", this.merge(params))
-                                .replace("%username%", session.getPlayer().getData().getUsername())
-                                .replace("%hostname%", client.getPlayer().getData().getUsername())
-                                .replace("%roomname%",room.getData().getName()),
-                        Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent);
-                session.send(msg);
-            }
+            final IMessageComposer msg = new AdvancedAlertMessageComposer(
+                    Locale.get("command.eventalert.alerttitle"),
+                    Locale.get("command.eventalert.message")
+                            .replace("%message%", this.merge(params))
+                            .replace("%username%", session.getPlayer().getData().getUsername())
+                            .replace("%hostname%", client.getPlayer().getData().getUsername())
+                            .replace("%roomname%", room.getData().getName()),
+                    Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent);
+            session.send(msg);
         }
 
         if (!CometExternalSettings.enableStaffMessengerLogs) return;
