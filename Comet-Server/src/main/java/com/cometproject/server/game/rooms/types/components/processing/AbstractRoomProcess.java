@@ -525,7 +525,7 @@ public class AbstractRoomProcess implements CometTask {
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
                 final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
                 final boolean isOverriding = isPlayer && entity.isOverriden();
-                if (!isOverriding && (!allowWalkthrough || nextPosIsTheGoal)) {
+                if (!isOverriding && (!allowWalkthrough && nextPosIsTheGoal)) {
                     isCancelled = true;
                 }
 
