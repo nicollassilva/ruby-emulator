@@ -10,8 +10,10 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredF
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -32,7 +34,7 @@ public class WiredCustomToggleStateNegative extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        final List<Position> tilesToUpdate = Lists.newArrayList();
+        final List<Position> tilesToUpdate = new ArrayList<>(this.getWiredData().getSelectedIds().size());
 
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
@@ -41,20 +43,36 @@ public class WiredCustomToggleStateNegative extends WiredActionItem {
                 continue;
             }
 
-            if(floorItem.getItemData().getData().equals("0")) {
-                floorItem.getItemData().setData("" + (floorItem.getDefinition().getInteractionCycleCount() - 1));
-            } else {
-                floorItem.getItemData().setData("" + (Integer.parseInt(floorItem.getItemData().getData()) - 1));
-            }
+            try {
+                final int current = Integer.parseInt(floorItem.getItemData().getData());
 
-            floorItem.sendUpdate();
-            tilesToUpdate.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY()));
+                if(current >= 1) {
+                    floorItem.getItemData().setData("" + (current - 1));
+                } else {
+                    floorItem.getItemData().setData("" + floorItem.getDefinition().getInteractionCycleCount());
+                }
+
+                floorItem.sendUpdate();
+
+                if(!tilesToUpdate.contains(floorItem.getPosition())) {
+                    tilesToUpdate.add(floorItem.getPosition());
+                }
+            }
+            catch (NumberFormatException e){
+                floorItem.getItemData().setData("");
+                floorItem.sendUpdate();
+                this.getWiredData().getSelectedIds().remove(itemId);
+                this.saveData();
+            }
         }
 
         for (final Position tileToUpdate : tilesToUpdate) {
-            this.getRoom().getMapping().updateTile(tileToUpdate.getX(), tileToUpdate.getY());
-        }
+            final RoomTile tile = this.getRoom().getMapping().getTile(tileToUpdate);
 
-        tilesToUpdate.clear();
+            if(tile == null)
+                continue;
+
+            tile.reload();
+        }
     }
 }
