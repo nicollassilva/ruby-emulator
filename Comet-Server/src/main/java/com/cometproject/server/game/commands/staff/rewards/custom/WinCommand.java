@@ -5,6 +5,7 @@ import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.players.data.PlayerData;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -43,6 +44,8 @@ public class WinCommand extends ChatCommand {
         } else {
             NetworkManager.getInstance().getSessions().broadcast(new NotificationMessageComposer("events", Locale.getOrDefault("command.win.female.alert", "A usuária %user% ganhou um evento.").replace("%user%", username)));
         }
+
+        ((PlayerEntity)playerSession.getPlayer().getEntity()).kick();
     }
 
     @Override

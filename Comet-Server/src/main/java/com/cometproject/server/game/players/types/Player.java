@@ -1273,12 +1273,10 @@ public class Player extends Observable implements IPlayer {
         return lastRoomsIds;
     }
 
-    @Override
     public boolean getNitro() {
         return nitroEnabled;
     }
 
-    @Override
     public boolean setNitro(boolean nitro) {
         nitroEnabled = nitro;
         return nitroEnabled;
