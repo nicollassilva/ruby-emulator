@@ -4,6 +4,7 @@ import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntityType;
+import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.sessions.Session;
 
@@ -34,7 +35,18 @@ public class TeleportToMeCommand extends ChatCommand {
             return;
         }
 
+        final RoomTile currentTargetTile = targetEntity.getTile();
+
         targetEntity.cancelWalk();
+
+        if(currentTargetTile != null) {
+            targetEntity.removeFromTile(currentTargetTile);
+
+            if(currentTargetTile.getTopItemInstance() != null) {
+                currentTargetTile.getTopItemInstance().onEntityStepOff(targetEntity);
+            }
+        }
+
         targetEntity.warpImmediately(client.getPlayer().getEntity().getPosition());
 
         sendWhisper("O usuário " + targetClient.getPlayer().getData().getUsername() + " foi teleportado para perto de você!", client);
