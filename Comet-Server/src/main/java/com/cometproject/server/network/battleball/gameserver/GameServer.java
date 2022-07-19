@@ -24,36 +24,29 @@ public class GameServer {
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws SQLException {
-        log.info("{} connected at the WebSocket server", session != null ? session.getRemoteAddress() : "null");
     }
 
     @OnWebSocketClose
     public void onClose(Session session, int statusCode, String reason) {
-        HashMap<String, String> player = Server.userMap.get(session);
         Server.userMap.remove(session);
-        final String username = player != null ? player.get("username") : "null";
-        log.info("{} left the WebSocket server at status code {} reason: {}", username, statusCode, reason);
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws SQLException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
         final JSONObject data = new JSONObject(message);
-        log.debug("WebSocket packet received='{}'", data);
 
         final IncomingEventManager incomingEventManager = new IncomingEventManager();
+
         if(data.has("header") && data.has("data")) {
             if(incomingEventManager.getEvents().containsKey(data.getInt("header"))) {
-                Class<? extends IncomingEvent> eventClass = incomingEventManager.getEvents().get(data.getInt("header"));
-                IncomingEvent event = eventClass.getDeclaredConstructor().newInstance();
+                final Class<? extends IncomingEvent> eventClass = incomingEventManager.getEvents().get(data.getInt("header"));
+                final IncomingEvent event = eventClass.getDeclaredConstructor().newInstance();
+
                 event.data = data;
                 event.session = session;
-                log.debug("Handling WebSocket packet: '{}' for session: '{}'", eventClass.getName(), session.getRemoteAddress());
+
                 event.handle();
-            } else {
-                log.info("Unknow WebSocket packet [" + data.has("header") + "]");
             }
-        } else {
-            log.info("Invalid WebSocket packet received");
         }
     }
 }
