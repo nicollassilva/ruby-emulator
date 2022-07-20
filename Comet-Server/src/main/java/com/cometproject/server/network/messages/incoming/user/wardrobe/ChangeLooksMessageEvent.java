@@ -27,6 +27,7 @@ public class ChangeLooksMessageEvent implements Event {
         if (figure.isEmpty() || gender.isEmpty()) return;
 
         figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
+
         if (figure.length() < 18) {
             client.send(new AlertMessageComposer(Locale.get("game.figure.invalid")));
             return;
