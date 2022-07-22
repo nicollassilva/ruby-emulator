@@ -22,7 +22,7 @@ public class AcceptMembershipMessageEvent implements Event {
         if (!client.getPlayer().getGroups().contains(groupId))
             return;
 
-        IGroup group = GameContext.getCurrent().getGroupService().getGroup(groupId);
+        final IGroup group = GameContext.getCurrent().getGroupService().getGroup(groupId);
 
         if (group == null || (group.getData().getOwnerId() != client.getPlayer().getId() &&
                 !group.getMembers().getAdministrators().contains(client.getPlayer().getId()))) {
@@ -35,7 +35,7 @@ public class AcceptMembershipMessageEvent implements Event {
         GameContext.getCurrent().getGroupService().removeRequest(group, playerId);
         GameContext.getCurrent().getGroupService().addGroupMember(group, new GroupMemberFactory().create(playerId, groupId, GroupAccessLevel.MEMBER));
 
-        Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+        final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
         if (session != null && session.getPlayer() != null) {
             session.getPlayer().getGroups().add(groupId);

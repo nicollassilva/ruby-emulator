@@ -51,13 +51,13 @@ public class GroupMembersMessageComposer extends MessageComposer {
         if (groupMembers.size() == 0) {
             msg.writeInt(0);
         } else {
-            List<List<PlayerAvatar>> paginatedMembers = paginateMembers(groupMembers, MEMBERS_PER_PAGE);
+            final List<List<PlayerAvatar>> paginatedMembers = paginateMembers(groupMembers, MEMBERS_PER_PAGE);
 
             msg.writeInt(paginatedMembers.get(page).size());
 
             int dateJoined = 0;
 
-            for (PlayerAvatar groupMember : paginatedMembers.get(page)) {
+            for (final PlayerAvatar groupMember : paginatedMembers.get(page)) {
                 if (groupMember.tempData() == null) {
                     if (requestType == 1) {
                         msg.writeInt(groupMember.getId() == group.getOwnerId() ? 0 : 1);
