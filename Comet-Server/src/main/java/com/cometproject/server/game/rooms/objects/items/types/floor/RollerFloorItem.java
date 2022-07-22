@@ -50,7 +50,10 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     @Override
     public void onEntityStepOn(final RoomEntity entity) {
         event.setTotalTicks(this.getTickCount());
-        this.stepOnRoller.add(entity);
+
+        if(!this.stepOnRoller.contains(entity)) {
+            this.stepOnRoller.add(entity);
+        }
     }
 
     @Override
@@ -66,6 +69,10 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
     public void onEventComplete(final RollerFloorItemEvent event) {
         if (this.cycleCancelled) {
             this.cycleCancelled = false;
+        }
+
+        if(this.getEntitiesOnItem().isEmpty()) {
+            this.stepOnRoller.clear();
         }
 
         synchronized (this) {
@@ -94,10 +101,12 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 : this.getRoom().getEntities().getEntitiesAt(this.getPosition());
 
         final Iterator<RoomEntity> entityIterator = entities.iterator();
+
         while (entityIterator.hasNext()) {
             final RoomEntity entity = entityIterator.next();
             final boolean isNotOnRoller = entity.getPosition().getX() != this.getPosition().getX() || entity.getPosition().getY() != this.getPosition().getY();
             final boolean hasEntityHoldingRoller = entityIterator.hasNext();
+
             if (isNotOnRoller && !hasEntityHoldingRoller) {
                 continue;
             }
