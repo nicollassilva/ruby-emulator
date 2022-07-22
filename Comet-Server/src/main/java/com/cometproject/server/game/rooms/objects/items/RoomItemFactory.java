@@ -312,6 +312,9 @@ public class RoomItemFactory {
             put("football_goal", FootballGoalFloorItem.class);
             put("football_score", FootballScoreFloorItem.class);
 
+            put("generic_small_score", GenericSmallScoreFloorItem.class);
+            put("generic_large_score", GenericLargeScoreFloorItem.class);
+
             put("snowb_slope", SnowboardSlopeFloorItem.class);
             put("snowb_rail", SnowboardJumpFloorItem.class);
             put("snowb_jump", SnowboardJumpFloorItem.class);
