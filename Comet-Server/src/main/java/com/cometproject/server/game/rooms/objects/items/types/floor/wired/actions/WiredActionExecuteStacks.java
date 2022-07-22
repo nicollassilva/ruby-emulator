@@ -27,7 +27,6 @@ public class WiredActionExecuteStacks extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        System.out.println("To aqui");
         final List<Position> tilesToExecute = Lists.newArrayList();
         final List<RoomItemFloor> actions = Lists.newArrayList();
         int nbEffectMsg = 0;

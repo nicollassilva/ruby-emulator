@@ -45,44 +45,52 @@ public class FootballTimerFloorItem extends RoomItemFloor {
         AbstractGameTimerFloorItem.InteractionGameTimerAction action = AbstractGameTimerFloorItem.InteractionGameTimerAction.getByAction(requestData);
 
         if(action == AbstractGameTimerFloorItem.InteractionGameTimerAction.INCREASE_TIME) {
-            if(this.state == GameState.RUNNING) return false;
+            if(!isWiredTriggered) {
+                if(this.state == GameState.RUNNING) return false;
 
-            if(this.state == GameState.PAUSED) {
-                this.state = GameState.IDLE;
-                this.time = 0;
-                this.getItemData().setData(0);
-                this.sendUpdate();
-                this.onTimerEnd();
+                if(this.state == GameState.PAUSED) {
+                    this.state = GameState.IDLE;
+                    this.time = 0;
+                    this.getItemData().setData(0);
+                    this.sendUpdate();
+                    this.onTimerEnd();
+                }
             }
 
             int time = Integer.parseInt(this.getItemData().getData());
 
-            if (time == 0 || time == 30 || time == 60 || time == 120 || time == 180 || time == 300 || time == 600) {
-                switch (time) {
-                    default:
-                        time = 0;
-                        break;
-                    case 0:
-                        time = 30;
-                        break;
-                    case 30:
-                        time = 60;
-                        break;
-                    case 60:
-                        time = 120;
-                        break;
-                    case 120:
-                        time = 180;
-                        break;
-                    case 180:
-                        time = 300;
-                        break;
-                    case 300:
-                        time = 600;
-                        break;
+            if(!isWiredTriggered) {
+                if (time == 0 || time == 30 || time == 60 || time == 120 || time == 180 || time == 300 || time == 600) {
+                    switch (time) {
+                        default:
+                            time = 0;
+                            break;
+                        case 0:
+                            time = 30;
+                            break;
+                        case 30:
+                            time = 60;
+                            break;
+                        case 60:
+                            time = 120;
+                            break;
+                        case 120:
+                            time = 180;
+                            break;
+                        case 180:
+                            time = 300;
+                            break;
+                        case 300:
+                            time = 600;
+                            break;
+                    }
+                } else {
+                    time = 0;
                 }
             } else {
-                time = 0;
+                if(time < 570) {
+                    time += 30;
+                }
             }
 
             this.time = time;
@@ -94,8 +102,11 @@ public class FootballTimerFloorItem extends RoomItemFloor {
                 // Tell the room we have an active football game.
                 this.getRoom().setAttribute("football", true);
 
-                for (RoomItemFloor scoreItem : this.getRoom().getItems().getByClass(FootballScoreFloorItem.class)) {
-                    ((FootballScoreFloorItem) scoreItem).reset();
+                for (final FootballScoreFloorItem scoreItem : this.getRoom().getItems().getByClass(FootballScoreFloorItem.class)) {
+                    if(scoreItem == null)
+                        continue;
+
+                    scoreItem.reset();
                 }
 
                 WiredTriggerGameStarts.executeTriggers(this.getRoom());

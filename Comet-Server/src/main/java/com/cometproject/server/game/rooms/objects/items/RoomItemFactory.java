@@ -38,7 +38,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.custom.WiredConditionSuperWired;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.custom.*;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.negative.memory.WiredNegativeConditionMemoryEquals;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.custom.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.memory.*;
@@ -123,6 +122,7 @@ public class RoomItemFactory {
             put("wf_act_bot_clothes", WiredActionBotClothes.class);
             put("wf_act_bot_follow_avatar", WiredActionBotFollowAvatar.class);
             put("wf_act_call_stacks", WiredActionExecuteStacks.class);
+            put("wf_act_increment_timers", WiredActionIncrementTimers.class);
 
             put("wf_trg_says_something", WiredTriggerPlayerSaysKeyword.class);
             put("wf_trg_says_sycommand", WiredTriggerUserSaysCommand.class);

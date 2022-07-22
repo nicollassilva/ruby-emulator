@@ -55,7 +55,9 @@ public class ItemProcessComponent implements CometTask {
         this.future = CometThreadManager.getInstance().executePeriodic(this, 0, INTERVAL, TimeUnit.MILLISECONDS);
         this.saveFuture = CometThreadManager.getInstance().executePeriodic(this::saveQueueTick, 1000, 1000, TimeUnit.MILLISECONDS);
 
-        log.debug("Processing started");
+        if(Comet.isDebugging) {
+            log.debug("Processing started");
+        }
     }
 
     private void saveQueueTick() {
@@ -79,7 +81,9 @@ public class ItemProcessComponent implements CometTask {
 
             this.saveQueueTick();
 
-            log.debug("Processing stopped");
+            if(Comet.isDebugging) {
+                log.debug("Processing stopped");
+            }
         }
     }
 

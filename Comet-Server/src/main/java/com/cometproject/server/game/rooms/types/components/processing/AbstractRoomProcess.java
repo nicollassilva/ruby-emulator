@@ -162,7 +162,9 @@ public class AbstractRoomProcess implements CometTask {
 
         this.active = true;
 
-        log.debug("Processing started");
+        if(Comet.isDebugging) {
+            log.debug("Processing started");
+        }
     }
 
     public void stop() {

@@ -251,7 +251,9 @@ public class Player extends Observable implements IPlayer {
 
         }
 
-        this.session.getLogger().debug(this.getData().getUsername() + " logged out");
+        if(Comet.isDebugging) {
+            this.session.getLogger().debug(this.getData().getUsername() + " logged out");
+        }
 
         PlayerDao.updatePlayerStatus(this, false, false);
 

@@ -105,7 +105,6 @@ public abstract class RoomGame implements CometTask {
         this.state = GameState.RUNNING;
 
         this.future = CometThreadManager.getInstance().executePeriodic(this, 0, 1, TimeUnit.SECONDS);
-        log.debug("Game active for " + amount + " seconds");
     }
 
     protected GameComponent getGameComponent() {
