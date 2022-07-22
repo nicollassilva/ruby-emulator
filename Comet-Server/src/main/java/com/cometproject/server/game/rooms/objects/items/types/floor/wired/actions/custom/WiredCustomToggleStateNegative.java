@@ -4,6 +4,8 @@ import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.GenericLargeScoreFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.GenericSmallScoreFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballTimerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTimerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
@@ -43,13 +45,15 @@ public class WiredCustomToggleStateNegative extends WiredActionItem {
                 continue;
             }
 
+            final int interactionCount = this.getCorrectInteractionCount(floorItem);
+
             try {
                 final int current = Integer.parseInt(floorItem.getItemData().getData());
 
                 if(current >= 1) {
                     floorItem.getItemData().setData("" + (current - 1));
                 } else {
-                    floorItem.getItemData().setData("" + floorItem.getDefinition().getInteractionCycleCount());
+                    floorItem.getItemData().setData("" + interactionCount);
                 }
 
                 floorItem.sendUpdate();
@@ -74,5 +78,17 @@ public class WiredCustomToggleStateNegative extends WiredActionItem {
 
             tile.reload();
         }
+    }
+
+    public int getCorrectInteractionCount(RoomItemFloor floorItem) {
+        if(floorItem instanceof GenericSmallScoreFloorItem) {
+            return ((GenericSmallScoreFloorItem) floorItem).SCORE_LIMIT;
+        }
+
+        if(floorItem instanceof GenericLargeScoreFloorItem) {
+            return ((GenericLargeScoreFloorItem) floorItem).SCORE_LIMIT;
+        }
+
+        return floorItem.getDefinition().getInteractionCycleCount();
     }
 }

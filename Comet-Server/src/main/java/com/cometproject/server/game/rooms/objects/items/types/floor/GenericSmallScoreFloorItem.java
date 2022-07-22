@@ -22,7 +22,7 @@ public class GenericSmallScoreFloorItem extends RoomItemFloor {
     @Override
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTriggered) {
         if (isWiredTriggered) {
-            requestData = 1;
+            requestData = 2;
         } else {
             if(!(entity instanceof PlayerEntity))
                 return false;
