@@ -2,6 +2,7 @@ package com.cometproject.server.game.rooms.objects.items.types.floor.wired.addon
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
@@ -13,8 +14,6 @@ public class WiredAddonPyramid extends RoomItemFloor {
 
     public WiredAddonPyramid(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
-
-        this.setTicks(RandomUtil.getRandomInt(5, 8) * 2);
     }
 
     @Override
@@ -28,21 +27,25 @@ public class WiredAddonPyramid extends RoomItemFloor {
     }
 
     @Override
-    public void onTickComplete() {
-        if (this.hasEntity) {
-            this.setTicks(RoomItemFactory.getProcessTime(1.0));
-            return;
+    public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
+        if(!(entity instanceof PlayerEntity) || hasEntity)
+            return false;
+
+        this.toggleState();
+        this.sendUpdate();
+
+        if(!isWiredTrigger) {
+            this.saveData();
         }
 
+        return true;
+    }
+
+    private void toggleState() {
         if (this.getItemData().getData().equals("1")) {
             this.getItemData().setData("0");
         } else {
             this.getItemData().setData("1");
         }
-
-        this.sendUpdate();
-        //this.setTicks(RoomItemFactory.getProcessTime(RandomUtil.getRandomInt(5, 8) * 2));
-
-        this.getRoom().getMapping().updateTile(this.getPosition().getX(), this.getPosition().getY());
     }
 }

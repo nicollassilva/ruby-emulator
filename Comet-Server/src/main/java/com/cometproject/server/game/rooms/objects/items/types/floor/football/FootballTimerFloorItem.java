@@ -41,10 +41,12 @@ public class FootballTimerFloorItem extends RoomItemFloor {
                 return true;
             }
         }
+
         AbstractGameTimerFloorItem.InteractionGameTimerAction action = AbstractGameTimerFloorItem.InteractionGameTimerAction.getByAction(requestData);
 
         if(action == AbstractGameTimerFloorItem.InteractionGameTimerAction.INCREASE_TIME) {
             if(this.state == GameState.RUNNING) return false;
+
             if(this.state == GameState.PAUSED) {
                 this.state = GameState.IDLE;
                 this.time = 0;
@@ -54,7 +56,7 @@ public class FootballTimerFloorItem extends RoomItemFloor {
             }
 
             int time = Integer.parseInt(this.getItemData().getData());
-            this.time = time;
+
             if (time == 0 || time == 30 || time == 60 || time == 120 || time == 180 || time == 300 || time == 600) {
                 switch (time) {
                     default:

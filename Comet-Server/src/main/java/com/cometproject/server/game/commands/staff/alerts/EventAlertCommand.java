@@ -7,6 +7,7 @@ import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
@@ -42,6 +43,7 @@ public class EventAlertCommand extends ChatCommand {
                     continue;
                 }
 
+                ((PlayerEntity) session.getPlayer().getEntity()).leaveRoom(false, false, true);
                 session.send(new RoomForwardMessageComposer(roomId));
                 continue;
             }

@@ -27,12 +27,14 @@ public class WiredActionExecuteStacks extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
+        System.out.println("To aqui");
         final List<Position> tilesToExecute = Lists.newArrayList();
         final List<RoomItemFloor> actions = Lists.newArrayList();
         int nbEffectMsg = 0;
 
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+
             if (floorItem == null || floorItem instanceof WiredActionExecuteStacks)
                 continue;
 
