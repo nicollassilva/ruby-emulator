@@ -8,6 +8,8 @@ import com.cometproject.server.game.rooms.types.Room;
 public class WiredTriggerAtGivenTimeLong extends WiredTriggerAtGivenTime {
     private static final int PARAM_TICK_LENGTH = 0;
 
+    private boolean needsReset = false;
+
     public WiredTriggerAtGivenTimeLong(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
 
@@ -20,18 +22,16 @@ public class WiredTriggerAtGivenTimeLong extends WiredTriggerAtGivenTime {
         for (final WiredTriggerAtGivenTimeLong wiredItem : getTriggers(room, WiredTriggerAtGivenTimeLong.class)) {
             if(wiredItem == null) continue;
 
-            if (timer >= wiredItem.getTime()) {
+            if (timer >= wiredItem.getTime() && !wiredItem.needsReset()) {
                 if (wiredItem.evaluate(null, null)) {
                     wasExecuted = true;
+
+                    wiredItem.setNeedsReset(true);
                 }
             }
         }
 
         return wasExecuted;
-    }
-
-    public int getTime() {
-        return this.getWiredData().getParams().get(PARAM_TICK_LENGTH);
     }
 
     @Override
@@ -42,5 +42,17 @@ public class WiredTriggerAtGivenTimeLong extends WiredTriggerAtGivenTime {
     @Override
     public int getInterface() {
         return 3;
+    }
+
+    public int getTime() {
+        return this.getWiredData().getParams().get(PARAM_TICK_LENGTH);
+    }
+
+    public void setNeedsReset(boolean needsReset) {
+        this.needsReset = needsReset;
+    }
+
+    public boolean needsReset() {
+        return this.needsReset;
     }
 }

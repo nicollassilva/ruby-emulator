@@ -54,7 +54,7 @@ public class WiredActionMoveToDirection extends WiredActionItem {
 
                 if (floorItem == null) continue;
 
-                if (floorItem.getMoveDirection() == -1 || floorItem.getLastStartDir() != startDir) {
+                if (floorItem.getMoveDirection() == -1 || floorItem.getLastStartDir() == startDir) {
                     floorItem.setMoveDirection(startDir);
                     this.setLastStartDir(startDir);
                 }
