@@ -59,13 +59,13 @@ public class BuyRoomCommand extends ChatCommand {
             return;
         }
 
-        //Decrement from the buyer the credits
-        client.getPlayer().getData().decreaseCredits(roomPrice);
+        //Decrement from the buyer the diamonds
+        client.getPlayer().getData().decreaseVipPoints(roomPrice);
         client.getPlayer().getData().save();
         client.getPlayer().sendBalance();
 
-        //Increment to the room owner the credits
-        roomOwner.getPlayer().getData().increaseCredits(roomPrice);
+        //Increment to the room owner the diamonds
+        roomOwner.getPlayer().getData().increaseVipPoints(roomPrice);
         roomOwner.getPlayer().getData().save();
         roomOwner.getPlayer().sendBalance();
 
