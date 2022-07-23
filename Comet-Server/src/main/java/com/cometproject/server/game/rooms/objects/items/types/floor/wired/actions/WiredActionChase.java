@@ -60,10 +60,6 @@ public class WiredActionChase extends WiredActionItem {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
             if (floorItem == null)
                 continue;
-/*
-            if (floorItem.getMoveDirection() == -1) {
-                floorItem.setMoveDirection(MOVE_DIR[RandomUtil.getRandomInt(0, 3)]);
-            }*/
 
             final List<PlayerEntity> entities = getNearestPlayerEntitiesInRadius(floorItem, CHASE_RADIUS);
             boolean collision = false;
@@ -79,11 +75,6 @@ public class WiredActionChase extends WiredActionItem {
             }
 
             final List<Square> nearestEntityPath = getNearestEntityPath(floorItem, entities);
-           /* if(nearestEntityPath.size() == 1){ // it's touching
-                WiredTriggerCollision.executeTriggers(entities.get(0), floorItem);
-                continue;
-            }*/
-
             if (nearestEntityPath.size() == 0) {
                 moveFloorItemRandomly(floorItem);
                 continue;
@@ -99,10 +90,6 @@ public class WiredActionChase extends WiredActionItem {
                 moveFloorItemRandomly(floorItem);
             }
         }
-    }
-
-    public boolean isCollided(PlayerEntity entity, RoomItemFloor floorItem) {
-        return entity.getPosition().touching(floorItem.getPosition()) && entity.getPosition().equals(floorItem.getPosition());
     }
 
     private List<Square> getNearestEntityPath(RoomItemFloor item, List<PlayerEntity> entities) {
@@ -122,7 +109,6 @@ public class WiredActionChase extends WiredActionItem {
         final List<PlayerEntity> entities = new ArrayList<>();
         for (int x = item.getPosition().getX() - radius; x < item.getPosition().getX() + radius; x++) {
             for (int y = item.getPosition().getY() - radius; y < item.getPosition().getY() + radius; y++) {
-                // entities.addAll(this.getRoom().getEntities().getEntitiesAt(new Position(x,y))); we need just once per title
                 for (final RoomEntity entity : this.getRoom().getEntities().getEntitiesAt(new Position(x, y))) {
                     if (entity instanceof PlayerEntity) {
                         entities.add((PlayerEntity) entity);
@@ -145,30 +131,13 @@ public class WiredActionChase extends WiredActionItem {
     private void moveFloorItemRandomly(RoomItemFloor item) {
         /* TODO: isso ainda nao está pronto. na versao final, ele ira andar em uma determinada direção
          e randomicamente alterar a direção. mas até agora está ok
-        if(MOVEMENT_RANDOM_CHANCE > RandomUtil.getRandomInt(0, 100)){
-            item.setMoveDirection(RandomUtil.getRandomInt(0,3));
-        }*/
+         */
 
         final Position currentPosition = item.getPosition().copy();
         final Position newPosition = WiredActionMoveRotate.getRandomPosition(1, currentPosition, this.getRoom());
         if (this.getRoom().getItems().moveFloorItemWired(item, newPosition, item.getRotation(), true, true, true)) {
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, item.getVirtualId()));
         }
-        /*
-        final RoomTile frontTile = this.getRoom().getMapping().getTile(item.getPosition().add(Pathfinder.movePoints[item.getMoveDirection()]));
-        if(frontTile != null && this.getRoom().getItems().moveFloorItemWired(item, frontTile.getPosition(), item.getRotation(), true, true, true)) {
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(item.getPosition(), frontTile.getPosition(), this.getVirtualId(), 0, item.getVirtualId()));
-            return;
-        }
-
-        for (final int dir : MOVE_DIR) {
-            final RoomTile someTile = this.getRoom().getMapping().getTile(item.getPosition().add(Pathfinder.movePoints[dir]));
-            if(someTile != null && this.getRoom().getItems().moveFloorItemWired(item, someTile.getPosition(), item.getRotation(), true, true, true)) {
-                this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(item.getPosition(), someTile.getPosition(), this.getVirtualId(), 0, item.getVirtualId()));
-                //item.setMoveDirection(dir);
-                return;
-            }
-        }*/
     }
 
     private static boolean isCollided(RoomItemFloor item, RoomEntity entity){
