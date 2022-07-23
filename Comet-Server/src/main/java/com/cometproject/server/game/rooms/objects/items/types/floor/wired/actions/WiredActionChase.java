@@ -16,6 +16,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectBundleMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.utilities.RandomUtil;
 import com.cometproject.server.utilities.comparators.PositionComparator;
 
@@ -59,21 +60,30 @@ public class WiredActionChase extends WiredActionItem {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
             if (floorItem == null)
                 continue;
-
+/*
             if (floorItem.getMoveDirection() == -1) {
                 floorItem.setMoveDirection(MOVE_DIR[RandomUtil.getRandomInt(0, 3)]);
-            }
+            }*/
 
             final List<PlayerEntity> entities = getNearestPlayerEntitiesInRadius(floorItem, CHASE_RADIUS);
+            boolean collision = false;
             for (final PlayerEntity entity : entities) {
-                if (isCollided(entity, floorItem)) {
-                    // call colision trigger and skip for dont waste resources
-                    WiredTriggerCollisionPlayer.executeTriggers(entity);
-                    continue;
+                if (isCollided(floorItem, entity)) { // call colision trigger and skip for dont waste resources
+                    WiredTriggerCollision.executeTriggers(entity, floorItem);
+                    collision = true;
                 }
             }
 
+            if(collision){
+                continue;
+            }
+
             final List<Square> nearestEntityPath = getNearestEntityPath(floorItem, entities);
+           /* if(nearestEntityPath.size() == 1){ // it's touching
+                WiredTriggerCollision.executeTriggers(entities.get(0), floorItem);
+                continue;
+            }*/
+
             if (nearestEntityPath.size() == 0) {
                 moveFloorItemRandomly(floorItem);
                 continue;
@@ -133,10 +143,18 @@ public class WiredActionChase extends WiredActionItem {
 
 
     private void moveFloorItemRandomly(RoomItemFloor item) {
+        /* TODO: isso ainda nao está pronto. na versao final, ele ira andar em uma determinada direção
+         e randomicamente alterar a direção. mas até agora está ok
         if(MOVEMENT_RANDOM_CHANCE > RandomUtil.getRandomInt(0, 100)){
             item.setMoveDirection(RandomUtil.getRandomInt(0,3));
-        }
+        }*/
 
+        final Position currentPosition = item.getPosition().copy();
+        final Position newPosition = WiredActionMoveRotate.getRandomPosition(1, currentPosition, this.getRoom());
+        if (this.getRoom().getItems().moveFloorItemWired(item, newPosition, item.getRotation(), true, true, true)) {
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, item.getVirtualId()));
+        }
+        /*
         final RoomTile frontTile = this.getRoom().getMapping().getTile(item.getPosition().add(Pathfinder.movePoints[item.getMoveDirection()]));
         if(frontTile != null && this.getRoom().getItems().moveFloorItemWired(item, frontTile.getPosition(), item.getRotation(), true, true, true)) {
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(item.getPosition(), frontTile.getPosition(), this.getVirtualId(), 0, item.getVirtualId()));
@@ -146,10 +164,14 @@ public class WiredActionChase extends WiredActionItem {
         for (final int dir : MOVE_DIR) {
             final RoomTile someTile = this.getRoom().getMapping().getTile(item.getPosition().add(Pathfinder.movePoints[dir]));
             if(someTile != null && this.getRoom().getItems().moveFloorItemWired(item, someTile.getPosition(), item.getRotation(), true, true, true)) {
-                item.setMoveDirection(dir);
                 this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(item.getPosition(), someTile.getPosition(), this.getVirtualId(), 0, item.getVirtualId()));
+                //item.setMoveDirection(dir);
                 return;
             }
-        }
+        }*/
+    }
+
+    private static boolean isCollided(RoomItemFloor item, RoomEntity entity){
+        return item.getPosition().equals(entity.getPosition()) || item.getPosition().distanceTo(entity.getPosition()) == 1;
     }
 }
