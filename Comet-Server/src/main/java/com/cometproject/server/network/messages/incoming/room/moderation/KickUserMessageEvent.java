@@ -10,14 +10,14 @@ import com.cometproject.server.protocol.messages.MessageEvent;
 
 public class KickUserMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        int playerId = msg.readInt();
+        final int playerId = msg.readInt();
 
         if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().getRoom() == null) {
             return;
         }
 
-        Room room = client.getPlayer().getEntity().getRoom();
-        PlayerEntity playerEntity = room.getEntities().getEntityByPlayerId(playerId);
+        final Room room = client.getPlayer().getEntity().getRoom();
+        final PlayerEntity playerEntity = room.getEntities().getEntityByPlayerId(playerId);
 
         if (playerEntity == null) {
             return;
@@ -28,8 +28,7 @@ public class KickUserMessageEvent implements Event {
             return;
         }
 
-
-        if (room.getData().getOwnerId() == playerEntity.getPlayerId() || !playerEntity.getPlayer().getPermissions().getRank().roomKickable()) {
+        if (room.getData().getOwnerId() == playerEntity.getPlayer().getId() || !playerEntity.getPlayer().getPermissions().getRank().roomKickable()) {
             return;
         }
 
