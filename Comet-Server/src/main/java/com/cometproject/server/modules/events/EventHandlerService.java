@@ -74,7 +74,7 @@ public class EventHandlerService implements EventHandler {
             this.invoke(eventClass, args);
             log.debug(String.format("Event handled: %s\n", eventClass.getSimpleName()));
         } else {
-            log.debug(String.format("Unhandled event: %s\n", eventClass.getSimpleName()));
+            //log.debug(String.format("Unhandled event: %s\n", eventClass.getSimpleName()));
         }
 
         return args.isCancelled();

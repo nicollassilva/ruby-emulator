@@ -41,25 +41,24 @@ public class EventAlertCommand extends ChatCommand {
                 }
 
                 if(session.getPlayer().getEntity().getRoom() != null) {
-                    ((PlayerEntity) session.getPlayer().getEntity()).leaveRoom(false, false, true);
+                    ((PlayerEntity) session.getPlayer().getEntity()).leaveRoom(false, false, false);
                 }
 
                 session.send(new RoomForwardMessageComposer(roomId));
-                continue;
             }
 
             if (session.getPlayer().getSettings().ignoreEvents())
                 continue;
 
-            final IMessageComposer msg = new AdvancedAlertMessageComposer(
+            session.send(new AdvancedAlertMessageComposer(
                     Locale.get("command.eventalert.alerttitle"),
                     Locale.get("command.eventalert.message")
                             .replace("%message%", this.merge(params))
                             .replace("%username%", session.getPlayer().getData().getUsername())
                             .replace("%hostname%", client.getPlayer().getData().getUsername())
                             .replace("%roomname%", room.getData().getName()),
-                    Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent);
-            session.send(msg);
+                    Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent)
+            );
         }
 
         if (!CometExternalSettings.enableStaffMessengerLogs) return;
