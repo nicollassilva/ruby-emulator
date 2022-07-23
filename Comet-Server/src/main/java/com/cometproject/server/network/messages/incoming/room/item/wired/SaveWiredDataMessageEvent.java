@@ -10,20 +10,15 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredF
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredUtil;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionGiveReward;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionMatchToSnapshot;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredCustomForwardRoom;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.WiredConditionMatchSnapshot;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.logging.entries.CommandLogEntry;
 import com.cometproject.server.network.messages.incoming.Event;
-import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.items.wired.SaveWiredMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.pin.EmailVerificationWindowMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
-import com.cometproject.server.storage.StorageManager;
 
 
 public class SaveWiredDataMessageEvent implements Event {
@@ -52,7 +47,7 @@ public class SaveWiredDataMessageEvent implements Event {
             return;
         }
 
-       final WiredFloorItem wiredItem = ((WiredFloorItem) room.getItems().getFloorItem(itemId));
+        final WiredFloorItem wiredItem = ((WiredFloorItem) room.getItems().getFloorItem(itemId));
 
         if (wiredItem == null) return;
 
@@ -90,12 +85,8 @@ public class SaveWiredDataMessageEvent implements Event {
             }
         }
 
-        if(wiredItem instanceof WiredCustomForwardRoom && filteredMessage.equals(room.getId() + "")){
-            client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("wired.forward_room.current_room_id","Não é possível usar esse wired com o id desse mesmo quarto")));
-            return;
-        }
-
         wiredItem.getWiredData().setText(filteredMessage);
+
         wiredItem.getWiredData().getSelectedIds().clear();
 
         int selectedItemCount = msg.readInt();

@@ -17,7 +17,7 @@ public class CheckReleaseMessageEvent implements Event {
             Session.CLIENT_VERSION = this.getReleaseNumber(release);
         }
 
-        client.getLogger().debug("Client running on release: " + Session.CLIENT_VERSION);
+        //client.getLogger().debug("Client running on release: " + Session.CLIENT_VERSION);
     }
 
     private int getReleaseNumber(String releaseString) {

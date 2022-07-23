@@ -178,7 +178,9 @@ public class AbstractRoomProcess implements CometTask {
             if (!this.adaptiveProcessTimes)
                 this.processFuture.cancel(false);
 
-            log.debug("Processing stopped");
+            if(Comet.isDebugging) {
+                log.debug("Processing stopped");
+            }
         }
     }
 

@@ -278,7 +278,9 @@ public class Room implements Attributable, IRoom {
             this.log.warn("Room [" + this.getData().getId() + "][" + this.getData().getName() + "] took " + timeTaken + "ms to dispose");
         }
 
-        this.log.debug("Room has been disposed");
+        if(Comet.isDebugging) {
+            this.log.debug("Room has been disposed");
+        }
     }
 
     public void tick() {
