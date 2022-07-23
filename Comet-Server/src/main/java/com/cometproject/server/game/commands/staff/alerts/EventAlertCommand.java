@@ -35,18 +35,21 @@ public class EventAlertCommand extends ChatCommand {
             if (session.getPlayer() == null)
                 continue;
 
-            if (session.getPlayer().getSettings().ignoreEvents())
-                continue;
-
             if(session.getPlayer().getNitro()) {
                 if(session.getPlayer().getEntity() != null && session.getPlayer().getEntity().getRoom().getData().getId() == roomId) {
                     continue;
                 }
 
-                ((PlayerEntity) session.getPlayer().getEntity()).leaveRoom(false, false, true);
+                if(session.getPlayer().getEntity().getRoom() != null) {
+                    ((PlayerEntity) session.getPlayer().getEntity()).leaveRoom(false, false, true);
+                }
+
                 session.send(new RoomForwardMessageComposer(roomId));
                 continue;
             }
+
+            if (session.getPlayer().getSettings().ignoreEvents())
+                continue;
 
             final IMessageComposer msg = new AdvancedAlertMessageComposer(
                     Locale.get("command.eventalert.alerttitle"),

@@ -10,6 +10,7 @@ public class NitroCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         final boolean flag = client.getPlayer().setNitro(!client.getPlayer().getNitro());
+
         if(flag){
             sendWhisper(Locale.getOrDefault("command.nitro.on","Comando nitro ativo."),client);
         }

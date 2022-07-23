@@ -212,6 +212,9 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.atravessar.name", "atravessar"), new AtravessarCommand());
         this.addCommand(Locale.getOrDefault("command.campainha.name", "campainha"), new CampainhaCommand());
         this.addCommand(Locale.getOrDefault("command.count_furnis.name", "countfurnis"), new CountFurnisCommand());
+        this.addCommand(Locale.getOrDefault("command.slime.name", "slime"), new SlimeCommand());
+        this.addCommand(Locale.getOrDefault("command.superpush.name", "spush"), new SuperPushCommand());
+        this.addCommand(Locale.getOrDefault("command.roomban.name", "roomban"), new RoomBanUserCommand());
     }
 
     /**
