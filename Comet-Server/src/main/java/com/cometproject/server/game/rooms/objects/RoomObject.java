@@ -11,6 +11,7 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.utilities.comparators.PositionComparator;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,20 +68,11 @@ public abstract class RoomObject implements IRoomObject, Positionable {
      *
      * @return The closest player entity | null if one couldn't be found
      */
-    public PlayerEntity nearestPlayerEntity() {
-        PositionComparator positionComporator = new PositionComparator(this);
-
-        List<PlayerEntity> nearestEntities = this.getRoom().getEntities().getPlayerEntities();
-
-        nearestEntities.sort(positionComporator);
-
-        for (PlayerEntity playerEntity : nearestEntities) {
-//            if (playerEntity.getTile().isReachable(this)) {
-            return playerEntity;
-//            }
-        }
-
-        return null;
+    public @Nullable PlayerEntity nearestPlayerEntity() {
+        final PositionComparator positionComparator = new PositionComparator(this);
+        final List<PlayerEntity> nearestEntities = this.getRoom().getEntities().getPlayerEntities();
+        nearestEntities.sort(positionComparator);
+        return nearestEntities.size() > 0 ? nearestEntities.get(0) : null;
     }
 
     /**
