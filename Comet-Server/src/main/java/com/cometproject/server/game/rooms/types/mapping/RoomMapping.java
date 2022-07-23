@@ -262,14 +262,13 @@ public class RoomMapping {
         }
 
         int entityId;
-        boolean isEntity = false;
+
         if (entity == null) {
             entityId = -1;
         } else if (isFloorItem) {
             entityId = 0;
         } else {
             entityId = entity;
-            isEntity=true;
         }
 
         if (isFloorItem) {
@@ -360,7 +359,7 @@ public class RoomMapping {
             return true;
 
         if(fromHeight > toHeight){
-            if(isEntity)
+            if(entity != null)
                 return true;
 
             if(fromHeight - toHeight >= 3)
