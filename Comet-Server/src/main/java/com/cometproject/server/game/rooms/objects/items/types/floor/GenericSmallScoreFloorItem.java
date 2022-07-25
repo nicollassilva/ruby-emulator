@@ -33,10 +33,13 @@ public class GenericSmallScoreFloorItem extends RoomItemFloor {
                     && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
                 return false;
             }
+
+            this.reset();
+            this.saveData();
+            return true;
         }
 
         final int currentScore = Integer.parseInt(this.getItemData().getData());
-
         switch(requestData) {
             case 1:
                 this.decrement(currentScore);
