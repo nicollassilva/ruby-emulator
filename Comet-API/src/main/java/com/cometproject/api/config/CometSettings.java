@@ -208,4 +208,5 @@ public class CometSettings {
     }
     public int getEventID() { return currentEventRoom; }
     public static boolean FIGURE_VALIDATION = false;
+    public static int CATALOG_SOLD_OUT_LTD_PAGE_ID = 0;
 }
