@@ -194,6 +194,31 @@ public class RoomDao {
         return rooms;
     }
 
+    public static boolean transferRoom(int roomId, int ownerId, String username) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET owner_id = ?, owner = ? WHERE id = ?", sqlConnection);
+
+            preparedStatement.setInt(1, ownerId);
+            preparedStatement.setString(2, username);
+
+            preparedStatement.setInt(3, roomId);
+
+            return preparedStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return false;
+    }
+
     public static int createRoom(String name, CustomFloorMapData model, String description, int category, int maxVisitors, RoomTradeState tradeState, int creationTime, int userId, String username, int wallThickness, int floorThickness, String decorations, boolean hideWalls) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
