@@ -217,4 +217,8 @@ public interface IPlayer {
     boolean getNitro();
 
     boolean setNitro(boolean nitro);
+
+    int getLastInviteFriends();
+
+    void setLastInviteFriends(int lastInviteFriends);
 }

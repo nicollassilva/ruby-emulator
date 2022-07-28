@@ -906,6 +906,32 @@ public class PlayerDao {
         }
     }
 
+    public static boolean userIgnoreInvitation(int userId) {
+        Connection sqlConnection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT id FROM player_settings WHERE ignore_invites = '1' AND player_id = ?", sqlConnection);
+            preparedStatement.setInt(1, userId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return false;
+    }
+
     public static void saveRoomCameraFollow(boolean r, int userId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
