@@ -28,6 +28,9 @@ import com.cometproject.server.game.commands.staff.muting.UnmuteCommand;
 import com.cometproject.server.game.commands.staff.rewards.*;
 import com.cometproject.server.game.commands.staff.rewards.custom.WinCommand;
 import com.cometproject.server.game.commands.staff.rewards.mass.*;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassCoinsCommand;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassPointsCommand;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassSeasonalCommand;
 import com.cometproject.server.game.commands.staff.security.LogsClientCommand;
 import com.cometproject.server.game.commands.user.*;
 import com.cometproject.server.game.commands.user.group.DeleteGroupCommand;
@@ -287,6 +290,9 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.roomvideo.name"), new RoomVideoCommand());
         this.addCommand(Locale.get("command.closedice.name"), new CloseDiceCommand());
         this.addCommand(Locale.get("command.publicroom.name"), new PublicRoomCommand());
+        this.addCommand(Locale.get("command.roommmasscoins.name"), new RoomMassCoinsCommand());
+        this.addCommand(Locale.get("command.roommmasspoints.name"), new RoomMassPointsCommand());
+        this.addCommand(Locale.get("command.roommass.seasonal.name"), new RoomMassSeasonalCommand());
 
         // New
         this.addCommand(Locale.get("command.advban.name"), new AdvBanCommand());
