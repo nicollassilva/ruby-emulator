@@ -167,6 +167,7 @@ public class Player extends Observable implements IPlayer {
     private long lastForwardRoomRequest = System.currentTimeMillis();
     private final List<Integer> lastRoomsIds = Lists.newArrayList();
     private boolean nitroEnabled = false;
+    private int lastInviteFriends = 0;
 
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
@@ -1282,5 +1283,15 @@ public class Player extends Observable implements IPlayer {
     public boolean setNitro(boolean nitro) {
         nitroEnabled = nitro;
         return nitroEnabled;
+    }
+
+    @Override
+    public int getLastInviteFriends() {
+        return this.lastInviteFriends;
+    }
+
+    @Override
+    public void setLastInviteFriends(int lastInviteFriends) {
+        this.lastInviteFriends = lastInviteFriends;
     }
 }

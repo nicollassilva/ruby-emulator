@@ -201,6 +201,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.online.name"), new OnlineCommand());
         this.addCommand(Locale.get("command.build.name"), new BuildCommand());
         this.addCommand(Locale.getOrDefault("command.event_alert_websocket.name", "eventvue"), new EventAlertVueCommand());
+        this.addCommand(Locale.get("command.invite_friends.name"), new InviteFriendsCommand());
 
         this.addCommand(Locale.getOrDefault("command.disabledcommands.name", "listcommands"), new ListDisabledCommandsCommand());
         this.addCommand(Locale.get("command.toggleshoot.name"), new ToggleShootCommand());
