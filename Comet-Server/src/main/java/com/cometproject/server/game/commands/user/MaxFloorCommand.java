@@ -20,10 +20,48 @@ public class MaxFloorCommand extends ChatCommand {
             return;
         }
 
-        final int maxLength = 64;
-        final StringBuilder map = new StringBuilder(maxLength * maxLength);
-        for (int y = 0; y <= maxLength; ++y) {
-            for (int x = 0; x <= maxLength; ++x) {
+        if (params.length == 0) {
+            sendWhisper("Digite o valor da largura! Entre 1 a 64.", client);
+            return;
+        }
+
+        int valueX = 0;
+
+        try {
+            valueX = Integer.parseInt(params[0]);
+        } catch (NumberFormatException ex) {
+            sendWhisper("Não é válido este número para a largura!", client);
+            return;
+        }
+
+        if (valueX < 1 || valueX > 64) {
+            sendWhisper("Oops, valor da largura inválido! Só entre 1 a 64.", client);
+            return;
+        }
+
+        if (params.length == 1) {
+            sendWhisper("Digite o valor da comprimento! Entre 1 a 64.", client);
+            return;
+        }
+
+        int valueY = 0;
+
+        try {
+            valueY = Integer.parseInt(params[1]);
+        } catch (NumberFormatException ex) {
+            sendWhisper("Não é válido este número para a comprimento!", client);
+            return;
+        }
+
+        if (valueY < 1 || valueY > 64) {
+            sendWhisper("Oops, valor da comprimento inválido! Só entre 1 a 64.", client);
+            return;
+        }
+
+        //final int maxLength = 64;
+        final StringBuilder map = new StringBuilder(valueX * valueY);
+        for (int y = 0; y <= valueY; ++y) {
+            for (int x = 0; x <= valueX; ++x) {
                 if (y == 0) {
                     map.append("x");
                 }
