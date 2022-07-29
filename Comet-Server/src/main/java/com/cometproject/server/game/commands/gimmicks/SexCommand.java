@@ -105,4 +105,9 @@ public class SexCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.sex.description", "Faça amor con um usuário");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }

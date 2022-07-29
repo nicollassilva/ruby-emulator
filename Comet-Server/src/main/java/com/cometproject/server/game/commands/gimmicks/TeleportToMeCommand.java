@@ -66,4 +66,9 @@ public class TeleportToMeCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.teleport_to_me.description", "Teleportar usuário para perto.");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }

@@ -26,7 +26,7 @@ public class InviteFriendsCommand extends ChatCommand {
 
         if (client.getPlayer().getData().getTimeMuted() != 0) {
             if (client.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
-                client.getPlayer().getSession().send(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.mute.muted", "You are muted for violating the rules! Your mute will expire in %timeleft% seconds").replace("%timeleft%", timeMutedExpire + "")));
+                client.getPlayer().getSession().send(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.mute.muted", "Você está mutado por violar as regras! Seu mute durará %timeleft% segundos.").replace("%timeleft%", timeMutedExpire + "")));
                 return;
             }
         }
@@ -74,7 +74,7 @@ public class InviteFriendsCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%mensagem%");
+        return Locale.getOrDefault("command.parameter.message", "(mensagem)");
     }
 
     @Override

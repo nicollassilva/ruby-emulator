@@ -77,4 +77,9 @@ public class PunchCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.punch.description", "Dá um soco em um usuário");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }

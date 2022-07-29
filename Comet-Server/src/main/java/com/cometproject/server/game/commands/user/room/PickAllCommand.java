@@ -78,6 +78,11 @@ public class PickAllCommand extends ChatCommand {
     }
 
     @Override
+    public boolean canDisable() {
+        return true;
+    }
+
+    @Override
     public String getLoggableDescription() {
         return this.logDesc;
     }

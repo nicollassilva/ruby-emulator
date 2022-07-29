@@ -81,4 +81,9 @@ public class SlimeCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.slime.description", "Jogar slime num usuário.");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }

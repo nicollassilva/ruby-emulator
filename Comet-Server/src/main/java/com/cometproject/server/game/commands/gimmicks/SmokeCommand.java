@@ -80,4 +80,9 @@ public class SmokeCommand extends ChatCommand {
     public String getDescription() {
         return Locale.getOrDefault("command.smoke.description", "Fuma um baseado");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }
