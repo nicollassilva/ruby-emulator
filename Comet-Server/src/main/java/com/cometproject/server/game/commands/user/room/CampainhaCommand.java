@@ -39,6 +39,6 @@ public class CampainhaCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "ativa/desativa a campainha do quarto";
+        return Locale.getOrDefault("command.campainha.description", "Liga/desliga a campainha do quarto.");
     }
 }

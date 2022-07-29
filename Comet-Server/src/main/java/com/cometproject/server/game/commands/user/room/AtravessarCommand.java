@@ -10,9 +10,9 @@ public class AtravessarCommand extends ChatCommand {
         client.getPlayer().getEntity().getRoom().getData().setAllowWalkthrough(!client.getPlayer().getEntity().getRoom().getData().isAllowWalkthrough());
 
         if (client.getPlayer().getEntity().getRoom().getData().isAllowWalkthrough()) {
-            sendNotif("Agora você pode atravessar outros rubis.", client);
+            sendNotif("Agora você pode atravessar outros usuários.", client);
         } else {
-            sendNotif("Atravessar rubis desativado.", client);
+            sendNotif("Atravessar usuários desativado.", client);
         }
 
         GameContext.getCurrent().getRoomService().saveRoomData(client.getPlayer().getEntity().getRoom().getData());
@@ -30,6 +30,6 @@ public class AtravessarCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "ativa/desativa atravessar sobre rubys";
+        return Locale.getOrDefault("command.atravessar.description", "Liga/desliga o atravessar de usuários no quarto.");
     }
 }

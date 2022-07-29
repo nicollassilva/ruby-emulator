@@ -55,6 +55,6 @@ public class WinCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Envia ponto no hall, diamante e próximo nível do emblema.";
+        return Locale.getOrDefault("command.win.description", "Envia ponto no hall, diamante e próximo nível do emblema");
     }
 }
