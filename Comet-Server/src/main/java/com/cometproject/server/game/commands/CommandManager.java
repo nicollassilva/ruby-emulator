@@ -155,7 +155,7 @@ public class CommandManager implements Initialisable {
         //this.addCommand(Locale.get("command.reward.name"), new RewardCommand());
         this.addCommand(Locale.getOrDefault("command.setz.name", "setz"), new SetZCommand());
         this.addCommand(Locale.getOrDefault("command.override.name", "override"), new OverrideCommand());
-        this.addCommand(Locale.getOrDefault("command.maxfloor.name", "maxfloor"), new MaxFloorCommand());
+        this.addCommand(Locale.getOrDefault("command.updatefloor.name", "updatefloor"), new UpdateFloorCommand());
         this.addCommand(Locale.get("command.brb.name"), new BrbCommand());
         this.addCommand(Locale.get("command.setidletimer.name"), new SetIdleTimerCommand());
         this.addCommand(Locale.getOrDefault("command.autofloor.name", "autofloor"), new AutoFloorCommand());
