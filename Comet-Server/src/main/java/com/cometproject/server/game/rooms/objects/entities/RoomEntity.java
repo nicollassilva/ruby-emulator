@@ -794,20 +794,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         final RoomTile tile = this.getRoom().getMapping().getTile(position);
 
-        if (tile != null) {
-            this.addToTile(tile);
+        if (tile == null)
+            return;
 
-            if (tile.getTopItemInstance() != null) {
-                if (tile.getTopItemInstance() instanceof SeatFloorItem) {
-                    ((SeatFloorItem) tile.getTopItemInstance()).onEntityStepOn(this, false);
-                }
-                else {
-                    tile.getTopItemInstance().onEntityStepOn(this);
-                }
-            }
-
-            tile.getEntities().add(this);
-        }
+        this.addToTile(tile);
     }
 
     public void teleportToObject(RoomObject roomObject) {

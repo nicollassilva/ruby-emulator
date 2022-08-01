@@ -18,17 +18,21 @@ public class WiredAddonPyramid extends RoomItemFloor {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        this.hasEntity = true;
+        if(!this.hasEntity) {
+            this.hasEntity = true;
+        }
     }
 
     @Override
     public void onEntityStepOff(RoomEntity entity) {
-        this.hasEntity = false;
+        if(this.getEntitiesOnItem().isEmpty()) {
+            this.hasEntity = false;
+        }
     }
 
     @Override
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
-        if(!(entity instanceof PlayerEntity) || hasEntity)
+        if(!isWiredTrigger && (!(entity instanceof PlayerEntity) || hasEntity))
             return false;
 
         this.toggleState();
