@@ -571,7 +571,7 @@ public class RoomDao {
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("DELETE FROM items WHERE `room_id` = ? AND `user_id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("DELETE items FROM items JOIN furniture ON (items.base_item = furniture.id) WHERE room_id = ? AND user_id = ? AND deleteable = 1", sqlConnection);
 
             preparedStatement.setInt(1, roomId);
             preparedStatement.setInt(2, ownerId);
