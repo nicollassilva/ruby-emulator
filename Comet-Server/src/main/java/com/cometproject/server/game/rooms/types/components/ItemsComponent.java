@@ -277,12 +277,9 @@ public class ItemsComponent {
         item.getPosition().setZ(newPosition.getZ());
         item.setRotation(newRotation);
 
-        updateEntitiesOnFurniMove(item, oldPosition, newPosition, false);
-        updateEntitiesOnFurniMove(item, oldPosition, newPosition, true);
+        updateEntitiesOnFurniMove(item, oldPosition, oldPosition, newPosition, false);
+        updateEntitiesOnFurniMove(item, newPosition, oldPosition, newPosition, true);
         item.save();
-
-        item.getTile().reload();
-        item.getRoom().getMapping().getTile(oldPosition).reload();
 
         //WiredTriggerFurniOutPosition.executeTriggers(item);
     }
@@ -531,12 +528,12 @@ public class ItemsComponent {
     }
 
     private void updatePickedUpObjectEntities(RoomItemFloor item, Position position) {
-        updateEntitiesOnFurniMove(item, position, new Position(-1,-1), false);
+        updateEntitiesOnFurniMove(item, position, position, new Position(-1,-1), false);
     }
 
-    private void updateEntitiesOnFurniMove(RoomItemFloor item, Position oldPosition, Position newPosition, boolean isWalkOn){
+    private void updateEntitiesOnFurniMove(RoomItemFloor item, Position itemPosition, Position oldPosition, Position newPosition, boolean isWalkOn){
         final List<RoomTile> updatedTiles = new ArrayList<>();
-        for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), oldPosition.getX(), oldPosition.getY(), item.getRotation())) {
+        for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), itemPosition.getX(), itemPosition.getY(), item.getRotation())) {
             final RoomTile affectedTileInstance = this.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
             updatedTiles.add(affectedTileInstance);
             affectedTileInstance.reload();
