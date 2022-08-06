@@ -23,7 +23,7 @@ public class PurchaseItemMessageEvent implements Event {
         final int pageId = msg.readInt();
         final int itemId = msg.readInt();
         final String data = msg.readString();
-        final int amount = Math.max(Math.max(msg.readInt(), 1), 100);
+        final int amount = Math.min(Math.max(msg.readInt(), 1), 100);
 
         final int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastPurchase();
         if(timeSinceLastUpdate >= CometSettings.playerPurchaseCooldown) {
