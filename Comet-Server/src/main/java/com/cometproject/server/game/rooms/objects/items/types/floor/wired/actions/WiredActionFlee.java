@@ -16,7 +16,6 @@ import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectB
 import com.cometproject.server.utilities.RandomUtil;
 import com.google.common.collect.Maps;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -100,7 +99,7 @@ public class WiredActionFlee extends WiredActionItem {
             }
         }
 
-        if (getRoom().getItems().moveFloorItem(floorItem.getId(), to, floorItem.getRotation(), true)) {
+        if (getRoom().getItems().moveFloorItem(floorItem.getId(), to, floorItem.getRotation())) {
             final Map<Integer, Double> items = Maps.newHashMap();
 
             items.put(floorItem.getVirtualId(), floorItem.getPosition().getZ());

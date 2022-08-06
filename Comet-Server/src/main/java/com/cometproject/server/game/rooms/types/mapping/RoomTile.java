@@ -22,15 +22,14 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 public class RoomTile {
+    public static final double INVALID_STACK_HEIGHT = 64d; // habbo client constant for invalid tile to place items
     private final RoomMapping mappingInstance;
     private final Position position;
     private final List<RoomItemFloor> items;
@@ -286,30 +285,36 @@ public class RoomTile {
     public double getStackHeight(RoomItemFloor itemToStack) {
         final RoomItemFloor topItem = this.getTopItemInstance();
 
-        double stackHeight;
-
+        double stackHeight = INVALID_STACK_HEIGHT;
         if (this.hasMagicTile() || (topItem instanceof AdjustableHeightFloorItem)) {
             stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.stackHeight;
-        } else {
+            // TODO: after reload tile, it does check if top item can stack or not. This check shouldn't be necessary...
+        } else if (this.canPlaceItemHere && this.canStack && (topItem == null || topItem.getDefinition().canStack())) {
             stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight;
         }
 
-        return stackHeight;
+        return Math.min(stackHeight, INVALID_STACK_HEIGHT);
     }
 
+    private final Comparator<RoomItemFloor> heightByDesc =(a,b) -> Double.compare(getTotalHeight(a), getTotalHeight(b));
     public double getTopHeight(RoomItemFloor exclude) {
-        double highest = this.getTileHeight();
+        if(items.isEmpty())
+            return 0d;
 
-        for (final RoomItemFloor item : items) {
-            if (exclude != null && exclude.getId() == item.getId()) continue;
+        synchronized (this.items){
+            for (final RoomItemFloor item : this.items.stream().sorted(heightByDesc).collect(Collectors.toList())) {
+                if(exclude != null && exclude.getId() == item.getId()) {
+                    continue;
+                }
 
-            final double totalHeight = getTotalHeight(item);
-            if (totalHeight > highest) {
-                highest = totalHeight;
+                if(!item.getDefinition().canStack())
+                    return INVALID_STACK_HEIGHT;
+
+                return Math.min(getTotalHeight(item), INVALID_STACK_HEIGHT);
             }
-        }
 
-        return highest;
+            return 0d;
+        }
     }
 
     public double getWalkHeight() {

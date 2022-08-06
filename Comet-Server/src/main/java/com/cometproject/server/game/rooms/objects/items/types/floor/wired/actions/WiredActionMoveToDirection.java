@@ -9,7 +9,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectBundleMessageComposer;
-import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.utilities.Direction;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -68,7 +67,7 @@ public class WiredActionMoveToDirection extends WiredActionItem {
         final Position currentPosition = floorItem.getPosition().copy();
         final Position nextPosition = floorItem.getPosition().squareInFront(floorItem.getMoveDirection());
 
-        if (this.getRoom().getItems().moveFloorItemWired(floorItem, floorItem.getPosition().squareInFront(floorItem.getMoveDirection()), floorItem.getRotation(), true, true, true)) {
+        if (this.getRoom().getItems().moveFloorItemWired(floorItem, floorItem.getPosition().squareInFront(floorItem.getMoveDirection()), floorItem.getRotation(), true, true)) {
             nextPosition.setZ(floorItem.getPosition().getZ());
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, nextPosition, this.getVirtualId(), 0, floorItem.getVirtualId()));
         } else {

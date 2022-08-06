@@ -84,7 +84,7 @@ public class WiredActionChase extends WiredActionItem {
             final Square nextSquare = nearestEntityPath.get(0);
             final Position nextPosition = new Position(nextSquare.x, nextSquare.y);
             floorItem.setMoveDirection(Position.calculateRotation(currentPosition, nextPosition));
-            if (this.getRoom().getItems().moveFloorItemWired(floorItem, nextPosition, floorItem.getRotation(), true, true, true)) {
+            if (this.getRoom().getItems().moveFloorItemWired(floorItem, nextPosition, floorItem.getRotation(), true, true)) {
                 this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, nextPosition, this.getVirtualId(), 0, floorItem.getVirtualId()));
             } else {
                 moveFloorItemRandomly(floorItem);
@@ -135,7 +135,7 @@ public class WiredActionChase extends WiredActionItem {
 
         final Position currentPosition = item.getPosition().copy();
         final Position newPosition = WiredActionMoveRotate.getRandomPosition(1, currentPosition, this.getRoom());
-        if (this.getRoom().getItems().moveFloorItemWired(item, newPosition, item.getRotation(), true, true, true)) {
+        if (this.getRoom().getItems().moveFloorItemWired(item, newPosition, item.getRotation(), true, true)) {
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, item.getVirtualId()));
         }
     }

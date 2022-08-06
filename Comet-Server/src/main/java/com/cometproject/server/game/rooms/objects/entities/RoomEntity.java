@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity {
     public int updatePhase = 0;
-    public boolean needsForcedUpdate = false;
+    private boolean needsForcedUpdate = false;
     private RoomEntityType entityType;
     private Position walkingGoal;
     private Position positionToSet;
@@ -1128,4 +1128,11 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.isRolling = rolling;
     }
 
+    public void setNeedsForcedUpdate(boolean needsForcedUpdate) {
+        this.needsForcedUpdate = needsForcedUpdate;
+    }
+
+    public boolean isNeedsForcedUpdate() {
+        return needsForcedUpdate;
+    }
 }

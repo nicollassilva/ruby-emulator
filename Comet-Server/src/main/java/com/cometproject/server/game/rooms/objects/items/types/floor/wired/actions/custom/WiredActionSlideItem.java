@@ -66,7 +66,7 @@ public class WiredActionSlideItem extends WiredActionItem {
                     }
 
 
-                    if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, floorItem.getRotation(), true, false, false)) {
+                    if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, floorItem.getRotation(), false, false)) {
                         this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));
                     }
 

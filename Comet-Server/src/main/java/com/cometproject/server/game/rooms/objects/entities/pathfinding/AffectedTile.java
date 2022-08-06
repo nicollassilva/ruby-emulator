@@ -13,6 +13,16 @@ public class AffectedTile {
         this.y = y;
     }
 
+    /**
+     * NOTE: posX and posY are included into affectedTile coords
+     *
+     * @param length
+     * @param width
+     * @param posX
+     * @param posY
+     * @param rotation
+     * @return
+     */
     public static List<AffectedTile> getAffectedBothTilesAt(int length, int width, int posX, int posY, int rotation) {
         final List<AffectedTile> pointList = new ArrayList<>();
 

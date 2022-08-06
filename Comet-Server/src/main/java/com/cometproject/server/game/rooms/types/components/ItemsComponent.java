@@ -22,7 +22,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorIte
 import com.cometproject.server.game.rooms.objects.items.types.floor.GiftFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.MagicStackFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTileFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.highscore.HighscoreFloorItem;
@@ -263,102 +262,43 @@ public class ItemsComponent {
         this.moodlightId = 0;
     }
 
-    private boolean moveFloorItemAfter(RoomItemFloor item, Position newPosition, double height, int rotation, boolean save) {
-        final List<RoomItemFloor> floorItemsAt = this.getItemsOnSquare(newPosition.getX(), newPosition.getY());
-
-        for (final RoomItemFloor stackItem : floorItemsAt) {
+    private void __moveFloorItemAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation) {
+        final Position oldPosition = item.getPosition().copy();
+        for (final RoomItemFloor stackItem : this.getItemsOnSquare(newPosition.getX(), newPosition.getY())) {
             if (item.getId() != stackItem.getId()) {
-
                 stackItem.onItemAddedToStack(item);
             }
         }
 
+        newPosition.setZ(newHeight);
         item.onPositionChanged(newPosition);
-
-        final List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
-
-        for (final RoomEntity entity0 : affectEntities0) {
-            item.onEntityStepOff(entity0);
-        }
-
-        final List<Position> tilesToUpdate = new ArrayList<>();
-
-        tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY()));
-        tilesToUpdate.add(new Position(newPosition.getX(), newPosition.getY()));
-
-        // Catch this so the item still updates!
-        try {
-            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
-                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
-
-                final List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
-
-                for (final RoomEntity entity1 : affectEntities1) {
-                    item.onEntityStepOff(entity1);
-                }
-            }
-
-            for (final AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), newPosition.getX(), newPosition.getY(), rotation)) {
-                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
-
-                final List<RoomEntity> affectEntities2 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
-
-                for (final RoomEntity entity2 : affectEntities2) {
-                    item.onEntityStepOn(entity2);
-                }
-            }
-        } catch (Exception e) {
-            log.error("Failed to update entity positions for changing item position", e);
-        }
-
         item.getPosition().setX(newPosition.getX());
         item.getPosition().setY(newPosition.getY());
+        item.getPosition().setZ(newPosition.getZ());
+        item.setRotation(newRotation);
 
-        item.getPosition().setZ(height);
-        item.setRotation(rotation);
-        //item.resetLastMovement();
+        updateEntitiesOnFurniMove(item, oldPosition, newPosition, false);
+        updateEntitiesOnFurniMove(item, oldPosition, newPosition, true);
+        item.save();
 
-        final List<RoomEntity> affectEntities3 = room.getEntities().getEntitiesAt(newPosition);
+        item.getTile().reload();
+        item.getRoom().getMapping().getTile(oldPosition).reload();
 
-        for (final RoomEntity entity3 : affectEntities3) {
-            item.onEntityStepOn(entity3);
-        }
-
-        if (save) item.save();
-
-        for (final Position tileToUpdate : tilesToUpdate) {
-            final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
-
-            if (tileInstance != null) {
-                tileInstance.reload();
-
-                room.getEntities().broadcastMessageModeBuild(tileInstance);
-            }
-        }
-
-        tilesToUpdate.clear();
         //WiredTriggerFurniOutPosition.executeTriggers(item);
-
-        return true;
     }
 
-    public boolean moveFloorItemWired(RoomItemFloor item, Position newPosition, int rotation, boolean save, boolean autoheight, boolean limit) {
+    public boolean moveFloorItemWired(RoomItemFloor item, Position newPosition, int newRotation, boolean autoHeight, boolean limit) {
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
-
-        if (item instanceof FreezeTileFloorItem && tile.hasItems() && tile.getItems().stream().anyMatch(tileItem -> tileItem instanceof FreezeTileFloorItem)) {
+        if (autoHeight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
-        if (autoheight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
-            return false;
+        double height = newPosition.getZ();
+        if (autoHeight) {
+            height = tile.getStackHeight(item);
         }
-
-        double height;
-
-        if (autoheight) height = tile.getStackHeight(item);
-        else height = newPosition.getZ();
 
         if (item instanceof WiredAddonNewPuzzleBox) {
             if (!tile.canPlaceItemHere()) {
@@ -366,12 +306,15 @@ public class ItemsComponent {
             }
         }
 
-        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2) return false;
+        if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2)
+            return false;
 
 
-        if (autoheight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0) return false;
+        if (autoHeight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
+            return false;
 
-        return this.moveFloorItemAfter(item, newPosition, height, rotation, save);
+        this.__moveFloorItemAndSave(item, newPosition, height, newRotation);
+        return true;
     }
 
     public void commit() {
@@ -585,17 +528,43 @@ public class ItemsComponent {
         removeItem(item, client, toInventory, false);
     }
 
+    private void updatePickedUpObjectEntities(RoomItemFloor item, Position position) {
+        updateEntitiesOnFurniMove(item, position, new Position(-1,-1), false);
+    }
+
+    private void updateEntitiesOnFurniMove(RoomItemFloor item, Position oldPosition, Position newPosition, boolean isWalkOn){
+        final List<RoomTile> updatedTiles = new ArrayList<>();
+        for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), oldPosition.getX(), oldPosition.getY(), item.getRotation())) {
+            final RoomTile affectedTileInstance = this.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
+            updatedTiles.add(affectedTileInstance);
+            affectedTileInstance.reload();
+
+            final double newHeightOnAffectedTile = affectedTileInstance.getWalkHeight();
+            for (final RoomEntity entity : room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y))) {
+                if (isWalkOn) item.onEntityStepOn(entity);
+                else item.onEntityStepOff(entity);
+
+                if (oldPosition.getX() != newPosition.getX() || oldPosition.getY() != newPosition.getY()) { // call trigger only if furniture was move to another place
+                    if (isWalkOn) WiredTriggerWalksOnFurni.executeTriggers(entity, item);
+                    else WiredTriggerWalksOffFurni.executeTriggers(entity, item);
+                }
+
+                if (newHeightOnAffectedTile != entity.getPosition().getZ()) {
+                    entity.getPosition().setZ(newHeightOnAffectedTile);
+                    entity.setNeedsForcedUpdate(true);
+                }
+            }
+        }
+
+        if (!updatedTiles.isEmpty()) {
+            room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(updatedTiles));
+        }
+    }
+
     public void removeItem(RoomItemFloor item, Session session, boolean toInventory, boolean delete) {
         final RoomTile roomTile = room.getMapping().getTile(item.getPosition());
 
         final List<RoomEntity> affectEntities = room.getEntities().getEntitiesAt(item.getPosition());
-        final List<Position> tilesToUpdate = new ArrayList<>();
-
-        tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY(), 0d));
-
-        for (final RoomEntity entity : affectEntities) {
-            item.onEntityStepOff(entity);
-        }
 
         if (item instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = null;
@@ -617,23 +586,8 @@ public class ItemsComponent {
             this.rollerSkateCount--;
         }
 
-        for (final AffectedTile tile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
-            final List<RoomEntity> entitiesOnItem = room.getEntities().getEntitiesAt(new Position(tile.x, tile.y));
-            tilesToUpdate.add(new Position(tile.x, tile.y, 0d));
-
-            for (final RoomEntity entity : entitiesOnItem) {
-                item.onEntityStepOff(entity);
-
-                if (roomTile != null && roomTile.getWalkHeight() != entity.getPosition().getZ()) {
-                    entity.getPosition().setZ(roomTile.getWalkHeight());
-                    entity.markNeedsUpdate();
-                }
-            }
-        }
-
         Session client = session;
         final int owner = item.getItemData().getOwnerId();
-
         if (session != null) {
             if (owner != session.getPlayer().getId()) {
                 client = NetworkManager.getInstance().getSessions().getByPlayerId(owner);
@@ -655,15 +609,7 @@ public class ItemsComponent {
             if (delete) StorageContext.getCurrentContext().getRoomItemRepository().deleteItem(item.getId());
         }
 
-        for (final Position tileToUpdate : tilesToUpdate) {
-            final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
-
-            if (tileInstance != null) {
-                tileInstance.reload();
-
-                room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tileInstance));
-            }
-        }
+        updatePickedUpObjectEntities(item, item.getPosition());
     }
 
     public void removeItem(RoomItemWall item, Session client, boolean toInventory) {
@@ -696,117 +642,44 @@ public class ItemsComponent {
         }
     }
 
-    public boolean moveFloorItem(long itemId, Position newPosition, int rotation, boolean save, Session client) {
+    public boolean moveFloorItem(long itemId, Position newPosition, int newRotation, Session client) {
         final RoomItemFloor item = this.getFloorItem(itemId);
-
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
-        double height = tile.getStackHeight(item);
+        double newHeight = tile.getTopHeight(item);
+        if(newHeight == RoomTile.INVALID_STACK_HEIGHT){
+            return false;
+        }
 
         if (client.getPlayer().getEntity().hasAttribute("setz.height")) {
-            height = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
+            newHeight = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
         }
 
-        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), client.getPlayer().getEntity())) {
+        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
-        return this.moveFloorItemAfter(item, newPosition, height, rotation, save);
+        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation);
+        return true;
     }
 
-    public boolean moveFloorItem(long itemId, Position newPosition, int rotation, boolean save) {
-        return moveFloorItem(itemId, newPosition, rotation, save, true, null, false);
-    }
-
-    public boolean moveFloorItem(long itemId, Position newPosition, int rotation, boolean save, boolean obeyStack, Player mover, boolean canPlaceOnEntity) {
+    public boolean moveFloorItem(long itemId, Position newPosition, int newRotation) {
         final RoomItemFloor item = this.getFloorItem(itemId);
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
-
-        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), mover.getEntity())) {
+        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
-        double height = tile.getStackHeight(item);
-
-        final List<RoomItemFloor> floorItemsAt = this.getItemsOnSquare(newPosition.getX(), newPosition.getY());
-
-        for (final RoomItemFloor stackItem : floorItemsAt) {
-            if (item.getId() != stackItem.getId()) {
-                stackItem.onItemAddedToStack(item);
-            }
+        double newHeight = tile.getTopHeight(item);
+        if(newHeight == RoomTile.INVALID_STACK_HEIGHT){
+            return false;
         }
+        newPosition.setZ(newHeight);
 
-        item.onPositionChanged(newPosition);
-
-        final List<Position> tilesToUpdate = new ArrayList<>();
-
-        tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY()));
-        tilesToUpdate.add(new Position(newPosition.getX(), newPosition.getY()));
-
-        final Position oldPosition = item.getPosition().copy();
-        final int oldRotation = item.getRotation();
-
-        item.getPosition().setX(newPosition.getX());
-        item.getPosition().setY(newPosition.getY());
-
-        item.getPosition().setZ(height);
-        item.getItemData().setRotation(rotation);
-
-        // Catch this so the item still updates!
-        try {
-            for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), oldPosition.getX(), oldPosition.getY(), oldRotation)) {
-                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
-
-                final List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
-
-                for (final RoomEntity entity1 : affectEntities1) {
-                    item.onEntityStepOff(entity1);
-                    WiredTriggerWalksOffFurni.executeTriggers(entity1, item);
-                    // update their height! maybe we shouldnt ? seems to lag the room
-                    if (tile.getWalkHeight() != entity1.getPosition().getZ()) {
-                        entity1.getPosition().setZ(tile.getWalkHeight());
-                        entity1.markNeedsUpdate();
-                    }
-                }
-            }
-
-            for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), newPosition.getX(), newPosition.getY(), rotation)) {
-                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
-
-                final List<RoomEntity> affectEntities2 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
-
-                for (final RoomEntity entity2 : affectEntities2) {
-                    item.onEntityStepOn(entity2);
-                    if (!item.getPosition().equals(newPosition))
-                        WiredTriggerWalksOnFurni.executeTriggers(entity2, item); // possible stack overflow
-
-                    // update their height! maybe we shouldnt ? seems to lag the room
-                    if (tile.getWalkHeight() != entity2.getPosition().getZ()) {
-                        entity2.getPosition().setZ(tile.getWalkHeight());
-                        entity2.markNeedsUpdate();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            log.error("Failed to update entity positions for changing item position", e);
-        }
-
-        if (save) item.save();
-
-        for (final Position tileToUpdate : tilesToUpdate) {
-            final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
-
-            if (tileInstance != null) {
-                tileInstance.reload();
-
-                room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tileInstance));
-            }
-        }
-
-        tilesToUpdate.clear();
+        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation);
         return true;
     }
 
@@ -898,6 +771,10 @@ public class ItemsComponent {
         }
 
         double height = tile.getStackHeight(null);
+        if(height == RoomTile.INVALID_STACK_HEIGHT){
+            this.sendFurniturePlacementError(player.getSession());
+            return;
+        }
 
         if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, player.getEntity())) {
             this.sendFurniturePlacementError(player.getSession());
@@ -932,44 +809,34 @@ public class ItemsComponent {
         }
 
         final RoomItemFloor floorItem = room.getItems().addFloorItem(item.getId(), item.getBaseId(), room, player.getId(), player.getData().getUsername(), x, y, rot, height, ExtraData, item.getLimitedEditionItem());
-
-        final List<Position> tilesToUpdate = new ArrayList<>();
-
+        final List<RoomTile> tilesToUpdate = new ArrayList<>();
         for (final RoomItemFloor stackItem : room.getItems().getItemsOnSquare(x, y)) {
             if (item.getId() != stackItem.getId()) {
                 stackItem.onItemAddedToStack(floorItem);
             }
         }
 
-        tilesToUpdate.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY(), 0d));
-
         for (final AffectedTile affTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), floorItem.getPosition().getX(), floorItem.getPosition().getY(), floorItem.getRotation())) {
-            tilesToUpdate.add(new Position(affTile.x, affTile.y, 0d));
+            final List<RoomEntity> affectEntities = room.getEntities().getEntitiesAt(new Position(affTile.x, affTile.y));
 
-            final List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(new Position(affTile.x, affTile.y));
-
-            for (final RoomEntity entity0 : affectEntities0) {
+            for (final RoomEntity entity0 : affectEntities) {
                 floorItem.onEntityStepOn(entity0);
             }
-        }
 
-        for (final Position tileToUpdate : tilesToUpdate) {
-            final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
-
+            final RoomTile tileInstance = this.room.getMapping().getTile(affTile.x, affTile.y);
             if (tileInstance != null) {
                 tileInstance.reload();
-
-                room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tileInstance));
+                tilesToUpdate.add(tileInstance);
             }
         }
-
         room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
-
         if (floorItem instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = floorItem;
         }
 
-        tilesToUpdate.clear();
+        if (!tilesToUpdate.isEmpty()) {
+            room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tilesToUpdate));
+        }
 
         floorItem.onPlaced();
         floorItem.saveData();

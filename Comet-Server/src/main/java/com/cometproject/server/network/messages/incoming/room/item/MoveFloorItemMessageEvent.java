@@ -56,17 +56,20 @@ public class MoveFloorItemMessageEvent implements Event {
             return;
         }
 
+        final Position newPos = new Position(x, y);
         if (floorItem != null) {
             if (rot != floorItem.getRotation()) {
                 // ADD TRIGGER FOR WIRED IF ITEM IS ROTATE
                 client.getPlayer().getQuests().progressQuest(QuestType.FURNI_ROTATE);
             }
 
-            client.getPlayer().getQuests().progressQuest(QuestType.FURNI_MOVE);
+            if (!newPos.equals(floorItem.getPosition())) {
+                client.getPlayer().getQuests().progressQuest(QuestType.FURNI_MOVE);
+            }
         }
 
         try {
-            if (room.getItems().moveFloorItem(id, new Position(x, y), rot, true, client)) {
+            if (room.getItems().moveFloorItem(id, newPos, rot, client)) {
                 if (floorItem != null && floorItem.getTile().getItems().size() > 1) {
                     client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
                 }
