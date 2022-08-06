@@ -45,6 +45,7 @@ public class FillCommand extends ChatCommand {
             case "area":
             case "all": {
                 client.getPlayer().getEntity().setSelectionType(SelectionType.Region);
+                client.getPlayer().getEntity().setBuildingType(BuildingType.FILL);
                 sendNotif("Preenchimento por área ativo.", client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 return;

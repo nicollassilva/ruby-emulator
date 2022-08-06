@@ -32,8 +32,8 @@ import java.util.concurrent.Executors;
 
 public class BuildingComponent {
     public static final int MAX_FILL_STACK_BLOCKS = 35;
-    public static final int MAX_FILL_AREA_BLOCKS = 150;
-    public static final long FILL_PLACE_ITEM_DELAY = 750L;
+    public static final int MAX_FILL_AREA_BLOCKS = 300;
+    public static final long FILL_PLACE_ITEM_DELAY = 75L;
     private static final boolean PLACE_ITEM_ASYNC = true;
     private static final Logger log = LogManager.getLogger(BuildingComponent.class.getName());
     private final ExecutorService buildingExecutor = Executors.newSingleThreadExecutor();
@@ -57,7 +57,7 @@ public class BuildingComponent {
             final List<RoomItemFloor> itemsToMove = new ArrayList<>(100);
             final MagicMoveFloorItem magicMove = (MagicMoveFloorItem) item;
             final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(magicMove.getDefinition().getLength(), magicMove.getDefinition().getWidth(), magicMove.getPosition().getX(), magicMove.getPosition().getY(), magicMove.getRotation());
-            for (final AffectedTile affectedTile : affectedTiles) { // TODO this value is awyas higher than item lenght * width
+            for (final AffectedTile affectedTile : affectedTiles) {
                 itemsToMove.addAll(this.room.getMapping().getTile(affectedTile.x, affectedTile.y).getItems());
             }
 
@@ -160,6 +160,10 @@ public class BuildingComponent {
      * @return true se conseguiu colocar o mobi no quarto.
      */
     private boolean __internalPlaceFloorItem(Session client, PlayerItem item, int x, int y, int rot) {
+        if(client == null || client.getPlayer() == null || client.getPlayer().getEntity() == null) {
+            return false;
+        }
+
         if (client.getPlayer().getEntity().getRoom() == null) {
             return false;
         }
@@ -221,16 +225,17 @@ public class BuildingComponent {
             playerPosition.setX(playerPosition.getX() + 1);
             playerPosition.setY(playerPosition.getY() + 1);
 
+            out:
             for (int builderX = playerPosition.getX(); builderX < x; builderX++) {
                 for (int builderY = playerPosition.getY(); builderY < y; builderY++) {
                     try {
                         if (++counter >= MAX_FILL_AREA_BLOCKS) {
-                            return;
+                            break out;
                         }
 
                         PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
                         if (nextItem == null)
-                            return;
+                            break out;
 
                         Thread.sleep(FILL_PLACE_ITEM_DELAY);
                         __internalPlaceFloorItem(client, nextItem, builderX, builderY, rot);
@@ -255,12 +260,12 @@ public class BuildingComponent {
             for (int i = 0; i < client.getPlayer().getEntity().getStackCount(); i++) {
                 try {
                     if (++counter >= MAX_FILL_STACK_BLOCKS) {
-                        return;
+                        break;
                     }
 
                     PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
                     if (nextItem == null)
-                        return;
+                        break;
 
                     Thread.sleep(FILL_PLACE_ITEM_DELAY);
                     __internalPlaceFloorItem(client, nextItem, x, y, rot);
