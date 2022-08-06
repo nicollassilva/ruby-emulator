@@ -755,30 +755,17 @@ public class RoomDao {
         final int category = room.getInt("category");
         final int maxUsers = room.getInt("max_users");
         final String thumbnail = room.getString("thumbnail");
-
-        String accessTypeString = room.getString("access_type");
-
-        if (!accessTypeString.equals("open") && !accessTypeString.equals("doorbell") && !accessTypeString.equals("password")) {
-            accessTypeString = "open";
-        }
-
+        final String accessTypeString = room.getString("access_type");
         final String password = room.getString("password");
         final RoomAccessType access = RoomAccessType.valueOf(accessTypeString.toUpperCase());
-        final String originalPassword = password;
-
         final int score = room.getInt("score");
-
         final String[] tags = room.getString("tags").isEmpty() ? new String[0] :
                 room.getString("tags").split(",");
-
         final Map<String, String> decorations = new HashMap<>();
-
         String[] decorationsArray = room.getString("decorations").split(",");
-
         fillDecorations(decorations, decorationsArray);
 
         final String model = room.getString("model");
-
         final boolean hideWalls = room.getString("hide_walls").equals("1");
         final int thicknessWall = room.getInt("thickness_wall");
         final int thicknessFloor = room.getInt("thickness_floor");
@@ -811,7 +798,7 @@ public class RoomDao {
         final int roomPrice = room.getInt("room_price");
 
         return new RoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
-                originalPassword, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
+                password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands, groupId,
                 requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice);

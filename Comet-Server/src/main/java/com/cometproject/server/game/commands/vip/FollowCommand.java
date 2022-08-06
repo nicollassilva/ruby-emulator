@@ -1,7 +1,9 @@
 package com.cometproject.server.game.commands.vip;
 
+import com.cometproject.api.game.rooms.settings.RoomAccessType;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
+import com.cometproject.server.game.navigator.types.search.NavigatorSearchService;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -26,6 +28,11 @@ public class FollowCommand extends ChatCommand {
         if (leader != null && leader.getPlayer() != null && leader.getPlayer().getEntity() != null) {
             if (!leader.getPlayer().getSettings().getAllowFollow() && !client.getPlayer().getPermissions().getRank().modTool()) {
                 sendNotif(Locale.getOrDefault("command.follow.disabled", "Esse usuário desativou a opção de ser seguido."), client);
+                return;
+            }
+
+            if(!NavigatorSearchService.checkRoomVisibility(client.getPlayer(), leader.getPlayer().getEntity().getRoom())){
+                sendNotif(Locale.getOrDefault("command.follow.invisible_room", "Esse usuário não está em nenhum quarto."), client);
                 return;
             }
 
