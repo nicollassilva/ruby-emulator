@@ -509,8 +509,10 @@ public class ItemsComponent {
     public void removeItem(RoomItemFloor item, Session client) {
         removeItem(item, client, true);
     }
-
-    public void removeItem(RoomItemFloor item, Session client, boolean toInventory) {
+    public void removeItem(RoomItemFloor item, Session client, boolean toInventory){
+        removeItem(item,client,toInventory, true);
+    }
+    public void removeItem(RoomItemFloor item, Session client, boolean toInventory, boolean sendPacket) {
         if (item instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = null;
         }
@@ -525,7 +527,7 @@ public class ItemsComponent {
             }
         }
 
-        removeItem(item, client, toInventory, false);
+        removeItem(item, client, toInventory, false, sendPacket);
     }
 
     private void updatePickedUpObjectEntities(RoomItemFloor item, Position position) {
@@ -561,11 +563,7 @@ public class ItemsComponent {
         }
     }
 
-    public void removeItem(RoomItemFloor item, Session session, boolean toInventory, boolean delete) {
-        final RoomTile roomTile = room.getMapping().getTile(item.getPosition());
-
-        final List<RoomEntity> affectEntities = room.getEntities().getEntitiesAt(item.getPosition());
-
+    public void removeItem(RoomItemFloor item, Session session, boolean toInventory, boolean delete, boolean sendPacket) {
         if (item instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = null;
         }
@@ -594,7 +592,9 @@ public class ItemsComponent {
             }
         }
 
-        this.getRoom().getEntities().broadcastMessage(new RemoveFloorItemMessageComposer(item.getVirtualId(), (session != null) ? owner : 0));
+        if(sendPacket) {
+            this.getRoom().getEntities().broadcastMessage(new RemoveFloorItemMessageComposer(item.getVirtualId(), (session != null) ? owner : 0));
+        }
         this.getFloorItems().remove(item.getId());
         this.decreaseItemsCount();
 
@@ -602,9 +602,11 @@ public class ItemsComponent {
 
         if (toInventory && client != null) {
             final PlayerItem playerItem = client.getPlayer().getInventory().add(item.getId(), item.getItemData().getItemId(), item.getItemData().getData(), item instanceof GiftFloorItem ? ((GiftFloorItem) item).getGiftData() : null, item.getLimitedEditionItemData());
-            client.sendQueue(new UpdateInventoryMessageComposer());
-            client.sendQueue(new UnseenItemsMessageComposer(Sets.newHashSet(playerItem)));
-            client.flush();
+            if(sendPacket) {
+                client.sendQueue(new UpdateInventoryMessageComposer());
+                client.sendQueue(new UnseenItemsMessageComposer(Sets.newHashSet(playerItem)));
+                client.flush();
+            }
         } else {
             if (delete) StorageContext.getCurrentContext().getRoomItemRepository().deleteItem(item.getId());
         }
@@ -612,8 +614,10 @@ public class ItemsComponent {
         updatePickedUpObjectEntities(item, item.getPosition());
     }
 
-    public void removeItem(RoomItemWall item, Session client, boolean toInventory) {
-        this.getRoom().getEntities().broadcastMessage(new RemoveWallItemMessageComposer(item.getVirtualId(), item.getItemData().getOwnerId()));
+    public void removeItem(RoomItemWall item, Session client, boolean toInventory, boolean sendPacket) {
+        if(sendPacket) {
+            this.getRoom().getEntities().broadcastMessage(new RemoveWallItemMessageComposer(item.getVirtualId(), item.getItemData().getOwnerId()));
+        }
         this.getWallItems().remove(item.getId());
         this.decreaseItemsCount();
 
@@ -632,10 +636,13 @@ public class ItemsComponent {
 
             if (session != null) {
                 session.getPlayer().getInventory().add(item.getId(), item.getItemData().getItemId(), item.getItemData().getData(), item.getLimitedEditionItemData());
-                session.send(new UpdateInventoryMessageComposer());
-                session.send(new UnseenItemsMessageComposer(new HashMap<Integer, List<Integer>>() {{
-                    put(1, Lists.newArrayList(item.getVirtualId()));
-                }}));
+                if(sendPacket) {
+                    session.sendQueue(new UpdateInventoryMessageComposer());
+                    session.sendQueue(new UnseenItemsMessageComposer(new HashMap<Integer, List<Integer>>() {{
+                        put(1, Lists.newArrayList(item.getVirtualId()));
+                    }}));
+                    session.flush();
+                }
             }
         } else {
             StorageContext.getCurrentContext().getRoomItemRepository().deleteItem(item.getId());

@@ -39,7 +39,7 @@ public class OpenPetPackageMessageEvent implements Event {
         PetEntity petEntity = room.getPets().addPet(petData, floor.getPosition());
         petEntity.getPetAI().free();
 
-        room.getItems().removeItem(floor, null, false, true);
+        room.getItems().removeItem(floor, null, false, true, true);
 
         client.send(new PetPackageCompleteMessageComposer(itemId, 0, petName));
         room.getEntities().broadcastMessage(new AvatarsMessageComposer(petEntity));

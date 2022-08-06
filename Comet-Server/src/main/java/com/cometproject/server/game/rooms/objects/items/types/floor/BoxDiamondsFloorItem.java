@@ -41,7 +41,7 @@ public class BoxDiamondsFloorItem extends RoomItemFloor {
             int result = RandomUtil.getRandomInt(0, 10);
 
             ((PlayerEntity) entity).getPlayer().getSession().send(new TalkMessageComposer(((PlayerEntity) entity).getPlayer().getEntity().getId(), "Has abierto la caja de diamantes y has obtenido " + result + " diamantes", ChatEmotion.NONE, 34));
-            entity.getRoom().getItems().removeItem(this, player.getSession(), false, true);
+            entity.getRoom().getItems().removeItem(this, player.getSession(), false, true, true);
             ((PlayerEntity) entity).getPlayer().getData().increaseVipPoints(result);
             ((PlayerEntity) entity).getPlayer().getData().save();
             ((PlayerEntity) entity).getPlayer().sendBalance();

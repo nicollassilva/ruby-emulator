@@ -90,7 +90,7 @@ public abstract class BreedingBoxFloorItem extends DefaultFloorItem {
         this.getItemData().setData("2");
         this.sendUpdate();
 
-        this.getRoom().getItems().removeItem(this, null, false, true);
+        this.getRoom().getItems().removeItem(this, null, false, true, true);
     }
 
     @Override

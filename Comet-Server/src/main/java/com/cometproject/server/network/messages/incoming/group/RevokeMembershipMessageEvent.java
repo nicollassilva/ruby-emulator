@@ -144,7 +144,7 @@ public class RevokeMembershipMessageEvent implements Event {
             if (roomItem instanceof RoomItemFloor) {
                 roomItem.getRoom().getItems().removeItem(((RoomItemFloor) roomItem), player);
             } else if (roomItem instanceof RoomItemWall) {
-                roomItem.getRoom().getItems().removeItem(((RoomItemWall) roomItem), player, true);
+                roomItem.getRoom().getItems().removeItem(((RoomItemWall) roomItem), player, true, true);
             }
         }
     }

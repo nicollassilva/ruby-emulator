@@ -1,6 +1,7 @@
 package com.cometproject.server.game.commands.user.room;
 
 import com.cometproject.api.config.CometExternalSettings;
+import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.items.RoomItem;
@@ -9,10 +10,18 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.wall.PostItWallItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
+import com.cometproject.server.network.messages.incoming.catalog.data.UnseenItemsMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.items.RemoveFloorItemMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.items.RemoveWallItemMessageComposer;
+import com.cometproject.server.network.messages.outgoing.user.inventory.UpdateInventoryMessageComposer;
 import com.cometproject.server.network.sessions.Session;
+import com.cometproject.server.protocol.messages.MessageComposer;
+import com.google.common.collect.Sets;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class PickAllCommand extends ChatCommand {
@@ -27,30 +36,38 @@ public class PickAllCommand extends ChatCommand {
             return;
         }
 
-        final List<RoomItem> itemsToRemove = new ArrayList<>();
-
+        final List<RoomItem> itemsToRemove = new ArrayList<>(room.getItems().getFloorItems().size() + room.getItems().getWallItems().size());
         itemsToRemove.addAll(room.getItems().getFloorItems().values());
         itemsToRemove.addAll(room.getItems().getWallItems().values());
 
+        final ArrayList<MessageComposer> toClient = new ArrayList<>();
+        final ArrayList<MessageComposer> toRoom = new ArrayList<>();
+
+        final Set<PlayerItem> unseenItems = new HashSet<>();
         for (final RoomItem item : itemsToRemove) {
             if(item instanceof PostItWallItem) continue;
 
             final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(item.getItemData().getOwnerId());
-
             item.onPickup();
-
-            if (item instanceof RoomItemFloor && item.getItemData().getOwnerId() == client.getPlayer().getId()) {
-                room.getItems().removeItem((RoomItemFloor) item, client);
-            } else if (item instanceof RoomItemWall && item.getItemData().getOwnerId() == client.getPlayer().getId()) {
-                room.getItems().removeItem((RoomItemWall) item, client, true);
+            if(item instanceof RoomItemFloor) {
+                room.getItems().removeItem((RoomItemFloor) item, session, true, false);
+                toRoom.add(new RemoveFloorItemMessageComposer(item.getVirtualId(), item.getItemData().getOwnerId()));
+            } else if (item instanceof RoomItemWall) {
+                room.getItems().removeItem((RoomItemWall) item, session, true, false);
+                toRoom.add(new RemoveWallItemMessageComposer(item.getVirtualId(), item.getItemData().getOwnerId()));
             }
 
-            if(item instanceof RoomItemFloor && item.getItemData().getOwnerId() != client.getPlayer().getId()) {
-                room.getItems().removeItem((RoomItemFloor) item, session);
-            } else if (item instanceof RoomItemWall && item.getItemData().getOwnerId() != client.getPlayer().getId()) {
-                room.getItems().removeItem((RoomItemWall) item, session, true);
+            if(item.getItemData().getOwnerId() == client.getPlayer().getId()){
+                unseenItems.add(client.getPlayer().getInventory().getItem(item.getId()));
             }
         }
+        toClient.add(new UpdateInventoryMessageComposer());
+        toClient.add(new UnseenItemsMessageComposer(unseenItems));
+
+        toClient.forEach(client::sendQueue);
+        client.flush();
+
+        toRoom.forEach(client.getPlayer().getEntity().getRoom().getEntities()::broadcastMessage);
 
         itemsToRemove.clear();
 

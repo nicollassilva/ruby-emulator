@@ -9,7 +9,6 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
 import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
-import com.cometproject.server.storage.queries.player.SubscriptionDao;
 import org.apache.commons.lang.math.NumberUtils;
 
 public class BoxSubscriptionVipFloorItem extends RoomItemFloor {
@@ -41,7 +40,7 @@ public class BoxSubscriptionVipFloorItem extends RoomItemFloor {
             this.sendUpdate();
 
             player.getSession().send(new TalkMessageComposer(((PlayerEntity) entity).getPlayer().getEntity().getId(), "Has abierto la caja de suscripción VIP y ya tienes una suscripción VIP vigente.", ChatEmotion.NONE, 34));
-            entity.getRoom().getItems().removeItem(this, player.getSession(), false, true);
+            entity.getRoom().getItems().removeItem(this, player.getSession(), false, true, true);
             //SubscriptionDao.addSubscription(timestamp, expire, player.getId());
             player.getData().setVip(true);
             player.getData().save();

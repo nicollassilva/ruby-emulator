@@ -28,6 +28,6 @@ public class DeletePostItMessageEvent implements Event {
             return;
         }
 
-        room.getItems().removeItem(wallItem, client, false);
+        room.getItems().removeItem(wallItem, client, false, true);
     }
 }
