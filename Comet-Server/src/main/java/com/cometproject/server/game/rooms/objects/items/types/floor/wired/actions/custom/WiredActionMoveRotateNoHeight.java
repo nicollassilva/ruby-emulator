@@ -53,7 +53,7 @@ public class WiredActionMoveRotateNoHeight extends WiredActionItem {
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
-                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, (movement != 0), (movement != 0))) {
+                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, (movement != 0), (movement != 0))) {
                     if (!rotationChanged && this.useItemsAnimation()) {
                         if (!(floorItem instanceof WiredCustomSetSpeedRollerSelected)) {
                             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));

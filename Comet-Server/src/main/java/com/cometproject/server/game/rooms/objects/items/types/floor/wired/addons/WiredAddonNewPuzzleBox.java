@@ -58,7 +58,7 @@ public class WiredAddonNewPuzzleBox extends RoomItemFloor {
             final Position currentPosition = this.getPosition().copy();
             final Position newPosition = new Position(NewX, NewY, z);
 
-            if (this.getRoom().getMapping().isValidPosition(newPosition) && this.getRoom().getItems().moveFloorItemWired(this, newPosition, this.getRotation(), true, true, true)) {
+            if (this.getRoom().getMapping().isValidPosition(newPosition) && this.getRoom().getItems().moveFloorItemWired(this, newPosition, this.getRotation(), true, true)) {
                 this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, this.getVirtualId()));
                 this.save();
                 entity.moveTo(currentPosition.getX(), currentPosition.getY());

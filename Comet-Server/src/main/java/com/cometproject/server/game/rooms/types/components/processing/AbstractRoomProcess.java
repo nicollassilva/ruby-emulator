@@ -15,10 +15,8 @@ import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.EffectFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.SeatFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.TeleportPadFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.pet.horse.HorseJumpFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerBotReachedFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
@@ -31,11 +29,10 @@ import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessage
 import com.cometproject.server.tasks.CometTask;
 import com.cometproject.server.tasks.CometThreadManager;
 import com.cometproject.server.utilities.TimeSpan;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -224,13 +221,13 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
-        if ((entity.needsUpdate() && !entity.needsUpdateCancel() || entity.needsForcedUpdate) && entity.isVisible()) {
-            if (entity.needsForcedUpdate && entity.updatePhase == 1) {
-                entity.needsForcedUpdate = false;
+        if ((entity.needsUpdate() && !entity.needsUpdateCancel() || entity.isNeedsForcedUpdate()) && entity.isVisible()) {
+            if (entity.isNeedsForcedUpdate() && entity.updatePhase == 1) {
+                entity.setNeedsForcedUpdate(false);
                 entity.updatePhase = 0;
 
                 entitiesToUpdate.add(entity);
-            } else if (entity.needsForcedUpdate) {
+            } else if (entity.isNeedsForcedUpdate()) {
                 if (entity.hasStatus(RoomEntityStatus.MOVE)) {
                     entity.removeStatus(RoomEntityStatus.MOVE);
                 }
