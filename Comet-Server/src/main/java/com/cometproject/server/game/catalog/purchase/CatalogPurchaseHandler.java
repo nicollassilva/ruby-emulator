@@ -60,7 +60,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     }
 
     @Override
-    public void purchaseItem(ISession client, int pageId, int itemId, String data, int amount, GiftData giftData) {
+    public synchronized void purchaseItem(ISession client, int pageId, int itemId, String data, int amount, GiftData giftData) {
         if (CometSettings.CATALOG_ASYNC_PURCHASE_ALLOW) {
             if (this.executorService == null) {
                 this.executorService = Executors.newFixedThreadPool(Integer.parseInt(Configuration.currentConfig().get("comet.system.catalogPurchaseThreads")));
