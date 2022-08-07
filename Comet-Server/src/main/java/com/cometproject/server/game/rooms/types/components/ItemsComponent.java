@@ -264,11 +264,13 @@ public class ItemsComponent {
 
     private void __moveFloorItemAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation) {
         final Position oldPosition = item.getPosition().copy();
+        int oldRotation = item.getRotation();
         for (final RoomItemFloor stackItem : this.getItemsOnSquare(newPosition.getX(), newPosition.getY())) {
             if (item.getId() != stackItem.getId()) {
                 stackItem.onItemAddedToStack(item);
             }
         }
+
 
         newPosition.setZ(newHeight);
         item.onPositionChanged(newPosition);
@@ -277,11 +279,9 @@ public class ItemsComponent {
         item.getPosition().setZ(newPosition.getZ());
         item.setRotation(newRotation);
 
-        updateEntitiesOnFurniMove(item, oldPosition, oldPosition, newPosition, false);
-        updateEntitiesOnFurniMove(item, newPosition, oldPosition, newPosition, true);
         item.save();
-
-        //WiredTriggerFurniOutPosition.executeTriggers(item);
+        updateEntitiesOnFurniMove(item, oldPosition, oldPosition, newPosition, oldRotation, false);
+        updateEntitiesOnFurniMove(item, newPosition, oldPosition, newPosition, newRotation, true);
     }
 
     public boolean moveFloorItemWired(RoomItemFloor item, Position newPosition, int newRotation, boolean autoHeight, boolean limit) {
@@ -528,12 +528,12 @@ public class ItemsComponent {
     }
 
     private void updatePickedUpObjectEntities(RoomItemFloor item, Position position) {
-        updateEntitiesOnFurniMove(item, position, position, new Position(-1,-1), false);
+        updateEntitiesOnFurniMove(item, position, position, new Position(-1,-1),item.getRotation() , false);
     }
 
-    private void updateEntitiesOnFurniMove(RoomItemFloor item, Position itemPosition, Position oldPosition, Position newPosition, boolean isWalkOn){
+    private void updateEntitiesOnFurniMove(RoomItemFloor item, Position itemPosition, Position oldPosition, Position newPosition, int rot, boolean isWalkOn){
         final List<RoomTile> updatedTiles = new ArrayList<>();
-        for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), itemPosition.getX(), itemPosition.getY(), item.getRotation())) {
+        for (final AffectedTile affectedTile : AffectedTile.getAffectedBothTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), itemPosition.getX(), itemPosition.getY(), rot)) {
             final RoomTile affectedTileInstance = this.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
             updatedTiles.add(affectedTileInstance);
             affectedTileInstance.reload();
