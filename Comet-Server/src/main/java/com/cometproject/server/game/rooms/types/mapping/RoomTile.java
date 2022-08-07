@@ -296,7 +296,7 @@ public class RoomTile {
         return Math.min(stackHeight, INVALID_STACK_HEIGHT);
     }
 
-    private final Comparator<RoomItemFloor> heightByDesc =(a,b) -> Double.compare(getTotalHeight(a), getTotalHeight(b));
+    private final Comparator<RoomItemFloor> heightByDesc = (a,b) -> Double.compare(getTotalHeight(b), getTotalHeight(a));
     public double getTopHeight(RoomItemFloor exclude) {
         if(items.isEmpty())
             return 0d;
