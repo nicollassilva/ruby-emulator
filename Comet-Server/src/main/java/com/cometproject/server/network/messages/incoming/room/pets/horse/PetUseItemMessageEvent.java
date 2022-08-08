@@ -1,10 +1,8 @@
 package com.cometproject.server.network.messages.incoming.room.pets.horse;
 
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
-import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.pets.data.PetMonsterPlantData;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.MonsterPlantEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -72,7 +70,7 @@ public class PetUseItemMessageEvent implements Event {
                 petEntity.addStatus(RoomEntityStatus.GESTURE, "spd");
                 petEntity.addStatus(RoomEntityStatus.fromString("grw" + monsterPlantData.getGrowthStage()), "");
 
-                client.getPlayer().getEntity().getRoom().getItems().removeItem(effectItem, client, false, true);
+                client.getPlayer().getEntity().getRoom().getItems().removeItem(effectItem, client, false, true, true);
                 client.send(new RemoveFloorItemMessageComposer(effectItem.getVirtualId(), client.getPlayer().getEntity().getRoom().getData().getOwnerId()));
                 client.send(new AvatarUpdateMessageComposer(petEntity));
                 client.send(new PetUpdateStatusComposer(petEntity));
@@ -85,6 +83,6 @@ public class PetUseItemMessageEvent implements Event {
         petEntity.getData().savePlantsData();
         petEntity.markNeedsUpdate(true);
         room.getEntities().broadcastMessage(new HorseFigureMessageComposer(petEntity));
-        room.getItems().removeItem(effectItem, client, false, true);
+        room.getItems().removeItem(effectItem, client, false, true, true);
     }
 }

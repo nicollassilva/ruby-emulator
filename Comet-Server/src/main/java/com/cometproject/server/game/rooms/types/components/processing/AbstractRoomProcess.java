@@ -426,12 +426,6 @@ public class AbstractRoomProcess implements CometTask {
                 entity.markNeedsUpdate();
             }
 
-            //if (entity.getIdleTimeWiredWalk() >= 30) {
-            if (entity instanceof PlayerEntity) {
-                WiredTriggerAntiWalk.executeTriggers(((PlayerEntity) entity));
-            }
-            //}
-
             if (entity instanceof PlayerEntity && entity.isIdleAndIncrement() && entity.isVisible()) {
 
                 if (entity.getIdleTime() >= 60 * CometSettings.roomIdleMinutes * 2) {

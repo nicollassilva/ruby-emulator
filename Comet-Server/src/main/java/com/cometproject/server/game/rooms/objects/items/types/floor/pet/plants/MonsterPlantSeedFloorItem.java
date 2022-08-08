@@ -71,7 +71,7 @@ public class MonsterPlantSeedFloorItem extends RoomItemFloor {
             petEntity.sendGrowth();
             petEntity.removeStatus(RoomEntityStatus.GESTURE);
 
-            this.getRoom().getItems().removeItem(this, null, false, true);
+            this.getRoom().getItems().removeItem(this, null, false, true, true);
         }
         return false;
     }

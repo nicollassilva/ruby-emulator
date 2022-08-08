@@ -50,7 +50,7 @@ public class ExchangeItemMessageEvent implements Event {
             value = Integer.parseInt(item.getDefinition().getItemName().split("_")[1]);
         }
 
-        room.getItems().removeItem(item, client, false, true);
+        room.getItems().removeItem(item, client, false, true, true);
         String exchangeValue;
 
         if (isDiamond) {

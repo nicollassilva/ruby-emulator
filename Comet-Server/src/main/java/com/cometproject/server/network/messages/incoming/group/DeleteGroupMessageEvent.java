@@ -65,7 +65,7 @@ public class DeleteGroupMessageEvent implements Event {
                     if (roomItem instanceof RoomItemFloor)
                         room.getItems().removeItem(((RoomItemFloor) roomItem), groupMemberSession);
                     else if (roomItem instanceof RoomItemWall)
-                        room.getItems().removeItem(((RoomItemWall) roomItem), groupMemberSession, true);
+                        room.getItems().removeItem(((RoomItemWall) roomItem), groupMemberSession, true, true);
                 }
             } else {
                 for (RoomItem roomItem : floorItemsOwnedByPlayer) {

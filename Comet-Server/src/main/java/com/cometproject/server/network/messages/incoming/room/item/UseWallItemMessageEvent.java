@@ -58,7 +58,7 @@ public class UseWallItemMessageEvent implements Event {
                 if(wallItem.getDefinition().getId() != item.getDefinition().getId()) continue;
 
                 wallItem.onPickup();
-                client.getPlayer().getEntity().getRoom().getItems().removeItem(wallItem, client, true);
+                client.getPlayer().getEntity().getRoom().getItems().removeItem(wallItem, client, true, true);
                 count++;
             }
 
