@@ -35,6 +35,8 @@ public interface AvatarEntity extends Attributable {
 
     List<Square> getWalkingPath();
 
+    int getAfkTime();
+
     void setWalkingPath(List<Square> path);
 
     List<Square> getProcessingPath();

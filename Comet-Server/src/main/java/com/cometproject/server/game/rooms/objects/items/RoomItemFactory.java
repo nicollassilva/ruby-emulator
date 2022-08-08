@@ -286,6 +286,7 @@ public class RoomItemFactory {
             put("wf_cnd_actor_is_idley", WiredConditionCustomIsIdle.class); // condition
             put("wf_cnd_actor_is_idlen", WiredNegativeConditionCustomIsIdle.class); // condition
             put("wf_trg_afkkkdormeur", WiredTriggerCustomIdle.class);
+            put("wf_trg_totalidle", WiredTriggerCustomTotalIdle.class);
 
             put("highscore_classic", HighscoreClassicFloorItem.class);
             put("highscore_perteam", HighscorePerTeamFloorItem.class);

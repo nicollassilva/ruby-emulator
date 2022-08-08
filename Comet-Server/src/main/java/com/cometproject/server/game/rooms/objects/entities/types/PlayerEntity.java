@@ -847,6 +847,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         this.getRoom().getEntities().broadcastMessage(new IdleStatusMessageComposer(this, true));
         WiredTriggerCustomIdle.executeTriggers(this);
+        WiredTriggerCustomTotalIdle.executeTriggers(this);
     }
 
     public int getPlayerId() {
