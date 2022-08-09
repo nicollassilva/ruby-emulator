@@ -183,6 +183,25 @@ public class CatalogDao {
         return data;
     }
 
+    public static void soldOutItem(int itemId, int pageId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("UPDATE catalog_items SET page_id = ? WHERE id = ?", sqlConnection);
+            preparedStatement.setInt(1, pageId);
+            preparedStatement.setInt(2, itemId);
+
+            SqlHelper.executeStatementSilently(preparedStatement, false);
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
     public static void updateLimitSellsForItem(int itemId, int amount) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -356,7 +375,7 @@ public class CatalogDao {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            preparedStatement = SqlHelper.prepare("SELECT DISTINCT `catalog_item` FROM player_recent_purchases WHERE player_id = ? LIMIT " + count, sqlConnection);
+            preparedStatement = SqlHelper.prepare("SELECT `catalog_item`, `purchase_date` FROM player_recent_purchases WHERE `player_id` = ? GROUP BY `catalog_item` ORDER BY `purchase_date` DESC LIMIT " + count, sqlConnection);
             preparedStatement.setInt(1, playerId);
 
             resultSet = preparedStatement.executeQuery();
@@ -414,7 +433,7 @@ public class CatalogDao {
             preparedStatement.setString(1, "1");
 
             resultSet = preparedStatement.executeQuery();
-            
+
             while (resultSet.next()) {
                 clubItems.put(resultSet.getInt("id"), new ClubOffer(resultSet));
             }

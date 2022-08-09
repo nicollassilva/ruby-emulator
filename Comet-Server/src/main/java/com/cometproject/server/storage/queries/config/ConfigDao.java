@@ -102,6 +102,8 @@ public class ConfigDao {
 
                 CometSettings.cameraCoinsPricing = config.getInt("camera_pricing_coins");
                 CometSettings.cameraDucketsPricing = config.getInt("camera_pricing_duckets");
+                CometSettings.FIGURE_VALIDATION = config.getBoolean("player_figure_validation");
+                CometSettings.CATALOG_SOLD_OUT_LTD_PAGE_ID = config.getInt("catalog_soldout_ltd_page");
 
                 final String characters = config.getString("word_filter_strict_chars");
 

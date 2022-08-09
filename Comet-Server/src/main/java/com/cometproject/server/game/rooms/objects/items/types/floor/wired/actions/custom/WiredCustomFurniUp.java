@@ -1,6 +1,5 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom;
 
-import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -56,7 +55,7 @@ public class WiredCustomFurniUp extends WiredActionItem {
 
             Position newPos = new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY(), this.isUp ? floorItem.getPosition().getZ() + newZ : floorItem.getPosition().getZ() - newZ);
 
-            this.getRoom().getItems().moveFloorItem(floorItem.getId(), newPos, floorItem.getRotation(), true, false, null, CometSettings.roomCanPlaceItemOnEntity);
+            this.getRoom().getItems().moveFloorItem(floorItem.getId(), newPos, floorItem.getRotation());
             this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
             floorItem.sendUpdate();
         }

@@ -104,6 +104,16 @@ public class RedeemVoucherMessageEvent implements Event {
                 ));
                 break;
             }
+
+            case BADGE: {
+                if(voucher.getData().isEmpty()) {
+                    failure = true;
+                    break;
+                }
+
+                client.getPlayer().getInventory().addBadge(voucher.getData(), true);
+                break;
+            }
         }
 
         if (failure) {

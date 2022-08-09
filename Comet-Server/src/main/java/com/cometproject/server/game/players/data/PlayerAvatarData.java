@@ -1,6 +1,8 @@
 package com.cometproject.server.game.players.data;
 
 import com.cometproject.api.game.players.data.PlayerAvatar;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 
 public class PlayerAvatarData implements PlayerAvatar {
@@ -19,22 +21,6 @@ public class PlayerAvatarData implements PlayerAvatar {
         this.figure = figure;
         this.gender = gender;
         this.motto = motto;
-
-        this.checkFigure();
-    }
-
-    private void checkFigure() {
-        if (figure == null) {
-            return;
-        }
-
-        if (PlayerFigureValidator.CheckFilterChar(figure)) {
-            this.figure = PlayerData.DEFAULT_FIGURE;
-        }
-
-        if (!PlayerFigureValidator.isValidFigureCode(this.figure, "m")) {
-            this.figure = PlayerData.DEFAULT_FIGURE;
-        }
     }
 
     public int getId() {

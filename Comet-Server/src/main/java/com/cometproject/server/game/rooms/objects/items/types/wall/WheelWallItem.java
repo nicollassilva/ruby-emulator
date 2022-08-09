@@ -1,11 +1,15 @@
 package com.cometproject.server.game.rooms.objects.items.types.wall;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.api.networking.sessions.ISession;
+import com.cometproject.server.game.permissions.PermissionsManager;
+import com.cometproject.server.game.permissions.types.Rank;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.network.NetworkManager;
 
 import java.util.Random;
 
@@ -26,7 +30,7 @@ public class WheelWallItem extends RoomItemWall {
 
         if (entity instanceof PlayerEntity) {
             PlayerEntity pEntity = (PlayerEntity) entity;
-            if (!this.getRoom().getRights().hasRights(pEntity.getPlayerId())) {
+            if (!this.getRoom().getRights().hasRights(pEntity.getPlayerId()) && !pEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
                 return false;
             }
         }

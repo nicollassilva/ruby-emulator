@@ -29,6 +29,11 @@ public class SetIdleTimerCommand extends ChatCommand {
 
             if(ticks < 0) ticks = 600;
 
+            if(ticks < 5) {
+                sendNotif("O tempo mínino para ficar ausente é de 5 segundos.", client);
+                return;
+            }
+
             room.getData().setUserIdleTicks(ticks * 2); // testing
             sendNotif(Locale.get("command.setidletimer.set").replace("%seconds%", "" + ticks), client);
 

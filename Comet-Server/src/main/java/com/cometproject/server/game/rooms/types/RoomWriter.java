@@ -22,8 +22,8 @@ public class RoomWriter {
 
         msg.writeInt(room.getId());
         msg.writeString(publicRoom != null ? publicRoom.getCaption() : room.getName());
-        msg.writeInt(room.getOwnerId());
-        msg.writeString(room.getOwner());
+        msg.writeInt(publicRoom != null ? 0 : room.getOwnerId());
+        msg.writeString(publicRoom != null ? "" : room.getOwner());
         msg.writeInt(skipAuth ? 0 : RoomWriter.roomAccessToNumber(room.getAccess()));
         msg.writeInt(!isActive ? 0 : RoomManager.getInstance().get(room.getId()).getEntities().playerCount());
         msg.writeInt(room.getMaxUsers());

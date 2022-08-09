@@ -622,6 +622,37 @@ public class PlayerDao {
         return badges;
     }
 
+    public static String[] getEquippedBadgesByPlayerId(int playerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        final String[] badges = new String[7];
+        int i = 0;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT * FROM player_badges WHERE player_id = ? AND slot <> 0 ORDER BY slot LIMIT 7", sqlConnection);
+            preparedStatement.setInt(1, playerId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                badges[i] = resultSet.getString("badge_code");
+                i++;
+            }
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(resultSet);
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return badges;
+    }
+
     public static void updatePlayerData(int id, String username, int rank, String motto, String figure, int credits, int points, String gender, int favouriteGroup, int activityPoints, int seasonalPoints, int questId, int achievementPoints, int xpPoints, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -873,6 +904,32 @@ public class PlayerDao {
             SqlHelper.closeSilently(preparedStatement);
             SqlHelper.closeSilently(sqlConnection);
         }
+    }
+
+    public static boolean userIgnoreInvitation(int userId) {
+        Connection sqlConnection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT id FROM player_settings WHERE ignore_invites = '1' AND player_id = ?", sqlConnection);
+            preparedStatement.setInt(1, userId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return false;
     }
 
     public static void saveRoomCameraFollow(boolean r, int userId) {
@@ -1138,8 +1195,6 @@ public class PlayerDao {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                final String figure = resultSet.getString("figure");
-
                 return resultSet.getString("figure");
             }
         } catch (SQLException e) {
@@ -1293,6 +1348,26 @@ public class PlayerDao {
 
             preparedStatement = sqlConnection.prepareStatement("UPDATE players SET disable_whisper = ? WHERE player_id = ?");
             preparedStatement.setString(1, disableWhisper ? "1" : "0");
+            preparedStatement.setInt(2, playerId);
+
+            SqlHelper.executeStatementSilently(preparedStatement, false);
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
+    public static void updateAllowMimic(final boolean allowMimic, int playerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = sqlConnection.prepareStatement("UPDATE player_settings SET allow_mimic = ? WHERE player_id = ?");
+            preparedStatement.setString(1, allowMimic ? "1" : "0");
             preparedStatement.setInt(2, playerId);
 
             SqlHelper.executeStatementSilently(preparedStatement, false);
@@ -1836,6 +1911,6 @@ public class PlayerDao {
             SqlHelper.closeSilently(sqlConnection);
         }
 
-        return 1;
+        return 0;
     }
 }

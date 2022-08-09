@@ -72,7 +72,7 @@ public class WhisperMessageEvent implements Event {
                     }
                     filteredMessage2 = playerEntity.getRoom().getFilter().filter(playerEntity, filteredMessage2);
                 }
-                whisperedPlayer.getSession().send(new WhisperMessageComposer(-1, "<b>" + client.getPlayer().getData().getUsername() + "</b>, disse ao grupo: " + filteredMessage2, 1));
+                whisperedPlayer.getSession().send(new WhisperMessageComposer(whisperedPlayer.getId(), "<b>" + client.getPlayer().getData().getUsername() + "</b>, disse ao grupo: " + filteredMessage2, 1));
             }
             client.send(new WhisperMessageComposer(playerEntity.getId(), "<b>" + client.getPlayer().getData().getUsername() + "</b>, disse ao grupo: " + message, bubbleId));
             playerEntity.postChat(message);

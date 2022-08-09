@@ -9,9 +9,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
-import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
 import com.cometproject.server.network.sessions.Session;
-import com.cometproject.storage.api.StorageContext;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -43,7 +41,7 @@ public class EjectAllCommand extends ChatCommand {
                 if (item instanceof RoomItemFloor) {
                     client.getPlayer().getEntity().getRoom().getItems().removeItem((RoomItemFloor) item, client);
                 } else {
-                    client.getPlayer().getEntity().getRoom().getItems().removeItem(((RoomItemWall) item), client, true);
+                    client.getPlayer().getEntity().getRoom().getItems().removeItem(((RoomItemWall) item), client, true, true);
                 }
             }
         } else {
@@ -76,14 +74,14 @@ public class EjectAllCommand extends ChatCommand {
                         if (roomItem instanceof RoomItemFloor)
                             room.getItems().removeItem(((RoomItemFloor) roomItem), groupMemberSession);
                         else if (roomItem instanceof RoomItemWall)
-                            room.getItems().removeItem(((RoomItemWall) roomItem), groupMemberSession, true);
+                            room.getItems().removeItem(((RoomItemWall) roomItem), groupMemberSession, true, true);
                     }
                 } else {
                     for (final RoomItem item : floorItemsOwnedByPlayer) {
                         if (item instanceof RoomItemFloor) {
                             client.getPlayer().getEntity().getRoom().getItems().removeItem((RoomItemFloor) item, client, false);
                         } else {
-                            client.getPlayer().getEntity().getRoom().getItems().removeItem(((RoomItemWall) item), client, false);
+                            client.getPlayer().getEntity().getRoom().getItems().removeItem(((RoomItemWall) item), client, false, true);
                         }
                     }
                 }

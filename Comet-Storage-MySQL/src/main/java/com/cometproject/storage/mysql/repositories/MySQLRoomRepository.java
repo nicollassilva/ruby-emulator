@@ -167,12 +167,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final int category = room.readInteger("category");
         final int maxUsers = room.readInteger("max_users");
         final String thumbnail = room.readString("thumbnail");
-
-        String accessTypeString = room.readString("access_type");
-
-        if (!accessTypeString.equals("open") && !accessTypeString.equals("doorbell") && !accessTypeString.equals("password")) {
-            accessTypeString = "open";
-        }
+        final String accessTypeString = room.readString("access_type");
 
         final String password = room.readString("password");
         final RoomAccessType access = RoomAccessType.valueOf(accessTypeString.toUpperCase());

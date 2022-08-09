@@ -13,6 +13,7 @@ import com.cometproject.api.game.rooms.models.IRoomModel;
 import com.cometproject.api.game.rooms.models.RoomModelData;
 import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.game.rooms.factories.RoomModelFactory;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.navigator.NavigatorManager;
 import com.cometproject.server.game.polls.PollManager;
 import com.cometproject.server.game.polls.types.Poll;
@@ -148,7 +149,10 @@ public class Room implements Attributable, IRoom {
             RoomQueue.getInstance().addQueue(this.getId(), 0);
         }
 
-        this.log.debug("Room loaded");
+        if(Comet.isDebugging) {
+            this.log.debug("Room loaded");
+        }
+
         return this;
     }
 
@@ -276,7 +280,9 @@ public class Room implements Attributable, IRoom {
             this.log.warn("Room [" + this.getData().getId() + "][" + this.getData().getName() + "] took " + timeTaken + "ms to dispose");
         }
 
-        this.log.debug("Room has been disposed");
+        if(Comet.isDebugging) {
+            this.log.debug("Room has been disposed");
+        }
     }
 
     public void tick() {

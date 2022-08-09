@@ -3,7 +3,8 @@ package com.cometproject.server.game.commands.staff;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
-import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 import com.cometproject.server.network.messages.outgoing.user.details.AvatarAspectUpdateMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.player.PlayerDao;
@@ -11,24 +12,28 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class MimicOfflineCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-        if (params.length < 1) {
-            sendNotif(Locale.getOrDefault("command.user.invalid", "Usuário inválido!"), client);
+        if (params.length < 1 || params[0].length() < 3) {
+            sendNotif(Locale.getOrDefault("command.user.invalid", "Nome de usuário inválido!"), client);
             return;
         }
 
         final String username = params[0];
-
-        if(username == null ) {
-            client.send(new NotificationMessageComposer("generic", "Por favor, informe o nome do usuário"));
-            return;
-        }
-
         final String figure = PlayerDao.getFigureByUsername(username);
         final String gender = PlayerDao.getGenderByUsername(username);
 
-        PlayerEntity playerEntity = client.getPlayer().getEntity();
+        if(figure == null || gender == null) {
+            sendNotif("Usuário não encontrado!", client);
+            return;
+        }
 
-        playerEntity.getPlayer().getData().setFigure(figure);
+        if(ClothingValidationManager.isInvalidLook(client.getPlayer(), figure, FigureGender.fromString(gender))){
+            sendNotif(Locale.getOrDefault("command.mimic.missing_clothing", "Você não pode copiar o visual desse usuário porque não possuí todas as peças de roupa que ele está vestindo."), client);
+            return;
+        }
+
+        final PlayerEntity playerEntity = client.getPlayer().getEntity();
+
+        playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(client.getPlayer(), figure, FigureGender.fromString(gender)));
         playerEntity.getPlayer().getData().setGender(gender);
         playerEntity.getPlayer().getData().save();
 

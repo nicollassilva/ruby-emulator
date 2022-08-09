@@ -346,6 +346,15 @@ public class CatalogManager implements ICatalogService {
         return null;
     }
 
+    @Override
+    public ICatalogPage getCatalogPageByCatalogItemId(final int id) {
+        if (!this.catalogItemIdToPageId.containsKey(id)) {
+            return null;
+        }
+
+        return this.pages.get(this.catalogItemIdToPageId.get(id));
+    }
+
     /**
      * Get a catalog item by its ID
      *

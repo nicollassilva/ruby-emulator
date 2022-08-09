@@ -53,7 +53,7 @@ public class WiredActionMoveRotateIgnoreHeight extends WiredActionItem {
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
-                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, false, false)) {
+                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, false, false)) {
                     if (!rotationChanged && this.useItemsAnimation()) {
                         if (!(floorItem instanceof WiredCustomSetSpeedRollerSelected)) {
                             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));

@@ -16,7 +16,7 @@ public class RedeemCreditsCommand extends ChatCommand {
     public void execute(Session client, String[] params) {
         int coinsToGive = 0;
         int diamondsToGive = 0;
-        int ducketsToGive = 0;
+        int rubisToGive = 0;
 
         final List<Long> itemsToRemove = Lists.newArrayList();
 
@@ -34,8 +34,8 @@ public class RedeemCreditsCommand extends ChatCommand {
                 try {
                     if (itemName.contains("_diamond_")) {
                         diamondsToGive += Integer.parseInt(itemName.split("_diamond_")[1]);
-                    } else if(itemName.contains("_ducket_")) {
-                        ducketsToGive += Integer.parseInt(itemName.split("_ducket_")[1]);
+                    } else if(itemName.contains("_ruby_")) {
+                        rubisToGive += Integer.parseInt(itemName.split("_ruby_")[1]);
                     } else {
                         coinsToGive += Integer.parseInt(itemName.split("_")[1]);
                     }
@@ -65,15 +65,15 @@ public class RedeemCreditsCommand extends ChatCommand {
             client.getPlayer().getData().increaseVipPoints(diamondsToGive);
         }
 
-        if(ducketsToGive > 0) {
-            client.getPlayer().getData().increaseActivityPoints(ducketsToGive);
+        if(rubisToGive > 0) {
+            client.getPlayer().getData().increaseSeasonalPoints(rubisToGive);
         }
 
         if (coinsToGive > 0) {
             client.getPlayer().getData().increaseCredits(coinsToGive);
         }
 
-        if (diamondsToGive > 0 || coinsToGive > 0 || ducketsToGive > 0) {
+        if (diamondsToGive > 0 || coinsToGive > 0 || rubisToGive > 0) {
             client.getPlayer().sendBalance();
             client.getPlayer().getData().save();
         }
@@ -92,6 +92,6 @@ public class RedeemCreditsCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.redeemcredits.description", "Canjea los furnis créditos, duckets, diamantes o moneda de temporada a tu monedero");
+        return Locale.getOrDefault("command.redeemcredits.description", "Canjea los furnis créditos, rubis, diamantes o moneda de temporada a tu monedero");
     }
 }

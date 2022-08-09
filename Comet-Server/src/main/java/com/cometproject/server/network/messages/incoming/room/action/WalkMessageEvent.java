@@ -42,20 +42,25 @@ public class WalkMessageEvent implements Event {
 
             if (entity.hasAttribute("teleport")) {
                 final Position newPosition = new Position(goalX, goalY);
-                final RoomTile tile = client.getPlayer().getEntity().getRoom().getMapping().getTile(newPosition);
+                final RoomTile nextTile = client.getPlayer().getEntity().getRoom().getMapping().getTile(newPosition);
+                final RoomTile currentTile = client.getPlayer().getEntity().getTile();
 
                 entity.cancelWalk();
                 entity.unIdle();
 
-                newPosition.setZ(tile.getWalkHeight());
+                if(currentTile != null) {
+                    entity.removeFromTile(currentTile);
+
+                    if(currentTile.getTopItemInstance() != null) {
+                        currentTile.getTopItemInstance().onEntityStepOff(entity);
+                    }
+                }
+
+                newPosition.setZ(nextTile.getWalkHeight());
                 entity.warpImmediately(newPosition);
 
                 entity.removeStatus(RoomEntityStatus.LAY);
                 entity.removeStatus(RoomEntityStatus.SIT);
-
-                if(tile.getTopItemInstance() != null) {
-                    tile.getTopItemInstance().onEntityStepOn(entity);
-                }
 
                 return;
             }

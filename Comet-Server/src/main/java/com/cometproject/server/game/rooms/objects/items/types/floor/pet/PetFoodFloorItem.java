@@ -66,7 +66,7 @@ public class PetFoodFloorItem extends RoomItemFloor {
                 }
 
                 this.pet.getPetAI().eatingComplete();
-                this.getRoom().getItems().removeItem(this, null, false, true);
+                this.getRoom().getItems().removeItem(this, null, false, true, true);
             } else {
                 if (this.pet.getData().getHunger() >= 20) {
                     this.setTicks(RoomItemFactory.getProcessTime(2.0));

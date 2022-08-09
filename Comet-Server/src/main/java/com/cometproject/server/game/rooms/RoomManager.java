@@ -9,6 +9,7 @@ import com.cometproject.api.game.rooms.settings.RoomTradeState;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.api.utilities.Initialisable;
 import com.cometproject.server.game.items.music.TraxMachineSong;
+import com.cometproject.server.game.navigator.types.search.NavigatorSearchService;
 import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.rooms.filter.WordFilter;
 import com.cometproject.server.game.rooms.models.types.StaticRoomModel;
@@ -269,6 +270,7 @@ public class RoomManager implements Initialisable {
     public List<IRoomData> getRoomsByQuery(String query) {
         final List<IRoomData> rooms = new ArrayList<>();
 
+        // empty query, return empty rooms;
         if (query.equals("owner:")) return rooms;
 
         if (query.equals("tag:")) return rooms;
@@ -366,18 +368,12 @@ public class RoomManager implements Initialisable {
                 continue;
             }
 
-            if (room.getEntities() != null && room.getEntities().playerCount() < minimumPlayers) continue;
+            if (!NavigatorSearchService.checkRoomVisibility(player, room)) {
+                continue;
+            }
 
-            if (room.getData().getAccess() == RoomAccessType.INVISIBLE && player.getData().getRank() < 3) {
-                if (room.getGroup() != null) {
-                    if (!player.getGroups().contains(room.getGroup().getId())) {
-                        continue;
-                    }
-                } else {
-                    if (!room.getRights().hasRights(player.getId())) {
-                        continue;
-                    }
-                }
+            if (room.getEntities() != null && room.getEntities().playerCount() < minimumPlayers) {
+                continue;
             }
 
             rooms.add(room.getData());

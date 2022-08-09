@@ -15,6 +15,7 @@ import com.cometproject.server.protocol.headers.Composers;
 import com.cometproject.server.protocol.messages.MessageComposer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
 
@@ -22,14 +23,12 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
     private final String data;
     private final List<Category> categories;
     private final Player player;
-    private int invisibleRooms;
 
     public NavigatorSearchResultSetMessageComposer(String category, String data, List<Category> categories, Player player) {
         this.category = category;
         this.data = data;
         this.categories = categories;
         this.player = player;
-        this.invisibleRooms = 0;
     }
 
     @Override
@@ -51,41 +50,12 @@ public class NavigatorSearchResultSetMessageComposer extends MessageComposer {
             msg.writeBoolean(false);
             msg.writeInt(0);
 
-            final List<IRoomData> rooms = NavigatorSearchService.order(RoomManager.getInstance().getRoomsByQuery(this.data), 50);
+            final List<IRoomData> rooms = NavigatorSearchService.order(RoomManager.getInstance().getRoomsByQuery(this.data), 50).stream().filter(
+                    room -> NavigatorSearchService.checkRoomVisibility(player, RoomManager.getInstance().get(room.getId()))
+            ).collect(Collectors.toList());
 
+            msg.writeInt(rooms.size());
             for (final IRoomData roomData : rooms) {
-                if (roomData.getAccess() == RoomAccessType.INVISIBLE && player.getData().getRank() < 3) {
-                    final Room room = RoomManager.getInstance().get(roomData.getId());
-
-                    if (room.getGroup() != null) {
-                        if (!player.getGroups().contains(room.getGroup().getId())) {
-                            invisibleRooms++;
-                        }
-                    } else {
-                        if (!room.getRights().hasRights(player.getId())) {
-                            invisibleRooms++;
-                        }
-                    }
-                }
-            }
-
-            msg.writeInt(rooms.size() - invisibleRooms);
-
-            for (final IRoomData roomData : rooms) {
-                if (roomData.getAccess() == RoomAccessType.INVISIBLE && player.getData().getRank() < 3) {
-                    final Room room = RoomManager.getInstance().get(roomData.getId());
-
-                    if (room.getGroup() != null) {
-                        if (!player.getGroups().contains(room.getGroup().getId())) {
-                            continue;
-                        }
-                    } else {
-                        if (!room.getRights().hasRights(player.getId())) {
-                            continue;
-                        }
-                    }
-                }
-
                 RoomWriter.write(roomData, msg);
             }
 

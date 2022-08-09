@@ -17,14 +17,16 @@ public class GroupInformationMessageComposer extends MessageComposer {
     private final boolean isOwner;
     private final boolean isAdmin;
     private final int membership;
+    private final int favoriteGroupId;
 
-    public GroupInformationMessageComposer(final IGroup group, final IRoomData roomData, final boolean flag, final boolean isOwner, final boolean isAdmin, final int membership) {
+    public GroupInformationMessageComposer(final IGroup group, final IRoomData roomData, final boolean flag, final boolean isOwner, final boolean isAdmin, final int membership, final int favoriteGroupId) {
         this.group = group;
         this.roomData = roomData;
         this.flag = flag;
         this.isOwner = isOwner;
         this.isAdmin = isAdmin;
         this.membership = membership;
+        this.favoriteGroupId = favoriteGroupId;
     }
 
     @Override
@@ -44,7 +46,7 @@ public class GroupInformationMessageComposer extends MessageComposer {
         msg.writeString(roomData == null ? "Unknown Room" : roomData.getName());
         msg.writeInt(membership);
         msg.writeInt(group.getMembers().getAll().size());
-        msg.writeBoolean(false); //favorite group
+        msg.writeBoolean(favoriteGroupId == group.getId()); //favorite group
         msg.writeString(getDate(group.getData().getCreatedTimestamp()));
         msg.writeBoolean(isOwner);
         msg.writeBoolean(isAdmin);

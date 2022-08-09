@@ -152,6 +152,10 @@ public interface IPlayer {
 
     void setLastCommandRoleplay(int lastCommandRoleplay);
 
+    int getLastSlotMachineAction();
+
+    void setLastSlotMachineAction(int lastSlotMachineAction);
+
     int getLastPurchase();
 
     void setLastPurchase(int lastPurchase);
@@ -209,4 +213,12 @@ public interface IPlayer {
     void setLastForwardRoomRequest(long lastForwardRoomRequest);
 
     List<Integer> getLastRoomsIds();
+
+    boolean getNitro();
+
+    boolean setNitro(boolean nitro);
+
+    int getLastInviteFriends();
+
+    void setLastInviteFriends(int lastInviteFriends);
 }

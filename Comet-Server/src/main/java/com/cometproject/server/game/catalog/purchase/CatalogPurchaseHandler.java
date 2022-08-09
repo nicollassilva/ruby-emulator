@@ -60,7 +60,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
     }
 
     @Override
-    public void purchaseItem(ISession client, int pageId, int itemId, String data, int amount, GiftData giftData) {
+    public synchronized void purchaseItem(ISession client, int pageId, int itemId, String data, int amount, GiftData giftData) {
         if (CometSettings.CATALOG_ASYNC_PURCHASE_ALLOW) {
             if (this.executorService == null) {
                 this.executorService = Executors.newFixedThreadPool(Integer.parseInt(Configuration.currentConfig().get("comet.system.catalogPurchaseThreads")));
@@ -77,8 +77,12 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
         final int playerIdToDeliver = giftData == null ? -1 : PlayerDao.getIdByUsername(giftData.getReceiver());
 
         if (this.canHandle(client, amount, giftData, playerIdToDeliver)) {
-            final ICatalogPage page = CatalogManager.getInstance().getPage(pageId);
+            ICatalogPage page = CatalogManager.getInstance().getPage(pageId);
             ICatalogItem item;
+
+            if(page == null) {
+                page = CatalogManager.getInstance().getCatalogPageByCatalogItemId(itemId);
+            }
 
             if (page != null) {
                 if (page.isVipOnly() && client.getPlayer().getData().getRank() != CometSettings.vipRank && client.getPlayer().getData().getRank() < CometSettings.rankCanSeeVipContent) return;
@@ -266,13 +270,20 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
             return false;
         }
 
-        if (giftData != null) {
-            if (playerIdToDeliver == 0) {
+        if (giftData == null) {
+            return true;
+        }
+
+        if (playerIdToDeliver == 0) {
+            client.send(new GiftUserNotFoundMessageComposer());
+            return false;
+        } else {
+            if (client.getPlayer().getMessenger().getFriendById(playerIdToDeliver) == null && !client.getPlayer().getPermissions().getRank().modTool()) {
                 client.send(new GiftUserNotFoundMessageComposer());
                 return false;
-            } else {
-                client.getPlayer().getAchievements().progressAchievement(AchievementType.GIFT_GIVER, 1);
             }
+
+            client.getPlayer().getAchievements().progressAchievement(AchievementType.GIFT_GIVER, 1);
         }
 
         return true;

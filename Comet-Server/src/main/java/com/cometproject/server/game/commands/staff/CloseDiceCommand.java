@@ -48,6 +48,6 @@ public class CloseDiceCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Fecha os dados";
+        return Locale.getOrDefault("command.closedice.description", "Fecha o(s) dado(s) ao redor do usuário que usar o comando.");
     }
 }

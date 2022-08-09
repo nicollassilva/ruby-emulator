@@ -4,6 +4,8 @@ import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.GenericLargeScoreFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.GenericSmallScoreFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballTimerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.freeze.FreezeTimerFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
@@ -40,7 +42,7 @@ public class WiredActionToggleState extends WiredActionItem {
             if (floorItem == null || floorItem instanceof WiredFloorItem || floorItem instanceof DiceFloorItem)
                 continue;
 
-            floorItem.onInteract(null, (floorItem instanceof FootballTimerFloorItem || floorItem instanceof FreezeTimerFloorItem ? 1 : 0), true);
+            floorItem.onInteract(null, this.getCorrectRequestDataByFloorItem(floorItem), true);
             tilesToUpdate.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY()));
         }
 
@@ -49,5 +51,17 @@ public class WiredActionToggleState extends WiredActionItem {
         }
 
         tilesToUpdate.clear();
+    }
+
+    public int getCorrectRequestDataByFloorItem(RoomItemFloor floorItem) {
+        if(floorItem instanceof FootballTimerFloorItem || floorItem instanceof FreezeTimerFloorItem) {
+            return 1;
+        }
+
+        if(floorItem instanceof GenericSmallScoreFloorItem || floorItem instanceof GenericLargeScoreFloorItem) {
+            return 2;
+        }
+
+        return 0;
     }
 }

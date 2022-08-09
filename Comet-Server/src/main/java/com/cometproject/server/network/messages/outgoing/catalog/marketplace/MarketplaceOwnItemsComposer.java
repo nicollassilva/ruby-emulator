@@ -25,10 +25,10 @@ public class MarketplaceOwnItemsComposer extends MessageComposer {
         msg.writeInt(this.client.getPlayer().getInventory().getSoldPriceTotal());
         msg.writeInt(this.client.getPlayer().getInventory().getMarketplaceItems().size());
 
-        for (IMarketPlaceOffer offer : this.client.getPlayer().getInventory().getMarketplaceItems()) {
+        for (final IMarketPlaceOffer offer : this.client.getPlayer().getInventory().getMarketplaceItems()) {
             try {
                 if (offer.getState() == MarketPlaceState.OPEN) {
-                    int offerHasExpired = (int) ((offer.getTimestamp() + 172800) - Comet.getTime());
+                    final int offerHasExpired = (int) ((offer.getTimestamp() + 172800) - Comet.getTime());
 
                     if (offerHasExpired <= 0) {
                         offer.setState(MarketPlaceState.CLOSED);
@@ -59,8 +59,8 @@ public class MarketplaceOwnItemsComposer extends MessageComposer {
                     msg.writeInt(0);
 
                 msg.writeInt(0);
-            } catch (Exception e) {
-                System.out.println(e);
+            } catch (Exception ignored) {
+
             }
         }
     }

@@ -83,7 +83,8 @@ public class PermissionsDao {
                         resultSet.getInt("messenger_max_friends"),
                         resultSet.getString("about_detailed").equals("1"),
                         resultSet.getString("about_stats").equals("1"),
-                        resultSet.getString("login_notif").equals("1")));
+                        resultSet.getString("login_notif").equals("1"),
+                        resultSet.getString("control_mpu").equals("1")));
             }
 
         } catch (SQLException e) {

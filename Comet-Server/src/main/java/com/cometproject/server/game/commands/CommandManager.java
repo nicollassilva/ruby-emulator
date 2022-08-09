@@ -28,6 +28,9 @@ import com.cometproject.server.game.commands.staff.muting.UnmuteCommand;
 import com.cometproject.server.game.commands.staff.rewards.*;
 import com.cometproject.server.game.commands.staff.rewards.custom.WinCommand;
 import com.cometproject.server.game.commands.staff.rewards.mass.*;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassCoinsCommand;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassPointsCommand;
+import com.cometproject.server.game.commands.staff.rewards.room.RoomMassSeasonalCommand;
 import com.cometproject.server.game.commands.staff.security.LogsClientCommand;
 import com.cometproject.server.game.commands.user.*;
 import com.cometproject.server.game.commands.user.building.FillCommand;
@@ -153,7 +156,7 @@ public class CommandManager implements Initialisable {
         //this.addCommand(Locale.get("command.reward.name"), new RewardCommand());
         this.addCommand(Locale.getOrDefault("command.setz.name", "setz"), new SetZCommand());
         this.addCommand(Locale.getOrDefault("command.override.name", "override"), new OverrideCommand());
-        this.addCommand(Locale.getOrDefault("command.maxfloor.name", "maxfloor"), new MaxFloorCommand());
+        this.addCommand(Locale.getOrDefault("command.updatefloor.name", "updatefloor"), new UpdateFloorCommand());
         this.addCommand(Locale.get("command.brb.name"), new BrbCommand());
         this.addCommand(Locale.get("command.setidletimer.name"), new SetIdleTimerCommand());
         this.addCommand(Locale.getOrDefault("command.autofloor.name", "autofloor"), new AutoFloorCommand());
@@ -189,6 +192,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.mentions.name", "mentions"), new MentionsCommand());
         this.addCommand(Locale.getOrDefault("command.djalert.name", "dj"), new DjAlertCommand());
         this.addCommand(Locale.getOrDefault("command.banner.name", "banner"), new BannerCommand());
+        this.addCommand(Locale.getOrDefault("command.disablemimic.name", "desativarcopiar"), new DisableMimicCommand());
 
         // Gimmick commands
         this.addCommand(Locale.get("command.rob.name"), new RobCommand());
@@ -201,6 +205,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.online.name"), new OnlineCommand());
         this.addCommand(Locale.get("command.build.name"), new BuildCommand());
         this.addCommand(Locale.getOrDefault("command.event_alert_websocket.name", "eventvue"), new EventAlertVueCommand());
+        this.addCommand(Locale.get("command.invite_friends.name"), new InviteFriendsCommand());
 
         this.addCommand(Locale.getOrDefault("command.disabledcommands.name", "listcommands"), new ListDisabledCommandsCommand());
         this.addCommand(Locale.get("command.toggleshoot.name"), new ToggleShootCommand());
@@ -209,6 +214,12 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.buy_room.name"), new BuyRoomCommand());
         this.addCommand(Locale.get("command.see_height.name"), new SeeHeightCommand());
         this.addCommand(Locale.get("command.teleport_to_me.name"), new TeleportToMeCommand());
+        this.addCommand(Locale.getOrDefault("command.atravessar.name", "atravessar"), new AtravessarCommand());
+        this.addCommand(Locale.getOrDefault("command.campainha.name", "campainha"), new CampainhaCommand());
+        this.addCommand(Locale.getOrDefault("command.count_furnis.name", "countfurnis"), new CountFurnisCommand());
+        this.addCommand(Locale.getOrDefault("command.slime.name", "slime"), new SlimeCommand());
+        this.addCommand(Locale.getOrDefault("command.superpush.name", "spush"), new SuperPushCommand());
+        this.addCommand(Locale.getOrDefault("command.roomban.name", "roomban"), new RoomBanUserCommand());
 
         this.addCommand(Locale.getOrDefault("command.fill.name", "fill"), new FillCommand());
     }
@@ -282,6 +293,9 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.roomvideo.name"), new RoomVideoCommand());
         this.addCommand(Locale.get("command.closedice.name"), new CloseDiceCommand());
         this.addCommand(Locale.get("command.publicroom.name"), new PublicRoomCommand());
+        this.addCommand(Locale.get("command.roommmasscoins.name"), new RoomMassCoinsCommand());
+        this.addCommand(Locale.get("command.roommmasspoints.name"), new RoomMassPointsCommand());
+        this.addCommand(Locale.get("command.roommass.seasonal.name"), new RoomMassSeasonalCommand());
 
         // New
         this.addCommand(Locale.get("command.advban.name"), new AdvBanCommand());
@@ -312,6 +326,7 @@ public class CommandManager implements Initialisable {
         this.addCommand("prefix", new PrefixCommand());
         this.addCommand("givebanner", new GiveBannerCommand());
         this.addCommand("keyboard", new KeyboardWalkCommand());
+        this.addCommand(Locale.get("command.transfer_room.name"), new TransferRoomCommand());
 
         // Room bundles
         this.addCommand(Locale.get("command.bundle.name"), new BundleCommand());
@@ -330,6 +345,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.editfurni.name"), new EditFurniCommand());
         this.addCommand(Locale.getOrDefault("command.win.name", "win"), new WinCommand());
         this.addCommand(Locale.getOrDefault("command.pickup.name", "pickup"), new PickupCommand());
+        this.addCommand(Locale.getOrDefault("command.nitro.name", "nitro"), new NitroCommand());
     }
 
     /**

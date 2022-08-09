@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public class WiredUtil {
+public class WiredUtil{
     public static final int MAX_FURNI_SELECTION = 15;
 
     public static final int PARAM_STATE = 0;

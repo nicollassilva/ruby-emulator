@@ -32,7 +32,7 @@ public class WiredCustomForwardRoom extends WiredActionItem {
             return;
         }
 
-        PlayerEntity playerEntity = ((PlayerEntity) event.entity);
+        final PlayerEntity playerEntity = ((PlayerEntity) event.entity);
 
         if (playerEntity.getPlayer() == null || playerEntity.getPlayer().getSession() == null) {
             return;
@@ -46,17 +46,19 @@ public class WiredCustomForwardRoom extends WiredActionItem {
             return;
         }
 
-        int roomId = Integer.parseInt(this.getWiredData().getText());
+        final int roomId = Integer.parseInt(this.getWiredData().getText());
 
         if (playerEntity.getPlayer().getEntity().getRoom().getId() == roomId)
             return;
 
         final long diff = System.currentTimeMillis() - playerEntity.getPlayer().getLastForwardRoomRequest();
+
         if (DELAY > diff) {
             return;
         }
 
         playerEntity.getPlayer().setLastForwardRoomRequest(System.currentTimeMillis());
+
         if (playerEntity.getPlayer().getPermissions().getRank().modTool()) {
             playerEntity.getPlayer().bypassRoomAuth(true);
         }

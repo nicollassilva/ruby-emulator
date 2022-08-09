@@ -278,6 +278,12 @@ public class PlayerSettings implements IPlayerSettings {
         return this.allowMimic;
     }
 
+    public void setAllowMimic(boolean value) {
+        this.allowMimic = value;
+
+        flush();
+    }
+
     public int getHomeRoom() {
         return this.homeRoom;
     }

@@ -1,7 +1,9 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.academy;
 
 import com.cometproject.api.game.achievements.types.AchievementType;
+import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
+import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
@@ -31,6 +33,29 @@ public class GymEquipmentFloorItem extends RoomItemFloor {
         playerEntity.setHeadRotation(this.getRotation());
 
         this.setTicks(RoomItemFactory.getProcessTime(this.processTime));
+
+        if(!this.getItemData().getData().equals("0"))
+            return;
+
+        this.getItemData().setData("1");
+        this.sendUpdate();
+    }
+
+    @Override
+    public void onPositionChanged(Position newPosition) {
+        final List<RoomEntity> entities = this.getEntitiesOnItem();
+
+        for(final RoomEntity entity : entities) {
+            if (!(entity instanceof PlayerEntity))
+                return;
+
+            final PlayerEntity playerEntity = ((PlayerEntity) entity);
+
+            playerEntity.setBodyRotation(this.getRotation());
+            playerEntity.setHeadRotation(this.getRotation());
+
+            playerEntity.markNeedsUpdate();
+        }
     }
 
     @Override
@@ -57,5 +82,15 @@ public class GymEquipmentFloorItem extends RoomItemFloor {
         }
 
         this.setTicks(RoomItemFactory.getProcessTime(this.processTime));
+    }
+
+    @Override
+    public void onEntityStepOff(RoomEntity entity) {
+        if(!this.getEntitiesOnItem().isEmpty())
+            return;
+
+        this.getItemData().setData("0");
+        this.sendUpdate();
+        this.saveData();
     }
 }

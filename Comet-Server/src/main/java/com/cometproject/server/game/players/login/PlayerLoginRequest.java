@@ -139,7 +139,9 @@ public class PlayerLoginRequest implements CometTask {
 
             RoomManager.getInstance().loadRoomsForUser(player);
 
-            client.getLogger().debug(client.getPlayer().getData().getUsername() + " logged in");
+            if(Comet.isDebugging) {
+                client.getLogger().debug(client.getPlayer().getData().getUsername() + " logged in");
+            }
 
             player.setOnline(true);
 

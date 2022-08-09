@@ -48,10 +48,8 @@ public class PrivateChatMessageEvent implements Event {
                 }
             }
 
-            if ((time / 1000L) < client.getPlayer().getMessengerFloodTime()) {
-                client.send(new MessengerErrorMessageComposer(4, userId));
+            if ((time / 1000L) < client.getPlayer().getMessengerFloodTime())
                 return;
-            }
 
             client.getPlayer().setMessengerLastMessageTime(time);
         }

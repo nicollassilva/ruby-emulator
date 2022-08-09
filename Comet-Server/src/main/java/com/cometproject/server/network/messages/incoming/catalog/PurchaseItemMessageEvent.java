@@ -1,5 +1,7 @@
 package com.cometproject.server.network.messages.incoming.catalog;
 
+import com.cometproject.api.config.CometSettings;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.catalog.CatalogManager;
 import com.cometproject.server.network.messages.incoming.Event;
@@ -21,18 +23,26 @@ public class PurchaseItemMessageEvent implements Event {
         final int pageId = msg.readInt();
         final int itemId = msg.readInt();
         final String data = msg.readString();
-        final int amount = msg.readInt();
+        final int amount = Math.min(Math.max(msg.readInt(), 1), 100);
 
-        if (!client.getPlayer().getSettings().getAllowTrade()) {
-            client.getPlayer().sendPopup(Locale.get("user.troc.disabled.title"), Locale.get("user.troc.disabled.action.message"));
-            return;
+        final int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastPurchase();
+        if(timeSinceLastUpdate >= CometSettings.playerPurchaseCooldown) {
+            client.getPlayer().setLastPurchase((int) Comet.getTime());
+
+            if (!client.getPlayer().getSettings().getAllowTrade()) {
+                client.getPlayer().sendPopup(Locale.get("user.troc.disabled.title"), Locale.get("user.troc.disabled.action.message"));
+                return;
+            }
+
+            if (client.getPlayer().antiSpam("PurchaseItemMessageEvent", 1.0)) {
+                client.getPlayer().sendPopup(Locale.get("game.catalog.furni.buytoofast.title"), Locale.get("game.catalog.furni.buytoofast.message"));
+                return;
+            }
+
+            CatalogManager.getInstance().getPurchaseHandler().purchaseItem(client, pageId, itemId, data, amount, null);
         }
-
-        if (client.getPlayer().antiSpam("PurchaseItemMessageEvent", 1.0)) {
+        else{
             client.getPlayer().sendPopup(Locale.get("game.catalog.furni.buytoofast.title"), Locale.get("game.catalog.furni.buytoofast.message"));
-            return;
         }
-
-        CatalogManager.getInstance().getPurchaseHandler().purchaseItem(client, pageId, itemId, data, amount, null);
     }
 }

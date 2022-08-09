@@ -11,9 +11,9 @@ import java.util.Set;
 
 public class FigureSetIdsMessageComposer extends MessageComposer {
 
-    private final Set<String> clothing;
+    private final Set<IClothingItem> clothing;
 
-    public FigureSetIdsMessageComposer(final Set<String> clothing) {
+    public FigureSetIdsMessageComposer(final Set<IClothingItem> clothing) {
         this.clothing = clothing;
     }
 
@@ -26,13 +26,9 @@ public class FigureSetIdsMessageComposer extends MessageComposer {
     public void compose(IComposer msg) {
         final Set<Integer> parts = new HashSet<>();
 
-        for (final String clothing : this.clothing) {
-            final IClothingItem clothingItem = CatalogManager.getInstance().getClothingItems().get(clothing);
-
-            if (clothingItem != null) {
-                for (final int part : clothingItem.getParts()) {
-                    parts.add(part);
-                }
+        for (final IClothingItem clothingItem : this.clothing) {
+            for (final int part : clothingItem.getParts()) {
+                parts.add(part);
             }
         }
 
@@ -44,8 +40,8 @@ public class FigureSetIdsMessageComposer extends MessageComposer {
 
         msg.writeInt(this.clothing.size());
 
-        for (final String clothing : this.clothing) {
-            msg.writeString(clothing);
+        for (final IClothingItem clothing : this.clothing) {
+            msg.writeString(clothing.getItemName());
         }
     }
 }

@@ -27,15 +27,19 @@ public class WearBadgeMessageEvent implements Event {
             return;
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 7; i++) {
             final int slot = msg.readInt();
+
+            if (slot < 1 || slot > 7)
+                return;
+
             final String badge = msg.readString();
 
             if (badge.isEmpty()) {
                 continue;
             }
 
-            if (!client.getPlayer().getInventory().getBadges().containsKey(badge) || slot < 1 || slot > 10) {
+            if (!client.getPlayer().getInventory().getBadges().containsKey(badge)) {
                 return;
             }
 

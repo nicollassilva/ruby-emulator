@@ -1,7 +1,6 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom;
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
-import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredUtil;
@@ -45,8 +44,8 @@ public class WiredCustomTeleportItem extends WiredActionItem {
 
         //event.entity.moveTo(position);
 
-        if (this.getRoom().getItems().moveFloorItem(item.getId(), playerEntity.getPosition().squareInFront(item.getMoveDirection()), item.getRotation(), true)) {
-            if(this.useItemsAnimation()) {
+        if (this.getRoom().getItems().moveFloorItem(item.getId(), playerEntity.getPosition().squareInFront(item.getMoveDirection()), item.getRotation())) {
+            if (this.useItemsAnimation()) {
                 this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(item));
             } else {
                 this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(item));

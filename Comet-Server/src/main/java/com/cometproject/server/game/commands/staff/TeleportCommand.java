@@ -40,4 +40,9 @@ public class TeleportCommand extends ChatCommand {
     public String getDescription() {
         return Locale.get("command.teleport.description");
     }
+
+    @Override
+    public boolean canDisable() {
+        return true;
+    }
 }

@@ -4,7 +4,6 @@ import com.cometproject.api.game.achievements.types.AchievementType;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.server.game.players.PlayerManager;
 import com.cometproject.server.game.players.types.PlayerAvatarActions;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
@@ -38,19 +37,33 @@ public class FootballGoalFloorItem extends RoomItemFloor {
 
     @Override
     public void onItemAddedToStack(RoomItemFloor floorItem) {
-        if (floorItem instanceof FootballFloorItem) {
-            this.getRoom().getGame().increaseScore(this.gameTeam, 1);
+        if (!(floorItem instanceof FootballFloorItem))
+            return;
 
-            final int playerId = this.getRoom().getData().getOwnerId();
 
-            if (PlayerManager.getInstance().isOnline(playerId)) {
-                Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+        final FootballFloorItem ball = (FootballFloorItem) floorItem;
 
-                if (session != null && session.getPlayer() != null && session.getPlayer().getAchievements() != null) {
-                    session.getPlayer().getAchievements().progressAchievement(AchievementType.FOOTBALL_GOAL, 1);
+        if(ball.getPusher() == null) return;
 
-                    nearestPlayerEntity().getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new ActionMessageComposer(session.getPlayer().getEntity().getId(), PlayerAvatarActions.EXPRESSION_RESPECT.getValue()));
+        this.getRoom().getGame().increaseScore(this.gameTeam, 1);
+
+        final int playerId = (
+                ball.getPusher() != null && ball.getPusher() instanceof PlayerEntity
+                        ? ((PlayerEntity) ball.getPusher()).getPlayerId()
+                        : this.getRoom().getData().getOwnerId()
+        );
+
+        if (PlayerManager.getInstance().isOnline(playerId)) {
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+
+            if (session != null && session.getPlayer() != null && session.getPlayer().getAchievements() != null) {
+                session.getPlayer().getAchievements().progressAchievement(AchievementType.FOOTBALL_GOAL, 1);
+
+                if(playerId == this.getRoom().getData().getOwnerId()) {
+                    session.getPlayer().getAchievements().progressAchievement(AchievementType.FOOTBALL_GOAL_ON_ROOM, 1);
                 }
+
+                nearestPlayerEntity().getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new ActionMessageComposer(session.getPlayer().getEntity().getId(), PlayerAvatarActions.EXPRESSION_RESPECT.getValue()));
             }
         }
     }

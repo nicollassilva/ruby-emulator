@@ -116,7 +116,7 @@ public class WiredCustomChaseBot extends WiredActionItem {
             if (to == null) return;
         }
 
-        if (this.getRoom().getItems().moveFloorItem(floorItem.getId(), to, floorItem.getRotation(), true)) {
+        if (this.getRoom().getItems().moveFloorItem(floorItem.getId(), to, floorItem.getRotation())) {
             to.setZ(floorItem.getPosition().getZ());
 
             this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(from, to, 0, 0, floorItem.getVirtualId()));

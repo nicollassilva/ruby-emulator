@@ -9,9 +9,10 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class IgnoreInvitationsMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        boolean ignoreRoomInvitations = msg.readBoolean();
+        final boolean ignoreRoomInvitations = msg.readBoolean();
 
         client.getPlayer().getSettings().setIgnoreInvites(ignoreRoomInvitations);
+
         PlayerDao.saveIgnoreInvitations(ignoreRoomInvitations, client.getPlayer().getId());
     }
 }

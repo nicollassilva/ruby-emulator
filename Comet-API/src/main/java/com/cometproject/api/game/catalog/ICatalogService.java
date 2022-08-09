@@ -36,6 +36,8 @@ public interface ICatalogService {
 
     ICatalogPage getPage(int id);
 
+    ICatalogPage getCatalogPageByCatalogItemId(final int id);
+
     ICatalogItem getCatalogItem(int catalogItemId);
 
     boolean pageExists(int id);

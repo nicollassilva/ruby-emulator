@@ -7,6 +7,8 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.boutique.Man
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureGender;
 
 
 public class WiredCustomChangeClothes extends WiredActionItem {
@@ -73,7 +75,10 @@ public class WiredCustomChangeClothes extends WiredActionItem {
             if (figure.length() > 512)
                 return;
 
-            playerEntity.getPlayer().getData().setFigure(figure);
+            if(ClothingValidationManager.isInvalidLook(playerEntity.getPlayer(), figure, FigureGender.fromString(mannequinFloorItem.getGender())))
+                return;
+
+            playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(playerEntity.getPlayer(),figure, FigureGender.fromString(mannequinFloorItem.getGender())));
             playerEntity.getPlayer().getData().setGender(mannequinFloorItem.getGender());
 
             playerEntity.getPlayer().getData().save();

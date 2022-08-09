@@ -20,7 +20,7 @@ public class SetBetCommand extends ChatCommand {
             if (amount < 0) {
                 amount = 5;
             } else if (amount > 50) {
-                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você não pode apostar mais de 50 diamantes,", ChatEmotion.NONE, 34));
+                client.getPlayer().getSession().send(new TalkMessageComposer(client.getPlayer().getEntity().getId(), "Você não pode apostar mais de 50 fichas.", ChatEmotion.NONE, 34));
                 amount = 50;
             }
 

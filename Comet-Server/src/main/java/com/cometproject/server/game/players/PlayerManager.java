@@ -165,7 +165,7 @@ public class PlayerManager implements IPlayerService, Initialisable {
 
     public PlayerData getDataByPlayerId(int playerId) {
         if (this.isOnline(playerId)) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
             if (session != null && session.getPlayer() != null && session.getPlayer().getData() != null) {
                 return session.getPlayer().getData();
@@ -173,14 +173,14 @@ public class PlayerManager implements IPlayerService, Initialisable {
         }
 
         if (this.playerDataCache != null) {
-            Element cachedElement = this.playerDataCache.get(playerId);
+            final Element cachedElement = this.playerDataCache.get(playerId);
 
             if (cachedElement != null && cachedElement.getObjectValue() != null) {
                 return (PlayerData) cachedElement.getObjectValue();
             }
         }
 
-        PlayerData playerData = PlayerDao.getDataById(playerId);
+        final PlayerData playerData = PlayerDao.getDataById(playerId);
 
         if (playerData != null && this.playerDataCache != null) {
             this.playerDataCache.put(new Element(playerId, playerData));
@@ -191,7 +191,7 @@ public class PlayerManager implements IPlayerService, Initialisable {
 
     public IPlayer getPlayerById(int playerId) {
         if (this.isOnline(playerId)) {
-            Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
+            final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 
             if (session != null && session.getPlayer() != null && session.getPlayer().getData() != null) {
                 return session.getPlayer();

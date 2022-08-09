@@ -33,27 +33,21 @@ public class GroupMembersMessageEvent implements Event {
         final List<PlayerAvatar> playerAvatars = Lists.newArrayList();
 
         switch (requestType) {
-            default: {
-                for (final IGroupMember groupMember : group.getMembers().getMembersAsList()) {
-                    addPlayerAvatar(groupMember.getPlayerId(), playerAvatars, (playerAvatar -> playerAvatar.tempData(groupMember)));
-                }
-            }
-            break;
-            case 1: {
+            case 1:
                 for (final Integer adminId : group.getMembers().getAdministrators()) {
                     addPlayerAvatar(adminId, playerAvatars);
                 }
-
-            }
-            break;
-
-            case 2: {
+                break;
+            case 2:
                 for (final Integer requestPlayerId : group.getMembers().getMembershipRequests()) {
                     addPlayerAvatar(requestPlayerId, playerAvatars);
                 }
-            }
-            break;
-
+                break;
+            default:
+                for (final IGroupMember groupMember : group.getMembers().getMembersAsList()) {
+                    addPlayerAvatar(groupMember.getPlayerId(), playerAvatars, (playerAvatar -> playerAvatar.tempData(groupMember)));
+                }
+                break;
         }
 
         final Set<PlayerAvatar> playersToRemove = Sets.newHashSet();

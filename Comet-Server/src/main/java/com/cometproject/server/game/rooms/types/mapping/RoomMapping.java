@@ -324,7 +324,7 @@ public class RoomMapping {
         final boolean positionHasUser = positionHasUser(entityId, to);
 
         if (positionHasUser) {
-            if(lastStep && !isAtDoor)
+            if(lastStep && !isAtDoor && !room.getData().getAllowWalkthrough())
                 return false;
 
             if (!isRetry && !room.getData().getAllowWalkthrough())
@@ -358,8 +358,13 @@ public class RoomMapping {
         if (isAtDoor)
             return true;
 
-        if (fromHeight > toHeight && fromHeight - toHeight >= 3)
-            return false;
+        if(fromHeight > toHeight){
+            if(entity != null)
+                return true;
+
+            if(fromHeight - toHeight >= 3)
+                return false;
+        }
 
         return !(fromHeight < toHeight && (toHeight - fromHeight) > 1.2);
     }

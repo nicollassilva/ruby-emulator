@@ -116,6 +116,7 @@ public class Player extends Observable implements IPlayer {
     private int lastPurchase = 0;
     private int lastSpin = 0;
     private int lastCommandRoleplay = 0;
+    private int lastSlotMachineAction = 0;
     private int lastRoomCreated = 0;
     private boolean isDeletingGroup = false;
     private long deletingGroupAttempt = 0;
@@ -165,6 +166,8 @@ public class Player extends Observable implements IPlayer {
 
     private long lastForwardRoomRequest = System.currentTimeMillis();
     private final List<Integer> lastRoomsIds = Lists.newArrayList();
+    private boolean nitroEnabled = false;
+    private int lastInviteFriends = 0;
 
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
@@ -249,7 +252,9 @@ public class Player extends Observable implements IPlayer {
 
         }
 
-        this.session.getLogger().debug(this.getData().getUsername() + " logged out");
+        if(Comet.isDebugging) {
+            this.session.getLogger().debug(this.getData().getUsername() + " logged out");
+        }
 
         PlayerDao.updatePlayerStatus(this, false, false);
 
@@ -710,8 +715,14 @@ public class Player extends Observable implements IPlayer {
         return lastCommandRoleplay;
     }
 
+    public int getLastSlotMachineAction() {
+        return lastSlotMachineAction;
+    }
+
     @Override
     public void setLastCommandRoleplay(int lastCommandRoleplay) { this.lastCommandRoleplay = lastCommandRoleplay; }
+
+    public void setLastSlotMachineAction(int lastSlotMachineAction) { this.lastSlotMachineAction = Player.this.lastSlotMachineAction; }
 
     @Override
     public void setLastPurchase(int lastPurchase) {
@@ -1263,5 +1274,24 @@ public class Player extends Observable implements IPlayer {
     @Override
     public List<Integer> getLastRoomsIds() {
         return lastRoomsIds;
+    }
+
+    public boolean getNitro() {
+        return nitroEnabled;
+    }
+
+    public boolean setNitro(boolean nitro) {
+        nitroEnabled = nitro;
+        return nitroEnabled;
+    }
+
+    @Override
+    public int getLastInviteFriends() {
+        return this.lastInviteFriends;
+    }
+
+    @Override
+    public void setLastInviteFriends(int lastInviteFriends) {
+        this.lastInviteFriends = lastInviteFriends;
     }
 }

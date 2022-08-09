@@ -73,7 +73,7 @@ public class MarketPlace {
     }
 
     public static void takeBackItem(Session client, int offerId) {
-        IMarketPlaceOffer offer = client.getPlayer().getInventory().getOffer(offerId);
+        final IMarketPlaceOffer offer = client.getPlayer().getInventory().getOffer(offerId);
 
         if(offer == null) {
             return;
@@ -94,34 +94,34 @@ public class MarketPlace {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            try (PreparedStatement preparedStatement = sqlConnection.prepareStatement("SELECT user_id FROM marketplace_items WHERE ID = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            try (final PreparedStatement preparedStatement = sqlConnection.prepareStatement("SELECT user_id FROM marketplace_items WHERE ID = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 preparedStatement.setInt(1, offer.getOfferId());
 
-                try (ResultSet ownerSet = preparedStatement.executeQuery()) {
+                try (final ResultSet ownerSet = preparedStatement.executeQuery()) {
                     ownerSet.last();
 
                     if(ownerSet.getRow() == 0) {
                         return;
                     }
 
-                    try (PreparedStatement statement = SqlHelper.prepare("DELETE FROM marketplace_items WHERE id = ? AND state != 2", sqlConnection)) {
+                    try (final PreparedStatement statement = SqlHelper.prepare("DELETE FROM marketplace_items WHERE id = ? AND state != 2", sqlConnection)) {
                         statement.setInt(1, offer.getOfferId());
                         int count = statement.executeUpdate();
 
                         if(count != 0) {
                             client.getPlayer().getInventory().removeMarketplaceOffer(offer);
 
-                            try (PreparedStatement updateItems = SqlHelper.prepare("UPDATE items SET user_id = ? WHERE id = ? LIMIT 1", sqlConnection)) {
+                            try (final PreparedStatement updateItems = SqlHelper.prepare("UPDATE items SET user_id = ? WHERE id = ? LIMIT 1", sqlConnection)) {
                                 updateItems.setInt(1, client.getPlayer().getId());
                                 updateItems.setInt(2, offer.getSoldItemId());
                                 updateItems.execute();
 
-                                try (PreparedStatement selectItem = SqlHelper.prepare("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", sqlConnection)) {
+                                try (final PreparedStatement selectItem = SqlHelper.prepare("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", sqlConnection)) {
                                     selectItem.setInt(1, offer.getSoldItemId());
 
-                                    try (ResultSet set = selectItem.executeQuery()) {
+                                    try (final ResultSet set = selectItem.executeQuery()) {
                                         while (set.next()) {
-                                            PlayerItem playerItem = new InventoryItem(set);
+                                            final PlayerItem playerItem = new InventoryItem(set);
 
                                             RoomItemDao.updateItem(playerItem, client.getPlayer());
 
@@ -325,12 +325,12 @@ public class MarketPlace {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            try (PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM marketplace_items WHERE id = ? LIMIT 1", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+            try (final PreparedStatement statement = sqlConnection.prepareStatement("SELECT * FROM marketplace_items WHERE id = ? LIMIT 1", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 statement.setInt(1, offerId);
 
-                try (ResultSet set = statement.executeQuery()) {
+                try (final ResultSet set = statement.executeQuery()) {
                     if(set.next()) {
-                        try (PreparedStatement itemStatement = sqlConnection.prepareStatement("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                        try (final PreparedStatement itemStatement = sqlConnection.prepareStatement("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                             itemStatement.setInt(1, set.getInt("item_id"));
 
                             try (ResultSet itemSet = itemStatement.executeQuery()) {
@@ -396,8 +396,8 @@ public class MarketPlace {
                     }
                 }
             }
-        } catch (SQLException e) {
-            log.error("Erro buyItem", e);
+        } catch (SQLException ignored) {
+
         } finally {
             SqlHelper.closeSilently(sqlConnection);
         }
@@ -409,11 +409,12 @@ public class MarketPlace {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            try (PreparedStatement statement = sqlConnection.prepareStatement("SELECT marketplace_items.*, COUNT( * ) AS count FROM marketplace_items INNER JOIN items ON marketplace_items.item_id = items.id INNER JOIN furniture ON items.item_id = furniture.id WHERE furniture.sprite_id = ( SELECT furniture.sprite_id FROM furniture WHERE furniture.id = ? LIMIT 1) ORDER BY price ASC LIMIT 1")) {
+            try (final PreparedStatement statement = sqlConnection.prepareStatement("SELECT marketplace_items.*, COUNT( * ) AS count FROM marketplace_items INNER JOIN items ON marketplace_items.item_id = items.id INNER JOIN furniture ON items.item_id = furniture.id WHERE furniture.sprite_id = ( SELECT furniture.sprite_id FROM furniture WHERE furniture.id = ? LIMIT 1) ORDER BY price ASC LIMIT 1")) {
                 statement.setInt(1, baseItemId);
 
-                try (ResultSet countSet = statement.executeQuery()) {
+                try (final ResultSet countSet = statement.executeQuery()) {
                     countSet.last();
+
                     if (countSet.getRow() == 0) {
                         client.send(new MarketplaceBuyErrorComposer(MarketplaceBuyErrorComposer.SOLD_OUT, 0, offerId, 0));
                     } else {
@@ -433,12 +434,12 @@ public class MarketPlace {
         if (item == null || client == null)
             return false;
 
-        FurnitureDefinition baseItem = ItemManager.getInstance().getDefinition(item.getDefinition().getId());
+        final FurnitureDefinition baseItem = ItemManager.getInstance().getDefinition(item.getDefinition().getId());
 
         if (!baseItem.canMarket() || price < 0)
             return false;
 
-        MarketPlaceItemOfferedEvent event = new MarketPlaceItemOfferedEvent(client, item, price);
+        final MarketPlaceItemOfferedEvent event = new MarketPlaceItemOfferedEvent(client, item, price);
 
         RequestOffersEvent.cachedResults.clear();
 
@@ -456,10 +457,11 @@ public class MarketPlace {
     public static void getCredits(Session client) {
         int credits = 0;
 
-        THashSet<IMarketPlaceOffer> offers = new THashSet<>();
+        final THashSet<IMarketPlaceOffer> offers = new THashSet<>();
+
         offers.addAll(client.getPlayer().getInventory().getMarketplaceItems());
 
-        for (IMarketPlaceOffer offer : offers) {
+        for (final IMarketPlaceOffer offer : offers) {
             if (offer.getState().equals(MarketPlaceState.SOLD)) {
                 client.getPlayer().getInventory().removeMarketplaceOffer(offer);
                 credits += offer.getPrice();

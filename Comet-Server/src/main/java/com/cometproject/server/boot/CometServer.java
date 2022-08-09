@@ -24,6 +24,8 @@ import com.cometproject.server.game.quests.QuestManager;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.bundles.RoomBundleManager;
 import com.cometproject.server.game.snowwar.thread.WorkerTasks;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
+import com.cometproject.server.game.utilities.validator.FigureData;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.logging.LogManager;
 import com.cometproject.server.modules.ModuleManager;
@@ -115,6 +117,7 @@ public class CometServer {
 
         GameCycle.getInstance().initialize();
         DiscordIntegration.getInstance().initialize();
+        ClothingValidationManager.reloadFiguredata("./config/figuredata.xml");
     }
 
     /**

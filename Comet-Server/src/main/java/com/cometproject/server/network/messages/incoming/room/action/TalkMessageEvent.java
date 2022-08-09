@@ -28,6 +28,7 @@ import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import com.cometproject.server.tasks.CometThreadManager;
+import com.cometproject.server.utilities.MessageColorUtil;
 import com.cometproject.server.utilities.RandomUtil;
 
 import java.util.concurrent.TimeUnit;
@@ -112,7 +113,7 @@ public class TalkMessageEvent implements Event {
         }
 
         if (playerEntity.onChat(filteredMessage)) {
-            if (!UsingColourCode(message)) {
+            if (messageHasNoColorsCode(message)) {
                 if (message.startsWith("@")) {
                     final String[] splittedName = message.replace("@", "").split(" ");
                     final String finalName = splittedName[0];
@@ -263,32 +264,10 @@ public class TalkMessageEvent implements Event {
                 if (floorItem != null) {
                     ((PrivateChatFloorItem) floorItem).broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble));
                 }
-            } else if (message.startsWith("@") && !UsingColourCode(message)) {
+            } else if (message.startsWith("@") && messageHasNoColorsCode(message)) {
                 client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "[SUA MENSAGEM] " + filteredMessage, bubble));
             } else {
-                if(UsingColourCode(message)) {
-                    filteredMessage = "<font color=\"%clrHr\">" + filteredMessage + "</font>";
-
-                    if (message.contains("@red@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.RED.getColor());
-                    } else if (message.contains("@blue@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.BLUE.getColor());
-                    } else if (message.contains("@green@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.GREEN.getColor());
-                    } else if (message.contains("@yellow@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.YELLOW.getColor());
-                    } else if (message.contains("@orange@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.ORANGE.getColor());
-                    } else if (message.contains("@pink@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.PINK.getColor());
-                    } else if (message.contains("@purple@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.PURPLE.getColor());
-                    } else if (message.contains("@gray@")) {
-                        filteredMessage = filteredMessage.replace("%clrHr", ChatColors.GRAY.getColor());
-                    }
-
-                    filteredMessage = clearMessageColors(filteredMessage);
-                }
+                filteredMessage = MessageColorUtil.getInstance().getFilteredString(filteredMessage);
 
                 client.getPlayer().getEntity().getRoom().getEntities().broadcastChatMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble), client.getPlayer().getEntity());
             }
@@ -297,26 +276,8 @@ public class TalkMessageEvent implements Event {
         }
     }
 
-    public static String clearMessageColors(String message) {
-        return message.replace("@red@", "")
-                .replace("@blue@", "")
-                .replace("@yellow@", "")
-                .replace("@orange@", "")
-                .replace("@green@", "")
-                .replace("@gray@", "")
-                .replace("@purple@", "")
-                .replace("@pink@", "");
-    }
-
-    public static boolean UsingColourCode(String Message) {
-        return Message.contains("@red") ||
-                Message.contains("@blue@") ||
-                Message.contains("@green@") ||
-                Message.contains("@yellow@") ||
-                Message.contains("@orange@") ||
-                Message.contains("@pink@") ||
-                Message.contains("@purple@") ||
-                Message.contains("@gray@");
+    public static boolean messageHasNoColorsCode(String string) {
+        return MessageColorUtil.getInstance().getFirstColorCodeOnString(string).isEmpty();
     }
 
     public static String filterMessage(String message) {

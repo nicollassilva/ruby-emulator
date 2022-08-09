@@ -23,11 +23,11 @@ public class WiredTriggerAtGivenTime extends WiredTriggerItem {
         for (final WiredTriggerAtGivenTime wiredItem : getTriggers(room, WiredTriggerAtGivenTime.class)) {
             if(wiredItem == null) continue;
 
-            if (timer >= wiredItem.getTime() && !wiredItem.needsReset) {
+            if (timer >= wiredItem.getTime() && !wiredItem.needsReset()) {
                 if (wiredItem.evaluate(null, null)) {
                     wasExecuted = true;
 
-                    wiredItem.needsReset = true;
+                    wiredItem.setNeedsReset(true);
                 }
             }
         }

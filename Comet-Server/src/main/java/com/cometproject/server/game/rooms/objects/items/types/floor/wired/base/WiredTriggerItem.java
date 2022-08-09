@@ -168,7 +168,7 @@ public abstract class WiredTriggerItem extends WiredFloorItem {
                     wiredActions.sort(comparator.reversed());
 
                     for (final WiredActionItem actionItem : wiredActions) {
-                        if (actionItem.requiresPlayer() && entity == null || actionItem instanceof WiredActionExecuteStacks)
+                        if (actionItem.requiresPlayer() && entity == null)
                             continue;
 
                         if (actionItem instanceof WiredActionShowMessage || actionItem instanceof WiredCustomShowMessageRoom) {

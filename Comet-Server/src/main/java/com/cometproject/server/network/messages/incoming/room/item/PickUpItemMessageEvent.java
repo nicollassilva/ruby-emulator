@@ -9,10 +9,15 @@ import com.cometproject.server.game.rooms.objects.items.types.wall.PostItWallIte
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.incoming.Event;
+import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.items.RemoveWallItemMessageComposer;
+import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.pin.EmailVerificationWindowMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
+import com.google.common.collect.Maps;
+
+import java.util.Map;
 
 
 public class PickUpItemMessageEvent implements Event {
@@ -40,6 +45,9 @@ public class PickUpItemMessageEvent implements Event {
             return;
 
         final RoomItemFloor item = room.getItems().getFloorItem(id);
+
+        if (!client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl())
+            return;
 
         if (item == null) {
             final RoomItemWall wItem = room.getItems().getWallItem(id);

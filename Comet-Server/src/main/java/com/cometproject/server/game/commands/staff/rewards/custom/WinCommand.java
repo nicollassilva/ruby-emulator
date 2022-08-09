@@ -1,24 +1,20 @@
 package com.cometproject.server.game.commands.staff.rewards.custom;
 
 import com.cometproject.api.config.CometExternalSettings;
-import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
-import com.cometproject.server.game.players.data.PlayerData;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.player.PlayerDao;
-import com.cometproject.server.storage.queries.player.inventory.InventoryDao;
 
 public class WinCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if(params.length < 1) return;
 
-        String username = params[0];
-
-        ISession playerSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
+        final String username = params[0];
+        final Session playerSession = NetworkManager.getInstance().getSessions().getByPlayerUsername(username);
 
         if(playerSession == null) {
             sendNotif("O usuário ficou offline ou não existe.", client);
@@ -43,6 +39,8 @@ public class WinCommand extends ChatCommand {
         } else {
             NetworkManager.getInstance().getSessions().broadcast(new NotificationMessageComposer("events", Locale.getOrDefault("command.win.female.alert", "A usuária %user% ganhou um evento.").replace("%user%", username)));
         }
+
+        playerSession.getPlayer().getEntity().kick();
     }
 
     @Override
@@ -57,6 +55,6 @@ public class WinCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Envia ponto no hall, diamante e próximo nível do emblema.";
+        return Locale.getOrDefault("command.win.description", "Envia ponto no hall, diamante e próximo nível do emblema");
     }
 }

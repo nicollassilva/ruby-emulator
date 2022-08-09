@@ -33,6 +33,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
 
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+
             if (floorItem == null || floorItem instanceof WiredActionExecuteStacks)
                 continue;
 

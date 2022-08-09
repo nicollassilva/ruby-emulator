@@ -17,7 +17,7 @@ import java.util.Random;
 public class WiredActionMoveRotate extends WiredActionItem {
     private static final int PARAM_MOVEMENT = 0;
     private static final int PARAM_ROTATION = 1;
-    private final Random random = new Random();
+    private static final Random random = new Random();
 
     public WiredActionMoveRotate(RoomItemData itemData, Room room) {
         super(itemData, room);
@@ -49,11 +49,11 @@ public class WiredActionMoveRotate extends WiredActionItem {
                 if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
 
                 final Position currentPosition = floorItem.getPosition().copy();
-                final Position newPosition = this.getRandomPosition(movement, currentPosition);
+                final Position newPosition = this.getRandomPosition(movement, currentPosition, this.getRoom());
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
-                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, true, true)) {
+                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, true)) {
                     if (!rotationChanged) {
                         this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));
                     } else {
@@ -66,7 +66,7 @@ public class WiredActionMoveRotate extends WiredActionItem {
         }
     }
 
-    private Position handleMovement(Position point, int movementType) {
+    private static Position handleMovement(Position point, int movementType) {
         final boolean dir = Math.random() < 0.5;
 
         switch (movementType) {
@@ -165,15 +165,14 @@ public class WiredActionMoveRotate extends WiredActionItem {
         return rotation;
     }
 
-    private Position getRandomPosition(int movement, Position currentPosition) {
+    public static Position getRandomPosition(int movement, Position currentPosition, Room room) {
         int limit = 5;
         Position newPosition;
 
         while (limit <= 12) {
-            newPosition = this.handleMovement(currentPosition.copy(), movement);
+            newPosition = handleMovement(currentPosition.copy(), movement);
 
-            final RoomTile randomRoomTile = this.getRoom().getMapping().getTile(newPosition);
-
+            final RoomTile randomRoomTile = room.getMapping().getTile(newPosition);
             if (randomRoomTile != null) {
                 if (randomRoomTile.canPlaceItemHere() && randomRoomTile.canStack()) {
                     newPosition.setZ(randomRoomTile.getStackHeight());

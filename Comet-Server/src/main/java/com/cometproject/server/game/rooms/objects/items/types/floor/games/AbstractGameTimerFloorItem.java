@@ -35,7 +35,7 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
         final InteractionGameTimerAction action = InteractionGameTimerAction.getByAction(requestData);
 
         if (action == InteractionGameTimerAction.INCREASE_TIME) {
-            if(this.getRoom().getGame().getInstance() != null) {
+            if(this.getRoom().getGame().getInstance() != null && !isWiredTriggered) {
                 if(this.getRoom().getGame().getInstance().getState().equals(GameState.RUNNING)) {
                     return false;
                 }
@@ -52,32 +52,43 @@ public abstract class AbstractGameTimerFloorItem extends RoomItemFloor {
                 time = Integer.parseInt(this.getItemData().getData());
             }
 
-            if (time == 0 || time == 30 || time == 60 || time == 120 || time == 180 || time == 300 || time == 600) {
-                switch (time) {
-                    default:
-                        time = 0;
-                        break;
-                    case 0:
-                        time = 30;
-                        break;
-                    case 30:
-                        time = 60;
-                        break;
-                    case 60:
-                        time = 120;
-                        break;
-                    case 120:
-                        time = 180;
-                        break;
-                    case 180:
-                        time = 300;
-                        break;
-                    case 300:
-                        time = 600;
-                        break;
+            if(!isWiredTriggered) {
+                if (time == 0 || time == 30 || time == 60 || time == 120 || time == 180 || time == 300 || time == 600) {
+                    switch (time) {
+                        default:
+                            time = 0;
+                            break;
+                        case 0:
+                            time = 30;
+                            break;
+                        case 30:
+                            time = 60;
+                            break;
+                        case 60:
+                            time = 120;
+                            break;
+                        case 120:
+                            time = 180;
+                            break;
+                        case 180:
+                            time = 300;
+                            break;
+                        case 300:
+                            time = 600;
+                            break;
+                    }
+                } else {
+                    time = 0;
                 }
             } else {
-                time = 0;
+                if(time <= 570) {
+                    time += 30;
+
+                    if(this.getRoom().getGame().getInstance() != null) {
+                        this.setLastTime(String.valueOf(time));
+                        this.getRoom().getGame().getInstance().startTimer(this.getRoom().getGame().getInstance().getGameLength() + 30);
+                    }
+                }
             }
 
             this.getItemData().setData(time + "");

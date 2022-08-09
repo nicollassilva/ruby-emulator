@@ -25,9 +25,8 @@ public class KickCommand extends ChatCommand {
             return;
         }
 
-        if (username.equals(client.getPlayer().getData().getUsername())) {
+        if (username.equals(client.getPlayer().getData().getUsername()))
             return;
-        }
 
         if (user.getPlayer().getEntity() == null) {
             sendNotif(Locale.getOrDefault("command.user.notinroom", "Esse usuário não está em nenhum quarto."), client);
@@ -36,6 +35,11 @@ public class KickCommand extends ChatCommand {
 
         if (!user.getPlayer().getPermissions().getRank().roomKickable()) {
             sendNotif(Locale.getOrDefault("command.kick.unkickable", "Você não pode expulsar esse usuário!"), client);
+            return;
+        }
+
+        if(client.getPlayer().getEntity().getRoom().getData().getOwnerId() == user.getPlayer().getId()) {
+            sendNotif(Locale.getOrDefault("command.kick.owner", "Você não pode expulsar o dono do quarto."), client);
             return;
         }
 
