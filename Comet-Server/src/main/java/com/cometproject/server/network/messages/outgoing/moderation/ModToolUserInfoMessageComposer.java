@@ -45,19 +45,19 @@ public class ModToolUserInfoMessageComposer extends MessageComposer {
         boolean isTradeLocked = playerStatistics.getTradeLock() > 0;
         Date date = new Date(playerStatistics.getTradeLock() * 1000);
 
-        msg.writeString(isTradeLocked ? date.toString() : Locale.getOrDefault("modtools.no_data.text", "N/A")); //trading_lock_expiry_txt
+        msg.writeString(isTradeLocked ? date.toString() : Locale.getOrDefault("modtools.no_data.text", "Não disponível")); //trading_lock_expiry_txt
 
-        msg.writeString(Locale.getOrDefault("modtools.no_data.text", "N/A")); // TODO: purchase logging
+        msg.writeString(Locale.getOrDefault("modtools.no_data.text", "Não disponível")); // TODO: purchase logging
         msg.writeInt(1); // ???
         msg.writeInt(0); // Banned accounts
 
         // TODO: Find banned accounts using this IP address or linked to this e-mail address (for hotels that use the Habbo ID system)
 
-        msg.writeString("Email: " + playerData.getEmail());
+        msg.writeString(playerData.getEmail());
         msg.writeString(playerData.getIpAddress());
 
         if(isTradeLocked) {
-            msg.writeString(Locale.getOrDefault("modtools.trade_blocked.text", "Trade Block"));
+            msg.writeString(Locale.getOrDefault("modtools.trade_blocked.text", "Trocas bloqueadas"));
             msg.writeInt(8); // Red Color // Sanction Degree
             return;
         }
