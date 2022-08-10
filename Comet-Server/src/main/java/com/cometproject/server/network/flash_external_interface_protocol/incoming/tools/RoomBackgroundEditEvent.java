@@ -14,7 +14,7 @@ public class RoomBackgroundEditEvent extends IncomingExternalInterfaceMessage<Ro
     @Override
     public void handle(Session client, JSONRoomBackgroundEditEvent message) {
         Room room = client.getPlayer().getEntity().getRoom();
-        if (room != null && (room.getRights().hasRights(client.getPlayer().getId()) || client.getPlayer().getPermissions().getRank().roomFullControl()) && client.getPlayer().getInventory().hasBadge("VISA")) {
+        if (room != null && (room.getRights().hasRights(client.getPlayer().getId()) || client.getPlayer().getPermissions().getRank().canControlMpu())) {
             RoomItemFloor item = room.getItems().getFloorItem(message.itemId);
             if(item == null ) return;
             String data = "state" + (char) 9 + "0";
