@@ -74,7 +74,7 @@ public class SaveBrandingMessageEvent implements Event {
                 }
 
                 final boolean isEmptyImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (char) 9);
-                final boolean securityImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (Comet.isDebugging ? "http://localhost:3000" : "https://rubyhotel.com.br"));
+                final boolean securityImageUrl = data.toString().startsWith("state" + (char) 9 + "0" + (char) 9 + "imageUrl" + (char) 9 + (Comet.isDebugging ? "http://localhost:3000" : "https://static-ruby.com"));
 
                 if(!isEmptyImageUrl && !securityImageUrl) {
                     hasErrors = true;
