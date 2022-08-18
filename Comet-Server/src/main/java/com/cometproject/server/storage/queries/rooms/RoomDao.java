@@ -565,6 +565,26 @@ public class RoomDao {
         }
     }
 
+    public static void removeItems(int roomId, int ownerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("DELETE items FROM items JOIN furniture ON (items.base_item = furniture.id) WHERE room_id = ? AND user_id = ? AND deleteable = 1", sqlConnection);
+
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.setInt(2, ownerId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static void removeNonOwnerItems(int roomId, int ownerId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;

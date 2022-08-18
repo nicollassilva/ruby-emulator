@@ -218,6 +218,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.count_furnis.name", "countfurnis"), new CountFurnisCommand());
         this.addCommand(Locale.getOrDefault("command.slime.name", "slime"), new SlimeCommand());
         this.addCommand(Locale.getOrDefault("command.superpush.name", "spush"), new SuperPushCommand());
+        this.addCommand(Locale.getOrDefault("command.delete_all_items.name", "deleteall"), new DeleteAllItemsCommand());
         this.addCommand(Locale.getOrDefault("command.roomban.name", "roomban"), new RoomBanUserCommand());
     }
 
