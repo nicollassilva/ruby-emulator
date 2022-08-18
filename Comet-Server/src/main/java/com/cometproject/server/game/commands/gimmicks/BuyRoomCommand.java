@@ -46,9 +46,24 @@ public class BuyRoomCommand extends ChatCommand {
             return;
         }
 
-        //Check if has enough credits
-        if (client.getPlayer().getData().getCredits() < roomPrice) {
-            sendWhisper("Você não possui moedas suficientes para comprar este quarto!", client);
+        if (room.getData().getRoomBuyer() != client.getPlayer().getData().getId()) {
+            sendWhisper("Você não é o usuário permitido a comprar este quarto!", client);
+            return;
+        }
+
+        //Check if has enough diamonds
+        if (client.getPlayer().getData().getVipPoints() < roomPrice) {
+            sendWhisper("Você não possui diamantes suficientes para comprar este quarto!", client);
+            return;
+        }
+
+        if (params.length != 1) {
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ' " + Locale.get("command.buy_room.name") + " sim ' para confirmar."), client);
+            return;
+        }
+
+        if (!params[0].equals("sim")) {
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ' " + Locale.get("command.buy_room.name") + " sim ' para confirmar."), client);
             return;
         }
 
@@ -81,7 +96,7 @@ public class BuyRoomCommand extends ChatCommand {
 
         final int roomId = room.getId();
 
-        RoomDao.changeRoomPrice(roomId, 0);
+        RoomDao.changeRoomPrice(roomId, 0, 0);
         RoomDao.removeNonOwnerItems(roomId, room.getData().getOwnerId());
         RoomDao.transferItems(roomId, room.getData().getOwnerId(), userId);
         RoomDao.changeRoomOwner(roomId, userId, client.getPlayer().getData().getUsername());
