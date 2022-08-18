@@ -262,7 +262,7 @@ public class ItemsComponent {
         this.moodlightId = 0;
     }
 
-    private void __moveFloorItemAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation) {
+    private void __moveFloorItemAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation, int state) {
         final Position oldPosition = item.getPosition().copy();
         int oldRotation = item.getRotation();
         for (final RoomItemFloor stackItem : this.getItemsOnSquare(newPosition.getX(), newPosition.getY())) {
@@ -271,13 +271,15 @@ public class ItemsComponent {
             }
         }
 
-
         newPosition.setZ(newHeight);
         item.onPositionChanged(newPosition);
         item.getPosition().setX(newPosition.getX());
         item.getPosition().setY(newPosition.getY());
         item.getPosition().setZ(newPosition.getZ());
         item.setRotation(newRotation);
+
+        if (state > -1)
+            item.getItemData().setData(state);
 
         item.save();
         updateEntitiesOnFurniMove(item, oldPosition, oldPosition, newPosition, oldRotation, false);
@@ -310,7 +312,7 @@ public class ItemsComponent {
         if (autoHeight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
             return false;
 
-        this.__moveFloorItemAndSave(item, newPosition, height, newRotation);
+        this.__moveFloorItemAndSave(item, newPosition, height, newRotation, -1);
         return true;
     }
 
@@ -660,11 +662,23 @@ public class ItemsComponent {
             newHeight = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
         }
 
+        if (client.getPlayer().getEntity().hasAttribute("rotation.height")) {
+            newRotation = (int) client.getPlayer().getEntity().getAttribute("rotation.height");
+        }
+
+        int newState = -1;
+        if (client.getPlayer().getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 1) {
+            newState = (int) client.getPlayer().getEntity().getAttribute("state.height");
+
+            if (newState > item.getDefinition().getInteractionCycleCount())
+                newState = item.getDefinition().getInteractionCycleCount();
+        }
+
         if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
-        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation);
+        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation, newState);
         return true;
     }
 
@@ -683,7 +697,7 @@ public class ItemsComponent {
         }
         newPosition.setZ(newHeight);
 
-        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation);
+        this.__moveFloorItemAndSave(item, newPosition, newHeight, newRotation, -1);
         return true;
     }
 
@@ -800,7 +814,19 @@ public class ItemsComponent {
             }
         }
 
-        final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : item.getExtraData();
+        if (player.getEntity().hasAttribute("rotation.height")) {
+            rot = (int) player.getEntity().getAttribute("rotation.height");
+        }
+
+        int newState = -1;
+        if (player.getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 1) {
+            newState = (int) player.getEntity().getAttribute("state.height");
+
+            if (newState > item.getDefinition().getInteractionCycleCount())
+                newState = item.getDefinition().getInteractionCycleCount();
+        }
+
+        final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : (newState == -1 ? item.getExtraData() : String.valueOf(newState));
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
 

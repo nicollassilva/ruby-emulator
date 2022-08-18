@@ -154,6 +154,8 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.emptyfriends.name"), new EmptyFriendsCommand());
         //this.addCommand(Locale.get("command.reward.name"), new RewardCommand());
         this.addCommand(Locale.getOrDefault("command.setz.name", "setz"), new SetZCommand());
+        this.addCommand(Locale.getOrDefault("command.setrot.name", "rotation"), new SetRotationCommand());
+        this.addCommand(Locale.getOrDefault("command.setstate.name", "state"), new SetStateCommand());
         this.addCommand(Locale.getOrDefault("command.override.name", "override"), new OverrideCommand());
         this.addCommand(Locale.getOrDefault("command.updatefloor.name", "updatefloor"), new UpdateFloorCommand());
         this.addCommand(Locale.get("command.brb.name"), new BrbCommand());

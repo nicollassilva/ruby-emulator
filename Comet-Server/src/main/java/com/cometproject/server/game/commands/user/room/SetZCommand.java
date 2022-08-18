@@ -8,7 +8,6 @@ import com.cometproject.server.network.messages.outgoing.room.engine.RelativeHei
 import com.cometproject.server.network.messages.outgoing.room.engine.UpdateStackMapMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 
-
 public class SetZCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
@@ -17,8 +16,8 @@ public class SetZCommand extends ChatCommand {
             return;
         }
 
-        if(params[0].equals("stop")) {
-            if(client.getPlayer().getEntity().hasAttribute("setz.height")) {
+        if (params[0].equals("stop")) {
+            if (client.getPlayer().getEntity().hasAttribute("setz.height")) {
                 client.getPlayer().getEntity().removeAttribute("setz.height");
                 sendWhisper("Altura desativada.", client);
 
@@ -32,6 +31,7 @@ public class SetZCommand extends ChatCommand {
                         }
                     }
                 }
+
                 client.sendQueue(new HeightmapMessageComposer(client.getPlayer().getEntity().getRoom()));
                 client.sendQueue(new RelativeHeightmapMessageComposer(client.getPlayer().getEntity().getRoom().getModel()));
                 client.flush();
@@ -72,8 +72,6 @@ public class SetZCommand extends ChatCommand {
                 sendWhisper("Você digitou errado o comando. :lj [valor] ~ :lj stop.", client);
             }
         }
-
-
     }
 
     @Override
