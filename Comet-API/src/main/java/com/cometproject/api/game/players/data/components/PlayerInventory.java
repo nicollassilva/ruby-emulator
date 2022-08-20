@@ -9,6 +9,7 @@ import com.cometproject.api.game.players.data.components.inventory.IMarketPlaceI
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import gnu.trove.set.hash.THashSet;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,6 +70,9 @@ public interface PlayerInventory extends IPlayerComponent, IMarketPlaceInventory
     boolean hasItem(long id);
 
     boolean hasBaseItem(long id);
+
+    @Nullable
+    PlayerItem getFirstItemByBaseItemId(long id);
 
     PlayerItem getItem(long id);
 

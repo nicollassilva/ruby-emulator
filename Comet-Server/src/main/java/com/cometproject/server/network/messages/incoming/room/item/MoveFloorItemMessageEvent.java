@@ -23,14 +23,13 @@ public class MoveFloorItemMessageEvent implements Event {
     private static final Logger log = LogManager.getLogger(MoveFloorItemMessageEvent.class.getName());
 
     public void handle(Session client, MessageEvent msg) {
-        if(client.getPlayer().getPermissions().getRank().modTool() && !client.getPlayer().getSettings().isPinSuccess()) {
+        if (client.getPlayer().getPermissions().getRank().modTool() && !client.getPlayer().getSettings().isPinSuccess()) {
             client.getPlayer().sendBubble("pincode", Locale.getOrDefault("pin.code.required", "Debes verificar tu PIN antes de realizar cualquier acción."));
-            client.send(new EmailVerificationWindowMessageComposer(1,1));
+            client.send(new EmailVerificationWindowMessageComposer(1, 1));
             return;
         }
 
         final Long id = ItemManager.getInstance().getItemIdByVirtualId(msg.readInt());
-
         if (id == null) {
             return;
         }
@@ -69,21 +68,9 @@ public class MoveFloorItemMessageEvent implements Event {
         }
 
         try {
-            if (room.getItems().moveFloorItem(id, newPos, rot, client)) {
-                if (floorItem != null && floorItem.getTile().getItems().size() > 1) {
-                    client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
-                }
-            } else {
-                final Map<String, String> notificationParams = Maps.newHashMap();
 
-                notificationParams.put("message", "${room.error.cant_set_item}");
+            client.getPlayer().getEntity().getRoom().getBuilderComponent().moveFloorItem(client, floorItem, new Position(x, y), rot);
 
-                client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
-            }
-
-            if (floorItem != null) {
-                room.getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
-            }
         } catch (Exception e) {
             log.error("Error whilst changing floor item position!", e);
         }
