@@ -390,6 +390,8 @@ public class RoomItemFactory {
             put("wf_memory_differentof", WiredConditionMemoryNotEquals.class);
             put("wf_memory_differentof_user", WiredConditionMemoryNotEqualsUser.class);
             // TODO: not equals user
+
+            put("move_stack_tool", MagicMoveFloorItem.class);
 /*
             put("wf_memory_universal_op", WiredMemoryBox.class);
             put("wf_memory_universal", WiredMemoryBox.class);*/
@@ -414,7 +416,7 @@ public class RoomItemFactory {
         }
 
         if (def.getItemName().startsWith(STACK_TOOL)) {
-            floorItem = new MagicMoveFloorItem(itemData, room);  //new MagicStackFloorItem(itemData, room);
+            floorItem = new MagicStackFloorItem(itemData, room);
         }
 
         if (def.isAdFurni()) {
@@ -430,7 +432,6 @@ public class RoomItemFactory {
                 floorItem = new GiftFloorItem(itemData, room);
             } catch (Exception e) {
                 return null;
-//                floorItem = new DefaultFloorItem(id, baseId, room, ownerId, x, y, height, rot, "");
             }
         } else {
             if (itemDefinitionMap.containsKey(def.getInteraction())) {

@@ -8,6 +8,10 @@ import com.cometproject.server.network.sessions.Session;
 public class FillCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
+        client.getPlayer().getEntity().setSelectionType(SelectionType.NONE);
+        client.getPlayer().getEntity().setBuildingType(BuildingType.NONE);
+        client.getPlayer().getEntity().setStackCount(0);
+
         BuildingComponent buildings = client.getPlayer().getEntity().getRoom().getBuilderComponent();
         if (buildings.getBuilderId() != client.getPlayer().getId() && buildings.getBuilderId() != -1 && !buildings.getBuilderName().isEmpty()) {
             sendWhisper("O usuário '" + buildings.getBuilderName() + "' já está usando esse comando.", client);
@@ -37,6 +41,7 @@ public class FillCommand extends ChatCommand {
 
                 client.getPlayer().getEntity().setStackCount(stackCount);
                 client.getPlayer().getEntity().setSelectionType(SelectionType.Stack);
+                client.getPlayer().getEntity().setBuildingType(BuildingType.FILL);
                 sendNotif("Preenchimento de pilha definido para '" + stackCount + "' items.", client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 return;

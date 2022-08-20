@@ -11,7 +11,9 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.MagicMoveFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.components.types.RoomMessageType;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.UpdateStackMapMessageComposer;
@@ -19,6 +21,7 @@ import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectB
 import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageComposer;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +35,7 @@ import java.util.concurrent.Executors;
 
 public class BuildingComponent {
     public static final int MAX_FILL_STACK_BLOCKS = 35;
-    public static final int MAX_FILL_AREA_BLOCKS = 300;
+    public static final int MAX_FILL_AREA_BLOCKS = 1000;
     public static final long FILL_PLACE_ITEM_DELAY = 75L;
     private static final boolean PLACE_ITEM_ASYNC = true;
     private static final Logger log = LogManager.getLogger(BuildingComponent.class.getName());
@@ -46,56 +49,14 @@ public class BuildingComponent {
         this.room = room;
     }
 
-    public void moveFloorItem(Session client, RoomItemFloor item, Position newPositon, int newRotation) {
+    public void moveFloorItem(Session client, RoomItemFloor item, Position newPosition, int newRotation) {
         if (client == null || item == null)
             return;
 
         if (item instanceof MagicMoveFloorItem) {
-            final Position oldPositon = item.getPosition();
-            final int diffX = newPositon.getX() - oldPositon.getX();
-            final int diffY = newPositon.getY() - oldPositon.getY();
-            final List<RoomItemFloor> itemsToMove = new ArrayList<>(100);
-            final MagicMoveFloorItem magicMove = (MagicMoveFloorItem) item;
-            final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(magicMove.getDefinition().getLength(), magicMove.getDefinition().getWidth(), magicMove.getPosition().getX(), magicMove.getPosition().getY(), magicMove.getRotation());
-            for (final AffectedTile affectedTile : affectedTiles) {
-                itemsToMove.addAll(this.room.getMapping().getTile(affectedTile.x, affectedTile.y).getItems());
-            }
-
-            final List<RoomTile> tilesUpdated = new ArrayList<>(affectedTiles.size());
-            for (final RoomItemFloor floorItem : itemsToMove) {
-                if (floorItem instanceof MagicMoveFloorItem) continue;
-                final Position oldItemPosition = floorItem.getPosition().copy();
-                final Position newItemPosition = oldItemPosition.copy();
-
-                newItemPosition.setX(oldItemPosition.getX() + diffX);
-                newItemPosition.setY(oldItemPosition.getY() + diffY);
-
-                for (final RoomEntity entity : this.room.getEntities().getEntitiesAt(oldItemPosition)) {
-                    floorItem.onEntityStepOff(entity);
-                    WiredTriggerWalksOffFurni.executeTriggers(entity, floorItem);
-                }
-
-                room.getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(oldItemPosition, newItemPosition, 0, 0, floorItem.getVirtualId()));
-
-                item.onPositionChanged(newItemPosition);
-                item.getPosition().setX(newItemPosition.getX());
-                item.getPosition().setY(newItemPosition.getY());
-
-                item.save();
-
-                final RoomTile oldTile = this.room.getMapping().getTile(oldItemPosition);
-                final RoomTile newTile = this.room.getMapping().getTile(newItemPosition);
-                oldTile.reload();
-                newTile.reload();
-                tilesUpdated.add(oldTile);
-                tilesUpdated.add(newTile);
-            }
-
-            if (!tilesUpdated.isEmpty()) {
-                room.getEntities().broadcastMessage(new UpdateStackMapMessageComposer(tilesUpdated));
-            }
+            room.getItems().moveItemsOnSquare((MagicMoveFloorItem) item,newPosition);
         } else {
-            final boolean successfulMove = room.getItems().moveFloorItem(item.getVirtualId(), newPositon, newRotation, true, client);
+            final boolean successfulMove = room.getItems().moveFloorItem(item.getId(), newPosition, newRotation, client);
             if (successfulMove) {
                 room.getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(item));
                 if (item.getTile().getItems().size() > 1) {
