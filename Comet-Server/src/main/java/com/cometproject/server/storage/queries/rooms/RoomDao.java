@@ -565,6 +565,26 @@ public class RoomDao {
         }
     }
 
+    public static void removeItems(int roomId, int ownerId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("DELETE items FROM items JOIN furniture ON (items.base_item = furniture.id) WHERE room_id = ? AND user_id = ? AND deleteable = 1", sqlConnection);
+
+            preparedStatement.setInt(1, roomId);
+            preparedStatement.setInt(2, ownerId);
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+    }
+
     public static void removeNonOwnerItems(int roomId, int ownerId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -585,16 +605,17 @@ public class RoomDao {
         }
     }
 
-    public static void changeRoomPrice(int roomId, int price) {
+    public static void changeRoomPrice(int roomId, int price, int userBuyerId) {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `room_price` = ? WHERE `id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("UPDATE rooms SET `room_price` = ?, `room_buyer` = ? WHERE `id` = ?", sqlConnection);
 
             preparedStatement.setInt(1, price);
-            preparedStatement.setInt(2, roomId);
+            preparedStatement.setInt(2, userBuyerId);
+            preparedStatement.setInt(3, roomId);
 
             preparedStatement.execute();
         } catch (SQLException e) {
@@ -796,12 +817,13 @@ public class RoomDao {
         final RoomDiagonalType roomDiagonal = RoomDiagonalType.parse(room.getString("room_diagonal"));
         final int songId = room.getInt("song_id");
         final int roomPrice = room.getInt("room_price");
+        final int roomBuyer = room.getInt("room_buyer");
 
         return new RoomData(id, type, name, description, ownerId, owner, category, maxUsers, access, password,
                 password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands, groupId,
-                requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice);
+                requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice, roomBuyer);
     }
 
     private static void fillDecorations(Map<String, String> decorations, String[] decorationsArray) {

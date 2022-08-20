@@ -147,8 +147,8 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.flagme.name"), new FlagMeCommand());
         this.addCommand(Locale.get("command.flaguser.name"), new FlagUserCommand());
         this.addCommand(Locale.get("command.randomize.name"), new RandomizeCommand());
-        this.addCommand(Locale.get("command.emptypets.name"), new EmptyPetsCommand());
-        this.addCommand(Locale.get("command.emptybots.name"), new EmptyBotsCommand());
+        this.addCommand(Locale.getOrDefault("command.emptypets.name", "emptypets"), new EmptyPetsCommand());
+        this.addCommand(Locale.getOrDefault("command.emptybots.name", "emptybots"), new EmptyBotsCommand());
         this.addCommand(Locale.get("command.mutebots.name"), new MuteBotsCommand());
         this.addCommand(Locale.get("command.mutepets.name"), new MutePetsCommand());
         this.addCommand(Locale.get("command.toggleevents.name"), new ToggleEventsCommand());
@@ -219,6 +219,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.count_furnis.name", "countfurnis"), new CountFurnisCommand());
         this.addCommand(Locale.getOrDefault("command.slime.name", "slime"), new SlimeCommand());
         this.addCommand(Locale.getOrDefault("command.superpush.name", "spush"), new SuperPushCommand());
+        this.addCommand(Locale.getOrDefault("command.delete_all_items.name", "deleteall"), new DeleteAllItemsCommand());
         this.addCommand(Locale.getOrDefault("command.roomban.name", "roomban"), new RoomBanUserCommand());
 
         this.addCommand(Locale.getOrDefault("command.fill.name", "fill"), new FillCommand());

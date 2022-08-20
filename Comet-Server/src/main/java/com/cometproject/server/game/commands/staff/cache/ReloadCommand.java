@@ -51,10 +51,11 @@ public class ReloadCommand extends ChatCommand {
                                 "- bundles\n" +
                                 "- catalog\n" +
                                 "- config\n" +
+                                "- crafting\n" +
                                 "- emojis\n" +
                                 "- filter\n" +
+                                "- gamecenter\n" +
                                 "- groupitems\n" +
-                                "- targetoffers\n" +
                                 "- items\n" +
                                 "- locale\n" +
                                 "- models\n" +
@@ -67,7 +68,8 @@ public class ReloadCommand extends ChatCommand {
                                 "- permissions\n" +
                                 "- pets\n" +
                                 "- polls\n" +
-                                "- quests"
+                                "- quests\n" +
+                                "- targetoffers"
                 ));
 
                 break;

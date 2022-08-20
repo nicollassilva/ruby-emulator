@@ -177,4 +177,8 @@ public interface IRoomData {
     int getRoomPrice();
 
     void setRoomPrice(int value);
+
+    int getRoomBuyer();
+
+    void setRoomBuyer(int id);
 }
