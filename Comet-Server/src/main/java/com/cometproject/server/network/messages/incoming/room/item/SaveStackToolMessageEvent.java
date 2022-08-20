@@ -43,21 +43,21 @@ public class SaveStackToolMessageEvent implements Event {
             return;
 
         final MagicStackFloorItem magicStackFloorItem = ((MagicStackFloorItem) floorItem);
+        final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(
+                magicStackFloorItem.getDefinition().getLength(),
+                magicStackFloorItem.getDefinition().getWidth(),
+                magicStackFloorItem.getPosition().getX(),
+                magicStackFloorItem.getPosition().getY(),
+                magicStackFloorItem.getRotation()
+        );
+        final List<RoomTile> tiles = new ArrayList<>(affectedTiles.size());
 
         final boolean placeOverFurni = height == -1;
         if(placeOverFurni){
-            final List<AffectedTile> affectedTiles = AffectedTile.getAffectedBothTilesAt(
-                    magicStackFloorItem.getDefinition().getLength(),
-                    magicStackFloorItem.getDefinition().getWidth(),
-                    magicStackFloorItem.getPosition().getX(),
-                    magicStackFloorItem.getPosition().getY(),
-                    magicStackFloorItem.getRotation()
-            );
-
-            final List<RoomTile> tiles = new ArrayList<>(affectedTiles.size());
             double highestHeight = 0d;
             for (final AffectedTile affectedTile : affectedTiles) {
                 final RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
+                tile.reload();
                 tiles.add(tile);
                 final double affectedTileHeight = tile.getTopHeight(magicStackFloorItem);
                 if (affectedTileHeight > highestHeight) {
@@ -66,18 +66,23 @@ public class SaveStackToolMessageEvent implements Event {
             }
 
             magicStackFloorItem.setOverrideHeight(Math.min(highestHeight, RoomTile.INVALID_STACK_HEIGHT));
-            client.send(new UpdateStackMapMessageComposer(tiles));
         }
         else{
             // height >= floor height <= 100
             final double tileOrHeight = Math.max(magicStackFloorItem.getTile().getTileHeight(), height);
             final double heightOrMaxAllowedValue = Math.min(tileOrHeight, RoomTile.INVALID_STACK_HEIGHT);
             magicStackFloorItem.setOverrideHeight(heightOrMaxAllowedValue);
+            for (final AffectedTile affectedTile : affectedTiles) {
+                final RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
+                tile.reload();
+                tiles.add(tile);
+            }
         }
 
 
         magicStackFloorItem.sendUpdate();
         magicStackFloorItem.saveData();
+        client.send(new UpdateStackMapMessageComposer(tiles));
         client.send(new UpdateStackHeightTileHeightComposer(itemId, (int) (magicStackFloorItem.getOverrideHeight() > 0 ? (magicStackFloorItem.getOverrideHeight() * 100) : 0)));
     }
 }

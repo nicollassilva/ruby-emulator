@@ -308,6 +308,10 @@ public class RoomTile {
                     continue;
                 }
 
+                if(hasMagicTile && !isStackTool){
+                    return this.getStackHeight();
+                }
+
                 if(!item.getDefinition().canStack() && !isStackTool)
                     return INVALID_STACK_HEIGHT;
 
