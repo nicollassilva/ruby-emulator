@@ -33,6 +33,7 @@ import com.cometproject.server.game.commands.staff.rewards.room.RoomMassPointsCo
 import com.cometproject.server.game.commands.staff.rewards.room.RoomMassSeasonalCommand;
 import com.cometproject.server.game.commands.staff.security.LogsClientCommand;
 import com.cometproject.server.game.commands.user.*;
+import com.cometproject.server.game.commands.user.building.FillCommand;
 import com.cometproject.server.game.commands.user.group.DeleteGroupCommand;
 import com.cometproject.server.game.commands.user.group.EjectAllCommand;
 import com.cometproject.server.game.commands.user.muting.MuteBotsCommand;
@@ -220,6 +221,8 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.superpush.name", "spush"), new SuperPushCommand());
         this.addCommand(Locale.getOrDefault("command.delete_all_items.name", "deleteall"), new DeleteAllItemsCommand());
         this.addCommand(Locale.getOrDefault("command.roomban.name", "roomban"), new RoomBanUserCommand());
+
+        this.addCommand(Locale.getOrDefault("command.fill.name", "fill"), new FillCommand());
     }
 
     /**

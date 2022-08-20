@@ -187,6 +187,29 @@ public class EntityComponent {
     public void broadcastMessage(MessageComposer msg, boolean usersWithRightsOnly) {
         broadcastMessage(msg, usersWithRightsOnly, RoomMessageType.GENERIC_COMPOSER);
     }
+    public void broadcastMessagesQueue(List<MessageComposer> messages, boolean usersWithRightsOnly, RoomMessageType type){
+        for (final PlayerEntity playerEntity : this.playerEntities) {
+            if (playerEntity.getPlayer() == null)
+                continue;
+
+            if (usersWithRightsOnly && !this.room.getRights().hasRights(playerEntity.getPlayerId()) && !playerEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
+                continue;
+            }
+
+            if (type == RoomMessageType.BOT_CHAT && playerEntity.getPlayer().botsMuted()) {
+                continue;
+            }
+
+            if (type == RoomMessageType.PET_CHAT && playerEntity.getPlayer().petsMuted()) {
+                continue;
+            }
+
+            for (final MessageComposer msg:messages) {
+                playerEntity.getPlayer().getSession().sendQueue(msg);
+            }
+            playerEntity.getPlayer().getSession().flush();
+        }
+    }
 
     public void broadcastMessage(MessageComposer msg, boolean usersWithRightsOnly, RoomMessageType type) {
         if (msg == null) return;

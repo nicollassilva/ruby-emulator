@@ -30,7 +30,11 @@ import gnu.trove.set.hash.THashSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
@@ -305,6 +309,18 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
         }
 
         return false;
+    }
+
+    @Override
+    @Nullable
+    public PlayerItem getFirstItemByBaseItemId(long id) {
+        for (final PlayerItem inventoryItem : this.inventoryItems.values()) {
+            if (inventoryItem.getDefinition().getId() == id) {
+                return inventoryItem;
+            }
+        }
+
+        return null;
     }
 
     @Override

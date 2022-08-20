@@ -6,9 +6,11 @@ import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultWallItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
-import com.cometproject.server.game.rooms.objects.items.types.floor.academy.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.GymEquipmentFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.IceSkateFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.RollerSkateFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.academy.SkateRailFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.boutique.MannequinFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.SlotMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.battleball.BattleBallTileFloorItem;
@@ -388,6 +390,8 @@ public class RoomItemFactory {
             put("wf_memory_differentof", WiredConditionMemoryNotEquals.class);
             put("wf_memory_differentof_user", WiredConditionMemoryNotEqualsUser.class);
             // TODO: not equals user
+
+            put("move_stack_tool", MagicMoveFloorItem.class);
 /*
             put("wf_memory_universal_op", WiredMemoryBox.class);
             put("wf_memory_universal", WiredMemoryBox.class);*/
@@ -428,7 +432,6 @@ public class RoomItemFactory {
                 floorItem = new GiftFloorItem(itemData, room);
             } catch (Exception e) {
                 return null;
-//                floorItem = new DefaultFloorItem(id, baseId, room, ownerId, x, y, height, rot, "");
             }
         } else {
             if (itemDefinitionMap.containsKey(def.getInteraction())) {
