@@ -301,13 +301,14 @@ public class RoomTile {
         if(items.isEmpty())
             return 0d;
 
+        final boolean isStackTool = exclude instanceof MagicStackFloorItem || exclude instanceof MagicMoveFloorItem;
         synchronized (this.items){
             for (final RoomItemFloor item : this.items.stream().sorted(heightByDesc).collect(Collectors.toList())) {
                 if(exclude != null && exclude.getId() == item.getId()) {
                     continue;
                 }
 
-                if(!item.getDefinition().canStack())
+                if(!item.getDefinition().canStack() && !isStackTool)
                     return INVALID_STACK_HEIGHT;
 
                 return Math.min(getTotalHeight(item), INVALID_STACK_HEIGHT);
