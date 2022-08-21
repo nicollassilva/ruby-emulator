@@ -65,12 +65,12 @@ public class SaveStackToolMessageEvent implements Event {
                 }
             }
 
-            magicStackFloorItem.setOverrideHeight(Math.min(highestHeight, RoomTile.INVALID_STACK_HEIGHT));
+            magicStackFloorItem.setOverrideHeight(Math.min(highestHeight,100d));
         }
         else{
             // height >= floor height <= 100
             final double tileOrHeight = Math.max(magicStackFloorItem.getTile().getTileHeight(), height);
-            final double heightOrMaxAllowedValue = Math.min(tileOrHeight, RoomTile.INVALID_STACK_HEIGHT);
+            final double heightOrMaxAllowedValue = Math.min(tileOrHeight, 100d);
             magicStackFloorItem.setOverrideHeight(heightOrMaxAllowedValue);
             for (final AffectedTile affectedTile : affectedTiles) {
                 final RoomTile tile = magicStackFloorItem.getRoom().getMapping().getTile(affectedTile.x, affectedTile.y);
