@@ -310,12 +310,14 @@ public class ItemsComponent {
     /**
      * Internal use only.
      * Used for skip verifications while moving items.
+     *
      * @param item
      * @param newPosition
      * @param newHeight
      * @param newRotation
+     * @param state
      */
-    public void __unsafeMoveItemUpdateTilesAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation) {
+    public void __unsafeMoveItemUpdateTilesAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation, int state) {
         final Position oldPosition = item.getPosition().copy();
         int oldRotation = item.getRotation();
         for (final RoomItemFloor stackItem : this.getItemsOnSquare(newPosition.getX(), newPosition.getY())) {
@@ -370,7 +372,7 @@ public class ItemsComponent {
         if (autoHeight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
             return false;
 
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, height, newRotation);
+        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, height, newRotation, -1);
         return true;
     }
 
@@ -746,7 +748,7 @@ public class ItemsComponent {
             return false;
         }
 
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation);
+        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation, newState);
         return true;
     }
 
@@ -763,8 +765,9 @@ public class ItemsComponent {
         if(newHeight == RoomTile.INVALID_STACK_HEIGHT){
             return false;
         }
+
         newPosition.setZ(newHeight);
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation);
+        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation,-1);
         return true;
     }
 
