@@ -403,6 +403,11 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
     @Override
     public void leaveRoom(boolean isOffline, boolean isKick, boolean toHotelView) {
+        if (this.getRoom().getBuilderComponent() != null && this.getPlayer().getEntity() != null
+                && this.getRoom().getBuilderComponent().isBuilder(this.getPlayer().getEntity())) {
+            this.getRoom().getBuilderComponent().setBuilder(null);
+        }
+
         if (this.isQueueing) {
             RoomQueue.getInstance().removePlayerFromQueue(this.getRoom().getId(), this.playerId);
         }
@@ -441,10 +446,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         if (trade != null) {
             trade.cancel(this.getPlayerId());
-        }
-
-        if (this.getRoom().getBuilderComponent().isBuilder(this.getPlayer().getEntity())) {
-            this.getRoom().getBuilderComponent().setBuilder(null);
         }
 
         if (this.getMountedEntity() != null) {
@@ -1077,7 +1078,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             return RoomControllerLevel.GUILD_MEMBER;
         } else if (this.getRoom().getRights().hasRights(this.getPlayerId())) {
             return RoomControllerLevel.GUEST;
-        }   
+        }
 
         return RoomControllerLevel.NONE;
     }
@@ -1085,7 +1086,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     public boolean isAway() {
         return this.isAway;
     }
-    
+
     public void setAway() {
         this.awayTime = System.currentTimeMillis();
         this.lastAwayReminder = this.awayTime / 1000;
