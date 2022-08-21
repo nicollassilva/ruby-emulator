@@ -22,14 +22,15 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons
 import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.google.common.collect.Lists;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
 public class RoomTile {
-    public static final double INVALID_STACK_HEIGHT = 64d; // habbo client constant for invalid tile to place items
     private final RoomMapping mappingInstance;
     private final Position position;
     private final List<RoomItemFloor> items;
@@ -285,41 +286,30 @@ public class RoomTile {
     public double getStackHeight(RoomItemFloor itemToStack) {
         final RoomItemFloor topItem = this.getTopItemInstance();
 
-        double stackHeight = INVALID_STACK_HEIGHT;
+        double stackHeight;
+
         if (this.hasMagicTile() || (topItem instanceof AdjustableHeightFloorItem)) {
             stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.stackHeight;
-            // TODO: after reload tile, it does check if top item can stack or not. This check shouldn't be necessary...
-        } else if (this.canPlaceItemHere && this.canStack && (topItem == null || topItem.getDefinition().canStack())) {
+        } else {
             stackHeight = itemToStack != null && itemToStack.getId() == this.getTopItem() ? itemToStack.getPosition().getZ() : this.originalHeight;
         }
 
-        return Math.min(stackHeight, INVALID_STACK_HEIGHT);
+        return stackHeight;
     }
 
-    private final Comparator<RoomItemFloor> heightByDesc = (a,b) -> Double.compare(getTotalHeight(b), getTotalHeight(a));
     public double getTopHeight(RoomItemFloor exclude) {
-        if(items.isEmpty())
-            return 0d;
+        double highest = this.getTileHeight();
 
-        final boolean isStackTool = exclude instanceof MagicStackFloorItem || exclude instanceof MagicMoveFloorItem;
-        synchronized (this.items){
-            for (final RoomItemFloor item : this.items.stream().sorted(heightByDesc).collect(Collectors.toList())) {
-                if(exclude != null && exclude.getId() == item.getId()) {
-                    continue;
-                }
+        for (final RoomItemFloor item : items) {
+            if (exclude != null && exclude.getId() == item.getId()) continue;
 
-                if(hasMagicTile && !isStackTool){
-                    return this.getStackHeight();
-                }
-
-                if(!item.getDefinition().canStack() && !isStackTool)
-                    return INVALID_STACK_HEIGHT;
-
-                return Math.min(getTotalHeight(item), INVALID_STACK_HEIGHT);
+            final double totalHeight = getTotalHeight(item);
+            if (totalHeight > highest) {
+                highest = totalHeight;
             }
-
-            return 0d;
         }
+
+        return highest;
     }
 
     public double getWalkHeight() {

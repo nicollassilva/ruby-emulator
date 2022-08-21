@@ -723,7 +723,8 @@ public class ItemsComponent {
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
-        double newHeight = tile.getTopHeight(item);
+        double newHeight = tile.getStackHeight(item);
+
         if (client.getPlayer().getEntity().hasAttribute("setz.height")) {
             newHeight = (double) client.getPlayer().getEntity().getAttribute("setz.height") + this.room.getMapping().getTile(newPosition.getX(), newPosition.getY()).getTileHeight();
         }
@@ -740,11 +741,7 @@ public class ItemsComponent {
                 newState = item.getDefinition().getInteractionCycleCount();
         }
 
-        if(newHeight == RoomTile.INVALID_STACK_HEIGHT){
-            return false;
-        }
-
-        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
+        if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), client.getPlayer().getEntity())) {
             return false;
         }
 
@@ -761,10 +758,7 @@ public class ItemsComponent {
             return false;
         }
 
-        double newHeight = tile.getTopHeight(item);
-        if(newHeight == RoomTile.INVALID_STACK_HEIGHT){
-            return false;
-        }
+        double newHeight = tile.getStackHeight(item);
 
         newPosition.setZ(newHeight);
         this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation,-1);
@@ -791,9 +785,7 @@ public class ItemsComponent {
         }
 
         if (!tile.canStack() && tile.getTopItem() != 0 && tile.getTopItem() != item.getId() && !hasStackToolCommand) {
-            final boolean isStackTool = item.getItemName().startsWith(RoomItemFactory.STACK_TOOL);
-            final boolean isMoveStackTool = item.getInteraction().equals("move_stack_tool");
-            if (!isStackTool && !isMoveStackTool) return false;
+            if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) return false;
         }
 
         if (!item.getInteraction().equals(RoomItemFactory.TELEPORT_PAD) && tile.getPosition().getX() == this.getRoom().getModel().getDoorX() && tile.getPosition().getY() == this.getRoom().getModel().getDoorY())
@@ -860,15 +852,9 @@ public class ItemsComponent {
             return;
         }
 
-        if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, player.getEntity())) {
-            this.sendFurniturePlacementError(player.getSession());
-            return;
-        }
-
-        final boolean isStackTool = item.getDefinition().getItemName().startsWith(RoomItemFactory.STACK_TOOL);
-        final boolean isMoveStackTool = item instanceof MagicMoveFloorItem;
         double height = tile.getStackHeight(null);
-        if(height == RoomTile.INVALID_STACK_HEIGHT && !(isMoveStackTool || isStackTool)){
+
+        if (!this.verifyItemPosition(item.getDefinition(), null, tile, null, player.getEntity())) {
             this.sendFurniturePlacementError(player.getSession());
             return;
         }
