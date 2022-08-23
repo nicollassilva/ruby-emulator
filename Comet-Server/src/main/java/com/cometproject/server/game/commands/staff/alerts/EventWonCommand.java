@@ -32,7 +32,7 @@ public class EventWonCommand extends NotificationCommand {
 
     @Override
     public String getParameter() {
-        return "%user%";
+        return "(usuário)";
     }
 
     @Override

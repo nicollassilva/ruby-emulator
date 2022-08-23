@@ -76,7 +76,7 @@ public class RoomVideoCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "%video%";
+        return "(url do vídeo)";
     }
 
     @Override

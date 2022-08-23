@@ -78,7 +78,7 @@ public class EventRewardCommand extends NotificationCommand {
 
     @Override
     public String getParameter() {
-        return "%username% %badge%";
+        return "(usuário) (emblema)";
     }
 
     @Override

@@ -60,7 +60,7 @@ public class GiveRankCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "%username% %rank%";
+        return "(usuário) (rank)";
     }
 
     @Override

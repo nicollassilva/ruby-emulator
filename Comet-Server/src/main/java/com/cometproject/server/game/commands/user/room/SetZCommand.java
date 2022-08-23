@@ -76,7 +76,7 @@ public class SetZCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "setz_command";
     }
 
     @Override
