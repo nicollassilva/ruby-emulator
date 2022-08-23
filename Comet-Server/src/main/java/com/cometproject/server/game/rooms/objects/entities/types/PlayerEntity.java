@@ -403,8 +403,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
     @Override
     public void leaveRoom(boolean isOffline, boolean isKick, boolean toHotelView) {
-        if (this.getRoom().getBuilderComponent() != null && this.getPlayer().getEntity() != null
-                && this.getRoom().getBuilderComponent().isBuilder(this.getPlayer().getEntity())) {
+        if (this.getRoom() != null && this.getRoom().getBuilderComponent() != null && this.getRoom().getBuilderComponent().isBuilder(this)) {
             this.getRoom().getBuilderComponent().setBuilder(null);
         }
 
