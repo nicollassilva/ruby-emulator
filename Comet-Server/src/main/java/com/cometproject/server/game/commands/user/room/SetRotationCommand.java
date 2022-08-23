@@ -27,8 +27,8 @@ public class SetRotationCommand extends ChatCommand {
             try {
                 final int rotation = Integer.parseInt(params[0]);
 
-                if (rotation < 0 || rotation > 8) {
-                    sendWhisper("A rotação deve estar entre 0 e 8.", client);
+                if (rotation < 0 || rotation > 7) {
+                    sendWhisper("A rotação deve estar entre 0 e 7.", client);
                     return;
                 }
 
@@ -48,11 +48,11 @@ public class SetRotationCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(rotação)";
+        return "(número)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.setrot.description", "Use este comando para girar mobílias, rotações disponíveis em um intervalo entre 0 e 8");
+        return Locale.getOrDefault("command.setrot.description", "Use este comando para girar mobílias, rotações disponíveis em um intervalo entre 0 e 7.");
     }
 }

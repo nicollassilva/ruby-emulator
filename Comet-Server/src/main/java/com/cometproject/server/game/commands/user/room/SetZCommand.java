@@ -47,7 +47,7 @@ public class SetZCommand extends ChatCommand {
                 final double height = Double.parseDouble(params[0]);
 
                 if (height > 100 || height < -100) {
-                    sendWhisper("A altura deve estar entre 100 e -100.", client);
+                    sendWhisper("A altura deve estar entre -100 e 100.", client);
                     return;
                 }
 
@@ -81,11 +81,11 @@ public class SetZCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(altura)";
+        return "(número)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.setz.description", "Use este comando em vez de um bloco empilhável, alturas disponíveis em um intervalo entre -100 e 100");
+        return Locale.getOrDefault("command.setz.description", "Use este comando em vez de um bloco empilhável, alturas disponíveis em um intervalo entre -100 e 100.");
     }
 }

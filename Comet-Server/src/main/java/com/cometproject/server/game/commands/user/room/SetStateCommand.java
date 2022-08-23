@@ -48,11 +48,11 @@ public class SetStateCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "(estado)";
+        return "(número)";
     }
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.setstate.description", "Use este comando para mudar o estado das mobílias, estados disponíveis em um intervalo entre 0 e 100");
+        return Locale.getOrDefault("command.setstate.description", "Use este comando para mudar o estado das mobílias, estados disponíveis em um intervalo entre 0 e 100.");
     }
 }
