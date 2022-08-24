@@ -20,7 +20,7 @@ public class BuildCommand extends ChatCommand {
         }
 
         client.getPlayer().getEntity().setAttribute("build.activated", true);
-        sendWhisper(Locale.getOrDefault("command.build_websocket.enabled", "Mode construction activé."), client);
+        sendWhisper(Locale.getOrDefault("command.build_websocket.enabled", "Modo de construção ativado."), client);
 
         final JSONObject output = new JSONObject();
 
@@ -44,7 +44,7 @@ public class BuildCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.get("command.parameter.number");
+        return "";
     }
 
     @Override
