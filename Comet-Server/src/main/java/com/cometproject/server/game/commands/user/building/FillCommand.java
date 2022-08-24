@@ -60,7 +60,7 @@ public class FillCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "commands_command";
+        return "fillarea_command";
     }
 
     @Override

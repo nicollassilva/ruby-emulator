@@ -56,7 +56,7 @@ public class GiveBadgeCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.badge", "%username% %badge%");
+        return Locale.getOrDefault("command.parameter.username" + " " + "command.parameter.badge", "(usuário) (emblema)");
     }
 
     @Override
