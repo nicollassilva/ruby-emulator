@@ -34,4 +34,9 @@ public class ItemDataCommand extends ChatCommand {
     public String getDescription() {
         return "Gets the data for the item you're currently standing on";
     }
+
+    @Override
+    public boolean isHidden() {
+        return true;
+    }
 }
