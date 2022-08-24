@@ -67,7 +67,7 @@ public class InventoryItem implements PlayerItem {
             msg.writeInt(this.getVirtualId());
             msg.writeInt(this.getDefinition().getSpriteId());
 
-            if (this.getDefinition().getItemName().contains("a2")) {
+            if (this.getDefinition().getItemName().contains("floor")) {
                 msg.writeInt(3);
             } else if (this.getDefinition().getItemName().contains("wallpaper")) {
                 msg.writeInt(2);

@@ -102,7 +102,7 @@ public class ItemDefinition implements FurnitureDefinition {
     }
 
     public boolean isRoomDecor() {
-        return itemName.startsWith("wallpaper") || itemName.startsWith("landscape") || itemName.startsWith("a2 ");
+        return itemName.startsWith("wallpaper") || itemName.startsWith("landscape") || itemName.startsWith("floor");
     }
 
     public boolean isTeleporter() {
