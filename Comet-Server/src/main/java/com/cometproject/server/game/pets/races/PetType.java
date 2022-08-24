@@ -37,4 +37,5 @@ public class PetType {
     public static final int FOOLS = 32;
     public static final int PTEROSAUR = 33;
     public static final int VELOCIRAPTOR = 34;
+    public static final int COW = 34;
 }

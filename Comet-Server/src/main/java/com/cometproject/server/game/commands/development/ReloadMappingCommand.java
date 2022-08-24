@@ -22,6 +22,12 @@ public class ReloadMappingCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return "Reloads the room map";
+        return "";
     }
+
+    @Override
+    public boolean isHidden() {
+        return true;
+    }
+
 }
