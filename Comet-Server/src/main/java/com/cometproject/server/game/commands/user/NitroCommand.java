@@ -3,10 +3,8 @@ package com.cometproject.server.game.commands.user;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
 import com.cometproject.server.network.sessions.Session;
-import org.apache.tomcat.jni.Local;
 
 public class NitroCommand extends ChatCommand {
-    public final static String NITRO="command_nitro";
     @Override
     public void execute(Session client, String[] params) {
         final boolean flag = client.getPlayer().setNitro(!client.getPlayer().getNitro());
