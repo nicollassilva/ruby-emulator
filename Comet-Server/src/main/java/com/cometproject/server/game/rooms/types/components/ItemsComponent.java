@@ -735,7 +735,7 @@ public class ItemsComponent {
 
         int newState = -1;
         if (client.getPlayer().getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
-            newState = (int) client.getPlayer().getEntity().getAttribute("state.height") - 1;
+            newState = (int) client.getPlayer().getEntity().getAttribute("state.height");
 
             if (newState > item.getDefinition().getInteractionCycleCount())
                 newState = item.getDefinition().getInteractionCycleCount();
@@ -880,7 +880,7 @@ public class ItemsComponent {
 
         int newState = -1;
         if (player.getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
-            newState = (int) player.getEntity().getAttribute("state.height") - 1;
+            newState = (int) player.getEntity().getAttribute("state.height");
 
             if (newState > item.getDefinition().getInteractionCycleCount())
                 newState = item.getDefinition().getInteractionCycleCount();
