@@ -25,7 +25,7 @@ public class HideWiredCommand extends ChatCommand {
         room.getData().setIsWiredHidden(!room.getData().isWiredHidden());
         final boolean isHidden = room.getData().isWiredHidden();
         for (final RoomItemFloor floorItem : room.getItems().getFloorItems().values()) {
-            if (floorItem instanceof WiredFloorItem || floorItem instanceof WiredAddonUnseenEffect || floorItem instanceof WiredAddonRandomEffect || floorItem instanceof WiredAddonNoItemsAnimateEffect || floorItem instanceof WiredAddonKebBar) {
+            if (floorItem.getDefinition().isWired()) {
                 if (isHidden) {
                     room.getEntities().broadcastMessage(new RemoveFloorItemMessageComposer(floorItem.getVirtualId(), client.getPlayer().getId()));
                 } else {
