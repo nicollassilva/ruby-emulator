@@ -67,7 +67,7 @@ public class EventAlertVueCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.event_alert_websocket.parameters", "%evento%");
+        return "";
     }
 
     @Override

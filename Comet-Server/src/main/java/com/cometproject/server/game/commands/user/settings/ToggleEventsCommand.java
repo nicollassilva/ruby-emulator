@@ -9,19 +9,15 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class ToggleEventsCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-
         final PlayerSettings playerSettings = client.getPlayer().getSettings();
-
-        if (playerSettings == null) {
+        if (playerSettings == null)
             return;
-        }
 
-        playerSettings.setIgnoreInvites(!playerSettings.ignoreEvents());
-
-        final String msg = playerSettings.ignoreEvents() ? "Agora você está ignorando as notificações de eventos!" : "As notificações de eventos agora estão ativadas.";
-        sendNotif(Locale.getOrDefault("command.toggleevents.msg." + playerSettings.ignoreEvents(), msg), client);
+        playerSettings.setIgnoreEvents(!playerSettings.ignoreEvents());
 
         PlayerDao.saveIgnoreEvents(playerSettings.ignoreEvents(), client.getPlayer().getId());
+
+        sendNotif(Locale.getOrDefault("command.toggleevents.msg." + playerSettings.ignoreEvents(), playerSettings.ignoreEvents() ? "Agora você está ignorando as notificações de eventos!" : "As notificações de eventos agora estão ativadas."), client);
     }
 
     @Override

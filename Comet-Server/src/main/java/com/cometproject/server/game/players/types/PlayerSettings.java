@@ -319,13 +319,11 @@ public class PlayerSettings implements IPlayerSettings {
     }
 
     public boolean ignoreEvents() {
-        return ignoreInvites;
+        return ignoreEvents;
     }
 
     public void setIgnoreInvites(boolean ignoreInvites) {
         this.ignoreInvites = ignoreInvites;
-
-        flush();
     }
 
     public int getNavigatorX() {
@@ -366,10 +364,6 @@ public class PlayerSettings implements IPlayerSettings {
 
     public void setNavigatorShowSearches(boolean navigatorShowSearches) {
         this.navigatorShowSearches = navigatorShowSearches;
-    }
-
-    public boolean isIgnoreEvents() {
-        return ignoreEvents;
     }
 
     public void setIgnoreEvents(boolean ignoreEvents) {
