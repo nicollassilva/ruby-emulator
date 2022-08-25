@@ -394,6 +394,8 @@ public class RoomItemFactory {
             put("move_stack_tool", MagicMoveFloorItem.class);
 
             put("wf_hideitem", WiredHideItem.class);
+            put("wf_sit_hideitem", WiredSitHideItem.class);
+
 /*
             put("wf_memory_universal_op", WiredMemoryBox.class);
             put("wf_memory_universal", WiredMemoryBox.class);*/
