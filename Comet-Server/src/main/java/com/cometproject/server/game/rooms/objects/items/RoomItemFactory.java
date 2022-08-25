@@ -392,6 +392,8 @@ public class RoomItemFactory {
             // TODO: not equals user
 
             put("move_stack_tool", MagicMoveFloorItem.class);
+
+            put("wf_hideitem", WiredHideItem.class);
 /*
             put("wf_memory_universal_op", WiredMemoryBox.class);
             put("wf_memory_universal", WiredMemoryBox.class);*/

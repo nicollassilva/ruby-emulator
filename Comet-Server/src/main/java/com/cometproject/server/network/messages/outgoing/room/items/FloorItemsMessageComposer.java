@@ -42,7 +42,7 @@ public class FloorItemsMessageComposer extends MessageComposer {
                 final List<RoomItemFloor> items = Lists.newArrayList();
 
                 for (final RoomItemFloor item : room.getItems().getFloorItems().values()) {
-                    if (!(item instanceof WiredFloorItem) && !(item instanceof WiredAddonRandomEffect) && !(item instanceof WiredAddonUnseenEffect) && !(item instanceof WiredAddonNoItemsAnimateEffect) && !(item instanceof WiredAddonKebBar)) {
+                    if (!item.getDefinition().isWired()) {
                         items.add(item);
                     }
                 }
