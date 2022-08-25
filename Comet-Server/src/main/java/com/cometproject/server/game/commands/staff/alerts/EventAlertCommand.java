@@ -7,7 +7,6 @@ import com.cometproject.api.networking.messages.IMessageComposer;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.commands.ChatCommand;
-import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
@@ -21,12 +20,17 @@ public class EventAlertCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
         if (params.length == 0) {
+            sendWhisper(Locale.getOrDefault("command.eventalert.missing_param", "Digite a mensagem!"), client);
             return;
         }
 
         final int roomId = client.getPlayer().getEntity().getRoom().getId();
         final String imageEvent = Locale.getOrDefault("image.event", "event");
         final Room room = client.getPlayer().getEntity().getRoom();
+        final String message = this.merge(params);
+        final String roomName = room.getData().getName();
+        final IMessageComposer messageComposer = new RoomForwardMessageComposer(roomId);
+        final String hostName = client.getPlayer().getData().getUsername();
 
         room.getData().setAccess(RoomAccessType.OPEN);
         GameContext.getCurrent().getRoomService().saveRoomData(room.getData());
@@ -38,13 +42,21 @@ public class EventAlertCommand extends ChatCommand {
             if (session.getPlayer().getSettings().ignoreEvents())
                 continue;
 
+            if (session.getPlayer().getNitro()) {
+                if (session.getPlayer().getEntity() != null && session.getPlayer().getEntity().getRoom().getData().getId() == roomId)
+                    continue;
+
+                session.send(messageComposer);
+                continue;
+            }
+
             session.send(new AdvancedAlertMessageComposer(
                     Locale.get("command.eventalert.alerttitle"),
                     Locale.get("command.eventalert.message")
-                            .replace("%message%", this.merge(params))
+                            .replace("%message%", message)
                             .replace("%username%", session.getPlayer().getData().getUsername())
-                            .replace("%hostname%", client.getPlayer().getData().getUsername())
-                            .replace("%roomname%", room.getData().getName()),
+                            .replace("%hostname%", hostName)
+                            .replace("%roomname%", roomName),
                     Locale.get("command.eventalert.buttontitle"), "event:navigator/goto/" + roomId, imageEvent)
             );
         }
