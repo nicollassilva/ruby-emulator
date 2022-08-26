@@ -105,6 +105,12 @@ public class ConfigDao {
                 CometSettings.FIGURE_VALIDATION = config.getBoolean("player_figure_validation");
                 CometSettings.CATALOG_SOLD_OUT_LTD_PAGE_ID = config.getInt("catalog_soldout_ltd_page");
 
+
+                CometSettings.FILL_AREA_MAX_SIZE = config.getInt("fill_area_max_size");
+                CometSettings.FILL_STACK_MAX_HEIGHT = config.getInt("fill_stack_max_height");
+                CometSettings.FILL_ITEM_PLACE_DELAY = config.getInt("fill_place_item_delay");
+                CometSettings.PLACE_ITEMS_ASYNC = config.getBoolean("place_items_async");
+
                 final String characters = config.getString("word_filter_strict_chars");
 
                 CometSettings.strictFilterCharacters.clear();

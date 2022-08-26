@@ -1,8 +1,10 @@
 package com.cometproject.server.game.rooms.types.components;
 
+import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.game.utilities.Position;
+import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
@@ -32,12 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class BuildingComponent {
-    public static final int MAX_FILL_STACK_BLOCKS = 35;
-    public static final int MAX_FILL_AREA_BLOCKS = 1000;
-    public static final long FILL_PLACE_ITEM_DELAY = 75L;
-    private static final boolean PLACE_ITEM_ASYNC = true;
     private static final Logger log = LogManager.getLogger(BuildingComponent.class.getName());
     private final ExecutorService buildingExecutor = Executors.newSingleThreadExecutor();
     private final Room room;
@@ -71,7 +70,7 @@ public class BuildingComponent {
     }
 
     public void placeWallItem(Session client, String[] parts, int id) {
-        if (PLACE_ITEM_ASYNC) {
+        if (CometSettings.PLACE_ITEMS_ASYNC) {
             buildingExecutor.submit(() -> __internalPlaceWallItem(client, parts, id));
         } else {
             __internalPlaceWallItem(client, parts, id);
@@ -108,7 +107,7 @@ public class BuildingComponent {
     }
 
     public void placeFloorItem(Session client, PlayerItem item, int x, int y, int rot) {
-        if (PLACE_ITEM_ASYNC) {
+        if (CometSettings.PLACE_ITEMS_ASYNC) {
             this.buildingExecutor.submit(() -> __internalPlaceFloorItem(client, item, x, y, rot));
         } else {
             __internalPlaceFloorItem(client, item, x, y, rot);
@@ -175,36 +174,28 @@ public class BuildingComponent {
 
     public void fillArea(Session client, int x, int y, int rot, PlayerItem item) {
         if (this.isBuilding()) {
-            client.send(new NotificationMessageComposer("generic", "Ops! você não pode preencher mais de uma região ao mesmo tempo."));
+            client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("fill.command.in.use","Ops! você não pode preencher mais de uma região ao mesmo tempo.")));
             return;
         }
 
         this.buildingExecutor.submit(() -> {
-            int counter = 0;
             this.isBuilding = true;
             final Position playerPosition = client.getPlayer().getEntity().getPosition().copy();
-            playerPosition.setX(playerPosition.getX() + 1);
-            playerPosition.setY(playerPosition.getY() + 1);
 
-            out:
-            for (int builderX = playerPosition.getX(); builderX < x; builderX++) {
-                for (int builderY = playerPosition.getY(); builderY < y; builderY++) {
-                    try {
-                        if (++counter >= MAX_FILL_AREA_BLOCKS) {
-                            break out;
-                        }
+            final List<Position> fillArea = Position.makeSquare(playerPosition, new Position(x,y));
+            for (final Position position : fillArea.stream().limit(CometSettings.FILL_AREA_MAX_SIZE).collect(Collectors.toList())) {
+                try {
+                    PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
+                    if (nextItem == null)
+                        break;
 
-                        PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
-                        if (nextItem == null)
-                            break out;
-
-                        Thread.sleep(FILL_PLACE_ITEM_DELAY);
-                        __internalPlaceFloorItem(client, nextItem, builderX, builderY, rot);
-                    } catch (Exception e) {
-                        log.error("error while placing item: {}", e.getMessage(), e);
-                    }
+                    Thread.sleep(CometSettings.FILL_ITEM_PLACE_DELAY);
+                    __internalPlaceFloorItem(client, nextItem, position.getX(), position.getY(), rot);
+                } catch (Exception e) {
+                    log.error("error while placing item: {}", e.getMessage(), e);
                 }
             }
+
             this.isBuilding = false;
         });
     }
@@ -220,7 +211,7 @@ public class BuildingComponent {
             this.isBuilding = true;
             for (int i = 0; i < client.getPlayer().getEntity().getStackCount(); i++) {
                 try {
-                    if (++counter >= MAX_FILL_STACK_BLOCKS) {
+                    if (++counter >= CometSettings.FILL_STACK_MAX_HEIGHT) {
                         break;
                     }
 
@@ -228,7 +219,7 @@ public class BuildingComponent {
                     if (nextItem == null)
                         break;
 
-                    Thread.sleep(FILL_PLACE_ITEM_DELAY);
+                    Thread.sleep(CometSettings.FILL_ITEM_PLACE_DELAY);
                     __internalPlaceFloorItem(client, nextItem, x, y, rot);
                 } catch (Exception e) {
                     log.error("error while placing item: {}", e.getMessage(), e);

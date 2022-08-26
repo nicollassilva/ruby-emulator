@@ -203,7 +203,6 @@ public class CometSettings {
         motdMessage = motd;
     }
 
-    public static boolean PLACE_ITEMS_ASYNC = false;
 
     public static void setCurrentEventRoom(int r) {
         currentEventRoom = r;
@@ -211,4 +210,8 @@ public class CometSettings {
     public int getEventID() { return currentEventRoom; }
     public static boolean FIGURE_VALIDATION = false;
     public static int CATALOG_SOLD_OUT_LTD_PAGE_ID = 0;
+    public static int FILL_AREA_MAX_SIZE = 100;
+    public static int FILL_STACK_MAX_HEIGHT = 35;
+    public static long FILL_ITEM_PLACE_DELAY = 250L;
+    public static boolean PLACE_ITEMS_ASYNC = true;
 }
