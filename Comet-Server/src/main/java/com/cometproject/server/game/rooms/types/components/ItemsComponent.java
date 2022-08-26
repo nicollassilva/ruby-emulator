@@ -317,7 +317,7 @@ public class ItemsComponent {
      * @param newRotation
      * @param state
      */
-    public void __unsafeMoveItemUpdateTilesAndSave(RoomItemFloor item, Position newPosition, double newHeight, int newRotation, int state) {
+    public void __unsafeMoveItemUpdateTilesAndSave(Session client, RoomItemFloor item, Position newPosition, double newHeight, int newRotation, int state) {
         final Position oldPosition = item.getPosition().copy();
         int oldRotation = item.getRotation();
         for (final RoomItemFloor stackItem : this.getItemsOnSquare(newPosition.getX(), newPosition.getY())) {
@@ -326,7 +326,6 @@ public class ItemsComponent {
             }
         }
 
-
         newPosition.setZ(newHeight);
         item.onPositionChanged(newPosition);
         item.getPosition().setX(newPosition.getX());
@@ -334,7 +333,7 @@ public class ItemsComponent {
         item.getPosition().setZ(newPosition.getZ());
         item.setRotation(newRotation);
 
-        if (state > -1)
+        if (client != null && client.getPlayer().getEntity().hasAttribute("state.height"))
             item.getItemData().setData(state);
 
         item.save();
@@ -372,7 +371,7 @@ public class ItemsComponent {
         if (autoHeight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
             return false;
 
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, height, newRotation, -1);
+        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, height, newRotation, -1);
         return true;
     }
 
@@ -733,7 +732,7 @@ public class ItemsComponent {
             newRotation = (int) client.getPlayer().getEntity().getAttribute("rotation.height");
         }
 
-        int newState = -1;
+        int newState = 0;
         if (client.getPlayer().getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) client.getPlayer().getEntity().getAttribute("state.height");
 
@@ -745,7 +744,7 @@ public class ItemsComponent {
             return false;
         }
 
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation, newState);
+        this.__unsafeMoveItemUpdateTilesAndSave(client, item, newPosition, newHeight, newRotation, newState);
         return true;
     }
 
@@ -761,7 +760,7 @@ public class ItemsComponent {
         double newHeight = tile.getStackHeight(item);
 
         newPosition.setZ(newHeight);
-        this.__unsafeMoveItemUpdateTilesAndSave(item, newPosition, newHeight, newRotation,-1);
+        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, newHeight, newRotation,-1);
         return true;
     }
 
@@ -878,7 +877,7 @@ public class ItemsComponent {
             rot = (int) player.getEntity().getAttribute("rotation.height");
         }
 
-        int newState = -1;
+        int newState = 0;
         if (player.getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) player.getEntity().getAttribute("state.height");
 
@@ -886,7 +885,7 @@ public class ItemsComponent {
                 newState = item.getDefinition().getInteractionCycleCount();
         }
 
-        final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : (newState == -1 ? item.getExtraData() : String.valueOf(newState));
+        final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : (!player.getEntity().hasAttribute("state.height") ? item.getExtraData() : String.valueOf(newState));
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
 
