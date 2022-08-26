@@ -167,7 +167,7 @@ public class BuildingComponent {
         this.builderId = player != null ? player.getPlayerId() : -1;
         this.builderName = player != null ? player.getUsername() : this.builderName;
         MessageComposer notification = new NotificationMessageComposer("generic",
-                "O comando fill foi " + (player != null ? "ativado" : "desativado") + " para o usuário '" + this.builderName + "'."
+                "O comando fill foi " + (player != null ? "ativado" : "desativado") + " para o usuário " + this.builderName + "."
         );
         this.room.getEntities().broadcastMessage(notification, true);
     }

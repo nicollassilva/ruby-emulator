@@ -24,7 +24,7 @@ public class FillCommand extends ChatCommand {
         }
 
         if (params.length == 0) {
-            sendWhisper(Locale.getOrDefault("command.fill.missing_args","Você precisa definir o tipo de preenchimento!"), client);
+            sendWhisper(Locale.getOrDefault("command.fill.missing_args","Você precisa definir o tipo de preenchimento! Para saber mais, diga ':fill ?'"), client);
             return;
         }
 
@@ -86,5 +86,10 @@ public class FillCommand extends ChatCommand {
     @Override
     public String getDescription() {
         return Locale.getOrDefault("command.fill.description", "Preenche uma região com mobis.");
+    }
+
+    @Override
+    public boolean canDisable() {
+        return true;
     }
 }
