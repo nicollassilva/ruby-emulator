@@ -19,7 +19,7 @@ public class FillCommand extends ChatCommand {
 
         BuildingComponent buildings = client.getPlayer().getEntity().getRoom().getBuilderComponent();
         if (buildings.getBuilderId() != client.getPlayer().getId() && buildings.getBuilderId() != -1 && !buildings.getBuilderName().isEmpty()) {
-            sendWhisper(Locale.getOrDefault("command.fill.already_in_use","O usuário '{}' já está usando esse comando.").replace("{}",buildings.getBuilderName()), client);
+            sendWhisper(Locale.getOrDefault("command.fill.already_in_use","O usuário {} já está usando esse comando.").replace("{}",buildings.getBuilderName()), client);
             return;
         }
 
@@ -29,7 +29,7 @@ public class FillCommand extends ChatCommand {
         }
 
         if(params[0].equals("?")){
-            sendAlert(Locale.getOrDefault("command.fill.help", "Tipos de preenchimento:\n\t-area: uma região de quadrados será preenchida pelo proximo bloco que colocar, os itens serão colocados em relação a seu ruby e onde clicou para colocar o item.\n\t-stack: os mobis serão empilhados no quadrado em que clicar."), client);
+            sendAlert(Locale.getOrDefault("command.fill.help", "Tipos de preenchimento:\n\narea: uma região de quadrados será preenchida pelo proximo bloco que colocar, os itens serão colocados em relação a seu Ruby e onde clicar para colocar o item.\n\nstack: os mobis serão empilhados no quadrado em que clicar (caso sejam empilháveis)."), client);
             return;
         }
 
@@ -45,14 +45,14 @@ public class FillCommand extends ChatCommand {
             case "pilha": {
                 final int stackCount = params.length >= 2 ? Math.max(Math.min(Integer.parseInt(params[1]), CometSettings.FILL_STACK_MAX_HEIGHT), 0) : 0;
                 if (stackCount == 0) {
-                    sendWhisper(Locale.getOrDefault("command.fill.stack.missing_arg", "Você precisa definir quantos itens será colocado (1-{})").replace("{}",String.valueOf(CometSettings.FILL_STACK_MAX_HEIGHT)), client);
+                    sendWhisper(Locale.getOrDefault("command.fill.stack.missing_arg", "Você precisa definir quantos itens serão colocados (1-{})").replace("{}",String.valueOf(CometSettings.FILL_STACK_MAX_HEIGHT)), client);
                     return;
                 }
 
                 client.getPlayer().getEntity().setStackCount(stackCount);
                 client.getPlayer().getEntity().setSelectionType(SelectionType.Stack);
                 client.getPlayer().getEntity().setBuildingType(BuildingType.FILL);
-                sendNotif(Locale.getOrDefault("command.fill.stack.on","Preenchimento de pilha definido para '{}' items.").replace("{}",String.valueOf(stackCount)), client);
+                sendNotif(Locale.getOrDefault("command.fill.stack.on","Preenchimento de pilha definido para {} items.").replace("{}",String.valueOf(stackCount)), client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 break;
             }
