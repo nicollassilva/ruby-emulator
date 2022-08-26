@@ -48,7 +48,7 @@ public class MoveFloorItemMessageEvent implements Event {
 
         if (!client.getPlayer().getEntity().getRoom().getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl()) {
             final Map<String, String> notificationParams = Maps.newHashMap();
-            notificationParams.put("message", "${room.error.cant_set_item}");
+            notificationParams.put("message", "${room.error.cant_set_not_owner}");
 
             client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
             client.send(new UpdateFloorItemMessageComposer(floorItem));
