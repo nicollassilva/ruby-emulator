@@ -7,6 +7,8 @@ import com.cometproject.server.game.rooms.types.misc.NameColor;
 import com.cometproject.server.network.messages.outgoing.misc.OpenLinkMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 
+import java.util.regex.Pattern;
+
 public class NameColourCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
@@ -15,10 +17,20 @@ public class NameColourCommand extends ChatCommand {
         }
 
         final String colour = params[0];
+        if (!this.isValidHexColor(colour.replace("#", ""))) {
+            sendWhisper("A cor digitada é inválida! Tente novamente. Exemplo: FF00FF", client);
+            return;
+        }
+
+        sendWhisper("Cor definida com sucesso!", client);
 
         client.getPlayer().getData().setNameColour(colour);
         client.getPlayer().getData().save();
         isExecuted(client);
+    }
+
+    private boolean isValidHexColor(String color) {
+        return Pattern.matches("([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$", color);
     }
 
     @Override

@@ -146,10 +146,9 @@ public class TalkMessageEvent implements Event {
                         final Map<String, String> notificationParams = Maps.newHashMap();
                         notificationParams.put("display", "BUBBLE");
                         notificationParams.put("linkUrl", "event:navigator/goto/" + client.getPlayer().getEntity().getRoom().getId());
-                        notificationParams.put("message", "O usuário " + client.getPlayer().getData().getUsername() + " disse:\r\n" + message);
-                        notificationParams.put("image", "generic");
+                        notificationParams.put("message", client.getPlayer().getData().getUsername() + " disse: " + message);
 
-                        player.send(new NotificationMessageComposer("generic", notificationParams));
+                        player.send(new NotificationMessageComposer("mention", notificationParams));
                         //player.send(new JavascriptCallbackMessageComposer(new MentionComposer(client.getPlayer().getData().getUsername(), message, client.getPlayer().getData().getFigure())));
                         final String name = String.format("@%s", finalName);
                         filteredMessage = filteredMessage.replace(String.format("@%s", finalName), String.format("%s", name));
@@ -274,7 +273,7 @@ public class TalkMessageEvent implements Event {
                     ((PrivateChatFloorItem) floorItem).broadcastMessage(new TalkMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, RoomManager.getInstance().getEmotions().getEmotion(filteredMessage), bubble));
                 }
             } else if (message.startsWith("@") && messageHasNoColorsCode(message)) {
-                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "[SUA MENSAGEM] " + filteredMessage, bubble));
+                client.getPlayer().getSession().send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), filteredMessage, bubble));
             } else {
                 filteredMessage = MessageColorUtil.getInstance().getFilteredString(filteredMessage);
 
