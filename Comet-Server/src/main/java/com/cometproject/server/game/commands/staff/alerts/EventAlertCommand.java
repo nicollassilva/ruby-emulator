@@ -39,9 +39,6 @@ public class EventAlertCommand extends ChatCommand {
             if (session.getPlayer() == null)
                 continue;
 
-            if (session.getPlayer().getSettings().ignoreEvents())
-                continue;
-
             if (session.getPlayer().getNitro()) {
                 if (session.getPlayer().getEntity() != null && session.getPlayer().getEntity().getRoom().getData().getId() == roomId)
                     continue;
@@ -50,6 +47,9 @@ public class EventAlertCommand extends ChatCommand {
                 continue;
             }
 
+            if (session.getPlayer().getSettings().ignoreEvents())
+                continue;
+            
             session.send(new AdvancedAlertMessageComposer(
                     Locale.get("command.eventalert.alerttitle"),
                     Locale.get("command.eventalert.message")

@@ -40,7 +40,7 @@ public class EventAlertVueCommand extends ChatCommand {
                 if (session == null)
                     continue;
 
-                if (session.getPlayer().getId() == client.getPlayer().getId() || session.getPlayer().getSettings().ignoreEvents())
+                if (session.getPlayer().getId() == client.getPlayer().getId())
                     continue;
 
                 if (session.getPlayer().getNitro()) {
@@ -50,6 +50,9 @@ public class EventAlertVueCommand extends ChatCommand {
                     session.send(messageComposer);
                     continue;
                 }
+
+                if (session.getPlayer().getSettings().ignoreEvents())
+                    continue;
 
                 message.client = session.getPlayer().getData().getWebsocketSession();
                 message.data = output;
