@@ -19,6 +19,7 @@ import com.cometproject.server.logging.entries.RoomChatLogEntry;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.messages.incoming.room.action.utilities.ChatColors;
+import com.cometproject.server.network.messages.outgoing.notification.AdvancedAlertMessageComposer;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.MutedMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
@@ -30,7 +31,9 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 import com.cometproject.server.tasks.CometThreadManager;
 import com.cometproject.server.utilities.MessageColorUtil;
 import com.cometproject.server.utilities.RandomUtil;
+import com.google.common.collect.Maps;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -140,7 +143,13 @@ public class TalkMessageEvent implements Event {
                     final MentionType mentionSetting = player.getPlayer().getSettings().getMentionType();
 
                     if (mentionSetting == MentionType.FRIENDS && player.getPlayer().getMessenger().getFriendById(client.getPlayer().getEntity().getPlayerId()) != null || mentionSetting == MentionType.ALL) {
-                        player.send(new WhisperMessageComposer(player.getPlayer().getEntity().getId(), "O usuário " + client.getPlayer().getData().getUsername() + " disse: " + "<b>" + message + "</b>", 1));
+                        final Map<String, String> notificationParams = Maps.newHashMap();
+                        notificationParams.put("display", "BUBBLE");
+                        notificationParams.put("linkUrl", "event:navigator/goto/" + client.getPlayer().getEntity().getRoom().getId());
+                        notificationParams.put("message", "O usuário " + client.getPlayer().getData().getUsername() + " disse:\r\n" + message);
+                        notificationParams.put("image", "generic");
+
+                        player.send(new NotificationMessageComposer("generic", notificationParams));
                         //player.send(new JavascriptCallbackMessageComposer(new MentionComposer(client.getPlayer().getData().getUsername(), message, client.getPlayer().getData().getFigure())));
                         final String name = String.format("@%s", finalName);
                         filteredMessage = filteredMessage.replace(String.format("@%s", finalName), String.format("%s", name));
