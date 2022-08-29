@@ -26,7 +26,7 @@ public class BotsCatalogHandler extends PurchaseHandler implements IPurchaseHand
             String botName = "Robot";
             String botFigure = item.getPresetData();
             String botGender = "m";
-            String botMotto = "Beeb beeb boop beep !";
+            String botMotto = "O que foi, humano?";
             BotType type = BotType.GENERIC;
             BotMode mode = BotMode.RELAXED;
 

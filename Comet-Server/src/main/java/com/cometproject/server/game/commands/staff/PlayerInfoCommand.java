@@ -65,9 +65,8 @@ public class PlayerInfoCommand extends ChatCommand {
 
         userInfo.append("<i>" + playerData.getSeasonalPoints() + " " + Locale.getOrDefault("command.playerinfo.seasonalPoints", "Calabazas") + "</i><br><br>");
 
+        userInfo.append("<i>" + playerData.getPlayer().getStats().getLevel() + " " + Locale.getOrDefault("command.playerinfo.nivel", "Nivel:") + "</i><br>");
         userInfo.append("<i>" + playerData.getXpPoints() + " " + Locale.getOrDefault("command.playerinfo.xp", "XP") + "</i><br><br>");
-
-        userInfo.append("<i>" + playerData.getPlayer().getStats().getLevel() + " " + Locale.getOrDefault("command.playerinfo.nivel", "Nivel:") + "</i><br><br>");
 
 
         userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.roomInfo", "Room Info") + "</b><br>");
