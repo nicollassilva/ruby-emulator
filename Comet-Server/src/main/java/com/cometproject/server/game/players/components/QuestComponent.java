@@ -128,7 +128,7 @@ public class QuestComponent extends PlayerComponent implements PlayerQuests {
 
                     case ACHIEVEMENT_POINTS:
                         this.getPlayer().getData().increaseAchievementPoints(quest.getReward());
-                        this.getPlayer().sendNotif("Alert", Locale.get("game.received.achievementPoints").replace("%points%", quest.getReward() + ""));
+                        this.getPlayer().sendNotif("Alerta", Locale.get("game.received.achievementPoints").replace("%points%", quest.getReward() + ""));
                         this.getPlayer().poof();
                         break;
 

@@ -63,7 +63,7 @@ public class CannonFloorItem extends RoomItemFloor {
         for (RoomEntity kickableEntity : this.getRoom().getMapping().getTile(kickTile).getEntities()) {
             if (kickableEntity instanceof PlayerEntity) {
                 if (((PlayerEntity) kickableEntity).getPlayerId() != this.getRoom().getData().getOwnerId() && ((PlayerEntity) kickableEntity).getPlayer().getPermissions().getRank().roomKickable()) {
-                    ((PlayerEntity) kickableEntity).getPlayer().getSession().send(new AdvancedAlertMessageComposer("Alert", Locale.getOrDefault("game.kicked", "You've been kicked!"), "room_kick_cannonball"));
+                    ((PlayerEntity) kickableEntity).getPlayer().getSession().send(new AdvancedAlertMessageComposer("Alerta", Locale.getOrDefault("game.kicked", "You've been kicked!"), "room_kick_cannonball"));
                     this.entitiesToKick.add(((PlayerEntity) kickableEntity));
                 }
 

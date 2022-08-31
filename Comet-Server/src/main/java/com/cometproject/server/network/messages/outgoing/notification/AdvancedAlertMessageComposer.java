@@ -29,7 +29,7 @@ public class AdvancedAlertMessageComposer extends MessageComposer {
     }
 
     public AdvancedAlertMessageComposer(String message) {
-        this("Alert", message, "", "", "");
+        this("Alerta", message, "", "", "");
     }
 
     @Override

@@ -19,7 +19,7 @@ public class HotelAlertLinkCommand extends ChatCommand {
 
         final String link = params[0];
 
-        NetworkManager.getInstance().getSessions().broadcast(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.hotelalertlink.title", "Alert"), this.merge(params, 1) + "<br><br>- <b>" + client.getPlayer().getData().getUsername() + "</b>", Locale.getOrDefault("command.hotelalertlink.buttontitle", "+info"), link, "hal"));
+        NetworkManager.getInstance().getSessions().broadcast(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.hotelalertlink.title", "Alerta"), this.merge(params, 1) + "<br><br>- <b>" + client.getPlayer().getData().getUsername() + "</b>", Locale.getOrDefault("command.hotelalertlink.buttontitle", "+info"), link, "hal"));
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 

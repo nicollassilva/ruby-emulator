@@ -41,7 +41,7 @@ public class DisableCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return "";
+        return Locale.getOrDefault("command.disablecommand.params", ":comando");
     }
 
     @Override
