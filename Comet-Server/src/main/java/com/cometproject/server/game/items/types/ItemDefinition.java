@@ -215,7 +215,7 @@ public class ItemDefinition implements FurnitureDefinition {
 
     @Override
     public boolean isWired() {
-        return this.getInteraction().startsWith("wf_act") || this.getInteraction().startsWith("wf_trg") || this.getInteraction().startsWith("wf_cnd") || this.getInteraction().startsWith("wf_cstm") || this.getItemName().startsWith("tile_stackmagic") || this.getInteraction().equals("wf_hideitem") || this.getInteraction().equals("wf_sit_hideitem");
+        return this.getItemName().startsWith("wf_memory") || this.getInteraction().startsWith("wf_act") || this.getInteraction().startsWith("wf_trg") || this.getInteraction().startsWith("wf_cnd") || this.getInteraction().startsWith("wf_cstm") || this.getItemName().startsWith("tile_stackmagic") || this.getInteraction().equals("wf_hideitem") || this.getInteraction().equals("wf_sit_hideitem");
     }
 
     public int getSongId() {
