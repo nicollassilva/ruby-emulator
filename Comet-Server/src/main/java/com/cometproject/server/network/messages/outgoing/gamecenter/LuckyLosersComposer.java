@@ -15,8 +15,8 @@ public class LuckyLosersComposer extends MessageComposer {
     public void compose(IComposer msg) {
         msg.writeInt(gameId);
         msg.writeInt(1);
-        msg.writeString("iNicollas");//Username
-        msg.writeString("wa-9001123-68.ea-1406-63.ch-265-93.sh-905-62.lg-720-1418.hd-180-2.ha-4201-0.hr-990000418-45-31");//Figure
+        msg.writeString("Pietro");//Username
+        msg.writeString("lg-275-1408.ca-4115-100-1408.hr-3163-42.ch-3934-1413-110.fa-3993-110.sh-3016-96.hd-180-1370");//Figure
         msg.writeString("M");//Gender .ToLower()
         msg.writeInt(1);//Rank
         msg.writeInt(5);//Score

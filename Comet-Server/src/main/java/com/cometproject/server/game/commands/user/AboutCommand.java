@@ -38,7 +38,7 @@ public class AboutCommand extends ChatCommand {
             if (CometSettings.aboutShowUptime || aboutDetailed)
                 about.append(Locale.getOrDefault("command.about.uptime", "Uptime: ")).append(cometStats.getUptime()).append("<br>");
 
-            about.append("<br>" + Locale.getOrDefault("command.about.credits_title", "<b>Agradecimentos:</b>") + "<br>Leon (Criador)<br>iNicollas<br>Dann<br>");
+            about.append("<br>" + Locale.getOrDefault("command.about.credits_title", "<b>Agradecimentos:</b>") + "<br>Leon (Criador)<br>Djinn<br>Snaiker");
 
             about.append(Locale.getOrDefault("command.about.client_version", "Client version: ")).append(CometServer.CLIENT_VERSION).append("<br>");
         }
