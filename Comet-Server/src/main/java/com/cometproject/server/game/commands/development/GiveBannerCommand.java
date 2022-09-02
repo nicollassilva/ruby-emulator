@@ -10,21 +10,34 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 public class GiveBannerCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
+        if (params.length == 0) {
+            sendWhisper("Digite o nick do usuário!", client);
+            return;
+        }
+
+        if (params.length == 1) {
+            sendWhisper("Digite o nome do banner!", client);
+            return;
+        }
+
         String target = params[0];
         String bannerName = params[1];
 
         int targetPlayerId = PlayerDao.getIdByUsername(target);
+        if (targetPlayerId == 0) {
+            sendWhisper("Este usuário não existe!", client);
+            return;
+        }
 
         PlayerDao.bannerForPlayer(bannerName, targetPlayerId);
 
         PermissionsManager.getInstance().loadPlayerBanner();
         isExecuted(client);
-
     }
 
     @Override
     public String getPermission() {
-        return "banner_command";
+        return "givebanner_command";
     }
 
     @Override

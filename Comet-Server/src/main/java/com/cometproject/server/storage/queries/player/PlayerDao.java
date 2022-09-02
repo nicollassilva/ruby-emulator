@@ -1474,7 +1474,7 @@ public class PlayerDao {
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("INSERT INTO player_banner (`banner_name`, `player_id`) VALUES(?, ?)", sqlConnection);
+            preparedStatement = SqlHelper.prepare("INSERT INTO player_banner (`banner_name`, `player_id`, `status`) VALUES(?, ?, '1')", sqlConnection);
 
             preparedStatement.setString(1, bannerName);
             preparedStatement.setInt(2, playerId);
