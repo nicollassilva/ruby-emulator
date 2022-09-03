@@ -141,11 +141,14 @@ public class GameCycle implements CometTask, Initialisable {
                             client.sendQueue(new NotificationMessageComposer("diamonds", String.format("Você recebeu %d diamantes!", CometSettings.onlineRewardDiamonds)));
                         }
 
-                        client.getPlayer().getData().increaseCredits((clubReward ? CometSettings.onlineRewardCreditsVip : CometSettings.onlineRewardCredits) * (doubleRewards ? 2 : 1));
-                        client.sendQueue(new NotificationMessageComposer("cred", String.format("Você recebeu %d moedas!", CometSettings.onlineRewardCredits)));
+                        final int credits = (clubReward ? CometSettings.onlineRewardCreditsVip : CometSettings.onlineRewardCredits) * (doubleRewards ? 2 : 1);
+                        final int duckets = (clubReward ? CometSettings.onlineRewardDucketsVip : CometSettings.onlineRewardDuckets) * (doubleRewards ? 2 : 1);
 
-                        client.getPlayer().getData().increaseActivityPoints((clubReward ? CometSettings.onlineRewardDucketsVip : CometSettings.onlineRewardDuckets) * (doubleRewards ? 2 : 1));
-                        client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado")));
+                        client.getPlayer().getData().increaseCredits(credits);
+                        client.sendQueue(new NotificationMessageComposer("cred", String.format("Você recebeu %d moedas!", credits)));
+
+                        client.getPlayer().getData().increaseActivityPoints(duckets);
+                        client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + duckets + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado")));
 
                         client.getPlayer().getData().save();
                         client.getPlayer().sendBalance();
