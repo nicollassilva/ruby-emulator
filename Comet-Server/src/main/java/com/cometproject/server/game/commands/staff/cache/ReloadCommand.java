@@ -69,6 +69,7 @@ public class ReloadCommand extends ChatCommand {
                                 "- pets\n" +
                                 "- polls\n" +
                                 "- quests\n" +
+                                "- banners\n" +
                                 "- targetoffers"
                 ));
 
@@ -228,6 +229,12 @@ public class ReloadCommand extends ChatCommand {
                 GameCenterManager.getInstance().initialize();
                 sendNotif("GameCenter reiniciado com sucesso.", client);
 
+                break;
+
+            case "banner":
+                PermissionsManager.getInstance().loadPlayerBanner();
+
+                sendNotif("Banners atualizados com sucesso.", client);
                 break;
         }
     }

@@ -11,12 +11,21 @@ import com.cometproject.server.network.sessions.Session;
 public class BannerCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
+        if (params.length == 0) {
+            sendWhisper("Digite o nome do banner!", client);
+            return;
+        }
+
         final String banner = params[0];
 
-        if(PermissionsManager.getInstance().getPlayerBanner().containsKey(banner)) {
+        if (PermissionsManager.getInstance().getPlayerBanner().containsKey(banner)) {
             final PlayerBanner playerBanner = PermissionsManager.getInstance().getPlayerBanner().get(banner);
+            if (!playerBanner.isStatus()) {
+                sendWhisper("Este banner não está ativo!", client);
+                return;
+            }
 
-            if(playerBanner.getPlayerId() == client.getPlayer().getData().getId() && playerBanner.isStatus() || playerBanner.getBannerName().equals(banner) && playerBanner.isStatus()) {
+            if (playerBanner.getPlayerId() == client.getPlayer().getData().getId()) {
                 client.getPlayer().getData().setBanner(banner);
                 client.getPlayer().getData().save();
 
@@ -25,9 +34,10 @@ public class BannerCommand extends ChatCommand {
 
                 isExecuted(client);
             } else {
-                client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("command.banner.unavailable", "No tienes disponible este banner")));
+                client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("command.banner.unavailable", "Este banner não está disponível!")));
             }
-        }
+        } else
+            sendWhisper("Este banner não existe!", client);
     }
 
     @Override
