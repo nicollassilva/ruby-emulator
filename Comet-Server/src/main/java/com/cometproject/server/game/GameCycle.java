@@ -113,7 +113,7 @@ public class GameCycle implements CometTask, Initialisable {
                         continue;
                     }
 
-                    if (client.getPlayer().getSubscription() != null && client.getPlayer().getSubscription().isValid()) {
+                    if (client.getPlayer().getData().getRank() == 2) {
                         clubReward = true;
                     }
 
@@ -141,15 +141,11 @@ public class GameCycle implements CometTask, Initialisable {
                             client.sendQueue(new NotificationMessageComposer("diamonds", String.format("Você recebeu %d diamantes!", CometSettings.onlineRewardDiamonds)));
                         }
 
-                        if (CometSettings.onlineRewardCredits > 0) {
-                            client.getPlayer().getData().increaseCredits(CometSettings.onlineRewardCredits * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
-                            client.sendQueue(new NotificationMessageComposer("cred", String.format("Você recebeu %d moedas!", CometSettings.onlineRewardCredits)));
-                        }
+                        client.getPlayer().getData().increaseCredits((clubReward ? CometSettings.onlineRewardCreditsVip : CometSettings.onlineRewardCredits) * (doubleRewards ? 2 : 1));
+                        client.sendQueue(new NotificationMessageComposer("cred", String.format("Você recebeu %d moedas!", CometSettings.onlineRewardCredits)));
 
-                        if (CometSettings.onlineRewardDuckets > 0) {
-                            client.getPlayer().getData().increaseActivityPoints(CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
-                            client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado")));
-                        }
+                        client.getPlayer().getData().increaseActivityPoints((clubReward ? CometSettings.onlineRewardDucketsVip : CometSettings.onlineRewardDuckets) * (doubleRewards ? 2 : 1));
+                        client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado")));
 
                         client.getPlayer().getData().save();
                         client.getPlayer().sendBalance();
