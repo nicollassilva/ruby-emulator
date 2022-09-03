@@ -148,7 +148,7 @@ public class GameCycle implements CometTask, Initialisable {
 
                         if (CometSettings.onlineRewardDuckets > 0) {
                             client.getPlayer().getData().increaseActivityPoints(CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1));
-                            client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado") + "\nBônus Especial: " + (doubleRewards ? "Ativo" : "Desativado")));
+                            client.getPlayer().getSession().send(new NotificationMessageComposer("pixel", "Você recebeu " + CometSettings.onlineRewardDuckets * (doubleRewards ? 2 : 1) * (clubReward ? 2 : 1) + " duckets por estar conectad" + (client.getPlayer().getData().getGender().equals("F") ? "a" : "o") + ".\n\nBônus VIP: " + (clubReward ? "Ativo" : "Desativado")));
                         }
 
                         client.getPlayer().getData().save();
