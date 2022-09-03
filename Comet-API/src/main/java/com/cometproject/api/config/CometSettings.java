@@ -49,6 +49,9 @@ public class CometSettings {
     public static int onlineRewardCredits = 0;
     public static int onlineRewardDuckets = 0;
 
+    public static int onlineRewardCreditsVip = 0;
+    public static int onlineRewardDucketsVip = 0;
+
     public static int cameraCoinsPricing = 0;
     public static int cameraDucketsPricing = 0;
 

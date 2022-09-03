@@ -36,6 +36,8 @@ public class ConfigDao {
                 CometSettings.onlineRewardEnabled = config.getBoolean("online_reward_enabled");
                 CometSettings.onlineRewardCredits = config.getInt("online_reward_credits");
                 CometSettings.onlineRewardDuckets = config.getInt("online_reward_duckets");
+                CometSettings.onlineRewardDucketsVip = config.getInt("online_reward_duckets_vip");
+                CometSettings.onlineRewardCreditsVip = config.getInt("online_reward_credits_vip");
                 CometSettings.onlineRewardInterval = config.getInt("online_reward_interval");
                 CometSettings.aboutImg = config.getString("about_image");
                 CometSettings.aboutShowPlayersOnline = config.getBoolean("about_show_players_online");
