@@ -111,8 +111,6 @@ public class GameCycle implements CometTask, Initialisable {
                         continue;
                     }
 
-                    final boolean clubReward = client.getPlayer().getData().getRank() == 2;
-
                     /*if ((Comet.getTime() - ((Session) client).getLastPing()) >= 300) {
                         client.disconnect();
                         continue;
@@ -132,6 +130,8 @@ public class GameCycle implements CometTask, Initialisable {
                     final boolean needsReward = (Comet.getTime() - client.getPlayer().getLastReward()) >= (60L * CometSettings.onlineRewardInterval);
 
                     if (needsReward) {
+                        final boolean clubReward = client.getPlayer().getData().getRank() == 2;
+
                         if (CometSettings.onlineRewardDiamonds > 0) {
                             client.getPlayer().getData().increaseVipPoints(CometSettings.onlineRewardDiamonds);
                             client.sendQueue(new NotificationMessageComposer("diamonds", String.format("Você recebeu %d diamantes!", CometSettings.onlineRewardDiamonds)));
