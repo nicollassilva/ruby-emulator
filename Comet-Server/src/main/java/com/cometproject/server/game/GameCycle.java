@@ -99,8 +99,6 @@ public class GameCycle implements CometTask, Initialisable {
     }
 
     private void processSession() {
-        boolean clubReward = false;
-
         final boolean doubleRewards = CometSettings.onlineRewardDoubleDays.contains(LocalDate.now().getDayOfWeek());
         final boolean updateDaily = this.getHour() == 0 && this.getMinute() == 0;
 
@@ -113,9 +111,7 @@ public class GameCycle implements CometTask, Initialisable {
                         continue;
                     }
 
-                    if (client.getPlayer().getData().getRank() == 2) {
-                        clubReward = true;
-                    }
+                    final boolean clubReward = client.getPlayer().getData().getRank() == 2;
 
                     /*if ((Comet.getTime() - ((Session) client).getLastPing()) >= 300) {
                         client.disconnect();
