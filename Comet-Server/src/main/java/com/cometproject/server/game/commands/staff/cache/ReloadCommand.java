@@ -47,6 +47,7 @@ public class ReloadCommand extends ChatCommand {
                         Locale.getOrDefault("command.reload.title", "Here's a list of what you can reload using the :reload <type> command!") +
                                 "\n\n" +
                                 "- achievements\n" +
+                                "- banners\n" +
                                 "- bans\n" +
                                 "- bundles\n" +
                                 "- catalog\n" +
@@ -69,7 +70,6 @@ public class ReloadCommand extends ChatCommand {
                                 "- pets\n" +
                                 "- polls\n" +
                                 "- quests\n" +
-                                "- banners\n" +
                                 "- targetoffers"
                 ));
 
