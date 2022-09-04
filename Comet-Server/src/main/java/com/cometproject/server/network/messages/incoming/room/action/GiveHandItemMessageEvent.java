@@ -26,6 +26,9 @@ public class GiveHandItemMessageEvent implements Event {
             return;
         }
 
+        if (providerEntity.getPosition().distanceTo(receivingEntity.getPosition()) > 1.5)
+            return;
+
         receivingEntity.carryItem(providerEntity.getHandItem());
         providerEntity.carryItem(0);
     }
