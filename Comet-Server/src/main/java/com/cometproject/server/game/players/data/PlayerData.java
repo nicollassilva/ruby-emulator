@@ -2,10 +2,13 @@ package com.cometproject.server.game.players.data;
 
 import com.cometproject.api.game.players.data.IPlayerData;
 import com.cometproject.server.config.Locale;
+import com.cometproject.server.game.permissions.PermissionsManager;
 import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.players.types.PlayerBanner;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.storage.queries.player.PlayerDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.sql.ResultSet;
@@ -16,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerData implements IPlayerData {
     public static final String DEFAULT_FIGURE = "hr-100-61.hd-180-2.sh-290-91.ch-210-66.lg-270-82";
+
+    private static final Logger log = LogManager.getLogger(PlayerData.class.getName());
 
     private final int id;
     private int rank;
@@ -104,6 +109,7 @@ public class PlayerData implements IPlayerData {
         this.kisses = kisses;
         this.banner = banner;
         this.player = player;
+        this.banners = new ConcurrentHashMap<>();
         this.loadPlayerBanners();
 
         flush();
@@ -141,6 +147,8 @@ public class PlayerData implements IPlayerData {
                 data.getInt("playerData_kisses"),
                 data.getString("playerData_banner"), player);
         this.websocket_session = null;
+        this.banners = new ConcurrentHashMap<>();
+
         this.loadPlayerBanners();
     }
 
@@ -536,7 +544,17 @@ public class PlayerData implements IPlayerData {
     }
 
     public void loadPlayerBanners() {
-        this.banners = PlayerDao.getPlayerBanners(this.id);
+        try {
+            if (this.banners.size() > 0)
+                this.banners.clear();
+
+            this.banners = PlayerDao.getPlayerBanners(this.id);
+        } catch (Exception e) {
+            log.error("Error while reloading players banner permissions", e);
+            return;
+        }
+
+        log.info("Loaded " + this.banners.size() + " player banners");
     }
 
     public Map<String, PlayerBanner> getPlayerBanner() {

@@ -1474,7 +1474,7 @@ public class PlayerDao {
 
         try {
             sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("SELECT `banner_name`, `status` FROM player_banner WHERE `played_id` = ?", sqlConnection);
+            preparedStatement = SqlHelper.prepare("SELECT `banner_name`, `status` FROM player_banner WHERE `player_id` = ?", sqlConnection);
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();
 

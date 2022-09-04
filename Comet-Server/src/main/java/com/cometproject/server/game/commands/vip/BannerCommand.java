@@ -33,7 +33,7 @@ public class BannerCommand extends ChatCommand {
 
             isExecuted(client);
         } else
-            sendWhisper("Você não tme este banner!", client);
+            sendWhisper("Você não tem este banner!", client);
     }
 
     @Override

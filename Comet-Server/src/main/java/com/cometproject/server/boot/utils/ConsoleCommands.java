@@ -104,7 +104,6 @@ public class ConsoleCommands {
                     PermissionsManager.getInstance().loadOverrideCommands();
                     PermissionsManager.getInstance().loadPerks();
                     PermissionsManager.getInstance().loadRankPermissions();
-                    PermissionsManager.getInstance().loadPlayerBanner();
                     log.info("Permissions cache was reloaded.");
                     break;
 
