@@ -18,26 +18,22 @@ public class BannerCommand extends ChatCommand {
 
         final String banner = params[0];
 
-        if (PermissionsManager.getInstance().getPlayerBanner().containsKey(banner)) {
-            final PlayerBanner playerBanner = PermissionsManager.getInstance().getPlayerBanner().get(banner);
-            if (!playerBanner.isStatus()) {
+        if (client.getPlayer().getData().getPlayerBanner().containsKey(banner)) {
+            final PlayerBanner playerBanner = client.getPlayer().getData().getPlayerBanner().get(banner);
+            if (!playerBanner.isEnabled()) {
                 sendWhisper("Este banner não está ativo!", client);
                 return;
             }
 
-            if (playerBanner.getPlayerId() == client.getPlayer().getData().getId()) {
-                client.getPlayer().getData().setBanner(banner);
-                client.getPlayer().getData().save();
+            client.getPlayer().getData().setBanner(banner);
+            client.getPlayer().getData().save();
 
-                client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new UpdateInfoMessageComposer(client.getPlayer().getEntity()));
-                client.send(new UpdateInfoMessageComposer(-1, client.getPlayer().getEntity()));
+            client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(new UpdateInfoMessageComposer(client.getPlayer().getEntity()));
+            client.send(new UpdateInfoMessageComposer(-1, client.getPlayer().getEntity()));
 
-                isExecuted(client);
-            } else {
-                client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("command.banner.unavailable", "Este banner não está disponível!")));
-            }
+            isExecuted(client);
         } else
-            sendWhisper("Este banner não existe!", client);
+            sendWhisper("Você não tme este banner!", client);
     }
 
     @Override

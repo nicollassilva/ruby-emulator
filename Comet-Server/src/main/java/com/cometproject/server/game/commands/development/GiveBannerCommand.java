@@ -29,9 +29,19 @@ public class GiveBannerCommand extends ChatCommand {
             return;
         }
 
-        PlayerDao.bannerForPlayer(bannerName, targetPlayerId);
+        final Session targetSession = NetworkManager.getInstance().getSessions().getByPlayerId(targetPlayerId);
 
-        PermissionsManager.getInstance().loadPlayerBanner();
+        if (PlayerDao.userHasBanner(bannerName, targetPlayerId))
+            PlayerDao.bannerForPlayer(bannerName, targetPlayerId);
+
+        //Check if the user is online to refresh the banners
+        if (targetSession != null) {
+            if (!targetSession.getPlayer().getData().getPlayerBanner().containsKey(bannerName)) {
+                targetSession.getPlayer().getData().loadPlayerBanners();
+            } else
+                sendWhisper("Este usuário já tem este banner!", client);
+        }
+
         isExecuted(client);
     }
 

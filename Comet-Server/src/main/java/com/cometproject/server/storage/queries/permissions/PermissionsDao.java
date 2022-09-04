@@ -160,37 +160,6 @@ public class PermissionsDao {
         return data;
     }
 
-    public static Map<String, PlayerBanner> getPlayerBanners() {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-
-        final Map<String, PlayerBanner> data = new ConcurrentHashMap<>();
-
-        try {
-            sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("SELECT `banner_name`, `player_id`, `status` FROM player_banner", sqlConnection);
-            resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-                try {
-                    data.putIfAbsent(resultSet.getString("banner_name"), new PlayerBanner(resultSet));
-                } catch (Exception ignored) {
-
-                }
-            }
-
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(resultSet);
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-
-        return data;
-    }
-
     public static Map<Integer, Integer> getEffects() {
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;

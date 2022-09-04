@@ -5,15 +5,12 @@ import com.cometproject.server.game.permissions.types.CommandPermission;
 import com.cometproject.server.game.permissions.types.OverrideCommandPermission;
 import com.cometproject.server.game.permissions.types.Perk;
 import com.cometproject.server.game.permissions.types.Rank;
-import com.cometproject.server.game.players.types.PlayerBanner;
 import com.cometproject.server.storage.queries.permissions.PermissionsDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 public class PermissionsManager implements Initialisable {
     private static PermissionsManager permissionsManagerInstance;
@@ -22,7 +19,6 @@ public class PermissionsManager implements Initialisable {
     private Map<Integer, Rank> ranks;
     private Map<String, CommandPermission> commands;
     private Map<String, OverrideCommandPermission> overridecommands;
-    private Map<String, PlayerBanner> playerBanner;
     private Map<Integer, Integer> effects;
     private Map<Integer, Integer> chatBubbles;
 
@@ -45,7 +41,6 @@ public class PermissionsManager implements Initialisable {
         this.ranks = new ConcurrentHashMap<>();
         this.effects = new ConcurrentHashMap<>();
         this.chatBubbles = new ConcurrentHashMap<>();
-        this.playerBanner = new ConcurrentHashMap<>();
 
         this.loadPerks();
         this.loadRankPermissions();
@@ -53,7 +48,6 @@ public class PermissionsManager implements Initialisable {
         this.loadOverrideCommands();
         this.loadEffects();
         this.loadChatBubbles();
-        this.loadPlayerBanner();
 
         log.info("PermissionsManager initialized");
     }
@@ -122,21 +116,6 @@ public class PermissionsManager implements Initialisable {
         log.info("Loaded " + this.getOverrideCommands().size() + " override command permissions");
     }
 
-    public void loadPlayerBanner() {
-        try {
-            if(this.getPlayerBanner().size() != 0) {
-                this.getPlayerBanner().clear();
-            }
-
-            this.playerBanner = PermissionsDao.getPlayerBanners();
-        } catch (Exception e) {
-            log.error("Error while reloading players banner permissions", e);
-            return;
-        }
-
-        log.info("Loaded " + this.getPlayerBanner().size() + " player banners permissions");
-    }
-
     public void loadEffects() {
         try {
             if (this.getEffects().size() != 0) {
@@ -185,10 +164,6 @@ public class PermissionsManager implements Initialisable {
 
     public Map<String, OverrideCommandPermission> getOverrideCommands() {
         return this.overridecommands;
-    }
-
-    public Map<String, PlayerBanner> getPlayerBanner() {
-        return this.playerBanner;
     }
 
     public Map<Integer, Perk> getPerks() {

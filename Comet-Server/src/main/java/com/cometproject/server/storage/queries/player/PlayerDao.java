@@ -12,10 +12,7 @@ import com.cometproject.server.game.players.PlayerOfferPurchase;
 import com.cometproject.server.game.players.components.types.navigator.SavedSearch;
 import com.cometproject.server.game.players.data.PlayerAvatarData;
 import com.cometproject.server.game.players.data.PlayerData;
-import com.cometproject.server.game.players.types.MisteryComponent;
-import com.cometproject.server.game.players.types.Player;
-import com.cometproject.server.game.players.types.PlayerSettings;
-import com.cometproject.server.game.players.types.PlayerStatistics;
+import com.cometproject.server.game.players.types.*;
 import com.cometproject.server.network.battleball.outgoing.Outgoing;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessage;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessageManager;
@@ -1466,6 +1463,65 @@ public class PlayerDao {
             SqlHelper.closeSilently(preparedStatement);
             SqlHelper.closeSilently(sqlConnection);
         }
+    }
+
+    public static Map<String, PlayerBanner> getPlayerBanners(int userId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        final Map<String, PlayerBanner> data = new ConcurrentHashMap<>();
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+            preparedStatement = SqlHelper.prepare("SELECT `banner_name`, `status` FROM player_banner WHERE `played_id` = ?", sqlConnection);
+            preparedStatement.setInt(1, userId);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                try {
+                    data.putIfAbsent(resultSet.getString("banner_name"), new PlayerBanner(resultSet));
+                } catch (Exception ignored) {
+
+                }
+            }
+
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(resultSet);
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return data;
+    }
+
+    public static boolean userHasBanner(String bannerName, int playerId) {
+        Connection sqlConnection = null;
+        ResultSet resultSet = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT id FROM player_banner WHERE banner_name = ? AND player_id = ?", sqlConnection);
+            preparedStatement.setString(1, bannerName);
+            preparedStatement.setInt(2, playerId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return false;
     }
 
     public static void bannerForPlayer(String bannerName, int playerId) {

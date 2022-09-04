@@ -3,12 +3,15 @@ package com.cometproject.server.game.players.data;
 import com.cometproject.api.game.players.data.IPlayerData;
 import com.cometproject.server.config.Locale;
 import com.cometproject.server.game.players.types.Player;
+import com.cometproject.server.game.players.types.PlayerBanner;
 import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import org.eclipse.jetty.websocket.api.Session;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class PlayerData implements IPlayerData {
@@ -66,6 +69,7 @@ public class PlayerData implements IPlayerData {
     private boolean flaggingUser = false;
 
     private Object tempData = null;
+    private Map<String, PlayerBanner> banners;
 
     public PlayerData(int id, String username, String motto, String figure, String gender, String email, int rank, int credits, int vipPoints, int activityPoints,
                       int seasonalPoints, String reg, int lastVisit, boolean vip, int achievementPoints, int xpPoints, int regTimestamp, int favouriteGroup, String ipAddress, int questId, int timeMuted, String nameColour, String tag, boolean emojiEnabled, int gamesWin, int bonusPoints, int endVipTimestamp, int snowXp, int kisses, String banner, Player player) {
@@ -100,6 +104,7 @@ public class PlayerData implements IPlayerData {
         this.kisses = kisses;
         this.banner = banner;
         this.player = player;
+        this.loadPlayerBanners();
 
         flush();
     }
@@ -135,7 +140,8 @@ public class PlayerData implements IPlayerData {
                 data.getInt("playerData_snowXp"),
                 data.getInt("playerData_kisses"),
                 data.getString("playerData_banner"), player);
-                this.websocket_session = null;
+        this.websocket_session = null;
+        this.loadPlayerBanners();
     }
 
     @Override
@@ -527,6 +533,14 @@ public class PlayerData implements IPlayerData {
             data = new PlayerData(this.id, this.username, this.motto, this.figure, this.gender, this.email, this.rank, this.credits, this.vipPoints, this.activityPoints, this.seasonalPoints, this.regDate, this.lastVisit, this.vip, this.achievementPoints, this.xpPoints, this.regTimestamp, this.favouriteGroup, this.ipAddress, this.questId, this.timeMuted, this.nameColour, this.tag, this.emojiEnabled, this.gamesWin, this.bonusPoints, this.endVipTimestamp, this.snowXp, this.kisses, this.banner, this.player);
         }
         return data;
+    }
+
+    public void loadPlayerBanners() {
+        this.banners = PlayerDao.getPlayerBanners(this.id);
+    }
+
+    public Map<String, PlayerBanner> getPlayerBanner() {
+        return this.banners;
     }
 
     public int getSnowXp() {
