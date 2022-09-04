@@ -231,7 +231,7 @@ public class ReloadCommand extends ChatCommand {
 
                 break;
 
-            case "banner":
+            case "banners":
                 PermissionsManager.getInstance().loadPlayerBanner();
 
                 sendNotif("Banners atualizados com sucesso.", client);
