@@ -47,7 +47,6 @@ public class ReloadCommand extends ChatCommand {
                         Locale.getOrDefault("command.reload.title", "Here's a list of what you can reload using the :reload <type> command!") +
                                 "\n\n" +
                                 "- achievements\n" +
-                                "- banners\n" +
                                 "- bans\n" +
                                 "- bundles\n" +
                                 "- catalog\n" +
@@ -117,7 +116,6 @@ public class ReloadCommand extends ChatCommand {
                 PermissionsManager.getInstance().loadOverrideCommands();
                 PermissionsManager.getInstance().loadEffects();
                 PermissionsManager.getInstance().loadChatBubbles();
-                PermissionsManager.getInstance().loadPlayerBanner();
 
                 sendNotif(Locale.get("command.reload.permissions"), client);
                 break;
@@ -229,12 +227,6 @@ public class ReloadCommand extends ChatCommand {
                 GameCenterManager.getInstance().initialize();
                 sendNotif("GameCenter reiniciado com sucesso.", client);
 
-                break;
-
-            case "banners":
-                PermissionsManager.getInstance().loadPlayerBanner();
-
-                sendNotif("Banners atualizados com sucesso.", client);
                 break;
         }
     }
