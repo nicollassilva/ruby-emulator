@@ -15,19 +15,19 @@ public class MarketPlaceWebhook {
         fields.put(
                 "\u200B",
                 "**Item:**\\n"
-                + item.getDefinition().getPublicName() +
-                "\\n**Valor:**\\n"
-                + price + " diamantes" +
-                "\\n**Comprador:**\\n"
-                + buyerPlayer.getUsername() +
-                "\\n**Vendedor:**\\n"
-                + sellerPlayer.getUsername()
+                        + item.getDefinition().getPublicName() +
+                        "\\n**Valor:**\\n"
+                        + price + " diamantes" +
+                        "\\n**Comprador:**\\n"
+                        + buyerPlayer.getUsername() +
+                        "\\n**Vendedor:**\\n"
+                        + sellerPlayer.getUsername()
         );
 
         DiscordIntegration.getInstance().sendWebhookFromNameWithThumbnail(
                 Locale.getOrDefault("webhook.marketplace.title", "Novo item comprado na Feira Livre"),
                 "marketplace",
                 fields,
-                "https://static-ruby.com/flash/dcr/hof_furni/icons/" + item.getDefinition().getItemName().replace("*", "_") + "_icon.png");
+                "https://rubyhotel.com.br/apifiles/furnitures/" + item.getDefinition().getItemName().replace("*", "_"));
     }
 }
