@@ -31,7 +31,7 @@ public class GiveBannerCommand extends ChatCommand {
 
         final Session targetSession = NetworkManager.getInstance().getSessions().getByPlayerId(targetPlayerId);
 
-        if (PlayerDao.userHasBanner(bannerName, targetPlayerId))
+        if (!PlayerDao.userHasBanner(bannerName, targetPlayerId))
             PlayerDao.bannerForPlayer(bannerName, targetPlayerId);
 
         //Check if the user is online to refresh the banners
