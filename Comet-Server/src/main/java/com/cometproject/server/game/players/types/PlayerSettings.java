@@ -326,6 +326,10 @@ public class PlayerSettings implements IPlayerSettings {
         this.ignoreInvites = ignoreInvites;
     }
 
+    public boolean getIgnoreInvites() {
+        return this.ignoreInvites;
+    }
+
     public int getNavigatorX() {
         return navigatorX;
     }

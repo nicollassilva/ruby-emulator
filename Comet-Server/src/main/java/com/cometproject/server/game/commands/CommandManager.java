@@ -330,6 +330,7 @@ public class CommandManager implements Initialisable {
         this.addCommand("givebanner", new GiveBannerCommand());
         this.addCommand("keyboard", new KeyboardWalkCommand());
         this.addCommand(Locale.get("command.transfer_room.name"), new TransferRoomCommand());
+        this.addCommand(Locale.getOrDefault("command.ignore_invites.name", "ignoreinvites"), new IgnoreInvitesCommand());
 
         // Room bundles
         this.addCommand(Locale.get("command.bundle.name"), new BundleCommand());
