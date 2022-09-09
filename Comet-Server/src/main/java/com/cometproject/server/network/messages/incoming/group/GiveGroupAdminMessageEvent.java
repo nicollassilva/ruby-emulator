@@ -41,6 +41,7 @@ public class GiveGroupAdminMessageEvent implements Event {
             return;
 
         groupMember.setAccessLevel(GroupAccessLevel.ADMIN);
+        StorageContext.getCurrentContext().getGroupMemberRepository().saveMember(groupMember);
 
         StorageContext.getCurrentContext().getGroupRepository().saveGroupData(group.getData());
 
