@@ -7,8 +7,10 @@ import com.cometproject.server.network.sessions.Session;
 public class MuteBotsCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
-        client.getPlayer().setBotsMuted(!client.getPlayer().botsMuted());
-        sendWhisper(Locale.get("command.mutebots." + client.getPlayer().botsMuted()), client);
+        final boolean botsMuted = !client.getPlayer().botsMuted();
+
+        client.getPlayer().setBotsMuted(botsMuted);
+        sendWhisper(Locale.get("command.mutebots." + botsMuted), client);
     }
 
     @Override

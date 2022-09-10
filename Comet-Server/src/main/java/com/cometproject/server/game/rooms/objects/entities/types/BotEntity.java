@@ -14,6 +14,7 @@ import com.cometproject.server.game.rooms.objects.entities.types.ai.bots.WaiterA
 import com.cometproject.server.game.rooms.objects.entities.types.data.BotDataObject;
 import com.cometproject.server.game.rooms.objects.entities.types.data.types.SpyBotData;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.components.types.RoomMessageType;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
 import com.cometproject.server.network.messages.outgoing.room.avatar.LeaveRoomMessageComposer;
@@ -65,7 +66,7 @@ public class BotEntity extends RoomEntity {
     }
 
     public void say(String message) {
-        this.getRoom().getEntities().broadcastMessage(new TalkMessageComposer(this.getId(), message, ChatEmotion.NONE, 2));
+        this.getRoom().getEntities().broadcastMessage(new TalkMessageComposer(this.getId(), message, ChatEmotion.NONE, 2), false, RoomMessageType.BOT_CHAT);
     }
 
     @Override
