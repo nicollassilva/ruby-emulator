@@ -50,7 +50,6 @@ public class RoomManager implements Initialisable {
 
     private Map<Integer, RoomPromotion> roomPromotions;
 
-    private Map<String, StaticRoomModel> models;
     private final Set<Integer> deletedRooms = Sets.newConcurrentHashSet();
 
     private Map<Integer, Map<Integer, TraxMachineSong>> traxMachineSongs;
@@ -94,7 +93,7 @@ public class RoomManager implements Initialisable {
         this.globalCycle = new RoomCycle();
         this.traxMachineSongs = new HashMap<>();
         this.loadPromotedRooms();
-        this.loadModels();
+
         this.loadTraxMachineSongs();
 
         this.globalCycle.start();
@@ -133,24 +132,6 @@ public class RoomManager implements Initialisable {
         });
     }
 
-    public void loadModels() {
-        if (this.models != null && this.getModels().size() != 0) {
-            this.getModels().clear();
-        }
-
-        this.models = RoomDao.getModels();
-
-        log.info("Loaded " + this.getModels().size() + " room models");
-    }
-
-    public StaticRoomModel getModel(String id) {
-        if (this.models.containsKey(id))
-            return this.models.get(id);
-
-        log.debug("Couldn't find model: " + id);
-
-        return null;
-    }
 
     public Room get(int id) {
         if (id < 1) return null;
@@ -440,9 +421,6 @@ public class RoomManager implements Initialisable {
         return this.globalCycle;
     }
 
-    public final Map<String, StaticRoomModel> getModels() {
-        return this.models;
-    }
 
     public final WordFilter getFilter() {
         return filterManager;

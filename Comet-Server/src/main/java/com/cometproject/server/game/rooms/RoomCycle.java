@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class RoomCycle implements CometTask {
     private final static int PERIOD = 500;
     private final static int FLAG = 2000;
-    private final static int ROOMCOUNTUPDATEINTERVAL = 5000; // every 10 seconds
+    private final static int ROOMCOUNTUPDATEINTERVAL = 60000; // every 10 seconds
     private final Logger log = LogManager.getLogger(RoomCycle.class.getName());
     private ScheduledFuture myFuture;
     private long lastRoomCountUpdate = 0;

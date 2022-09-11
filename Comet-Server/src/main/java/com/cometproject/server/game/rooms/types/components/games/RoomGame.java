@@ -25,6 +25,14 @@ public abstract class RoomGame implements CometTask {
 
     private final Logger log;
 
+    public void ModifyTimer(int amount) {
+        this.gameLength = amount;
+    }
+
+    public void ModifyTime(int amount) {
+        this.timer = amount;
+    }
+
     public RoomGame(Room room, GameType gameType) {
         this.type = gameType;
         this.log = LogManager.getLogger("RoomGame [" + room.getData().getName() + "][" + room.getData().getId() + "][" + this.type + "]");
