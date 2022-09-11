@@ -140,7 +140,7 @@ import java.util.concurrent.Executors;
 public class MessageHandler {
     public static Logger log = LogManager.getLogger(MessageHandler.class.getName());
 
-    private final Map<Integer, Event> messages = Maps.newConcurrentMap();
+    private final Map<Short, Event> messages = Maps.newConcurrentMap();
     //private final Map<Integer, IMessageEventHandler> eventHandlers = Maps.newConcurrentMap();
 
     private final ExecutorService eventExecutor;
@@ -627,7 +627,7 @@ public class MessageHandler {
     }
 
     public void handle(MessageEvent message, Session client) {
-        final int header = message.getId();
+        final short header = message.getId();
 
         if (Comet.isDebugging) {
             //log.debug(message.toString());
@@ -656,7 +656,7 @@ public class MessageHandler {
         }
     }
 
-    public Map<Integer, Event> getMessages() {
+    public Map<Short, Event> getMessages() {
         return this.messages;
     }
 }

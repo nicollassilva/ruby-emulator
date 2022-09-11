@@ -17,7 +17,10 @@ public class SessionEventHandler {
     /**
      * The events required to complete login
      */
-    private final Map<Integer, Boolean> loginEvents;
+    private final Map<Short, Boolean> loginEvents;
+
+
+
 
     /**
      * Initialize the event handler
@@ -27,11 +30,12 @@ public class SessionEventHandler {
     public SessionEventHandler(Session session) {
         this.session = session;
 
-        this.loginEvents = new HashMap<Integer, Boolean>() {{
+        this.loginEvents = new HashMap<Short, Boolean>() {{
             put(Events.GenerateSecretKeyMessageEvent, true);
             put(Events.InitCryptoMessageEvent, true);
             put(Events.SSOTicketMessageEvent, true);
         }};
+
     }
 
     /**

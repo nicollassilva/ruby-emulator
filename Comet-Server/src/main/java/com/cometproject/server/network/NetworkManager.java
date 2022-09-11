@@ -12,11 +12,19 @@ import com.cometproject.server.network.messages.GameMessageHandler;
 import com.cometproject.server.network.messages.MessageHandler;
 import com.cometproject.server.network.sessions.SessionManager;
 import com.cometproject.server.network.sessions.net.NetSessionFactory;
+import com.cometproject.server.network.ws.WebSocketChannelHandler;
+import com.cometproject.server.protocol.codec.ws.WebSocketMessageEncoder;
 import com.google.common.collect.Sets;
 import io.coerce.services.messaging.client.MessagingClient;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.EventLoopGroup;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Log4J2LoggerFactory;
@@ -37,9 +45,7 @@ public class NetworkManager {
     private int serverPort;
     private SessionManager sessions;
     private MessageHandler messageHandler;
-    private EventLoopGroup bossGroup;
-    private EventLoopGroup workerGroup;
-    private EventLoopGroup connectGroup;
+
     private MessagingClient messagingClient;
 
     public NetworkManager() {
@@ -57,10 +63,6 @@ public class NetworkManager {
         this.sessions = new SessionManager();
         this.messageHandler = new MessageHandler();
 
-        this.bossGroup = new NioEventLoopGroup(Integer.parseInt(Configuration.currentConfig().get("comet.network.bossGroup")));
-        this.workerGroup = new NioEventLoopGroup(Integer.parseInt(Configuration.currentConfig().get("comet.network.workerGroup")));
-        this.connectGroup = new NioEventLoopGroup(Integer.parseInt(Configuration.currentConfig().get("comet.network.connectGroup")));
-
         this.serverPort = Integer.parseInt(ports.split(",")[0]);
 
         InternalLoggerFactory.setDefaultFactory(Log4J2LoggerFactory.INSTANCE);
@@ -75,6 +77,43 @@ public class NetworkManager {
         final NetworkingContext networkingContext = new NetworkingContext(serverFactory);
 
         NetworkingContext.setCurrentContext(networkingContext);
+
+
+        final ServerBootstrap bootstrapWebSocket = new ServerBootstrap()
+                .group(new NioEventLoopGroup(), new NioEventLoopGroup())
+                .channel(NioServerSocketChannel.class)
+                .childHandler(
+                        new ChannelInitializer<SocketChannel>() {
+                            @Override
+                            public void initChannel(final SocketChannel ch) throws Exception {
+                                ChannelPipeline pipeline = ch.pipeline();
+                                pipeline.addLast(new HttpServerCodec())
+                                        .addLast(new HttpObjectAggregator(65536))
+                                        .addLast(new WebSocketServerCompressionHandler())
+                                        .addLast(new WebSocketMessageEncoder())
+                                        .addLast(new WebSocketChannelHandler());
+
+                                ch.config().setTrafficClass(0x18);
+                                ch.config().setTcpNoDelay(true);
+                            }
+
+                        }
+                )
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+
+        int wsPort = Integer.valueOf(Configuration.currentConfig().get("comet.network.websocket.port"));
+
+        bootstrapWebSocket.bind(new InetSocketAddress(ip, wsPort)).addListener(objectFuture -> {
+            if (!objectFuture.isSuccess()) {
+                log.error("Error during server initialization! : " + ip + ":" + wsPort);
+            } else {
+                log.info("Websocket running on port:" + wsPort);
+            }
+        });
 
         final Set<Short> portSet = Sets.newHashSet();
 

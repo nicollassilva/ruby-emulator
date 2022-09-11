@@ -345,6 +345,81 @@ public class ItemsComponent {
         updateEntitiesOnFurniMove(item, newPosition, oldPosition, newPosition, newRotation, true);
     }
 
+
+    public boolean moveFloorItemMatch(long itemId, Position newPosition, int rotation, boolean save, boolean obeyStack, Player player) {
+        RoomItemFloor item = this.getFloorItem(itemId);
+        if (item == null) return false;
+
+        RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
+        if(tile == null)
+            return false;
+
+        item.onPositionChanged(newPosition);
+
+        List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
+
+        for (RoomEntity entity0 : affectEntities0) {
+            item.onEntityStepOff(entity0);
+        }
+
+        List<Position> tilesToUpdate = new ArrayList<>();
+
+        tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY()));
+        tilesToUpdate.add(new Position(newPosition.getX(), newPosition.getY()));
+
+        try {
+            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
+                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
+
+                List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+
+                for (RoomEntity entity1 : affectEntities1) {
+                    item.onEntityStepOff(entity1);
+                }
+            }
+
+            for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), newPosition.getX(), newPosition.getY(), rotation)) {
+                tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
+
+                List<RoomEntity> affectEntities2 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+
+                for (RoomEntity entity2 : affectEntities2) {
+                    item.onEntityStepOn(entity2);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Failed to update entity positions for changing item position", e);
+        }
+
+        item.getPosition().setX(newPosition.getX());
+        item.getPosition().setY(newPosition.getY());
+
+        item.getPosition().setZ(newPosition.getZ());
+        item.setRotation(rotation);
+
+        List<RoomEntity> affectEntities3 = room.getEntities().getEntitiesAt(newPosition);
+
+        for (RoomEntity entity3 : affectEntities3) {
+            item.onEntityStepOn(entity3);
+        }
+
+        if (save)
+            item.save();
+
+        for (Position tileToUpdate : tilesToUpdate) {
+            final RoomTile tileInstance = this.room.getMapping().getTile(tileToUpdate.getX(), tileToUpdate.getY());
+
+            if (tileInstance != null) {
+                tileInstance.reload();
+
+                room.getEntities().broadcastMessageSetz(new UpdateStackMapMessageComposer(tileInstance));
+            }
+        }
+
+        tilesToUpdate.clear();
+        return true;
+    }
+
     public boolean moveFloorItemWired(RoomItemFloor item, Position newPosition, int newRotation, boolean autoHeight, boolean limit) {
         if (item == null) return false;
 

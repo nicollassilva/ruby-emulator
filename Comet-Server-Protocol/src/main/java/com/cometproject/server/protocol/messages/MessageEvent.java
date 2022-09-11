@@ -1,19 +1,28 @@
 package com.cometproject.server.protocol.messages;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 import com.cometproject.api.networking.messages.IMessageEvent;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-import java.nio.charset.Charset;
-import java.util.Arrays;
-
-public final class MessageEvent implements IMessageEvent  {
-    private final int id;
+public final class MessageEvent implements IMessageEvent {
+    private final short id;
+    private final int length;
     private final ByteBuf buffer;
 
-    public MessageEvent(int id, ByteBuf buf) {
+    public MessageEvent(int length, ByteBuf buf) {
+        this.length = length;
         this.buffer = (buf != null) && (buf.readableBytes() > 0) ? buf : Unpooled.EMPTY_BUFFER;
-        this.id = id;
+
+        if (this.content().readableBytes() >= 2) {
+            this.id = this.readShort();
+        } else {
+            this.id = 0;
+        }
     }
 
     @Override
@@ -37,11 +46,13 @@ public final class MessageEvent implements IMessageEvent  {
 
     @Override
     public String readString() {
-        int length = this.readShort();
-        byte[] data = new byte[length];
-        this.content().readBytes(data);
+       /* int length = this.readShort();
+        byte[] data = this.content().readBytes((length)).array();
 
-        return new String(data);
+        return new String(data);*/
+        int length = this.readShort();
+        final byte[] bytes = this.readBytes(length);
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -52,6 +63,7 @@ public final class MessageEvent implements IMessageEvent  {
             bytes[i] = this.buffer.readByte();
         }
 
+//        byte[] data = this.content().readBytes((length)).array();
         return bytes;
     }
 
@@ -72,7 +84,7 @@ public final class MessageEvent implements IMessageEvent  {
     }
 
     @Override
-    public int getId() {
+    public short getId() {
         return this.id;
     }
 
@@ -82,6 +94,6 @@ public final class MessageEvent implements IMessageEvent  {
 
     @Override
     public int getLength() {
-        return buffer.readableBytes();
+        return length;
     }
 }

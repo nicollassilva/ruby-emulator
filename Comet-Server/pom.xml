@@ -97,6 +97,11 @@
 
     <repositories>
         <repository>
+            <id>project.local</id>
+            <name>project</name>
+            <url>file:C:\Users\Paulo\.m2\repository\Coerce</url>
+        </repository>
+        <repository>
             <id>java.net</id>
             <url>https://maven.java.net/content/repositories/snapshots/</url>
         </repository>

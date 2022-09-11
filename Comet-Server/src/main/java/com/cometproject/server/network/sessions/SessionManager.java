@@ -45,6 +45,12 @@ public final class SessionManager implements ISessionManager, ISessionService {
         this.channelGroup.add(channel.channel());
         channel.channel().attr(CHANNEL_ID_ATTR).set(this.idGenerator.incrementAndGet());
 
+
+        if (Comet.isDebugging) {
+            System.out.println("\nSessionManager :: session=" + session + "\n");
+        }
+
+
         return (this.sessions.putIfAbsent(channel.channel().attr(CHANNEL_ID_ATTR).get(), session) == null);
     }
 

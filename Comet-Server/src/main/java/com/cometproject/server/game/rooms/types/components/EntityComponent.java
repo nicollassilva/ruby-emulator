@@ -452,4 +452,27 @@ public class EntityComponent {
         this.botIdToEntity.clear();
         this.petIdToEntity.clear();
     }
+
+    public void broadcastMessageSetz(MessageComposer msg) {
+        if (msg == null) return;
+
+        for (RoomEntity entity : this.entities.values())
+        {
+            if(entity == null)
+                continue;
+
+            if (entity.getEntityType() == RoomEntityType.PLAYER)
+            {
+                PlayerEntity playerEntity = (PlayerEntity) entity;
+
+                if (playerEntity.getPlayer() == null)
+                    continue;
+
+                if(playerEntity.setzok)
+                    continue;
+
+                playerEntity.getPlayer().getSession().send(msg);
+            }
+        }
+    }
 }

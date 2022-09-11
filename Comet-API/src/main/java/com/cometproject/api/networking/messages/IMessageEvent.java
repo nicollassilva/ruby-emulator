@@ -15,7 +15,7 @@ public interface IMessageEvent {
 
     byte[] toRawBytes();
 
-    int getId();
+    short getId();
 
     int getLength();
 }
