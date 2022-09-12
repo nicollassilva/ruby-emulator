@@ -115,6 +115,11 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                         return;
                     }
 
+                    if (item.isVip() && client.getPlayer().getData().getRank() != CometSettings.vipRank) {
+                        client.send(new PurchaseErrorMessageComposer(2));
+                        return;
+                    }
+
                     if (this.itemHasCustomPurchase(item, page, client, amount)) {
                         return;
                     }
