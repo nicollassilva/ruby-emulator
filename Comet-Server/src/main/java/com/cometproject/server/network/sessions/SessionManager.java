@@ -66,9 +66,6 @@ public final class SessionManager implements ISessionManager, ISessionService {
     }
 
     public boolean remove(ChannelHandlerContext channel) {
-        if (channel.channel().attr(CHANNEL_ID_ATTR).get() == null) {
-            return false;
-        }
 
         if (this.sessions.containsKey(channel.channel().attr(CHANNEL_ID_ATTR).get())) {
             this.channelGroup.remove(channel.channel());

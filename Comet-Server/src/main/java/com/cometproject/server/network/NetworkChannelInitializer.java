@@ -2,13 +2,13 @@ package com.cometproject.server.network;
 
 import com.cometproject.api.config.CometSettings;
 import com.cometproject.networking.api.sessions.INetSessionFactory;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.clients.ClientHandler;
 import com.cometproject.server.network.sessions.SessionAccessLog;
 import com.cometproject.server.protocol.codec.MessageDecoder;
 import com.cometproject.server.protocol.codec.MessageEncoder;
 import com.cometproject.server.protocol.codec.MessageFrameDecoder;
 import com.cometproject.server.protocol.codec.XMLPolicyDecoder;
-import com.cometproject.server.protocol.codec.websockets.MessageInterceptorHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.string.StringEncoder;
@@ -47,6 +47,12 @@ public class NetworkChannelInitializer extends ChannelInitializer<SocketChannel>
             final SessionAccessLog sessionAccessLog = accessLog.get(ipAddress);
 
             if (sessionAccessLog.isSuspicious()) {
+
+                if (Comet.isDebugging) {
+                    System.out.println("ip suspeito! " + ipAddress);
+                }
+
+
                 ch.disconnect();
                 log.warn(String.format("Client denied, address: %s", ipAddress));
                 return;
@@ -59,13 +65,13 @@ public class NetworkChannelInitializer extends ChannelInitializer<SocketChannel>
 
         ch.config().setTrafficClass(0x18);
 
-        if(CometSettings.websocketsEnabled)
-            ch.pipeline().addLast("messageInterceptor", new MessageInterceptorHandler());
+        //if(CometSettings.websocketsEnabled)
+         //   ch.pipeline().addLast("messageInterceptor", new MessageInterceptorHandler());
 
         ch.pipeline()
                 .addLast("xmlDecoder", new XMLPolicyDecoder())
                 .addLast("stringEncoder", new StringEncoder(CharsetUtil.UTF_8))
-                .addLast("frameDecoder", new MessageFrameDecoder())
+               // .addLast("frameDecoder", new MessageFrameDecoder())
                 .addLast("messageDecoder", new MessageDecoder())
                 .addLast("messageEncoder", new MessageEncoder());
 

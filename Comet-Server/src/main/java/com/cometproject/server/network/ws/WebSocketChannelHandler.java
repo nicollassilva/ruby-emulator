@@ -27,9 +27,7 @@ public class WebSocketChannelHandler extends ChannelInboundHandlerAdapter {
             HttpHeaders headers = httpRequest.headers();
             System.out.println(headers.get("Connection"));
             System.out.println(headers.get("Upgrade"));
-            for (Map.Entry<String, String> entry : headers.entries()) {
-                System.out.println(entry.getKey() + ": " + entry.getValue());
-            }
+
 
             if ("Upgrade".equalsIgnoreCase(headers.get("Connection")) || "WebSocket".equalsIgnoreCase(headers.get("Upgrade"))) {
                 if (Comet.isDebugging) {

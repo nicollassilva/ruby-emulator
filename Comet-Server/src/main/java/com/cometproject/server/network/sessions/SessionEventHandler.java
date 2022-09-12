@@ -1,5 +1,6 @@
 package com.cometproject.server.network.sessions;
 
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.protocol.headers.Events;
 import com.cometproject.server.protocol.messages.MessageEvent;
@@ -18,8 +19,6 @@ public class SessionEventHandler {
      * The events required to complete login
      */
     private final Map<Short, Boolean> loginEvents;
-
-
 
 
     /**
@@ -48,8 +47,13 @@ public class SessionEventHandler {
         // event can only be called once!
         if (this.loginEvents.containsKey(msg.getId())) {
             if (!this.loginEvents.get(msg.getId())) {
+                if (Comet.isDebugging)
+                    System.out.println("event not allowed");
                 return; // event not allowed
             } else {
+
+                if (Comet.isDebugging)
+                    System.out.println("login replace");
                 this.loginEvents.replace(msg.getId(), false);
             }
         }

@@ -1,18 +1,20 @@
 package com.cometproject.server.protocol.codec;
 
+import java.util.List;
+
 import com.cometproject.api.networking.sessions.SessionManagerAccessor;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.util.CharsetUtil;
 
-import java.util.List;
 
 public class XMLPolicyDecoder extends ByteToMessageDecoder {
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
 
         in.markReaderIndex();
         if (in.readableBytes() < 1) return;
@@ -29,6 +31,7 @@ public class XMLPolicyDecoder extends ByteToMessageDecoder {
                             + "<allow-access-from domain=\"*\" to-ports=\"*\" />\r\n"
                             + "</cross-domain-policy>\0"
             ).addListener(ChannelFutureListener.CLOSE);
+
         } else if (delimiter == 0x3f) {
             try {
                 String messageStr = in.toString(CharsetUtil.UTF_8);
@@ -36,10 +39,13 @@ public class XMLPolicyDecoder extends ByteToMessageDecoder {
 
                 SessionManagerAccessor.getInstance().getSessionManager().parseCommand(message, ctx);
             } catch (Exception e) {
-
+                //..
             }
         } else {
             ctx.channel().pipeline().remove(this);
+
+            MessageDecoder decoder = ctx.pipeline().get(MessageDecoder.class);
+            // decoder.decode(ctx, in, out);
         }
     }
 }
