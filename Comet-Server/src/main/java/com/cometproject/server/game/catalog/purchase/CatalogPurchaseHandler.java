@@ -115,11 +115,6 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                         return;
                     }
 
-                    if (item.isVip() && client.getPlayer().getData().getRank() != CometSettings.vipRank) {
-                        client.send(new PurchaseErrorMessageComposer(2));
-                        return;
-                    }
-
                     if (this.itemHasCustomPurchase(item, page, client, amount)) {
                         return;
                     }
@@ -145,6 +140,14 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                         final FurnitureDefinition definition = ItemManager.getInstance().getDefinition(Integer.parseInt(item.getItemId()));
 
                         if (definition == null) {
+                            return;
+                        }
+
+                        final int userRank = client.getPlayer().getData().getRank();
+                        final boolean userIsVip = userRank == CometSettings.vipRank || userRank >= CometSettings.rankCanSeeVipContent;
+
+                        if (item.isVip() && !userIsVip) {
+                            client.send(new PurchaseErrorMessageComposer(2));
                             return;
                         }
 
