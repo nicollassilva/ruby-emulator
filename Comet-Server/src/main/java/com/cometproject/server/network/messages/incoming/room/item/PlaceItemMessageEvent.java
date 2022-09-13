@@ -32,7 +32,7 @@ public class PlaceItemMessageEvent implements Event {
         }
 
         if (!client.getPlayer().getEntity().getRoom().getBuilderComponent().isBuilder(client.getPlayer().getEntity())
-        && !client.getPlayer().getEntity().getBuildingType().equals(BuildingType.NONE)) {
+                && !client.getPlayer().getEntity().getBuildingType().equals(BuildingType.NONE)) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class PlaceItemMessageEvent implements Event {
                         }
 
                         case Region: {
-                            buildingComponent.fillArea(client, x, y, rot, item);
+                            buildingComponent.placeFloorItem(client, item, x, y, rot);
                             return;
                         }
                     }

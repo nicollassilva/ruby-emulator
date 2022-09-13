@@ -4,6 +4,7 @@ import com.cometproject.api.config.CometExternalSettings;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.config.Locale;
+import com.cometproject.server.game.commands.user.building.BuildingType;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -57,6 +58,34 @@ public class ChangeFloorItemStateMessageEvent implements Event {
         final RoomItemFloor item = room.getItems().getFloorItem(itemId);
 
         if (item == null) {
+            return;
+        }
+
+        if(client.getPlayer().getEntity().hasRights() && client.getPlayer().getEntity().getBuildingType().equals(BuildingType.FILL)){
+            if(client.getPlayer().getEntity().hasAttribute("fill_command_item")){
+                final RoomItemFloor firstItem = (RoomItemFloor)client.getPlayer().getEntity().getAttribute("fill_command_item");
+                if(firstItem.getId() == item.getId()){
+                    client.getPlayer().getEntity().removeAttribute("fill_command_item");
+                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.undo", "Esse mobi deixou de ser selecionado para o preenchimento por área.")));
+                    return;
+                }
+
+                if(firstItem.getDefinition().getId() != item.getDefinition().getId()){
+                    client.getPlayer().getEntity().removeAttribute("fill_command_item");
+                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.incompatible.selection", "Você só pode selecionar mobis se forem iguais!")));
+                    return;
+                }
+
+                final Position to = item.getPosition().copy();
+                client.getPlayer().getEntity().getRoom().getBuilderComponent().fillArea(client, firstItem.getPosition(), to, item.getRotation(), item.getDefinition().getId());
+                client.getPlayer().getEntity().removeAttribute("fill_command_item");
+                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.done","Área preenchida com sucesso!")));
+            }
+            else{
+                client.getPlayer().getEntity().setAttribute("fill_command_item", item);
+                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.first_item.selected", "Você selecionou o primeiro item, a âncora de seleção do preenchimento por área. Para preencher, clique 2x em outro mobi igual!")));
+            }
+
             return;
         }
 

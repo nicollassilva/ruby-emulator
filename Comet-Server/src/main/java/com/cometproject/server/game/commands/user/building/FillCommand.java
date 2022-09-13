@@ -61,7 +61,7 @@ public class FillCommand extends ChatCommand {
             case "all": {
                 client.getPlayer().getEntity().setSelectionType(SelectionType.Region);
                 client.getPlayer().getEntity().setBuildingType(BuildingType.FILL);
-                sendNotif(Locale.getOrDefault("command.fill.area.on","Preenchimento por área ativo."), client);
+                sendNotif(Locale.getOrDefault("command.fill.area.on","Preenchimento por área ativo. Para preencher uma área, clique 2x em um mobi!"), client);
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().setBuilder(client.getPlayer().getEntity());
                 break;
             }

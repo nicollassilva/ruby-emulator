@@ -326,15 +326,15 @@ public class Position {
         this.flag = flag;
     }
 
-    public static List<Position> makeSquare(Position p1, Position p2) {
-        final List<Position> positions = new ArrayList<>();
+    public static List<Position> makeSquareInclusive(Position p1, Position p2) {
         final int lowerX = Math.min(p1.getX(), p2.getX());
         final int lowerY = Math.min(p1.getY(), p2.getY());
         final int higherX = Math.max(p1.getX(), p2.getX());
         final int higherY = Math.max(p1.getY(), p2.getY());
+        final List<Position> positions = new ArrayList<>((higherX - lowerX )* (higherY - lowerY));
 
-        for (int x = lowerX; x < higherX; x++) {
-            for (int y = lowerY; y < higherY; y++) {
+        for (int x = lowerX; x <= higherX; x++) {
+            for (int y = lowerY; y <= higherY; y++) {
                 positions.add(new Position(x, y));
             }
         }
