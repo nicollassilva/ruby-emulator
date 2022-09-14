@@ -57,7 +57,7 @@ public class RoomVideoCommand extends ChatCommand {
         final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
 
         message.data = new JSONObject();
-        message.data.put("url", url.replace("watch?v=", "embed/") + "?autoplay=1&controls=0");
+        message.data.put("url", url.replace("watch?v=", "embed/") + "?autoplay=1&controls=1");
 
         for (final PlayerEntity entity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
             final org.eclipse.jetty.websocket.api.Session wsSession = entity.getPlayer().getData().getWebsocketSession();
