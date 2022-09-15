@@ -149,7 +149,9 @@ public class CatalogPage implements ICatalogPage {
         int size = 0;
 
         for (ICatalogItem item : this.items.values()) {
-            if((item.isVip() || this.isVipOnly()) && rank != CometSettings.vipRank && rank < CometSettings.rankCanSeeVipContent) continue;
+            if(this.isVipOnly() && (rank != CometSettings.vipRank && rank < CometSettings.rankCanSeeVipContent)) {
+                continue;
+            }
 
             if (rank >= this.getMinRank() && this.getTemplate().equals("default_3x3")) {
                 size++;
