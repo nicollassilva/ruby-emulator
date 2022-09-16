@@ -234,7 +234,7 @@ public class CatalogItem implements ICatalogItem {
             }
         }
 
-        msg.writeInt(0); // club level
+        msg.writeInt(this.vip ? 1 : 0); // club level
         msg.writeBoolean(!(this.getLimitedTotal() > 0) && this.allowOffer());
         msg.writeBoolean(false); // unknown
         msg.writeString("");
