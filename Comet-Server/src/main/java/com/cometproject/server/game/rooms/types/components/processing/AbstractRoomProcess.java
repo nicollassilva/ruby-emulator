@@ -420,6 +420,18 @@ public class AbstractRoomProcess implements CometTask {
                 entity.markNeedsUpdate();
             }
 
+            if (entity instanceof PlayerEntity) {
+                if (((PlayerEntity) entity).isSpinBody()) {
+                    ((PlayerEntity) entity).incrementSpinBodyRotation();
+
+                    final int rotation = ((PlayerEntity) entity).getSpinBodyRotation();
+
+                    entity.setHeadRotation(rotation);
+                    entity.setBodyRotation(rotation);
+                    entity.markNeedsUpdate(true);
+                }
+            }
+
             // Handle signs
             if (entity.hasStatus(RoomEntityStatus.SIGN) && !entity.isDisplayingSign()) {
                 entity.removeStatus(RoomEntityStatus.SIGN);

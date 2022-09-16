@@ -128,6 +128,8 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     private BuildingType buildingType = BuildingType.NONE;
     private SelectionType selectionType = SelectionType.NONE;
     private int stackCount = 0;
+    private boolean spinBody = false;
+    private int spinBodyRotation = 2;
 
     public PlayerEntity(Player player, int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
         super(identifier, startPosition, startBodyRotation, startHeadRotation, roomInstance);
@@ -1136,5 +1138,28 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
     public void setBuildingType(BuildingType buildingType) {
         this.buildingType = buildingType;
+    }
+
+    public boolean isSpinBody() {
+        return this.spinBody;
+    }
+
+    public void setIsSpinBody(boolean value) {
+        this.spinBody = value;
+    }
+
+    public int getSpinBodyRotation() {
+        return this.spinBodyRotation;
+    }
+
+    public void setSpinBodyRotation(int rot) {
+        this.spinBodyRotation = rot;
+    }
+
+    public void incrementSpinBodyRotation() {
+        this.spinBodyRotation++;
+
+        if (this.spinBodyRotation > 8)
+            this.spinBodyRotation = 0;
     }
 }
