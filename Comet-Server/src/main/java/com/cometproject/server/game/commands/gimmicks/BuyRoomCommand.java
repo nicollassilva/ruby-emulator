@@ -58,12 +58,12 @@ public class BuyRoomCommand extends ChatCommand {
         }
 
         if (params.length != 1) {
-            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ' " + Locale.get("command.buy_room.name") + " sim ' para confirmar."), client);
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
             return;
         }
 
         if (!params[0].equals("sim")) {
-            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ' " + Locale.get("command.buy_room.name") + " sim ' para confirmar."), client);
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
             return;
         }
 

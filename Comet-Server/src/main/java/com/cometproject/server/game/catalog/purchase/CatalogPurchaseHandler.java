@@ -147,7 +147,7 @@ public class CatalogPurchaseHandler implements ICatalogPurchaseHandler {
                         final boolean userIsVip = userRank == CometSettings.vipRank || userRank >= CometSettings.rankCanSeeVipContent;
 
                         if (item.isVip() && !userIsVip) {
-                            client.send(new AlertMessageComposer(Locale.getOrDefault("catalog.error.vip", "<b>Alerta</b><br><br>Parece que você não é membro VIP para comprar este item!")));
+                            client.send(new AlertMessageComposer(Locale.getOrDefault("catalog.error.vip", "<b>Alerta</b><br><br>Parece que você não é VIP para comprar este item!")));
                             return;
                         }
 
