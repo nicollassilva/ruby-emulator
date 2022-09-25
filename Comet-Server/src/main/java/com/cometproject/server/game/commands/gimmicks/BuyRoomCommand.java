@@ -52,18 +52,18 @@ public class BuyRoomCommand extends ChatCommand {
         }
 
         //Check if has enough diamonds
-        if (client.getPlayer().getData().getVipPoints() < roomPrice) {
-            sendWhisper("Você não possui diamantes suficientes para comprar este quarto!", client);
+        if (client.getPlayer().getData().getCredits() < roomPrice) {
+            sendWhisper("Você não possui moedas suficientes para comprar este quarto!", client);
             return;
         }
 
         if (params.length != 1) {
-            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> moedas! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
             return;
         }
 
         if (!params[0].equals("sim")) {
-            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> diamantes! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
+            sendAlert(Locale.getOrDefault("command.buy_room.confirm","<b>Alerta</b>\rVocê tem a certeza que deseja comprar este quarto?\r\rCustará <b>" + room.getData().getRoomPrice() + "</b> moedas! Digite ':" + Locale.get("command.buy_room.name") + " sim' para confirmar."), client);
             return;
         }
 
@@ -75,12 +75,12 @@ public class BuyRoomCommand extends ChatCommand {
         }
 
         //Decrement from the buyer the diamonds
-        client.getPlayer().getData().decreaseVipPoints(roomPrice);
+        client.getPlayer().getData().decreaseCredits(roomPrice);
         client.getPlayer().getData().save();
         client.getPlayer().sendBalance();
 
         //Increment to the room owner the diamonds
-        roomOwner.getPlayer().getData().increaseVipPoints(roomPrice);
+        roomOwner.getPlayer().getData().increaseCredits(roomPrice);
         roomOwner.getPlayer().getData().save();
         roomOwner.getPlayer().sendBalance();
 
