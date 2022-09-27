@@ -138,7 +138,7 @@ public class AddUserToRoomMessageEvent implements Event {
         }
 
         if (room.getData().getRoomPrice() > 0 && room.getData().getRoomBuyer() == client.getPlayer().getData().getId()) {
-            client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "Este quarto está à venda por " + room.getData().getRoomPrice() + " diamantes!"));
+            client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "Este quarto está à venda por " + room.getData().getRoomPrice() + " créditos!"));
         }
 
         client.flush();
