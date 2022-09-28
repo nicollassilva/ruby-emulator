@@ -90,8 +90,13 @@ public class CraftSecretMessageEvent implements Event {
             }
         }
 
-        if(finalRecipe.getAchievement() != null) { client.getPlayer().getAchievements().progressAchievement(finalRecipe.getAchievement(), 1); }
-        if(finalRecipe.getBadge() != null) {  client.getPlayer().getInventory().addBadge(finalRecipe.getBadge(), true); }
+        if(finalRecipe.getAchievement() != null) {
+            client.getPlayer().getAchievements().progressAchievement(finalRecipe.getAchievement(), 1);
+        }
+
+        if (finalRecipe.getBadge() != null && !finalRecipe.getBadge().isEmpty() && !finalRecipe.getBadge().isBlank()) {
+            client.getPlayer().getInventory().addBadge(finalRecipe.getBadge(), true);
+        }
 
         client.send(new CraftingFinalResultMessageComposer(true, recipe[0]));
     }
