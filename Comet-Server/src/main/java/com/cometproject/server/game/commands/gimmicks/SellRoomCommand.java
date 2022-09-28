@@ -76,7 +76,7 @@ public class SellRoomCommand extends ChatCommand {
         room.getData().setRoomPrice(value);
 
         for (final PlayerEntity playerEntity : room.getEntities().getPlayerEntities())
-            playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Este quarto " + (!isSelling ? "já não está à venda!" : "está à venda por " + value + " créditos! E apenas o usuário " + PlayerDao.getUsernameByPlayerId(room.getData().getRoomBuyer()) + " pode comprá-lo!")));
+            playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Este quarto " + (!isSelling ? "já não está à venda!" : "está à venda por " + value + " Moedas! E apenas o usuário " + PlayerDao.getUsernameByPlayerId(room.getData().getRoomBuyer()) + " pode comprá-lo!")));
     }
 
     @Override
