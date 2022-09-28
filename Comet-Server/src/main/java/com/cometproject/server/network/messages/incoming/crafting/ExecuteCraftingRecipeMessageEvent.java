@@ -64,7 +64,7 @@ public class ExecuteCraftingRecipeMessageEvent implements Event {
         if (recipe.getAchievement() != null) {
             client.getPlayer().getAchievements().progressAchievement(recipe.getAchievement(), 1);
         }
-        if (recipe.getBadge() != null && !recipe.getBadge().isEmpty() && !recipe.getBadge().isBlank()) {
+        if (recipe.getBadge() != null && !recipe.getBadge().isEmpty()) {
             client.getPlayer().getInventory().addBadge(recipe.getBadge(), true);
         }
 

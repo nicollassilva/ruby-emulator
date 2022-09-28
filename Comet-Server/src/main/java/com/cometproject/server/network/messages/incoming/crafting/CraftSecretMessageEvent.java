@@ -94,7 +94,7 @@ public class CraftSecretMessageEvent implements Event {
             client.getPlayer().getAchievements().progressAchievement(finalRecipe.getAchievement(), 1);
         }
 
-        if (finalRecipe.getBadge() != null && !finalRecipe.getBadge().isEmpty() && !finalRecipe.getBadge().isBlank()) {
+        if (finalRecipe.getBadge() != null && !finalRecipe.getBadge().isEmpty()) {
             client.getPlayer().getInventory().addBadge(finalRecipe.getBadge(), true);
         }
 
