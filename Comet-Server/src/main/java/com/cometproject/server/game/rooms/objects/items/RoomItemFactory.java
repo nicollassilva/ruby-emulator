@@ -256,6 +256,7 @@ public class RoomItemFactory {
             put("wf_trg_bot_reached_furni", WiredTriggerBotReachedFurni.class); // bot reached furni
             put("wf_trg_ex_command_reverse", WiredTriggerUserSaysCommandReversed.class); // usuario dice comando
             put("beta_football", BetaFootballFloorItem.class); // test
+
             put("wf_xtra_or", WiredAddonOrEffect.class); // complemento OR
             put("wf_trg_anti_walk", WiredTriggerAntiWalk.class); // afk wired new
             put("wf_cstm_execute_stacks_conditions", WiredCustomExecuteStacksConditions.class); // ejecuta pilas con condiciones
@@ -311,6 +312,8 @@ public class RoomItemFactory {
 
             put("football_timer", FootballTimerFloorItem.class);
             put("ball", FootballFloorItem.class);
+
+
             put("football_gate", FootballGateFloorItem.class);
             put("football_goal", FootballGoalFloorItem.class);
             put("football_score", FootballScoreFloorItem.class);
