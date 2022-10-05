@@ -34,7 +34,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
-            if (floorItem == null || floorItem instanceof WiredActionExecuteStacks)
+            if (floorItem == null)
                 continue;
 
             for (final Position positions : floorItem.getPositions()) {
@@ -59,21 +59,10 @@ public class WiredActionExecuteStacks extends WiredActionItem {
                 if (actions.size() > 1000)
                     break;
 
-                if (roomItemFloor instanceof WiredCustomForwardRoom || roomItemFloor instanceof WiredActionExecuteStacks)
-                    continue;
-
                 if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
                     continue;
 
-                if (roomItemFloor instanceof WiredActionItem || roomItemFloor instanceof WiredConditionItem || roomItemFloor instanceof WiredAddonUnseenEffect || roomItemFloor instanceof WiredAddonRandomEffect || roomItemFloor instanceof WiredAddonNoItemsAnimateEffect) {
-                    if (roomItemFloor instanceof WiredActionShowMessage || roomItemFloor instanceof WiredCustomShowMessageRoom) {
-                        if (nbEffectMsg >= 10) {
-                            continue;
-                        }
-
-                        nbEffectMsg++;
-                    }
-
+                if (roomItemFloor instanceof WiredActionItem) {
                     actions.add(roomItemFloor);
                 }
             }
