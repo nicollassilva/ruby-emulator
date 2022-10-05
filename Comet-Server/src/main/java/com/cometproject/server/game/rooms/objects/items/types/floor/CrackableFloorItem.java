@@ -3,6 +3,7 @@ package com.cometproject.server.game.rooms.objects.items.types.floor;
 import com.cometproject.api.game.furniture.types.CrackableReward;
 import com.cometproject.api.game.furniture.types.CrackableType;
 import com.cometproject.api.game.furniture.types.FurnitureDefinition;
+import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.api.networking.messages.IComposer;
@@ -13,7 +14,10 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.network.messages.incoming.catalog.data.UnseenItemsMessageComposer;
+import com.cometproject.server.network.messages.outgoing.user.inventory.UpdateInventoryMessageComposer;
 import com.cometproject.server.tasks.CometThreadManager;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang.math.NumberUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -117,7 +121,10 @@ public class CrackableFloorItem extends RoomItemFloor {
                 if (itemDefinition != null) {
                     this.getRoom().getItems().removeItem(this, player.getSession(), false);
 
-                    this.getRoom().getItems().placeFloorItem(new InventoryItem(this.getId(), itemDefinition.getId(), ""), this.getPosition().getX(), this.getPosition().getY(), this.getRotation(), player);
+                    final PlayerItem playerItem = new InventoryItem(this.getId(), itemDefinition.getId(), "");
+                    player.getInventory().addItem(playerItem);
+
+                    this.getRoom().getItems().placeFloorItem(playerItem, this.getPosition().getX(), this.getPosition().getY(), this.getRotation(), player);
                 }
                 break;
 
@@ -140,7 +147,7 @@ public class CrackableFloorItem extends RoomItemFloor {
                 break;
 
             case BADGE:
-                //player.getInventory().addBadge(reward.getRewardData(), true, true); discontinued
+                player.getInventory().addBadge(reward.getRewardData(), true, true);
         }
     }
 
