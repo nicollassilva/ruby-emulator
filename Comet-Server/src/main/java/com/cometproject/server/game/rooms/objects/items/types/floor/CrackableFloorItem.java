@@ -17,6 +17,7 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.incoming.catalog.data.UnseenItemsMessageComposer;
 import com.cometproject.server.network.messages.outgoing.user.inventory.UpdateInventoryMessageComposer;
 import com.cometproject.server.tasks.CometThreadManager;
+import com.cometproject.storage.api.StorageContext;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -125,6 +126,8 @@ public class CrackableFloorItem extends RoomItemFloor {
                     player.getInventory().addItem(playerItem);
 
                     this.getRoom().getItems().placeFloorItem(playerItem, this.getPosition().getX(), this.getPosition().getY(), this.getRotation(), player);
+
+                    StorageContext.getCurrentContext().getRoomItemRepository().setBaseItem(playerItem.getId(), itemDefinition.getId());
                 }
                 break;
 
