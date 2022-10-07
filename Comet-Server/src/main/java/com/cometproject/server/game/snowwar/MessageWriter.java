@@ -37,9 +37,7 @@ public class MessageWriter {
         }
 
         final byte[] rtn = new byte[writer];
-        for (int i = 0; i < writer; i++) {
-            rtn[i] = bytes[i];
-        }
+        System.arraycopy(bytes, 0, rtn, 0, writer);
 
         bytes = rtn;
         bytesReady = true;
@@ -59,9 +57,7 @@ public class MessageWriter {
         }
 
         final byte[] rtn = new byte[writer];
-        for (int i = 0; i < writer; i++) {
-            rtn[i] = bytes[i];
-        }
+        System.arraycopy(bytes, 0, rtn, 0, writer);
 
         bytes = rtn;
         bytesReady = true;
@@ -74,12 +70,12 @@ public class MessageWriter {
         bytes[writer++] = (byte) ((in >>> 24) & 0xFF);
         bytes[writer++] = (byte) ((in >>> 16) & 0xFF);
         bytes[writer++] = (byte) ((in >>> 8) & 0xFF);
-        bytes[writer++] = (byte) ((in >>> 0) & 0xFF);
+        bytes[writer++] = (byte) ((in) & 0xFF);
     }
 
     public void writeInt16(int in) {
         bytes[writer++] = (byte) ((in >>> 8) & 0xFF);
-        bytes[writer++] = (byte) ((in >>> 0) & 0xFF);
+        bytes[writer++] = (byte) ((in) & 0xFF);
     }
 
     public void writeBoolean(boolean in) {
@@ -105,8 +101,8 @@ public class MessageWriter {
     public void writeBytes(byte[] in) {
         final int len = in.length;
         writeInt16(len);
-        for (int i = 0; i < len; i++) {
-            bytes[writer++] = in[i];
+        for (byte b : in) {
+            bytes[writer++] = b;
         }
     }
 

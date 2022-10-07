@@ -40,46 +40,46 @@ public class PlayerInfoCommand extends ChatCommand {
         final StringBuilder userInfo = new StringBuilder();
 
         if (client.getPlayer().getPermissions().getRank().modTool()) {
-            userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.id", "ID") + "</b>: " + playerData.getId() + "<br>");
+            userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.id", "ID")).append("</b>: ").append(playerData.getId()).append("<br>");
         }
 
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.username", "Usuario") + "</b>: " + playerData.getUsername() + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.motto", "Misión") + "</b>: " + playerData.getMotto() + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.gender", "Genero") + "</b>: " + (playerData.getGender().equalsIgnoreCase("m") ? Locale.getOrDefault("command.playerinfo.male", "Homem") : Locale.getOrDefault("command.playerinfo.female", "Mulher")) + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.status", "Estado") + "</b>: " + (session == null ? Locale.getOrDefault("command.playerinfo.offline", "Offline") : Locale.getOrDefault("command.playerinfo.online", "Online")) + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.achievementPoints", "IAchievement Points") + "</b>: " + playerData.getAchievementPoints() + "<br>");
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.vip", "VIP") + "</b>: " + playerData.isVip() + "<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.username", "Usuario")).append("</b>: ").append(playerData.getUsername()).append("<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.motto", "Misión")).append("</b>: ").append(playerData.getMotto()).append("<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.gender", "Genero")).append("</b>: ").append(playerData.getGender().equalsIgnoreCase("m") ? Locale.getOrDefault("command.playerinfo.male", "Homem") : Locale.getOrDefault("command.playerinfo.female", "Mulher")).append("<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.status", "Estado")).append("</b>: ").append(session == null ? Locale.getOrDefault("command.playerinfo.offline", "Offline") : Locale.getOrDefault("command.playerinfo.online", "Online")).append("<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.achievementPoints", "IAchievement Points")).append("</b>: ").append(playerData.getAchievementPoints()).append("<br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.vip", "VIP")).append("</b>: ").append(playerData.isVip()).append("<br>");
 
         if (client.getPlayer().getPermissions().getRank().modTool()) {
-            userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.rank", "Rango") + "</b>: " + playerData.getRank() + "<br><br>");
+            userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.rank", "Rango")).append("</b>: ").append(playerData.getRank()).append("<br><br>");
         }
 
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.currencyBalances", "Currency Balances") + "</b><br>");
-        userInfo.append("<i>" + playerData.getCredits() + " " + Locale.getOrDefault("command.playerinfo.credits", "credits") + "</i><br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.currencyBalances", "Currency Balances")).append("</b><br>");
+        userInfo.append("<i>").append(playerData.getCredits()).append(" ").append(Locale.getOrDefault("command.playerinfo.credits", "credits")).append("</i><br>");
 
         if (client.getPlayer().getPermissions().getRank().modTool()) {
-            userInfo.append("<i>" + playerData.getVipPoints() + " " + Locale.getOrDefault("command.playerinfo.diamonds", "diamonds") + "</i><br>");
+            userInfo.append("<i>").append(playerData.getVipPoints()).append(" ").append(Locale.getOrDefault("command.playerinfo.diamonds", "diamonds")).append("</i><br>");
         }
 
-        userInfo.append("<i>" + playerData.getActivityPoints() + " " + Locale.getOrDefault("command.playerinfo.activityPoints", "duckets") + "</i><br>");
+        userInfo.append("<i>").append(playerData.getActivityPoints()).append(" ").append(Locale.getOrDefault("command.playerinfo.activityPoints", "duckets")).append("</i><br>");
 
-        userInfo.append("<i>" + playerData.getSeasonalPoints() + " " + Locale.getOrDefault("command.playerinfo.seasonalPoints", "Calabazas") + "</i><br><br>");
+        userInfo.append("<i>").append(playerData.getSeasonalPoints()).append(" ").append(Locale.getOrDefault("command.playerinfo.seasonalPoints", "Calabazas")).append("</i><br><br>");
 
-        userInfo.append("<i>" + playerData.getPlayer().getStats().getLevel() + " " + Locale.getOrDefault("command.playerinfo.nivel", "Nivel:") + "</i><br>");
-        userInfo.append("<i>" + playerData.getXpPoints() + " " + Locale.getOrDefault("command.playerinfo.xp", "XP") + "</i><br><br>");
+        userInfo.append("<i>").append(playerData.getPlayer().getStats().getLevel()).append(" ").append(Locale.getOrDefault("command.playerinfo.nivel", "Nivel:")).append("</i><br>");
+        userInfo.append("<i>").append(playerData.getXpPoints()).append(" ").append(Locale.getOrDefault("command.playerinfo.xp", "XP")).append("</i><br><br>");
 
 
-        userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.roomInfo", "Room Info") + "</b><br>");
+        userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.roomInfo", "Room Info")).append("</b><br>");
 
         if (session != null && session.getPlayer().getEntity() != null) {
-            userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.roomId", "Room ID") + "</b>: " + session.getPlayer().getEntity().getRoom().getData().getId() + "<br>");
-            userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.roomName", "Room Name") + "</b>: " + session.getPlayer().getEntity().getRoom().getData().getName() + "<br>");
-            userInfo.append("<b>" + Locale.getOrDefault("command.playerinfo.roomOwner", "Room Owner") + "</b>: " + session.getPlayer().getEntity().getRoom().getData().getOwner() + "<br>");
+            userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.roomId", "Room ID")).append("</b>: ").append(session.getPlayer().getEntity().getRoom().getData().getId()).append("<br>");
+            userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.roomName", "Room Name")).append("</b>: ").append(session.getPlayer().getEntity().getRoom().getData().getName()).append("<br>");
+            userInfo.append("<b>").append(Locale.getOrDefault("command.playerinfo.roomOwner", "Room Owner")).append("</b>: ").append(session.getPlayer().getEntity().getRoom().getData().getOwner()).append("<br>");
         } else {
             if (session == null)
-                userInfo.append("<i>" + Locale.getOrDefault("command.playerinfo.notOnline", "This player is not online!") + "</i>");
+                userInfo.append("<i>").append(Locale.getOrDefault("command.playerinfo.notOnline", "This player is not online!")).append("</i>");
             else
-                userInfo.append("<i>" + Locale.getOrDefault("command.playerinfo.notInRoom", "This player is not in a room!") + "</i>");
+                userInfo.append("<i>").append(Locale.getOrDefault("command.playerinfo.notInRoom", "This player is not in a room!")).append("</i>");
         }
 
         client.send(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.playerinfo.title", "Player Information") + ": " + username, userInfo.toString()));

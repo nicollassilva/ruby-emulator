@@ -19,10 +19,10 @@ public class RoomItemEventQueue {
             return;
         }
 
-        final List<RoomItemEventQueueEntry> eventQueueCopy = new LinkedList<>();
+        final List<RoomItemEventQueueEntry> eventQueueCopy;
 
         synchronized (this.lock) { // reduce lock time by copying (events happen outside lock)
-            eventQueueCopy.addAll(this.eventQueue);
+            eventQueueCopy = new LinkedList<>(this.eventQueue);
 
             this.eventQueue.clear();
         }

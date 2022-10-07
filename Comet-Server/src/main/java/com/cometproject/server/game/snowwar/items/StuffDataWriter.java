@@ -27,9 +27,7 @@ public class StuffDataWriter {
         }
 
         final byte[] rtn = new byte[writer];
-        for(int i = 0;i<writer;i++) {
-            rtn[i] = bytes[i];
-        }
+        System.arraycopy(bytes, 0, rtn, 0, writer);
         bytes = rtn;
 
         return bytes;
@@ -39,16 +37,16 @@ public class StuffDataWriter {
         bytes[writer++] = (byte) ((in >>> 24) & 0xFF);
         bytes[writer++] = (byte) ((in >>> 16) & 0xFF);
         bytes[writer++] = (byte) ((in >>> 8) & 0xFF);
-        bytes[writer++] = (byte) ((in >>> 0) & 0xFF);
+        bytes[writer++] = (byte) ((in) & 0xFF);
     }
 
     public void writeInt16(int in) {
         bytes[writer++] = (byte) ((in >>> 8) & 0xFF);
-        bytes[writer++] = (byte) ((in >>> 0) & 0xFF);
+        bytes[writer++] = (byte) ((in) & 0xFF);
     }
 
     public void writeInt8(int in) {
-        bytes[writer++] = (byte) ((in >>> 0) & 0xFF);
+        bytes[writer++] = (byte) ((in) & 0xFF);
     }
 
     public void writeString(String in) {
@@ -62,8 +60,8 @@ public class StuffDataWriter {
     public void writeBytes(byte[] in) {
         final int len = in.length;
         writeInt16(len);
-        for(int i = 0;i<len;i++) {
-            bytes[writer++] = in[i];
+        for (byte b : in) {
+            bytes[writer++] = b;
         }
     }
 

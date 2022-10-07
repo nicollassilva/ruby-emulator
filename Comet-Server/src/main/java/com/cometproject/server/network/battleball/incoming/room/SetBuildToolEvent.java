@@ -35,7 +35,7 @@ public class SetBuildToolEvent extends IncomingEvent {
         if(this.data.getJSONObject("data").getString("type").equals("setz")) {
             if (this.data.getJSONObject("data").get("value") instanceof Double || this.data.getJSONObject("data").get("value") instanceof Integer || this.data.getJSONObject("data").get("value") instanceof Float) {
 
-                Double value = this.data.getJSONObject("data").getDouble("value");
+                double value = this.data.getJSONObject("data").getDouble("value");
 
                 client.getPlayer().getEntity().setAttribute("setz.height", value);
                 for (RoomTile[] pTile : client.getPlayer().getEntity().getRoom().getMapping().getTiles()) {
@@ -74,7 +74,7 @@ public class SetBuildToolEvent extends IncomingEvent {
 
         if(this.data.getJSONObject("data").getString("type").equals("rotation")) {
             if(this.data.getJSONObject("data").get("value") instanceof Integer) {
-                Integer value = this.data.getJSONObject("data").getInt("value");
+                int value = this.data.getJSONObject("data").getInt("value");
 
                 if (value > 7 || value < 0) return;
 
@@ -88,7 +88,7 @@ public class SetBuildToolEvent extends IncomingEvent {
 
         if(this.data.getJSONObject("data").getString("type").equals("state")) {
             if(this.data.getJSONObject("data").get("value") instanceof Integer) {
-                Integer value = this.data.getJSONObject("data").getInt("value");
+                int value = this.data.getJSONObject("data").getInt("value");
 
                 if (value > 100 || value < 0) return;
 

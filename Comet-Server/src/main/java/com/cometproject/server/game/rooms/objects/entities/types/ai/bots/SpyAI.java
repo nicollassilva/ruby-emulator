@@ -44,33 +44,33 @@ public class SpyAI extends AbstractBotAI {
 
         if (entity.getPlayerId() == this.getBotEntity().getData().getOwnerId()) {
             if (message.equals("yes") || message.equals("oui") || message.equals("sim") || message.equals("ya") || message.equals(Locale.getOrDefault("comet.game.bot.yes", "yes"))) {
-                String stillIn = "";
-                String left = "";
+                StringBuilder stillIn = new StringBuilder();
+                StringBuilder left = new StringBuilder();
 
                 for (String username : ((SpyBotData) this.getBotEntity().getDataObject()).getVisitors()) {
                     boolean isLast = ((SpyBotData) this.getBotEntity().getDataObject()).getVisitors().indexOf(username) == (((SpyBotData) this.getBotEntity().getDataObject()).getVisitors().size() - 1);
 
                     if (this.getBotEntity().getRoom().getEntities().getEntityByName(username, RoomEntityType.PLAYER) != null) {
                         if (isLast) {
-                            stillIn += username + (stillIn.equals("") ? Locale.getOrDefault("comet.game.bot.spy.stillInRoom.single", " is still in the room") : Locale.getOrDefault("comet.game.bot.spy.stillInRoom.multiple", " are still in the room"));
+                            stillIn.append(username).append(stillIn.toString().equals("") ? Locale.getOrDefault("comet.game.bot.spy.stillInRoom.single", " is still in the room") : Locale.getOrDefault("comet.game.bot.spy.stillInRoom.multiple", " are still in the room"));
                         } else {
-                            stillIn += username + ", ";
+                            stillIn.append(username).append(", ");
                         }
                     } else {
                         if (isLast) {
-                            left += username + (left.equals("") ? Locale.getOrDefault("comet.game.bot.spy.leftRoom.single", " has left") : Locale.getOrDefault("comet.game.bot.spy.leftRoom.multiple", " have left"));
+                            left.append(username).append(left.toString().equals("") ? Locale.getOrDefault("comet.game.bot.spy.leftRoom.single", " has left") : Locale.getOrDefault("comet.game.bot.spy.leftRoom.multiple", " have left"));
                         } else {
-                            left += username + ", ";
+                            left.append(username).append(", ");
                         }
                     }
                 }
 
-                if (!left.equals("")) {
-                    this.getBotEntity().say(left);
+                if (!left.toString().equals("")) {
+                    this.getBotEntity().say(left.toString());
                 }
 
-                if (!stillIn.equals("")) {
-                    this.getBotEntity().say(stillIn);
+                if (!stillIn.toString().equals("")) {
+                    this.getBotEntity().say(stillIn.toString());
                 }
 
                 ((SpyBotData) this.getBotEntity().getDataObject()).getVisitors().clear();
