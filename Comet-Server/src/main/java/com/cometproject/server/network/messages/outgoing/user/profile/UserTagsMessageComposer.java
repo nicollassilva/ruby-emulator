@@ -25,8 +25,6 @@ public class UserTagsMessageComposer extends MessageComposer {
         msg.writeInt(playerId);
         msg.writeInt(tags.size());
 
-        tags.forEach((tag) -> {
-            msg.writeString(tag);
-        });
+        tags.forEach(msg::writeString);
     }
 }

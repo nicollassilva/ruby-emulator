@@ -67,9 +67,7 @@ public class FillCommand extends ChatCommand {
             }
         }
 
-        final RoomReloadListener reloadListener = new RoomReloadListener(client.getPlayer().getEntity().getRoom(), (players, newRoom) -> {
-            newRoom.getBuilderComponent().setBuilder(null);
-        });
+        final RoomReloadListener reloadListener = new RoomReloadListener(client.getPlayer().getEntity().getRoom(), (players, newRoom) -> newRoom.getBuilderComponent().setBuilder(null));
         RoomManager.getInstance().addReloadListener(client.getPlayer().getEntity().getRoom().getId(), reloadListener);
     }
 

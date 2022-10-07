@@ -444,8 +444,6 @@ public class InventoryComponent extends PlayerComponent implements PlayerInvento
 
         this.inventoryItems = new HashMap<>();
 
-        nonDeleteableItems.forEach(item -> {
-            this.inventoryItems.put(item.getId(), item);
-        });
+        nonDeleteableItems.forEach(item -> this.inventoryItems.put(item.getId(), item));
     }
 }

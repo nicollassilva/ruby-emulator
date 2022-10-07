@@ -46,7 +46,7 @@ public class ScoreboardItemData {
             users.add(user);
             this.entries.add(new HighscoreEntry(users, score));
 
-            Collections.sort(this.entries, comparator);
+            this.entries.sort(comparator);
         }
     }
 
