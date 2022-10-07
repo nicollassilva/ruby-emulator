@@ -221,6 +221,7 @@ public class BuildingComponent {
                         if (nextItem == null)
                             break;
 
+
                         Thread.sleep(CometSettings.FILL_ITEM_PLACE_DELAY);
                         __internalPlaceFloorItem(client, nextItem, x, y, rot);
                     } catch (Exception e) {
