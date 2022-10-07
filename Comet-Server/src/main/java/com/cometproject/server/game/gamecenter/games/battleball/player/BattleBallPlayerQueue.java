@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BattleBallPlayerQueue {
 
     private static int roomCounter;
-    private static final Map<Integer, RoomQueue> roomQueue = new ConcurrentHashMap<Integer, RoomQueue>(100);
+    private static final Map<Integer, RoomQueue> roomQueue = new ConcurrentHashMap<>(100);
     private static final Logger log = LogManager.getLogger(PlayerManager.class.getName());
 
     public static void addPlayerInQueue(Session client) {

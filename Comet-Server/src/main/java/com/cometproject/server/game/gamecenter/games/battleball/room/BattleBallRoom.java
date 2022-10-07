@@ -68,7 +68,7 @@ public class BattleBallRoom {
 
     public boolean lobbyFull;
 
-    public final Map<Integer, Session> players = new ConcurrentHashMap<Integer, Session>(BattleBall.GAME_MAX_PLAYERS);
+    public final Map<Integer, Session> players = new ConcurrentHashMap<>(BattleBall.GAME_MAX_PLAYERS);
 
     public SpawnPoint spawnsBlue;
     public SpawnPoint spawnsRed;

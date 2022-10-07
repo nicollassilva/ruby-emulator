@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ClientHandler extends SimpleChannelInboundHandler<MessageEvent> {
     private static final AttributeKey<INetSession> ATTR_SESSION = AttributeKey.newInstance("NetSession");
 
-    private static Logger log = Logger.getLogger(ClientHandler.class.getName());
+    private static final Logger log = Logger.getLogger(ClientHandler.class.getName());
 
     private static ClientHandler clientHandlerInstance;
     private final INetSessionFactory sessionFactory;

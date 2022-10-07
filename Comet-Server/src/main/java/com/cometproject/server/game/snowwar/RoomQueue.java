@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomQueue {
     public SnowWarRoom room;
-    public final Map<Integer, Session> players = new ConcurrentHashMap<Integer, Session>(SnowWar.MAXPLAYERS);
+    public final Map<Integer, Session> players = new ConcurrentHashMap<>(SnowWar.MAXPLAYERS);
 
     public RoomQueue(SnowWarRoom snowRoom) {
         room = snowRoom;

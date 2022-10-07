@@ -462,7 +462,7 @@ public class Player extends Observable implements IPlayer {
 
     public boolean handleGroupWhisper(String username) {
         if (this.groupWhispers == null) {
-            this.groupWhispers = new ArrayList<String>();
+            this.groupWhispers = new ArrayList<>();
         }
         if (!this.isGroupWhisperValid(username)) {
             this.groupWhispers.add(username);

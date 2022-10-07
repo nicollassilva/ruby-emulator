@@ -32,8 +32,8 @@ public class SnowWarRoom extends SynchronizedGameStage {
     public HumanGameObject MostKills;
     public SnowWarGameStage map;
 
-    public final Map<Integer, Map<Integer, HumanGameObject>> TeamPlayers = new ConcurrentHashMap<Integer, Map<Integer, HumanGameObject>>(SnowWar.TEAMS.length);
-    public final Map<Integer, HumanGameObject> players = new ConcurrentHashMap<Integer, HumanGameObject>(SnowWar.MAXPLAYERS);
+    public final Map<Integer, Map<Integer, HumanGameObject>> TeamPlayers = new ConcurrentHashMap<>(SnowWar.TEAMS.length);
+    public final Map<Integer, HumanGameObject> players = new ConcurrentHashMap<>(SnowWar.MAXPLAYERS);
 
     public final List<Event> gameEvents = Collections.synchronizedList(new ArrayList<>());
 

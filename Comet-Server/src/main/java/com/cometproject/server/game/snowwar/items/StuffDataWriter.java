@@ -7,7 +7,7 @@ import java.util.List;
  * Created by SpreedBlood on 2017-12-22.
  */
 public class StuffDataWriter {
-    public List<Integer> savedPositions = new ArrayList<Integer>();
+    public List<Integer> savedPositions = new ArrayList<>();
 
     private byte[] bytes;
     public int writer;

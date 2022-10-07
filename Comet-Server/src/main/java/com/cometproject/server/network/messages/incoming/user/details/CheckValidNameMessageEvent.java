@@ -51,7 +51,7 @@ public class CheckValidNameMessageEvent implements Event {
         } else if (name.length() < 3) {
             client.send(new NameChangeUpdateMessageComposer(name, 2));
         } else if (inUse) {
-            final LinkedList<String> suggestions = new LinkedList();
+            final LinkedList<String> suggestions = new LinkedList<>();
 
             for (int i = 100; i < 103; i++) {
                 suggestions.add(i + "");

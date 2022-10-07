@@ -105,7 +105,7 @@ public class NetworkManager {
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
-        int wsPort = Integer.valueOf(Configuration.currentConfig().get("comet.network.websocket.port"));
+        int wsPort = Integer.parseInt(Configuration.currentConfig().get("comet.network.websocket.port"));
 
         bootstrapWebSocket.bind(new InetSocketAddress(ip, wsPort)).addListener(objectFuture -> {
             if (!objectFuture.isSuccess()) {

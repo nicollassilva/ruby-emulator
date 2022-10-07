@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GamesLeaderboard {
-    public static final Map<Integer, GamesLeaderboard> leaderboards = new ConcurrentHashMap<Integer, GamesLeaderboard>();
+    public static final Map<Integer, GamesLeaderboard> leaderboards = new ConcurrentHashMap<>();
 
     public final int gameId;
 

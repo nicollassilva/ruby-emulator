@@ -10,7 +10,7 @@ import java.util.List;
  * Created by SpreedBlood on 2017-12-28.
  */
 public class MessageWriter {
-    public List<Integer> savedPositions = new ArrayList<Integer>();
+    public List<Integer> savedPositions = new ArrayList<>();
     public boolean isReady;
     private boolean bytesReady;
     public int writer;

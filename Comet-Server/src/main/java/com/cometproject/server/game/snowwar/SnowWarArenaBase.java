@@ -17,9 +17,9 @@ public abstract class SnowWarArenaBase {
     public int ArenaType;
     public int ArenaWidth;
     public String HeightMap;
-    public List<GamefuseObject> fuseObjects = new ArrayList<GamefuseObject>(200);
-    public List<SpawnPoint> spawnsBLUE = new ArrayList<SpawnPoint>(5);
-    public List<SpawnPoint> spawnsRED = new ArrayList<SpawnPoint>(5);
+    public List<GamefuseObject> fuseObjects = new ArrayList<>(200);
+    public List<SpawnPoint> spawnsBLUE = new ArrayList<>(5);
+    public List<SpawnPoint> spawnsRED = new ArrayList<>(5);
 
 
     public abstract void gameObjects(Map<Integer, GameItemObject> gameObjects, SnowWarRoom room);

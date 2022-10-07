@@ -34,9 +34,9 @@ public class CraftSecretMessageEvent implements Event {
         final int MachineInRoomId = msg.readInt();
         final int totalItems = msg.readInt();
         final CraftingRecipe[] recipe = {null};
-        List<Long> realId = new ArrayList<Long>();
-        List<Integer> items = new ArrayList<Integer>();
-        List<PlayerItem> inventoryItems = new ArrayList<PlayerItem>();
+        List<Long> realId = new ArrayList<>();
+        List<Integer> items = new ArrayList<>();
+        List<PlayerItem> inventoryItems = new ArrayList<>();
 
         for(int i=0;i<totalItems;i++) {
             final int itemId = msg.readInt();

@@ -288,7 +288,7 @@ public class ItemDao {
 
             while (resultSet.next() && item == null) {
                 preparedStatement.setInt(1, resultSet.getInt(1));
-                preparedStatement.setInt(2, Integer.valueOf(itemId));
+                preparedStatement.setInt(2, Integer.parseInt(itemId));
                 preparedStatement.addBatch();
                 item = (PlayerItem) new DefaultFloorItem(resultSet.getInt(1), player.getId(), (PlayerItem) CatalogManager.getInstance().ecotronItem, extradata, 0,0);
             }

@@ -14,21 +14,15 @@ public class TimeSpan {
         int HOUR = 60 * MINUTE;
         int DAY = 24 * HOUR;
 
-        long ms = time;
-
-        StringBuffer text = new StringBuffer();
-        if (ms > DAY) {
-            text.append(ms / DAY).append("d ");
-            ms %= DAY;
-        } else if (ms > HOUR) {
-            text.append(ms / HOUR).append("h ");
-            ms %= HOUR;
-        } else if (ms > MINUTE) {
-            text.append(ms / MINUTE).append("min ");
-            ms %= MINUTE;
-        } else if (ms > SECOND) {
-            text.append(ms / SECOND).append("sec ");
-            ms %= SECOND;
+        StringBuilder text = new StringBuilder();
+        if (time > DAY) {
+            text.append(time / DAY).append("d ");
+        } else if (time > HOUR) {
+            text.append(time / HOUR).append("h ");
+        } else if (time > MINUTE) {
+            text.append(time / MINUTE).append("min ");
+        } else if (time > SECOND) {
+            text.append(time / SECOND).append("sec ");
         }
 
         return text.toString();

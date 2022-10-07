@@ -22,7 +22,7 @@ public class RecyclerLogicMessageComposer extends MessageComposer {
         msg.writeInt(CatalogManager.getInstance().prizes.size());
         for(Map.Entry<Integer, THashSet<FurnitureDefinition>> map : CatalogManager.getInstance().prizes.entrySet()) {
             msg.writeInt(map.getKey());
-            msg.writeInt(Integer.valueOf(Locale.get("hotel.ecotron.rarity.chance." + map.getKey())));
+            msg.writeInt(Integer.parseInt(Locale.get("hotel.ecotron.rarity.chance." + map.getKey())));
             msg.writeInt(map.getValue().size());
             for(FurnitureDefinition furnitureDefinition : map.getValue()) {
                 msg.writeString(furnitureDefinition.getItemName());

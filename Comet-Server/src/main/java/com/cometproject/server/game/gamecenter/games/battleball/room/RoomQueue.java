@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RoomQueue {
 
     public BattleBallRoom room;
-    public final Map<Integer, Session> players = new ConcurrentHashMap<Integer, Session>(BattleBall.GAME_MAX_PLAYERS);
+    public final Map<Integer, Session> players = new ConcurrentHashMap<>(BattleBall.GAME_MAX_PLAYERS);
 
     public RoomQueue(BattleBallRoom battleBallRoom) {
         room = battleBallRoom;

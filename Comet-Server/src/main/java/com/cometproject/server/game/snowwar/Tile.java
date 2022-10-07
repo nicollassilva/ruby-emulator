@@ -34,7 +34,7 @@ public class Tile {
         _3ob = new Tile[8];
         _4gH = new int[]{_arg1, _arg2, 0};
         _location = new PlayerTile((_arg1 * TILE_SIZE), (_arg2 * TILE_SIZE), 0);
-        _0E8 = new ArrayList<GamefuseObject>();
+        _0E8 = new ArrayList<>();
     }
 
     public static int _4mC(int _arg1){

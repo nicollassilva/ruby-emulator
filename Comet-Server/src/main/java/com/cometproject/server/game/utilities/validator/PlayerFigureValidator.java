@@ -24,7 +24,7 @@ public class PlayerFigureValidator {
     }
 
     public static List<Integer> setmapexeption() {
-        List<Integer> data = new ArrayList<Integer>();
+        List<Integer> data = new ArrayList<>();
         data.add(99999);
         data.add(11090314);
         data.add(0);
@@ -180,7 +180,7 @@ public class PlayerFigureValidator {
     }
 
     public static List<Integer> colorsexeption() {
-        List<Integer> data = new ArrayList<Integer>();
+        List<Integer> data = new ArrayList<>();
         data.add(1);
         data.add(0);
         data.add(14);
