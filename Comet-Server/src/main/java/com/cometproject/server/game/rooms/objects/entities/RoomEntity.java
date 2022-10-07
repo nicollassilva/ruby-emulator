@@ -179,7 +179,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         PlayerEntity playerEntity = null;
 
-        if (this instanceof PlayerEntity) {
+        if(this instanceof PlayerEntity) {
             playerEntity = (PlayerEntity) this;
         }
 
@@ -516,7 +516,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 this.afkTime++;
             }
 
-            if (this.afkTime >= 5) {
+            if(this.afkTime >= 5) {
                 WiredTriggerCustomTotalIdle.executeTriggers((PlayerEntity) this);
             }
 
@@ -822,6 +822,35 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.warp(roomObject.getPosition());
     }
 
+    public void warp(Position position, boolean cancelNextUpdate) {
+        if(this instanceof PlayerEntity) {
+            ((PlayerEntity) this).setAttribute("tp", true);
+        }
+
+        if (cancelNextUpdate) {
+            this.cancelNextUpdate();
+        } else {
+            this.updatePhase = 1;
+        }
+
+        this.needsForcedUpdate = true;
+
+        this.updateAndSetPosition(position);
+        this.markNeedsUpdate();
+
+        final RoomTile tile = this.getRoom().getMapping().getTile(position);
+
+        if (tile != null) {
+            this.addToTile(tile);
+
+            if (tile.getTopItemInstance() != null) {
+                if (tile.getTopItemInstance() instanceof SeatFloorItem)
+                    ((SeatFloorItem) tile.getTopItemInstance()).onEntityStepOn(this, false);
+                else
+                    tile.getTopItemInstance().onEntityStepOn(this);
+            }
+        }
+    }
 
     public void warpBanzai(final Position position, final boolean cancelNextUpdate) {
         if (cancelNextUpdate) {
@@ -846,41 +875,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.warpBanzai(position, true);
     }
 
-
-    public void warp(Position position, boolean cancelNextUpdate) {
-
-        //this.setAttribute("teleentrando", true);
-
-        if (cancelNextUpdate) {
-            this.cancelNextUpdate();
-        } else {
-            this.updatePhase = 1;
-        }
-
-        this.needsForcedUpdate = true;
-        //this.isWarped = true;
-        this.updateAndSetPosition(position);
-        this.markNeedsUpdate();
-
-        final RoomTile tile = this.getRoom().getMapping().getTile(position);
-        if (tile != null) {
-
-            this.addToTile(tile);
-
-            if (tile.getTopItemInstance() != null) {
-                if (tile.getTopItemInstance() instanceof SeatFloorItem)
-                    ((SeatFloorItem) tile.getTopItemInstance()).onEntityStepOn(this, false);
-                else
-                    tile.getTopItemInstance().onEntityStepOn(this);
-            }
-
-            tile.getEntities().add(this);
-        }
-    }
-
     @Override
     public void warp(Position position) {
-        this.warp(position, false);
+        this.warp(position, true);
     }
 
     @Override

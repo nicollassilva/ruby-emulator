@@ -35,6 +35,7 @@ public abstract class RollableFloorItem extends RoomItemFloor {
     }
 
     public static void roll(RoomItemFloor item, Position from, Position to, Room room) {
+        final RollableFloorItem rollableFloorItem = (RollableFloorItem) item;
 
         final Map<Integer, Double> items = new HashMap<>();
 

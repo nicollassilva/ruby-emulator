@@ -2,8 +2,6 @@ package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actio
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
-import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredAddonNoItemsAnimateEffect;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredCustomForwardRoom;
@@ -28,24 +26,6 @@ public class WiredActionExecuteStacks extends WiredActionItem {
     }
 
     @Override
-    public final boolean evaluate(RoomEntity entity, Object data) {
-        if (this.hasTicks()) return false;
-
-        final WiredItemEvent itemEvent = new WiredItemEvent(entity, data);
-
-        if (this.getWiredData().getDelay() >= 1 && this.usesDelay()) {
-            itemEvent.setTotalTicks(RoomItemFactory.getProcessTime(this.getWiredData().getDelay() / 2));
-
-            this.queueEvent(itemEvent);
-        } else {
-            itemEvent.onCompletion(this);
-            this.onEventComplete(itemEvent);
-        }
-
-        return true;
-    }
-
-    @Override
     public void onEventComplete(WiredItemEvent event) {
         final List<Position> tilesToExecute = Lists.newArrayList();
         final List<RoomItemFloor> actions = Lists.newArrayList();
@@ -54,7 +34,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
-            if (floorItem == null || (floorItem.getPosition().getX() == this.getPosition().getX() && floorItem.getPosition().getY() == this.getPosition().getY()))
+            if (floorItem == null)
                 continue;
 
             for (final Position positions : floorItem.getPositions()) {
@@ -82,7 +62,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
                 if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
                     continue;
 
-                if (roomItemFloor instanceof WiredActionItem && !(roomItemFloor instanceof WiredActionExecuteStacks)) {
+                if (roomItemFloor instanceof WiredActionItem) {
                     actions.add(roomItemFloor);
                 }
             }
