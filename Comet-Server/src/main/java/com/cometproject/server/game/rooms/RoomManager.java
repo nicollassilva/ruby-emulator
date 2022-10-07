@@ -164,11 +164,8 @@ public class RoomManager implements Initialisable {
     }
 
     public void unloadIdleRooms() {
-        final Iterator<Room> roomIterator = this.unloadingRoomInstances.values().iterator();
 
-        while (roomIterator.hasNext()) {
-            final Room room = roomIterator.next();
-
+        for (final Room room : this.unloadingRoomInstances.values()) {
             this.executorService.submit(() -> {
                 room.dispose();
 
@@ -185,9 +182,10 @@ public class RoomManager implements Initialisable {
                     }
                 }
 
-                roomIterator.remove();
             });
         }
+
+        this.unloadingRoomInstances.clear();
 
         final List<Room> idleRooms = new ArrayList<>();
 
@@ -439,7 +437,7 @@ public class RoomManager implements Initialisable {
     }
 
     public void setTraxMachineSongFromUserId(int userId, TraxMachineSong traxMachineSong) {
-        if(this.traxMachineSongs.containsKey(userId)) {
+        if (this.traxMachineSongs.containsKey(userId)) {
             this.traxMachineSongs.get(userId).put(traxMachineSong.getId(), traxMachineSong);
         }
 
@@ -450,7 +448,7 @@ public class RoomManager implements Initialisable {
     }
 
     public Map<Integer, TraxMachineSong> getTraxMachineSongsFromUserId(int userId) {
-        if(!this.traxMachineSongs.containsKey(userId)) {
+        if (!this.traxMachineSongs.containsKey(userId)) {
             return null;
         }
 
@@ -460,7 +458,7 @@ public class RoomManager implements Initialisable {
     public TraxMachineSong getTraxMachineSongFromUserAndSongId(int userId, int songId) {
         final Map<Integer, TraxMachineSong> userSongs = this.getTraxMachineSongsFromUserId(userId);
 
-        if(userSongs == null) {
+        if (userSongs == null) {
             return null;
         }
 

@@ -34,7 +34,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
         for (final long itemId : this.getWiredData().getSelectedIds()) {
             final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
-            if (floorItem == null)
+            if (floorItem == null || (floorItem.getPosition().getX() == this.getPosition().getX() && floorItem.getPosition().getY() == this.getPosition().getY()))
                 continue;
 
             for (final Position positions : floorItem.getPositions()) {
@@ -62,7 +62,7 @@ public class WiredActionExecuteStacks extends WiredActionItem {
                 if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
                     continue;
 
-                if (roomItemFloor instanceof WiredActionItem) {
+                if (roomItemFloor instanceof WiredActionItem && !(roomItemFloor instanceof WiredActionExecuteStacks)) {
                     actions.add(roomItemFloor);
                 }
             }
