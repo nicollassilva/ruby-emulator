@@ -722,7 +722,8 @@ public class Player extends Observable implements IPlayer {
     @Override
     public void setLastCommandRoleplay(int lastCommandRoleplay) { this.lastCommandRoleplay = lastCommandRoleplay; }
 
-    public void setLastSlotMachineAction(int lastSlotMachineAction) { this.lastSlotMachineAction = Player.this.lastSlotMachineAction; }
+    public void setLastSlotMachineAction(int lastSlotMachineAction) {
+        this.lastSlotMachineAction = Player.this.lastSlotMachineAction; }
 
     @Override
     public void setLastPurchase(int lastPurchase) {

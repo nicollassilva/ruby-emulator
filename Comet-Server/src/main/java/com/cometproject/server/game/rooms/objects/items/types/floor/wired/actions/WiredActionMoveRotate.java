@@ -49,7 +49,7 @@ public class WiredActionMoveRotate extends WiredActionItem {
                 if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
 
                 final Position currentPosition = floorItem.getPosition().copy();
-                final Position newPosition = this.getRandomPosition(movement, currentPosition, this.getRoom());
+                final Position newPosition = getRandomPosition(movement, currentPosition, this.getRoom());
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
