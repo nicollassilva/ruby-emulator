@@ -25,6 +25,7 @@ public class RoomMapping {
 
     private RoomTile[][] tiles;
 
+
     public RoomMapping(Room roomInstance) {
         this.room = roomInstance;
     }
@@ -58,10 +59,8 @@ public class RoomMapping {
     }
 
     public void dispose() {
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[x].length; y++) {
-                final RoomTile tile = this.tiles[x][y];
-
+        for (RoomTile[] roomTiles : tiles) {
+            for (final RoomTile tile : roomTiles) {
                 if (tile != null) {
                     tile.dispose();
                 }

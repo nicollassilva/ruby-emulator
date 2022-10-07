@@ -65,7 +65,6 @@ public class Room implements Attributable, IRoom {
     private EntityComponent entities;
     private BuildingComponent buildingComponent;
     private FilterComponent filter;
-    private RoomModelFactory layout;
     private IGroup group;
     private Map<String, Object> attributes;
     private Set<Integer> ratings;
@@ -149,7 +148,7 @@ public class Room implements Attributable, IRoom {
             RoomQueue.getInstance().addQueue(this.getId(), 0);
         }
 
-        if(Comet.isDebugging) {
+        if (Comet.isDebugging) {
             this.log.debug("Room loaded");
         }
 
@@ -238,7 +237,11 @@ public class Room implements Attributable, IRoom {
         this.itemProcess.stop();
         this.game.stop();
 
+        this.buildingComponent.dispose();
+        this.trade.dispose();
         this.game.dispose();
+        this.filter.dispose();
+        this.rights.dispose();
         this.entities.dispose();
         this.items.dispose();
         this.bots.dispose();
@@ -260,6 +263,13 @@ public class Room implements Attributable, IRoom {
         if (this.noVotes != null) {
             this.noVotes.clear();
         }
+        if (this.ratings != null) {
+            this.ratings.clear();
+        }
+
+        if (this.attributes != null) {
+            this.attributes.clear();
+        }
 
 
         if (this.infobusChoice1 != null) {
@@ -274,13 +284,14 @@ public class Room implements Attributable, IRoom {
             this.infobusChoice3.clear();
         }
 
+
         final long timeTaken = System.currentTimeMillis() - currentTime;
 
         if (timeTaken >= 250) {
             this.log.warn("Room [" + this.getData().getId() + "][" + this.getData().getName() + "] took " + timeTaken + "ms to dispose");
         }
 
-        if(Comet.isDebugging) {
+        if (Comet.isDebugging) {
             this.log.debug("Room has been disposed");
         }
     }
@@ -317,12 +328,12 @@ public class Room implements Attributable, IRoom {
         this.infobusChoice2 = Sets.newConcurrentHashSet();
         this.infobusChoice3 = Sets.newConcurrentHashSet();
 
-        if(poll != null) {
+        if (poll != null) {
             this.getEntities().broadcastMessage(new StartInfobusPollMessageComposer(poll));
         }
     }
 
-    public boolean hasAnsweredInfobus(int playerId){
+    public boolean hasAnsweredInfobus(int playerId) {
         return this.infobusChoice1.contains(playerId) ||
                 this.infobusChoice2.contains(playerId) ||
                 this.infobusChoice3.contains(playerId);

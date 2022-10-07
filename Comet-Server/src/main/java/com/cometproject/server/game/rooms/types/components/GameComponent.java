@@ -30,7 +30,6 @@ public class GameComponent {
     private final AtomicInteger blobCounter = new AtomicInteger(0);
     private final Room room;
     private RoomGame instance;
-    private V75AbstractGame v75Instance;
     private final Map<GameTeam, List<Integer>> teams;
     private Map<GameTeam, Integer> scores;
     private boolean shootEnabled;

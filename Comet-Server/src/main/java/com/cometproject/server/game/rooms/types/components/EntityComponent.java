@@ -451,6 +451,9 @@ public class EntityComponent {
         this.playerIdToEntity.clear();
         this.botIdToEntity.clear();
         this.petIdToEntity.clear();
+        this.nameToPlayerEntity.clear();
+        this.playerEntities.clear();
+
     }
 
     public void broadcastMessageSetz(MessageComposer msg) {

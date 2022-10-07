@@ -35,6 +35,14 @@ public class BuildingComponent {
     private volatile int builderId = -1;
     private String builderName = "";
 
+    public void dispose(){
+        try {
+            buildingExecutor.shutdown();
+        }catch (Exception ex){
+            log.error(ex);
+        }
+    }
+
     public BuildingComponent(Room room) {
         this.room = room;
     }

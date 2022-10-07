@@ -44,6 +44,7 @@ public class RightsComponent {
 
     public void dispose() {
         this.rights.clear();
+        this.mutedPlayers.clear();
         this.bannedPlayers.clear();
     }
 

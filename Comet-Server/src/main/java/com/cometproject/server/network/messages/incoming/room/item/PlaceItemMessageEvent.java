@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 
 
 public class PlaceItemMessageEvent implements Event {
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+
     @Override
     public void handle(Session client, MessageEvent msg) {
         if (client.getPlayer().getPermissions().getRank().modTool() && !client.getPlayer().getSettings().isPinSuccess()) {

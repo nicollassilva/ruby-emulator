@@ -12,6 +12,9 @@ public class TradeComponent {
     private final Room room;
     private final List<Trade> trades;
 
+    public void dispose(){
+        trades.clear();
+    }
     public TradeComponent(Room room) {
         this.room = room;
         this.trades = new ArrayList<>();

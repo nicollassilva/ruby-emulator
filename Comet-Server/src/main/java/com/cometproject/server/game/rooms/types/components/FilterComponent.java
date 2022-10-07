@@ -12,6 +12,10 @@ public class FilterComponent {
     private final Room room;
     private final Set<String> filteredWords;
 
+    public void dispose(){
+        this.filteredWords.clear();
+    }
+
     public FilterComponent(Room room) {
         this.room = room;
 
