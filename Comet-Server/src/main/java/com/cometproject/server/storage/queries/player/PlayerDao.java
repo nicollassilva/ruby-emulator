@@ -1205,6 +1205,41 @@ public class PlayerDao {
         return null;
     }
 
+    public static void reloadPlayerCurrencies(Player player) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT p.id as playerId, p.credits AS playerData_credits, p.vip_points AS playerData_vipPoints, p.rank AS playerData_rank, p.seasonal_points AS playerData_seasonalPoints, p.vip AS playerData_vip, p.achievement_points AS playerData_achievementPoints, p.xp_points AS playerData_xpPoints, p.activity_points AS playerData_activityPoints FROM players p WHERE p.id = ?", sqlConnection);
+            preparedStatement.setInt(1, player.getId());
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                player.getData().setVip(resultSet.getString("playerData_vip").equals("1"));
+                player.getData().setCredits(resultSet.getInt("playerData_credits"));
+                player.getData().setRank(resultSet.getInt("playerData_rank"));
+                player.getData().setSeasonalPoints(resultSet.getInt("playerData_seasonalPoints"));
+                player.getData().setXpPoints(resultSet.getInt("playerData_xpPoints"));
+                player.getData().setActivityPoints(resultSet.getInt("playerData_activityPoints"));
+                player.getData().setAchievementPoints(resultSet.getInt("playerData_achievementPoints"));
+                player.getData().setVipPoints(resultSet.getInt("playerData_vipPoints"));
+            }
+
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(resultSet);
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+
+    }
+
     public static String getGenderByUsername(String username) {
 
         Connection sqlConnection = null;

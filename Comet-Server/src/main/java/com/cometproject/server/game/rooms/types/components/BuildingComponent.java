@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BuildingComponent {
@@ -35,10 +36,18 @@ public class BuildingComponent {
     private volatile int builderId = -1;
     private String builderName = "";
 
-    public void dispose(){
+    public void dispose() {
         try {
-            buildingExecutor.shutdown();
-        }catch (Exception ex){
+            try {
+                buildingExecutor.shutdown();
+
+                if (!buildingExecutor.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                    buildingExecutor.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                buildingExecutor.shutdownNow();
+            }
+        } catch (Exception ex) {
             log.error(ex);
         }
     }

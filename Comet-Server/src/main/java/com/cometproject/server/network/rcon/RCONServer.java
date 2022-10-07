@@ -2,6 +2,7 @@ package com.cometproject.server.network.rcon;
 
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.messages.rcon.ForwardUser;
+import com.cometproject.server.network.messages.rcon.ReloadCredits;
 import com.cometproject.server.network.rcon.utils.RCONMessage;
 import com.cometproject.server.network.rcon.utils.Server;
 import com.google.gson.Gson;
@@ -33,6 +34,7 @@ public class RCONServer extends Server {
         this.gsonBuilder.registerTypeAdapter(RCONMessage.class, new RCONMessage.RCONMessageSerializer());
 
         this.addRCONMessage("forwarduser", ForwardUser.class);
+        this.addRCONMessage("reloadCredits", ReloadCredits.class);
 
         Collections.addAll(this.allowedAdresses, "127.0.0.1");
     }
