@@ -77,6 +77,6 @@ public class RedeemClothesCommand extends ChatCommand {
 
     @Override
     public String getDescription() {
-        return Locale.getOrDefault("command.redeem_clothes.description", "Gerar os seus visuais diretamente do inventário.");
+        return Locale.getOrDefault("command.redeem_clothes.description", "Gere os seus visuais diretamente do inventário.");
     }
 }
