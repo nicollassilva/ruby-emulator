@@ -49,7 +49,7 @@ public class RedeemClothesCommand extends ChatCommand {
         }
 
         if (itemsToRemove.size() == 0) {
-            sendWhisper("Oops, não foi encontrada nenhuma roupa no seu inventário!", client);
+            sendWhisper("Oops, não foi encontrada nenhuma roupa no seu inventário ou você já possui!", client);
             return;
         }
 
