@@ -11,7 +11,7 @@ import com.cometproject.server.storage.queries.player.PlayerDao;
 
 public class ExchangeItemMessageEvent implements Event {
     @Override
-    public void handle(Session client, MessageEvent msg) {
+    synchronized public void handle(Session client, MessageEvent msg) {
         final int virtualId = msg.readInt();
         final long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
 
@@ -24,14 +24,16 @@ public class ExchangeItemMessageEvent implements Event {
             return;
         }
 
-
         final RoomItemFloor item = room.getItems().getFloorItem(itemId);
 
-        if (item == null)
+        if (item == null || item.getIsLocked())
             return;
 
         if (item.getItemData().getOwnerId() != client.getPlayer().getId())
             return;
+
+
+        item.setIsLocked(true);
 
         int value;
         boolean isDiamond = false;
@@ -43,7 +45,7 @@ public class ExchangeItemMessageEvent implements Event {
         if (item.getDefinition().getItemName().contains("_diamond_")) {
             isDiamond = true;
             value = Integer.parseInt(item.getDefinition().getItemName().split("_diamond_")[1]);
-        } else if(item.getDefinition().getItemName().contains("_ruby_")) {
+        } else if (item.getDefinition().getItemName().contains("_ruby_")) {
             isRuby = true;
             value = Integer.parseInt(item.getDefinition().getItemName().split("_ruby_")[1]);
         } else {
@@ -56,7 +58,7 @@ public class ExchangeItemMessageEvent implements Event {
         if (isDiamond) {
             client.getPlayer().getData().increaseVipPoints(value);
             exchangeValue = "Diamonds: " + client.getPlayer().getData().getVipPoints();
-        } else if(isRuby){
+        } else if (isRuby) {
             client.getPlayer().getData().increaseSeasonalPoints(value);
             exchangeValue = "Rubys: " + client.getPlayer().getData().getSeasonalPoints();
         } else {
