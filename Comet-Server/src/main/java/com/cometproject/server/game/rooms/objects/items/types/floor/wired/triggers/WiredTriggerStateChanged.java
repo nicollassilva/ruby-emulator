@@ -16,6 +16,7 @@ public class WiredTriggerStateChanged extends WiredTriggerItem {
 
     public static boolean executeTriggers(RoomEntity entity, RoomItemFloor floorItem) {
         PlayerEntity playerEntity = ((PlayerEntity) entity);
+
         boolean wasExecuted = false;
 
         for (final WiredTriggerStateChanged wiredItem : getTriggers(entity.getRoom(), WiredTriggerStateChanged.class)) {
@@ -30,8 +31,6 @@ public class WiredTriggerStateChanged extends WiredTriggerItem {
                     entity.lookTo(playerEntity.getPosition().squareInFront(floorItem.getRotation()).getX(), playerEntity.getPosition().squareBehind(floorItem.getRotation()).getY());
                     wasExecuted = wiredItem.evaluate(entity, floorItem);
                 }
-
-                //wasExecuted = wiredItem.evaluate(entity, floorItem);
             }
         }
 
