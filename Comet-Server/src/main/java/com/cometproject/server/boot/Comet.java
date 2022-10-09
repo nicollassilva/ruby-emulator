@@ -145,7 +145,7 @@ public class Comet {
     public static void initRcon() throws Exception {
         if(!isDebugging) return;
 
-        rconServer = new RCONServer("127.0.0.1", 30001);
+        rconServer = new RCONServer("0.0.0.0", 30001);
         rconServer.initializePipeline();
         rconServer.connect();
     }
