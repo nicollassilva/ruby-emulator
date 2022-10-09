@@ -17,7 +17,7 @@ public class RCONServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        String adress = ctx.channel().remoteAddress().toString().split(":")[0].replace("/", "");
+        /*
 
         for (String s : Comet.getRconServer().allowedAdresses) {
             if (s.equalsIgnoreCase(adress)) {
@@ -26,8 +26,11 @@ public class RCONServerHandler extends ChannelInboundHandlerAdapter {
         }
 
         ctx.channel().close();
+*/
+        super.channelRegistered(ctx);
+        String adress = ctx.channel().remoteAddress().toString().split(":")[0].replace("/", "");
 
-        LOGGER.warn("RCON Remote connection closed: {}. IP not allowed!", adress);
+        LOGGER.warn("RCON Remote connection open: {}.", adress);
     }
 
     @Override
