@@ -36,6 +36,8 @@ public abstract class Pathfinder {
     }
 
     public List<Square> makePath(RoomObject roomFloorObject, Position end, byte pathfinderMode, boolean isRetry) {
+      //  final long startTime = System.currentTimeMillis();
+
         final List<Square> squares = new CopyOnWriteArrayList<>();
         PathfinderNode nodes = makePathReversed(roomFloorObject, end, pathfinderMode, isRetry);
 
@@ -45,7 +47,7 @@ public abstract class Pathfinder {
                 nodes = nodes.getNextNode();
             }
         }
-
+   //     System.out.println("pathfinding took " + (System.currentTimeMillis() - startTime) + "ms");
         return Lists.reverse(squares);
     }
 
@@ -90,13 +92,14 @@ public abstract class Pathfinder {
                     if (!node.isInClosed()) {
                         diff = 0;
 
-//                        if (current.getPosition().getX() != node.getPosition().getX()) {
-//                            diff += 1;
-//                        }
-//
-//                        if (current.getPosition().getY() != node.getPosition().getY()) {
-//                            diff += 1;
-//                        }
+                        if (current.getPosition().getX() != node.getPosition().getX()) {
+                            diff += 1;
+                        }
+
+                        if (current.getPosition().getY() != node.getPosition().getY()) {
+                            diff += 1;
+                        }
+
 
                         cost = current.getCost() + diff + node.getPosition().getDistanceSquared(end);
 
@@ -123,7 +126,7 @@ public abstract class Pathfinder {
     }
 
     public boolean isValidStep(RoomObject object, Position from, Position to, boolean lastStep, boolean isRetry) {
-        if(object instanceof RoomEntity)
+        if (object instanceof RoomEntity)
             return object.getRoom().getMapping().isValidEntityStep((RoomEntity) object, from, to, lastStep, isRetry);
         else
             return object.getRoom().getMapping().isValidStep(0, from, to, lastStep, object instanceof RoomItemFloor, isRetry);

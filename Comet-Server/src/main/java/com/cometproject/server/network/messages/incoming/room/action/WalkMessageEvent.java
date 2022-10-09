@@ -48,10 +48,10 @@ public class WalkMessageEvent implements Event {
                 entity.cancelWalk();
                 entity.unIdle();
 
-                if(currentTile != null) {
+                if (currentTile != null) {
                     entity.removeFromTile(currentTile);
 
-                    if(currentTile.getTopItemInstance() != null) {
+                    if (currentTile.getTopItemInstance() != null) {
                         currentTile.getTopItemInstance().onEntityStepOff(entity);
                     }
                 }
@@ -72,6 +72,7 @@ public class WalkMessageEvent implements Event {
             if (entity.canWalk() && (!entity.isOverriden() || entity.isOverriden() && entity.isOverrideA()) && entity.isVisible()) {
                 entity.moveTo(goalX, goalY);
             }
+
         } catch (Exception e) {
             //client.getLogger().error("Error while finding path", e);
             e.printStackTrace();

@@ -179,7 +179,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         PlayerEntity playerEntity = null;
 
-        if(this instanceof PlayerEntity) {
+        if (this instanceof PlayerEntity) {
             playerEntity = (PlayerEntity) this;
         }
 
@@ -209,25 +209,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             return;
         }
 
-//        if (playerEntity != null && !playerEntity.hasAttribute("interacttpencours")) {
-//            if (tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) {
-//                if (tile.getRedirect() == null) {
-//                    return;
-//                }
-//            }
-//        }
-
-        /*if (tile.getEntities().size() != 0 && (playerEntity != null && playerEntity.getGameTeam() != GameTeam.NONE && !playerEntity.hasAttribute("interacttpencours"))) {
-            // We're playing!
-            final List<RoomTile> tiles = tile.getAdjacentTiles(this.getPosition());
-
-            for (final RoomTile roomTiles : tiles) {
-                if (roomTiles.getMovementNode() != RoomEntityMovementNode.CLOSED) {
-                    this.moveTo(roomTiles.getPosition());
-                    return;
-                }<
-            }
-        }*/
 
         if (tile.getRedirect() != null) {
             x = tile.getRedirect().getX();
@@ -236,22 +217,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.previousSteps = 0;
 
-        // reassign the position values if they're set to redirect
-
-//        if (this.getPositionToSet() != null) {
-//            final RoomTile oldTile = this.getRoom().getMapping().getTile(this.getPosition());
-//            final RoomTile newTile = this.getRoom().getMapping().getTile(this.getPositionToSet());
-//
-//            if (oldTile != null) {
-//                oldTile.getEntities().remove(this);
-//            }
-//
-//            if (newTile != null) {
-//                newTile.getEntities().add(this);
-//            }
-//
-//            this.setPosition(this.getPositionToSet());
-//        }
 
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
@@ -270,28 +235,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 return;
             }
         }
-//
-//        if(this.isFastWalkEnabled()) {
-//            List<Square> newPath = new ArrayList<>();
-//
-//            boolean add = false;
-//            for(Square square : path) {
-//                if(add) {
-//                    newPath.add(square);
-//                    add = false;
-//                } else {
-//                    add = true;
-//                }
-//            }
-//
-//            path.clear();
-//            path = newPath;
-//        }
+
 
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
-        this.resetAfkTimer();
-        this.resetIdleTimeWiredWalk();
         this.setWalkingPath(path);
     }
 
@@ -516,7 +463,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 this.afkTime++;
             }
 
-            if(this.afkTime >= 5) {
+            if (this.afkTime >= 5) {
                 WiredTriggerCustomTotalIdle.executeTriggers((PlayerEntity) this);
             }
 
@@ -823,7 +770,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public void warp(Position position, boolean cancelNextUpdate) {
-        if(this instanceof PlayerEntity) {
+        if (this instanceof PlayerEntity) {
             ((PlayerEntity) this).setAttribute("tp", true);
         }
 

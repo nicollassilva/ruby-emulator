@@ -34,7 +34,7 @@ public class RCONServer extends Server {
         this.gsonBuilder.registerTypeAdapter(RCONMessage.class, new RCONMessage.RCONMessageSerializer());
 
         this.addRCONMessage("forwarduser", ForwardUser.class);
-        this.addRCONMessage("reloadCredits", ReloadCredits.class);
+        this.addRCONMessage("reloadcredits", ReloadCredits.class);
 
         Collections.addAll(this.allowedAdresses, "127.0.0.1");
     }
