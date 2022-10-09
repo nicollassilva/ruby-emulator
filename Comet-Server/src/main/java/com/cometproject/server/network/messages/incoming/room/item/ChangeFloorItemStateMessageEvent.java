@@ -61,29 +61,28 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             return;
         }
 
-        if(client.getPlayer().getEntity().hasRights() && client.getPlayer().getEntity().getBuildingType().equals(BuildingType.FILL)){
-            if(client.getPlayer().getEntity().hasAttribute("fill_command_item")){
-                final RoomItemFloor firstItem = (RoomItemFloor)client.getPlayer().getEntity().getAttribute("fill_command_item");
-                if(firstItem.getId() == item.getId()){
+        if (client.getPlayer().getEntity().hasRights() && client.getPlayer().getEntity().getBuildingType().equals(BuildingType.FILL)) {
+            if (client.getPlayer().getEntity().hasAttribute("fill_command_item")) {
+                final RoomItemFloor firstItem = (RoomItemFloor) client.getPlayer().getEntity().getAttribute("fill_command_item");
+                if (firstItem.getId() == item.getId()) {
                     client.getPlayer().getEntity().removeAttribute("fill_command_item");
-                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.undo", "Esse mobi deixou de ser selecionado para o preenchimento por área.")));
+                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("fill.command.area.undo", "Esse mobi deixou de ser selecionado para o preenchimento por área.")));
                     return;
                 }
 
-                if(firstItem.getDefinition().getId() != item.getDefinition().getId()){
+                if (firstItem.getDefinition().getId() != item.getDefinition().getId()) {
                     client.getPlayer().getEntity().removeAttribute("fill_command_item");
-                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.incompatible.selection", "Você só pode selecionar mobis se forem iguais!")));
+                    client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("fill.command.area.incompatible.selection", "Você só pode selecionar mobis se forem iguais!")));
                     return;
                 }
 
                 final Position to = item.getPosition().copy();
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().fillArea(client, firstItem.getPosition(), to, item.getRotation(), item.getDefinition().getId());
                 client.getPlayer().getEntity().removeAttribute("fill_command_item");
-                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.done","Área preenchida com sucesso!")));
-            }
-            else{
+                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("fill.command.area.done", "Área preenchida com sucesso!")));
+            } else {
                 client.getPlayer().getEntity().setAttribute("fill_command_item", item);
-                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(),Locale.getOrDefault("fill.command.area.first_item.selected", "Você selecionou o primeiro item, a âncora de seleção do preenchimento por área. Para preencher, clique 2x em outro mobi igual!")));
+                client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), Locale.getOrDefault("fill.command.area.first_item.selected", "Você selecionou o primeiro item, a âncora de seleção do preenchimento por área. Para preencher, clique 2x em outro mobi igual!")));
             }
 
             return;
@@ -110,11 +109,11 @@ public class ChangeFloorItemStateMessageEvent implements Event {
             int count = 0;
 
             for (final RoomItemFloor floorItem : floorItems.values()) {
-                if(floorItem == null) continue;
+                if (floorItem == null) continue;
 
-                if(floorItem.getItemData().getOwnerId() != client.getPlayer().getId()) continue;
+                if (floorItem.getItemData().getOwnerId() != client.getPlayer().getId()) continue;
 
-                if(floorItem.getDefinition().getId() != item.getDefinition().getId()) continue;
+                if (floorItem.getDefinition().getId() != item.getDefinition().getId()) continue;
 
                 floorItem.onPickup();
 
@@ -132,8 +131,11 @@ public class ChangeFloorItemStateMessageEvent implements Event {
 
         client.getPlayer().getQuests().progressQuest(QuestType.EXPLORE_FIND_ITEM, item.getDefinition().getSpriteId());
 
-        if (item.onInteract(client.getPlayer().getEntity(), msg.readInt(), false)) {
+        if (item.onInteract(client.getPlayer().getEntity(), msg.readInt(), true)) {
             WiredTriggerStateChanged.executeTriggers(client.getPlayer().getEntity(), item);
+        }
+
+        if (item.onInteract(client.getPlayer().getEntity(), msg.readInt(), false)) {
             WiredTriggerCustomStateChanged.executeTriggers(client.getPlayer().getEntity(), item);
 
             final List<Position> tilesToUpdate = new ArrayList<>();
