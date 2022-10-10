@@ -22,7 +22,7 @@ public class ProcessTimesCommand extends ChatCommand {
         }
 
         for (Long processTime : room.getProcess().getProcessTimes()) {
-            processTimesBuilder.append(processTime + "\n");
+            processTimesBuilder.append(processTime).append("\n");
         }
 
         client.send(new AlertMessageComposer("<b>Process Times</b><br><br>" + processTimesBuilder));

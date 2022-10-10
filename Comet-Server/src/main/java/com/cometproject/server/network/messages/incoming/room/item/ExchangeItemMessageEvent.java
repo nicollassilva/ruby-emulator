@@ -6,6 +6,7 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.messages.incoming.Event;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.protocol.messages.MessageEvent;
+import com.cometproject.server.storage.StorageManager;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 
 
@@ -15,23 +16,38 @@ public class ExchangeItemMessageEvent implements Event {
         final int virtualId = msg.readInt();
         final long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
 
-        if (client.getPlayer().getEntity() == null)
-            return;
+        StorageManager storage = StorageManager.getInstance();
 
+        if (storage.idIsBlocked(itemId)) {
+            return;
+        }
+
+        if (!storage.blockItemId(itemId)) {
+            return;
+        }
+
+        if (client.getPlayer().getEntity() == null) {
+            storage.unblockItemId(itemId);
+            return;
+        }
         final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null || (!room.getRights().hasRights(client.getPlayer().getId()) && !client.getPlayer().getPermissions().getRank().roomFullControl())) {
+            storage.unblockItemId(itemId);
+
             return;
         }
 
         final RoomItemFloor item = room.getItems().getFloorItem(itemId);
 
-        if (item == null || item.getIsLocked())
+        if (item == null || item.getIsLocked()) {
+            storage.unblockItemId(itemId);
             return;
-
-        if (item.getItemData().getOwnerId() != client.getPlayer().getId())
+        }
+        if (item.getItemData().getOwnerId() != client.getPlayer().getId()) {
+            storage.unblockItemId(itemId);
             return;
-
+        }
 
         item.setIsLocked(true);
 
@@ -39,8 +55,10 @@ public class ExchangeItemMessageEvent implements Event {
         boolean isDiamond = false;
         boolean isRuby = false;
 
-        if (!item.getDefinition().getItemName().startsWith("CF_") && !item.getDefinition().getItemName().startsWith("CFC_"))
+        if (!item.getDefinition().getItemName().startsWith("CF_") && !item.getDefinition().getItemName().startsWith("CFC_")) {
+            storage.unblockItemId(itemId);
             return;
+        }
 
         if (item.getDefinition().getItemName().contains("_diamond_")) {
             isDiamond = true;
@@ -70,5 +88,8 @@ public class ExchangeItemMessageEvent implements Event {
 
         client.getPlayer().sendBalance();
         client.getPlayer().getData().save();
+        storage.unblockItemId(itemId);
+
     }
+
 }

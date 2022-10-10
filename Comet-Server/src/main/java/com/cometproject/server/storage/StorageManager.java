@@ -2,17 +2,19 @@ package com.cometproject.server.storage;
 
 import com.cometproject.api.utilities.Initialisable;
 import com.cometproject.server.storage.queue.StorageQueue;
+import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.cometproject.storage.api.StorageContext;
 import com.cometproject.storage.mysql.MySQLStorageInitializer;
 import com.cometproject.storage.mysql.connections.HikariConnectionProvider;
 
 public class StorageManager implements Initialisable {
     private static StorageManager storageManagerInstance;
-
+    private ConcurrentHashSet<Long> blockedItemIds;
     private final HikariConnectionProvider hikariConnectionProvider;
     private StorageQueue queues;
 
     public StorageManager() {
+
         hikariConnectionProvider = new HikariConnectionProvider();
     }
 
@@ -21,6 +23,18 @@ public class StorageManager implements Initialisable {
             storageManagerInstance = new StorageManager();
 
         return storageManagerInstance;
+    }
+
+    public boolean idIsBlocked(long itemId){
+        return this.blockedItemIds.contains(itemId);
+    }
+
+    public boolean blockItemId(long itemId){
+        return this.blockedItemIds.add(itemId);
+    }
+
+    public void unblockItemId(long itemId){
+        this.blockedItemIds.remove(itemId);
     }
 
     @Override
@@ -33,6 +47,7 @@ public class StorageManager implements Initialisable {
         StorageContext.setCurrentContext(storageContext);
         SqlHelper.init(hikariConnectionProvider);
         this.queues = new StorageQueue();
+        this.blockedItemIds = new ConcurrentHashSet<>();
     }
 
     public void shutdown() {
@@ -41,5 +56,9 @@ public class StorageManager implements Initialisable {
 
     public StorageQueue getQueues() {
         return queues;
+    }
+
+    public ConcurrentHashSet<Long> getBlockedItemIds() {
+        return blockedItemIds;
     }
 }

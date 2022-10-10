@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Properties;
 
@@ -29,7 +31,7 @@ public class Configuration extends Properties {
         super();
 
         try {
-            Reader stream = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+            Reader stream = new InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8);
 
             this.load(stream);
             stream.close();

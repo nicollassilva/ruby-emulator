@@ -25,6 +25,7 @@ import com.cometproject.server.network.messages.outgoing.user.inventory.RemoveOb
 import com.cometproject.server.network.messages.outgoing.user.inventory.UpdateInventoryMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.SqlHelper;
+import com.cometproject.server.storage.StorageManager;
 import com.cometproject.server.storage.queries.rooms.RoomItemDao;
 import gnu.trove.set.hash.THashSet;
 import org.apache.logging.log4j.LogManager;
@@ -331,7 +332,15 @@ public class MarketPlace {
                 try (final ResultSet set = statement.executeQuery()) {
                     if(set.next()) {
                         try (final PreparedStatement itemStatement = sqlConnection.prepareStatement("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-                            itemStatement.setInt(1, set.getInt("item_id"));
+                            var itemId = set.getLong("item_id");
+
+                            if (StorageManager.getInstance().idIsBlocked(itemId))
+                                return;
+
+                            if (!StorageManager.getInstance().blockItemId(itemId))
+                                return;
+
+                            itemStatement.setLong(1, itemId);
 
                             try (ResultSet itemSet = itemStatement.executeQuery()) {
                                 itemSet.first();
@@ -340,16 +349,22 @@ public class MarketPlace {
                                     final int price = MarketPlace.calculateCommision(set.getInt("price"));
 
                                     if(set.getInt("user_id") == client.getPlayer().getId()) {
+                                        StorageManager.getInstance().unblockItemId(itemId);
+
                                         client.send(new NotificationMessageComposer("generic", Locale.getOrDefault("marketplace.buy.own.item", "Você não pode comprar seu próprio item")));
                                         return;
                                     }
 
                                     if (set.getInt("state") != 1) {
+                                        StorageManager.getInstance().unblockItemId(itemId);
+
                                         sendErrorMessage(client, itemSet.getInt("base_item"), offerId);
                                         return;
                                     }
 
                                     if(price > client.getPlayer().getData().getVipPoints()) {
+                                        StorageManager.getInstance().unblockItemId(itemId);
+
                                         client.send(new MarketplaceBuyErrorComposer(MarketplaceBuyErrorComposer.NOT_ENOUGH_CREDITS, 0, offerId, price));
                                         return;
                                     }
@@ -388,6 +403,8 @@ public class MarketPlace {
                                     MarketPlaceWebhook.send(item, client.getPlayer().getData(), sellerPlayer, event.price);
 
                                     unseenItem.clear();
+                                    StorageManager.getInstance().unblockItemId(itemId);
+
                                 }
                             }
                         }

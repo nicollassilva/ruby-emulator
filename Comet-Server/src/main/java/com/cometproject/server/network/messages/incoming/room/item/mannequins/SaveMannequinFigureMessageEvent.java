@@ -30,11 +30,11 @@ public class SaveMannequinFigureMessageEvent implements Event {
         }
 
         String[] figureParts = client.getPlayer().getData().getFigure().split("\\.");
-        String finalFigure = "";
+        StringBuilder finalFigure = new StringBuilder();
 
         for (String figurePart : figureParts) {
             if (!figurePart.contains("hr") && !figurePart.contains("hd") && !figurePart.contains("he") && !figurePart.contains("ha")) {
-                finalFigure += figurePart + ".";
+                finalFigure.append(figurePart).append(".");
             }
         }
 

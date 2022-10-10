@@ -55,7 +55,7 @@ public class RewardCommand extends ChatCommand {
                 if (!received) {
                     counter.incrementAndGet();
 
-                    builder.append("- " + rewardData.getCode() + "\n");
+                    builder.append("- ").append(rewardData.getCode()).append("\n");
                 }
             });
         }

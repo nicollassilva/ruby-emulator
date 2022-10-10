@@ -63,11 +63,11 @@ public class MannequinFloorItem extends RoomItemFloor {
 
         if (!this.gender.equals(playerEntity.getGender())) return false;
 
-        String newFigure = "";
+        StringBuilder newFigure = new StringBuilder();
 
         for (String playerFigurePart : playerEntity.getFigure().split("\\.")) {
             if (!playerFigurePart.startsWith("ch") && !playerFigurePart.startsWith("lg"))
-                newFigure += playerFigurePart + ".";
+                newFigure.append(playerFigurePart).append(".");
         }
 
         String newFigureParts = "";
