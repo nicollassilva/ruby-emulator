@@ -9,6 +9,10 @@ import com.cometproject.server.network.messages.outgoing.room.avatar.AvatarsMess
 import com.cometproject.server.network.messages.outgoing.room.avatar.LeaveRoomMessageComposer;
 import com.cometproject.server.network.sessions.Session;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class TransformCommand extends ChatCommand {
     public static void composeTransformation(IComposer msg, String[] transformationData, PlayerEntity entity) {
@@ -45,10 +49,19 @@ public class TransformCommand extends ChatCommand {
             return;
         }
 
-        if (params[0].equalsIgnoreCase("human")) {
+        String option = params[0];
+
+        if (option.equalsIgnoreCase("lista")) {
+            final List<String> names = new ArrayList<>(PetManager.getInstance().getTransformablePets().keySet());
+
+            sendAlert(Locale.getOrDefault("command.transform.list", "Lista de pets disponíveis:\n%pets").replace("%pets", String.join("\n", names)), client);
+            return;
+        }
+
+        if (option.equalsIgnoreCase("human")) {
             client.getPlayer().getEntity().removeAttribute("transformation");
         } else {
-            final String data = PetManager.getInstance().getTransformationData(params[0].toLowerCase());
+            final String data = PetManager.getInstance().getTransformationData(option.toLowerCase());
 
             if (data == null || data.isEmpty()) {
                 sendWhisper(Locale.getOrDefault("command.transform.notexists", "Ops! Esse nome de Pet não existe."), client);
