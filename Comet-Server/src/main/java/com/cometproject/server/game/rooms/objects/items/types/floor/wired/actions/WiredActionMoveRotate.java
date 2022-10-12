@@ -2,10 +2,12 @@ package com.cometproject.server.game.rooms.objects.items.types.floor.wired.actio
 
 import com.cometproject.api.game.rooms.objects.data.RoomItemData;
 import com.cometproject.api.game.utilities.Position;
+import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.DiceFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events.WiredItemEvent;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerCollision;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.SlideObjectBundleMessageComposer;
@@ -43,30 +45,43 @@ public class WiredActionMoveRotate extends WiredActionItem {
         final int rotation = this.getWiredData().getParams().get(PARAM_ROTATION);
 
         synchronized (this.getWiredData().getSelectedIds()) {
-            for (final long itemId : this.getWiredData().getSelectedIds()) {
-                final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            for (long itemId : this.getWiredData().getSelectedIds()) {
+                RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
 
                 if (floorItem == null || floorItem instanceof DiceFloorItem) continue;
 
-                final Position currentPosition = floorItem.getPosition().copy();
-                final Position newPosition = getRandomPosition(movement, currentPosition, this.getRoom());
+                Position currentPosition = new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY(), floorItem.getPosition().getZ());
+                Position newPosition = this.handleMovement(currentPosition.copy(), movement);
                 final int newRotation = this.handleRotation(floorItem.getRotation(), rotation);
                 final boolean rotationChanged = newRotation != floorItem.getRotation();
 
-                if (this.getRoom().getItems().moveFloorItemWired(floorItem, newPosition, newRotation, true, true)) {
-                    if (!rotationChanged) {
-                        this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition, newPosition, 0, 0, floorItem.getVirtualId()));
-                    } else {
-                        this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
+                for (int collisionDirection : Position.COLLIDE_TILES) {
+                    final Position collisionPosition = floorItem.getPosition().squareInFront(collisionDirection);
+                    final RoomTile collisionTile = this.getRoom().getMapping().getTile(collisionPosition);
+
+                    if (collisionTile != null) {
+                        final RoomEntity entity = collisionTile.getEntity();
+
+                        if (entity != null) {
+                            WiredTriggerCollision.executeTriggers(entity, floorItem);
+                        }
                     }
                 }
-
+                if (this.getRoom().getItems().moveFloorItem(floorItem.getId(), newPosition.copy(), newRotation)) {
+                    if (!rotationChanged) {
+                        this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
+                        this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition.copy(), newPosition.copy(), 0, 0, floorItem.getVirtualId()));
+                    } else {
+                        this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));
+                        this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(currentPosition.copy(), newPosition.copy(), 0, 0, floorItem.getVirtualId()));
+                    }
+                }
                 floorItem.save();
             }
         }
     }
 
-    private static Position handleMovement(Position point, int movementType) {
+    private Position handleMovement(Position point, int movementType) {
         final boolean dir = Math.random() < 0.5;
 
         switch (movementType) {
@@ -165,25 +180,4 @@ public class WiredActionMoveRotate extends WiredActionItem {
         return rotation;
     }
 
-    public static Position getRandomPosition(int movement, Position currentPosition, Room room) {
-        int limit = 5;
-        Position newPosition;
-
-        while (limit <= 12) {
-            newPosition = handleMovement(currentPosition.copy(), movement);
-
-            final RoomTile randomRoomTile = room.getMapping().getTile(newPosition);
-            if (randomRoomTile != null) {
-                if (randomRoomTile.canPlaceItemHere() && randomRoomTile.canStack()) {
-                    newPosition.setZ(randomRoomTile.getStackHeight());
-
-                    return newPosition;
-                }
-            }
-
-            limit++;
-        }
-
-        return currentPosition;
-    }
 }

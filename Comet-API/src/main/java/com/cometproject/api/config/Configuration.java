@@ -31,7 +31,7 @@ public class Configuration extends Properties {
         super();
 
         try {
-            Reader stream = new InputStreamReader(Files.newInputStream(Paths.get(file)), StandardCharsets.UTF_8);
+            Reader stream = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
 
             this.load(stream);
             stream.close();

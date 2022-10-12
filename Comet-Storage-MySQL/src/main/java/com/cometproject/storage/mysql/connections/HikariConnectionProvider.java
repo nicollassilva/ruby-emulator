@@ -16,9 +16,9 @@ public class HikariConnectionProvider extends MySQLConnectionProvider {
     private final Logger log = LogManager.getLogger(HikariConnectionProvider.class.getName());
 
     private HikariDataSource hikariDataSource;
-    private boolean isConnectionFailed = true;
 
     public HikariConnectionProvider() {
+        boolean isConnectionFailed = true;
         try {
             HikariConfig config = new HikariConfig();
 
@@ -43,7 +43,7 @@ public class HikariConnectionProvider extends MySQLConnectionProvider {
 
             log.info("Connecting to the MySQL server");
 
-            this.isConnectionFailed = false;
+            isConnectionFailed = false;
             this.hikariDataSource = new HikariDataSource(config);
         } catch (Exception e) {
             isConnectionFailed = true;

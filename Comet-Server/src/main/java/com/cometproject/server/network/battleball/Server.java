@@ -16,7 +16,7 @@ public class Server {
 
     public static void connect() {
         port(Integer.parseInt(Configuration.currentConfig().get("comet.network.customWebSocket.port")));
-
+        ipAddress("0.0.0.0");
         webSocket("/", GameServer.class);
         init();
     }
