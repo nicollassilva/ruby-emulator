@@ -332,7 +332,7 @@ public class MarketPlace {
                 try (final ResultSet set = statement.executeQuery()) {
                     if(set.next()) {
                         try (final PreparedStatement itemStatement = sqlConnection.prepareStatement("SELECT i.*, ltd.limited_id, ltd.limited_total FROM items i LEFT JOIN items_limited_edition ltd ON ltd.item_id = i.id WHERE i.id = ?", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-                            var itemId = set.getLong("item_id");
+                            long itemId = set.getLong("item_id");
 
                             if (StorageManager.getInstance().idIsBlocked(itemId))
                                 return;
