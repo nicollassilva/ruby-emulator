@@ -23,16 +23,17 @@ public class GameServer {
     private static final Logger log = LogManager.getLogger(PlayerManager.class.getName());
 
     @OnWebSocketConnect
-    public void onConnect(Session session) throws SQLException {
+    public void onConnect(Session user) throws SQLException {
     }
 
     @OnWebSocketClose
-    public void onClose(Session session, int statusCode, String reason) {
-        Server.userMap.remove(session);
+    public void onClose(Session user, int statusCode, String reason) {
+        Server.userMap.remove(user);
     }
 
+
     @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws SQLException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
+    public void onMessage(Session user, String message) throws SQLException, IllegalAccessException, InstantiationException, IOException, InvocationTargetException, NoSuchMethodException {
         final JSONObject data = new JSONObject(message);
 
         final IncomingEventManager incomingEventManager = new IncomingEventManager();
@@ -43,7 +44,7 @@ public class GameServer {
                 final IncomingEvent event = eventClass.getDeclaredConstructor().newInstance();
 
                 event.data = data;
-                event.session = session;
+                event.session = user;
 
                 event.handle();
             }
