@@ -7,6 +7,7 @@ import com.cometproject.server.network.battleball.outgoing.Outgoing;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessage;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessageManager;
 import com.cometproject.server.network.sessions.Session;
+import org.java_websocket.WebSocket;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -60,7 +61,7 @@ public class RoomVideoCommand extends ChatCommand {
         message.data.put("url", url.replace("watch?v=", "embed/") + "?autoplay=1&controls=1");
 
         for (final PlayerEntity entity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
-            final org.eclipse.jetty.websocket.api.Session wsSession = entity.getPlayer().getData().getWebsocketSession();
+            final WebSocket wsSession = entity.getPlayer().getData().getWebsocketSession();
 
             if(wsSession == null) continue;
 

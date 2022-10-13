@@ -16,6 +16,6 @@ public class BattleBallCounterMessage extends OutgoingMessage {
         packet.put("header", Outgoing.BattleBallCounterMessage);
         packet.put("data", this.data);
 
-        this.client.getRemote().sendString(packet.toString());
+        this.client.sendTextFrame(packet.toString());
     }
 }

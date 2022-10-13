@@ -16,6 +16,6 @@ public class CloseTraxMachineWindowMessage extends OutgoingMessage {
         packet.put("header", Outgoing.CloseTraxMachineWindowMessage);
         packet.put("data", this.data);
 
-        this.client.getRemote().sendString(packet.toString());
+        this.client.sendTextFrame(packet.toString());
     }
 }

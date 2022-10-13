@@ -18,6 +18,6 @@ public class OpenBuildToolMessage extends OutgoingMessage {
         packet.put("header", Outgoing.OpenBuildToolMessage);
         packet.put("data", data);
 
-        this.client.getRemote().sendString(packet.toString());
+        this.client.sendTextFrame(packet.toString());
     }
 }

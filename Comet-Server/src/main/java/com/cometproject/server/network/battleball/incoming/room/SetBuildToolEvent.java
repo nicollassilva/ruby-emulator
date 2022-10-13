@@ -1,11 +1,9 @@
 package com.cometproject.server.network.battleball.incoming.room;
 
-import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.api.networking.sessions.SessionManagerAccessor;
 import com.cometproject.server.game.players.PlayerManager;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
-import com.cometproject.server.network.NetworkManager;
-import com.cometproject.server.network.battleball.Server;
+import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.battleball.incoming.IncomingEvent;
 import com.cometproject.server.network.messages.outgoing.room.engine.HeightmapMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.RelativeHeightmapMessageComposer;
@@ -26,7 +24,7 @@ public class SetBuildToolEvent extends IncomingEvent {
     @Override
     public void handle() throws SQLException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException {
 
-        HashMap<String, String> player = Server.userMap.get(this.session);
+        HashMap<String, String> player = GameServer.userMap.get(this.session);
         Session client = (Session) SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(Integer.parseInt(player.get("id")));
 
 

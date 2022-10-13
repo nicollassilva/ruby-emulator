@@ -14,6 +14,6 @@ public class CloseYoutubeWindowMessage extends OutgoingMessage {
         packet.put("header", Outgoing.CloseYoutubeWindowMessage);
         packet.put("data", this.data);
 
-        this.client.getRemote().sendString(packet.toString());
+        this.client.sendTextFrame(packet.toString());
     }
 }

@@ -71,6 +71,7 @@ import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.storage.queries.pets.RoomPetDao;
 import com.cometproject.server.utilities.attributes.Attributable;
 import org.apache.logging.log4j.Logger;
+import org.java_websocket.enums.ReadyState;
 import org.json.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -381,7 +382,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             message = classMessage.getDeclaredConstructor().newInstance();
             message.client = this.getPlayer().getData().getWebsocketSession();
 
-            if(message.client == null || message.client.getRemote() == null || !message.client.isOpen()) return;
+            if(message.client == null || !message.client.isOpen()) return;
 
             message.data = new JSONObject();
             message.data.put("openSilently", true);

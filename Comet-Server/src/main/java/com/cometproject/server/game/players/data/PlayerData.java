@@ -9,7 +9,7 @@ import com.cometproject.server.game.utilities.validator.PlayerFigureValidator;
 import com.cometproject.server.storage.queries.player.PlayerDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.websocket.api.Session;
+import org.java_websocket.WebSocket;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,7 +65,7 @@ public class PlayerData implements IPlayerData {
     private int snowXp;
     private int kisses;
 
-    private Session websocket_session;
+    private WebSocket websocket_session;
     private boolean pass;
     private String machineID;
 
@@ -599,8 +599,8 @@ public class PlayerData implements IPlayerData {
         this.machineID = machineID;
     }*/
     
-    public Session getWebsocketSession() { return websocket_session; }
+    public WebSocket getWebsocketSession() { return websocket_session; }
 
-    public void setWebsocketSession(Session session) { this.websocket_session = session; }
+    public void setWebsocketSession(WebSocket session) { this.websocket_session = session; }
 
 }

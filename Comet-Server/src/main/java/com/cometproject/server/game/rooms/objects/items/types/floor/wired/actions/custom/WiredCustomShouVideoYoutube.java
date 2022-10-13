@@ -12,6 +12,7 @@ import com.cometproject.server.network.battleball.outgoing.OutgoingMessage;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessageManager;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.sessions.Session;
+import org.java_websocket.WebSocket;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class WiredCustomShouVideoYoutube extends WiredActionItem {
         message.data.put("url", url.replace("watch?v=", "embed/") + "?autoplay=1&controls=1");
 
         for (final PlayerEntity entity : client.getPlayer().getEntity().getRoom().getEntities().getPlayerEntities()) {
-            final org.eclipse.jetty.websocket.api.Session wsSession = entity.getPlayer().getData().getWebsocketSession();
+            final WebSocket wsSession = entity.getPlayer().getData().getWebsocketSession();
 
             if(wsSession == null) continue;
 

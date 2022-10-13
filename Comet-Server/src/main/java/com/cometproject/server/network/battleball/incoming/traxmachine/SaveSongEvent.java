@@ -3,7 +3,7 @@ package com.cometproject.server.network.battleball.incoming.traxmachine;
 import com.cometproject.api.networking.sessions.SessionManagerAccessor;
 import com.cometproject.server.game.items.music.TraxMachineSong;
 import com.cometproject.server.game.rooms.RoomManager;
-import com.cometproject.server.network.battleball.Server;
+import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.battleball.incoming.IncomingEvent;
 import com.cometproject.server.network.messages.outgoing.notification.NotificationMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class SaveSongEvent extends IncomingEvent {
     @Override
     public void handle() throws SQLException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException {
-        final HashMap<String, String> player = Server.userMap.get(this.session);
+        final HashMap<String, String> player = GameServer.userMap.get(this.session);
         final Session client = (Session) SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(Integer.parseInt(player.get("id")));
 
         if(client == null) return;

@@ -1,11 +1,9 @@
 package com.cometproject.server.network.battleball.incoming.handshake;
 
-import com.cometproject.api.utilities.JsonUtil;
-import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.players.PlayerManager;
 import com.cometproject.server.game.players.data.PlayerData;
 import com.cometproject.server.network.NetworkManager;
-import com.cometproject.server.network.battleball.Server;
+import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.battleball.incoming.IncomingEvent;
 import com.cometproject.server.network.battleball.outgoing.Outgoing;
 import com.cometproject.server.network.battleball.outgoing.OutgoingMessage;
@@ -13,7 +11,6 @@ import com.cometproject.server.network.battleball.outgoing.OutgoingMessageManage
 import com.cometproject.server.network.sessions.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.JsonSerializer;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -50,7 +47,7 @@ public class SSOLoginEvent extends IncomingEvent {
             player.put("username", userData.getUsername());
             player.put("auth_ticket", ssoTicket);
 
-            Server.userMap.put(this.session, player);
+            GameServer.userMap.put(this.session, player);
             output.put("authenticated", true);
         } else {
             output.put("authenticated", false);

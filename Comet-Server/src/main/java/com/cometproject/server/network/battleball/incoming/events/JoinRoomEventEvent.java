@@ -3,10 +3,9 @@ package com.cometproject.server.network.battleball.incoming.events;
 import com.cometproject.api.networking.sessions.ISession;
 import com.cometproject.api.networking.sessions.SessionManagerAccessor;
 import com.cometproject.server.game.players.PlayerManager;
-import com.cometproject.server.network.battleball.Server;
+import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.battleball.incoming.IncomingEvent;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
-import com.cometproject.server.network.sessions.Session;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -22,7 +21,7 @@ public class JoinRoomEventEvent extends IncomingEvent {
     @Override
     public void handle() throws SQLException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException {
 
-        HashMap<String, String> player = Server.userMap.get(this.session);
+        HashMap<String, String> player = GameServer.userMap.get(this.session);
         ISession client = SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(Integer.parseInt(player.get("id")));
 
 

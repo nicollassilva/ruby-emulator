@@ -1,11 +1,9 @@
 package com.cometproject.server.network.battleball.incoming.battleball;
 
-import com.cometproject.api.networking.sessions.ISession;
-import com.cometproject.api.networking.sessions.SessionManagerAccessor;
 import com.cometproject.server.game.gamecenter.games.battleball.player.BattleBallPlayerQueue;
 import com.cometproject.server.game.players.PlayerManager;
 import com.cometproject.server.network.NetworkManager;
-import com.cometproject.server.network.battleball.Server;
+import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.battleball.incoming.IncomingEvent;
 import com.cometproject.server.network.messages.outgoing.room.engine.HotelViewMessageComposer;
 import com.cometproject.server.network.sessions.Session;
@@ -24,7 +22,7 @@ public class BattleBallLeaveEvent extends IncomingEvent {
     @Override
     public void handle() throws SQLException, IllegalAccessException, InstantiationException, IOException, NoSuchMethodException, InvocationTargetException {
 
-        HashMap<String, String> player = Server.userMap.get(this.session);
+        HashMap<String, String> player = GameServer.userMap.get(this.session);
         //Session client = SessionManagerAccessor.getInstance().getSessionManager().fromPlayer(Integer.parseInt(player.get("id")));
         Session client = NetworkManager.getInstance().getSessions().fromPlayer(player.get("id"));
         if(BattleBallPlayerQueue.playerExit((Session) client)) {
