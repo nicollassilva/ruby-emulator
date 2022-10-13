@@ -49,8 +49,10 @@ public class Session implements ISession {
 
     private long lastPing = Comet.getTime();
 
-    public Session(ChannelHandlerContext channel) {
+    private String ipAddress = null;
+    public Session(ChannelHandlerContext channel, String ipAddress ) {
         this.channel = channel;
+        this.ipAddress = ipAddress;
         this.encryption = CometSettings.cryptoEnabled ? new HabboEncryption(CometSettings.crypto_e, CometSettings.crypto_n, CometSettings.crypto_d) : null;
     }
 
@@ -121,6 +123,10 @@ public class Session implements ISession {
 
     public String getIpAddress() {
         String ipAddress = "0.0.0.0";
+
+        if (this.ipAddress != null && !this.ipAddress.isEmpty()){
+            return this.ipAddress;
+        }
 
         if(this.getChannel().channel().hasAttr(HttpCustomHandler.WS_IP)) {
             return this.getChannel().channel().attr(HttpCustomHandler.WS_IP).get();

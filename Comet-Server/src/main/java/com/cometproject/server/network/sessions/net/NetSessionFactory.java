@@ -25,7 +25,7 @@ public class NetSessionFactory implements INetSessionFactory {
             System.out.println("NetSessionFactory :: vai criar a session...");
         }
 
-        if (!sessionManager.add(channel)) {
+        if (!sessionManager.add(channel, null)) {
             if (Comet.isDebugging) {
                 System.out.println("NetSessionFactory :: !add");
             }

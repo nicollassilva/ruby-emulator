@@ -22,11 +22,10 @@ public class WebSocketChannelHandler extends ChannelInboundHandlerAdapter {
 
 
 
-        if (msg instanceof HttpRequest) {
-            HttpRequest httpRequest = (HttpRequest) msg;
+        if (msg instanceof HttpRequest httpRequest) {
             HttpHeaders headers = httpRequest.headers();
-            System.out.println(headers.get("Connection"));
-            System.out.println(headers.get("Upgrade"));
+            //System.out.println(headers.get("Connection"));
+            //System.out.println(headers.get("Upgrade"));
 
 
             if ("Upgrade".equalsIgnoreCase(headers.get("Connection")) || "WebSocket".equalsIgnoreCase(headers.get("Upgrade"))) {
@@ -44,8 +43,8 @@ public class WebSocketChannelHandler extends ChannelInboundHandlerAdapter {
 
                 //todo: set ip to session!
 
-                if (!NetworkManager.getInstance().getSessions().add(ctx)) {
-                    System.out.println("falha ao setar");
+                if (!NetworkManager.getInstance().getSessions().add(ctx, ipAddress)) {
+                  //  System.out.println("falha ao setar");
 
                     ctx.disconnect();
                 } else {

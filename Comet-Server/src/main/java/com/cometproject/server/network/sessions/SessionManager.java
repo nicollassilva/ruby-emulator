@@ -36,8 +36,8 @@ public final class SessionManager implements ISessionManager, ISessionService {
         SessionManagerAccessor.getInstance().setSessionManager(this);
     }
 
-    public boolean add(ChannelHandlerContext channel) {
-        Session session = new Session(channel);
+    public boolean add(ChannelHandlerContext channel, String ipAddress) {
+        Session session = new Session(channel, ipAddress);
 
         session.initialise();
 
