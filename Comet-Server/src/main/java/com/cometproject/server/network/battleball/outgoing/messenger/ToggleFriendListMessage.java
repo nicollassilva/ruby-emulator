@@ -15,6 +15,6 @@ public class ToggleFriendListMessage extends OutgoingMessage {
         packet.put("header", Outgoing.ToggleFriendListMessage);
         packet.put("data", this.data);
 
-        this.client.sendTextFrame(packet.toString());
+        this.client.send(packet.toString());
     }
 }

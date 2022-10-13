@@ -19,6 +19,6 @@ public class SSOVerifiedMessage extends OutgoingMessage {
         packet.put("header", Outgoing.SSOVerifiedMessage);
         packet.put("data", data);
 
-        this.client.sendTextFrame(packet.toString());
+        this.client.send(packet.toString());
     }
 }

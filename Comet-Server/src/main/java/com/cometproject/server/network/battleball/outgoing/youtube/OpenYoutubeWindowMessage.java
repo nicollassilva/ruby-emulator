@@ -14,6 +14,6 @@ public class OpenYoutubeWindowMessage extends OutgoingMessage {
         packet.put("header", Outgoing.OpenYoutubeWindowMessage);
         packet.put("data", this.data);
 
-        this.client.sendTextFrame(packet.toString());
+        this.client.send(packet.toString());
     }
 }

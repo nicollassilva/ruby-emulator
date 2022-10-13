@@ -14,6 +14,6 @@ public class OpenEventAlertMessage extends OutgoingMessage {
         packet.put("header", Outgoing.OpenEventAlertMessage);
         packet.put("data", this.data);
 
-        this.client.sendTextFrame(packet.toString());
+        this.client.send(packet.toString());
     }
 }

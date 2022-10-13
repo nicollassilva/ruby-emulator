@@ -16,6 +16,6 @@ public class BattleBallEndMessage extends OutgoingMessage {
         packet.put("header", Outgoing.BattleBallEndMessage);
         packet.put("data", this.data);
 
-        this.client.sendTextFrame(packet.toString());
+        this.client.send(packet.toString());
     }
 }

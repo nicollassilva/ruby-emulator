@@ -550,7 +550,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             message.client = this.getPlayer().getData().getWebsocketSession();
             message.data = new JSONObject();
 
-            if(message.client == null || message.client.getRemote() == null || !message.client.isOpen()) return;
+            if(message.client == null ||  !message.client.isOpen()) return;
 
             message.compose();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException | NoSuchMethodException e) {
@@ -569,7 +569,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             message.client = this.getPlayer().getData().getWebsocketSession();
             message.data = new JSONObject();
 
-            if(message.client == null || message.client.getRemote() == null || !message.client.isOpen()) return;
+            if(message.client == null ||  !message.client.isOpen()) return;
 
             message.compose();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | IOException | NoSuchMethodException e) {
