@@ -96,32 +96,56 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         try {
-            final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
+            try {
 
-            playersToRemove = new ArrayList<>();
-            entitiesToUpdate = new ArrayList<>();
+                final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
-            for (final RoomEntity entity : entities.values()) {
-                if (entity.isFastWalkEnabled() || this.update) {
-                    this.startProcessing(entity);
+                playersToRemove = new ArrayList<>();
+                entitiesToUpdate = new ArrayList<>();
+
+
+                for (final RoomEntity entity : entities.values()) {
+                    if (entity == null)
+                        continue;
+
+                    if (entity.isFastWalkEnabled() || this.update) {
+                        this.startProcessing(entity);
+                    }
                 }
+            } catch (Exception ex) {
+                log.error("Error during room entity processing [1]", ex);
+
             }
-
-            // only send the updates if we need to
-            if (entitiesToUpdate.size() > 0) {
-                this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
-            }
-
-            for (final RoomEntity entity : entitiesToUpdate) {
-                if (entity.updatePhase == 1) continue;
-
-                if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
-                    playersToRemove.add((PlayerEntity) entity);
+            try {
+                // only send the updates if we need to
+                if (entitiesToUpdate.size() > 0) {
+                    this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
                 }
+            } catch (Exception ex) {
+                log.error("Error during room entity processing [2]", ex);
             }
 
-            for (final PlayerEntity entity : playersToRemove) {
-                entity.leaveRoom(entity.getPlayer() == null, false, true);
+            try {
+                for (final RoomEntity entity : entitiesToUpdate) {
+                    if (entity.updatePhase == 1) continue;
+
+                    if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
+                        playersToRemove.add((PlayerEntity) entity);
+                    }
+                }
+            } catch (Exception ex) {
+                log.error("Error during room entity processing [3]", ex);
+            }
+
+            try {
+                for (final PlayerEntity entity : playersToRemove) {
+                    if (entity == null)
+                        continue;
+
+                    entity.leaveRoom(entity.getPlayer() == null, false, true);
+                }
+            } catch (Exception ex) {
+                log.error("Error during room entity processing [4]", ex);
             }
 
             playersToRemove.clear();
@@ -130,7 +154,7 @@ public class AbstractRoomProcess implements CometTask {
             playersToRemove = null;
             entitiesToUpdate = null;
         } catch (Exception e) {
-            log.warn("Error during room entity processing", e);
+            log.error("Error during room entity processing", e);
         }
 
         final TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
@@ -159,7 +183,7 @@ public class AbstractRoomProcess implements CometTask {
 
         this.active = true;
 
-        if(Comet.isDebugging) {
+        if (Comet.isDebugging) {
             log.debug("Processing started");
         }
     }
@@ -175,7 +199,7 @@ public class AbstractRoomProcess implements CometTask {
             if (!this.adaptiveProcessTimes)
                 this.processFuture.cancel(false);
 
-            if(Comet.isDebugging) {
+            if (Comet.isDebugging) {
                 log.debug("Processing stopped");
             }
         }

@@ -135,6 +135,9 @@ public class BanzaiGame extends RoomGame {
     }
 
     public void increaseScore(GameTeam team, int amount) {
+        if (this.getGameComponent() == null)
+            return;
+
         this.getGameComponent().increaseScore(team, amount);
         this.updateScoreboard(team);
     }

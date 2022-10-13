@@ -129,7 +129,12 @@ public class NetworkManager {
 
         gameServer.start();
 
-        var wsServer = new GameServer(Integer.parseInt(Configuration.currentConfig().get("comet.network.customWebSocket.port")));
+        var port = Integer.parseInt(Configuration.currentConfig().get("comet.network.customWebSocket.port"));
+
+
+        System.out.println("Starting WS on port: " + port);
+
+        var wsServer = new GameServer(port);
         wsServer.start();
     }
 

@@ -81,6 +81,9 @@ public class Comet {
             }
         }
 
+        org.apache.log4j.Level logLevel = org.apache.log4j.Level.INFO;
+
+
         if (args.length < 1) {
             log.debug("No config args found, falling back to default configuration!");
             server = new CometServer(null);
@@ -103,6 +106,8 @@ public class Comet {
             for (final String arg : arguments) {
                 if (arg.equals("--debug-logging")) {
                     isDebugging = true;
+                    logLevel = org.apache.log4j.Level.TRACE;
+
                 }
 
                 if (arg.equals("--gui")) {
@@ -128,6 +133,8 @@ public class Comet {
 
             server = new CometServer(cometConfiguration);
         }
+
+        org.apache.log4j.Logger.getRootLogger().setLevel(logLevel);
 
         Configurator.setLevel(log.getName(), Level.INFO);
         server.init();

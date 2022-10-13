@@ -45,11 +45,8 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageEvent> {
 
         final INetSession session = this.sessionFactory.createSession(ctx);
 
-        System.out.println("ClientHandler :: " + session);
-
         ctx.attr(ATTR_SESSION).set(session);
         if (session == null) {
-            System.out.println("ClientHandler :: session null...");
 
             ctx.disconnect();
         }
@@ -62,7 +59,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageEvent> {
         }
 
         try {
-            System.out.println("ClientHandler :: session inativa...");
 
             INetSession session = ctx.attr(ATTR_SESSION).get();
 
@@ -112,7 +108,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<MessageEvent> {
         try {
             final INetSession session = channelHandlerContext.attr(ATTR_SESSION).get();
 
-            System.out.println("channelRead0");
             if (session != null) {
                 session.getMessageHandler().handleMessage(event, session);
             }

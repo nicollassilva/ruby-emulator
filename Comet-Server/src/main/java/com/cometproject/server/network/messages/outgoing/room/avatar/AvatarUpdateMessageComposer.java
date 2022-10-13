@@ -22,6 +22,9 @@ public class AvatarUpdateMessageComposer extends MessageComposer {
         this.entities = Lists.newArrayList();
 
         for (final RoomEntity entity : entities) {
+            if (entity == null)
+                continue;
+
             if (!entity.isVisible() || !entity.sendUpdateMessage()) {
                 entity.setSendUpdateMessage(true);
                 continue;
