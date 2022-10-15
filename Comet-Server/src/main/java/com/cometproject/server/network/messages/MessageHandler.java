@@ -136,6 +136,7 @@ import org.apache.logging.log4j.LogManager;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 public class MessageHandler {
     public static Logger log = LogManager.getLogger(MessageHandler.class.getName());
@@ -144,10 +145,10 @@ public class MessageHandler {
     //private final Map<Integer, IMessageEventHandler> eventHandlers = Maps.newConcurrentMap();
 
     private final ExecutorService eventExecutor;
-    //private final boolean asyncEventExecution;
+    private final boolean asyncEventExecution;
 
     public MessageHandler() {
-        /*this.asyncEventExecution = Boolean.parseBoolean((String) Configuration.currentConfig().getOrDefault("comet.network.alternativePacketHandling.enabled", "false"));
+        this.asyncEventExecution = Boolean.parseBoolean((String) Configuration.currentConfig().getOrDefault("comet.network.alternativePacketHandling.enabled", "false"));
 //        this.eventExecutor = asyncEventExecution ? Executors.newFixedThreadPool(Integer.parseInt((String) Configuration.currentConfig().getOrDefault("comet.network.alternativePacketHandling.threads", "8"))) : null;
 
         if (this.asyncEventExecution) {
@@ -165,9 +166,8 @@ public class MessageHandler {
             }
         } else {
             this.eventExecutor = null;
-        }*/
+        }
 
-        this.eventExecutor = Executors.newFixedThreadPool(Integer.parseInt(Configuration.currentConfig().get("comet.network.messageHandlerThreads")));
         this.load();
     }
 
@@ -640,8 +640,32 @@ public class MessageHandler {
             try {
                 final Event event = this.getMessages().get(header);
 
+
                 if (event != null) {
-                    this.eventExecutor.submit(new MessageEventTask(event, client, message));
+                    if (this.asyncEventExecution) {
+                        this.eventExecutor.submit(new MessageEventTask(event, client, message));
+                    } else {
+                        final long start = System.currentTimeMillis();
+                        if (Comet.isDebugging) {
+                            log.debug("Started packet process for packet: [" + event.getClass().getSimpleName() + "][" + header + "]");
+                        }
+
+                        event.handle(client, message);
+
+                        long timeTakenSinceCreation = ((System.currentTimeMillis() - start));
+
+                        // If the packet took more than 100ms to be handled, red flag!
+                        if (timeTakenSinceCreation >= 100 && Comet.isDebugging) {
+                            if (client.getPlayer() != null && client.getPlayer().getData() != null)
+                                log.trace("[" + event.getClass().getSimpleName() + "][" + message.getId() + "][" + client.getPlayer().getId() + "][" + client.getPlayer().getData().getUsername() + "] Packet took " + timeTakenSinceCreation + "ms to execute");
+                            else
+                                log.trace("[" + event.getClass().getSimpleName() + "][" + message.getId() + "] Packet took " + timeTakenSinceCreation + "ms to execute");
+                        }
+
+                        if (Comet.isDebugging) {
+                            log.debug("Finished packet process for packet: [" + event.getClass().getSimpleName() + "][" + header + "] in " + ((System.currentTimeMillis() - start)) + "ms");
+                        }
+                    }
                 }
             } catch (Exception e) {
                 if (client.getLogger() != null)
