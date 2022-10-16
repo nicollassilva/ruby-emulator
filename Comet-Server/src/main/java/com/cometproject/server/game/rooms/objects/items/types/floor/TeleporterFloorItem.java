@@ -248,15 +248,15 @@ public class TeleporterFloorItem extends AdvancedFloorItem<TeleporterFloorItem.T
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
         if (isWiredTrigger) return false;
 
-        Position posInFront = this.getPosition().squareInFront(this.getRotation());
+        final Position posInFront = this.getPosition().squareInFront(this.getRotation());
 
         if (entity.isOverriden()) return false;
 
         if (entity.getPosition().getX() != posInFront.getX() || entity.getPosition().getY() != posInFront.getY() &&
-                !(entity.getPosition().getX() == this.getPosition().getX() && entity.getPosition().getY() == this.getPosition().getY())) {
+                !(entity.getPosition().getX() == this.getPosition().getX() && entity.getPosition().getY() == this.getPosition().getY()) && entity.canWalk() && !entity.isFreeze()) {
             entity.moveTo(posInFront.getX(), posInFront.getY());
 
-            RoomTile tile = this.getRoom().getMapping().getTile(posInFront.getX(), posInFront.getY());
+            final RoomTile tile = this.getRoom().getMapping().getTile(posInFront.getX(), posInFront.getY());
 
             if (tile != null) {
                 tile.scheduleEvent(entity.getId(), (e) -> onInteract(e, requestData, false));

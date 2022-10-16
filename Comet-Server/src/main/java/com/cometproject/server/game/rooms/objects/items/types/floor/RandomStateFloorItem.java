@@ -27,10 +27,10 @@ public class RandomStateFloorItem extends DefaultFloorItem {
     @Override
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
         if (!isWiredTrigger) {
-            PlayerEntity playerEntity = ((PlayerEntity) entity);
+            final PlayerEntity playerEntity = ((PlayerEntity) entity);
 
             if (!this.getPosition().touching(entity.getPosition())) {
-                if(!playerEntity.isFreeze() || !playerEntity.hasAttribute("interacttpencours") || !playerEntity.hasAttribute("tptpencours")) {
+                if(!playerEntity.isFreeze() || !playerEntity.usingTeleportItem()) {
                     entity.moveTo(this.getPosition().squareInFront(this.getRotation()).getX(), this.getPosition().squareBehind(this.getRotation()).getY());
                     return false;
                 }

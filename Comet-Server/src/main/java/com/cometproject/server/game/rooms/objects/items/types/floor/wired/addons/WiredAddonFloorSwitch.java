@@ -21,7 +21,7 @@ public class WiredAddonFloorSwitch extends RoomItemFloor {
         }
 
         if (!this.getPosition().touching(entity.getPosition())) {
-            if(!playerEntity.isFreeze() || !playerEntity.hasAttribute("interacttpencours") || !playerEntity.hasAttribute("tptpencours")) {
+            if(!playerEntity.isFreeze() || !playerEntity.usingTeleportItem()) {
                 entity.moveTo(this.getPosition().squareBehind(this.getRotation()).getX(), this.getPosition().squareBehind(this.getRotation()).getY());
                 return false;
             }

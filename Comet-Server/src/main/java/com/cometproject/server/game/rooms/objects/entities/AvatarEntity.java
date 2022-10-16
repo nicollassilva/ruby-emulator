@@ -21,6 +21,8 @@ public interface AvatarEntity extends Attributable {
 
     Position getPositionToSet();
 
+    boolean usingTeleportItem();
+
     void updateAndSetPosition(Position position);
 
     void markPositionIsSet();

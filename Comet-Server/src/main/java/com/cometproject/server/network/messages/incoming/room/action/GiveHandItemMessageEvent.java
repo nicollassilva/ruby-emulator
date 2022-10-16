@@ -25,7 +25,7 @@ public class GiveHandItemMessageEvent implements Event {
             return;
 
         if(!providerEntity.getPosition().touching(receivingEntity.getPosition())) {
-            if(!providerEntity.getPlayer().getEntity().isFreeze() && !providerEntity.hasAttribute("interacttpencours") && !providerEntity.hasAttribute("tptpencours")) {
+            if(!providerEntity.getPlayer().getEntity().isFreeze() && !providerEntity.usingTeleportItem()) {
                 final Position sqInFront = receivingEntity.getPosition().squareInFront(receivingEntity.getBodyRotation());
 
                 providerEntity.moveTo(sqInFront.getX(), sqInFront.getY());

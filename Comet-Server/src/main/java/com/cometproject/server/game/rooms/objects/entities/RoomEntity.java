@@ -206,9 +206,12 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (tile == null) return;
 
         if ((tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) && tile.getRedirect() == null) {
-            return;
+            if(playerEntity != null && !playerEntity.usingTeleportItem())
+                return;
+        } else {
+            if(playerEntity != null && playerEntity.usingTeleportItem())
+                return;
         }
-
 
         if (tile.getRedirect() != null) {
             x = tile.getRedirect().getX();
@@ -216,7 +219,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         }
 
         this.previousSteps = 0;
-
 
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
@@ -235,7 +237,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 return;
             }
         }
-
 
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
@@ -1092,5 +1093,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     public boolean isNeedsForcedUpdate() {
         return needsForcedUpdate;
+    }
+
+    public boolean usingTeleportItem() {
+        return this.hasAttribute("interacttpencours") && this.hasAttribute("tptpencours");
     }
 }

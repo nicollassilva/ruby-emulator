@@ -28,7 +28,7 @@ public class VendingMachineFloorItem extends RoomItemFloor {
         final Position posInFront = this.getPosition().squareInFront(this.getRotation());
 
         if (!posInFront.equals(entity.getPosition())) {
-            if(!playerEntity.getPlayer().getEntity().isFreeze() && !playerEntity.hasAttribute("interacttpencours") && !playerEntity.hasAttribute("tptpencours")) {
+            if(!playerEntity.getPlayer().getEntity().isFreeze() && !playerEntity.usingTeleportItem()) {
                 entity.moveTo(posInFront.getX(), posInFront.getY());
             }
 
@@ -41,7 +41,7 @@ public class VendingMachineFloorItem extends RoomItemFloor {
         }
 
 
-        int rotation = Position.calculateRotation(entity.getPosition().getX(), entity.getPosition().getY(), this.getPosition().getX(), this.getPosition().getY(), false);
+        final int rotation = Position.calculateRotation(entity.getPosition().getX(), entity.getPosition().getY(), this.getPosition().getX(), this.getPosition().getY(), false);
 
         if (!entity.hasStatus(RoomEntityStatus.SIT) && !entity.hasStatus(RoomEntityStatus.LAY)) {
             entity.setBodyRotation(rotation);

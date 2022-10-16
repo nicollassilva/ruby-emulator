@@ -36,12 +36,9 @@ public class DefaultFloorItem extends RoomItemFloor {
                 pEntity.getPlayer().getQuests().progressQuest(QuestType.FURNI_SWITCH);
             }
 
-            if(pEntity != null)
+            if(pEntity.setuseok)
             {
-                if(pEntity.setuseok)
-                {
-                    this.getItemData().setData(pEntity.setuse - 1 + "");
-                }
+                this.getItemData().setData(pEntity.setuse - 1 + "");
             }
         }
 

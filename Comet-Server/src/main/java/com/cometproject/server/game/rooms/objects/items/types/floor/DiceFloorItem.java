@@ -24,7 +24,7 @@ public class DiceFloorItem extends RoomItemFloor {
 
         if (!isWiredTrigger) {
             if (!this.getPosition().touching(entity.getPosition())) {
-                if(!playerEntity.isFreeze() || !playerEntity.hasAttribute("interacttpencours") || !playerEntity.hasAttribute("tptpencours")) {
+                if(!playerEntity.isFreeze() || !playerEntity.usingTeleportItem()) {
                     entity.moveTo(this.getPosition().squareInFront(this.getRotation()).getX(), this.getPosition().squareBehind(this.getRotation()).getY());
                     return false;
                 }
