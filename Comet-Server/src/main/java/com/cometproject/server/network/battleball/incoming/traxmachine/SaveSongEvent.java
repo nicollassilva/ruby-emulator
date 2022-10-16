@@ -32,7 +32,6 @@ public class SaveSongEvent extends IncomingEvent {
 
         final Pattern songDataHasNonWordChar = Pattern.compile("[^\\w\"{}\\[\\],:]");
 
-        System.out.println(songDataHasNonWordChar.matcher(songData));
         if (songDataHasNonWordChar.matcher(songData).find()) {
             client.send(new NotificationMessageComposer("traxmachine", "Você foi detectado."));
             return;
