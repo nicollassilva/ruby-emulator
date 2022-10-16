@@ -76,10 +76,10 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
         msg.writeInt(-1);
         //msg.writeInt(!this.getDefinition().getInteraction().equals("default") ? 1 : 0);
         msg.writeInt((!(this instanceof DefaultFloorItem) || this.getDefinition().getInteractionCycleCount() >= 2) && !(this instanceof SoundMachineFloorItem) ? 1 : 0);
-        msg.writeInt(this.getItemData().getOwnerId());
+        msg.writeInt(this.getRoom().isPublicRoom() ? 0 : this.getItemData().getOwnerId());
 
         if (isNew)
-            msg.writeString(this.getItemData().getOwnerName());
+            msg.writeString(this.getRoom().isPublicRoom() ? "" : this.getItemData().getOwnerName());
     }
 
     @Override

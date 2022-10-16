@@ -110,6 +110,10 @@ public class NavigatorManager implements Initialisable {
         return this.publicRooms.get(roomId);
     }
 
+    public boolean isPublicRoom(int roomId) {
+        return this.publicRooms.containsKey(roomId);
+    }
+
     public Map<Integer, Category> getCategories() {
         return this.categories;
     }

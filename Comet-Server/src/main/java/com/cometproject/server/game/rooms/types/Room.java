@@ -80,12 +80,14 @@ public class Room implements Attributable, IRoom {
     private boolean playmusica = true;
     private boolean isReloading = false;
     private boolean forcedUnload = false;
+    private final boolean isPublicRoom;
     private int executedEvent = 0;
 
     public Room(IRoomData data) {
         this.data = data;
         this.log = LogManager.getLogger("Room \"" + this.getData().getName() + "\"");
         this.cachedData = null;
+        this.isPublicRoom = NavigatorManager.getInstance().isPublicRoom(this.getId());
     }
 
     public Room(RoomDataObject cachedRoomObject) {
@@ -537,5 +539,9 @@ public class Room implements Attributable, IRoom {
 
     public BuildingComponent getBuilderComponent() {
         return buildingComponent;
+    }
+
+    public boolean isPublicRoom() {
+        return isPublicRoom;
     }
 }

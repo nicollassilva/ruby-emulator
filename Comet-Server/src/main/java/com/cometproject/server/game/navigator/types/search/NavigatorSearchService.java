@@ -250,11 +250,10 @@ public class NavigatorSearchService implements CometTask {
                 break;
 
             case PUBLIC:
-
-                List<IRoomData> publicRooms = Lists.newArrayList();
+                final List<IRoomData> publicRooms = Lists.newArrayList();
 
                 for (PublicRoom publicRoom : NavigatorManager.getInstance().getPublicRooms(category.getCategoryId()).values()) {
-                    IRoomData roomData = GameContext.getCurrent().getRoomService().getRoomData(publicRoom.getRoomId());
+                    final IRoomData roomData = GameContext.getCurrent().getRoomService().getRoomData(publicRoom.getRoomId());
 
                     if (roomData != null) {
                         publicRooms.add(roomData);
