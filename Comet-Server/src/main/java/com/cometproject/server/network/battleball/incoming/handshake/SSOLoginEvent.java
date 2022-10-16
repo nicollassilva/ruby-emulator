@@ -53,8 +53,10 @@ public class SSOLoginEvent extends IncomingEvent {
             output.put("authenticated", false);
         }
 
-        final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.SSOVerifiedMessage);
-        final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+        final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.SSOVerifiedMessage);
+
+        if(message == null) return;
+
         message.client = this.session;
         message.data = output;
 

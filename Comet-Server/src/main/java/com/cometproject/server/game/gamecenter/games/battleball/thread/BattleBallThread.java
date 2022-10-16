@@ -53,10 +53,10 @@ public class BattleBallThread extends Thread {
                 //BattleBallRunTask.exec(room);
 
                 for(Session client : room.players.values()) {
+                    final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.BattleBallStartedMessage);
 
-                    Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallStartedMessage);
-                    OutgoingMessage message = null;
-                    message = classMessage.getDeclaredConstructor().newInstance();
+                    if(message == null) return;
+
                     message.client = client.getPlayer().getData().getWebsocketSession();
                     message.data = new JSONObject();
 
@@ -76,7 +76,6 @@ public class BattleBallThread extends Thread {
 
 
                 for(final Session client : room.players.values()) {
-                    System.out.println(client.getPlayer().getEntity().getAttribute("team"));
                     client.getPlayer().getEntity().setFreeze(false);
                 }
 
@@ -88,9 +87,10 @@ public class BattleBallThread extends Thread {
                 room.status = RoomStatus.STAGE_RUNNING;
 
                 for(final Session client : room.players.values()) {
-                    Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallCounterMessage);
-                    OutgoingMessage message = null;
-                    message = classMessage.getDeclaredConstructor().newInstance();
+                    final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.BattleBallCounterMessage);
+
+                    if(message == null) return;
+
                     message.client = client.getPlayer().getData().getWebsocketSession();
                     message.data = new JSONObject();
 

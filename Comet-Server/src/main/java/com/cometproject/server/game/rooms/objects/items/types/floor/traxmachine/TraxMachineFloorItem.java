@@ -42,8 +42,10 @@ public class TraxMachineFloorItem extends RoomItemFloor {
 
     private void sendTraxMachineWindow(RoomEntity entity) {
         try {
-            final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenTraxMachineWindowMessage);
-            final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+            final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.OpenTraxMachineWindowMessage);
+
+            if(message == null) return;
+
             final TraxMachineSong song = RoomManager.getInstance().getTraxMachineSongFromUserAndSongId(this.getRoom().getData().getOwnerId(), this.getRoom().getData().getSongId());
 
             message.client = ((PlayerEntity) entity).getPlayer().getData().getWebsocketSession();

@@ -26,7 +26,6 @@ public class BattleBallPlayerQueue {
     private static final Logger log = LogManager.getLogger(PlayerManager.class.getName());
 
     public static void addPlayerInQueue(Session client) {
-
         PlayerData playerData = client.getPlayer().getData();
 
         RoomQueue pickedRoom = null;
@@ -58,8 +57,9 @@ public class BattleBallPlayerQueue {
 
         for(final Session playerClient : pickedRoom.players.values()) {
             try {
-                final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);
-                final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+                final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.BattleBallJoinQueueMessage);
+
+                if(message == null) return;
 
                 message.client = client.getPlayer().getData().getWebsocketSession();
 
@@ -78,12 +78,13 @@ public class BattleBallPlayerQueue {
 
         for(final Session playerClient : pickedRoom.players.values()) {
             try {
-                Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.BattleBallJoinQueueMessage);
-                OutgoingMessage message = null;
-                message = classMessage.getDeclaredConstructor().newInstance();
-                message.client = playerClient.getPlayer().getData().getWebsocketSession();
-                message.data = new JSONObject();
+                final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.BattleBallJoinQueueMessage);
 
+                if(message == null) return;
+
+                message.client = playerClient.getPlayer().getData().getWebsocketSession();
+
+                message.data = new JSONObject();
                 message.data.put("username", client.getPlayer().getEntity().getUsername());
                 message.data.put("figure", client.getPlayer().getEntity().getFigure());
 

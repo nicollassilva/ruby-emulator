@@ -378,10 +378,8 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         if(song == null) return;
 
         try {
-            final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenTraxMachineWindowMessage);
-            OutgoingMessage message = null;
+            final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.OpenTraxMachineWindowMessage);
 
-            message = classMessage.getDeclaredConstructor().newInstance();
             message.client = this.getPlayer().getData().getWebsocketSession();
 
             if(message.client == null || !message.client.isOpen()) return;
@@ -545,10 +543,8 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         if(this.getPlayer() == null) return;
 
         try {
-            final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.CloseTraxMachineWindowMessage);
-            OutgoingMessage message = null;
+            final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.CloseTraxMachineWindowMessage);
 
-            message = classMessage.getDeclaredConstructor().newInstance();
             message.client = this.getPlayer().getData().getWebsocketSession();
             message.data = new JSONObject();
 
@@ -564,10 +560,10 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         if(this.getPlayer() == null) return;
 
         try {
-            final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.CloseYoutubeWindowMessage);
-            OutgoingMessage message = null;
+            final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.CloseYoutubeWindowMessage);
 
-            message = classMessage.getDeclaredConstructor().newInstance();
+            if(message == null) return;
+
             message.client = this.getPlayer().getData().getWebsocketSession();
             message.data = new JSONObject();
 

@@ -54,8 +54,9 @@ public class RoomVideoCommand extends ChatCommand {
 
 
     public void sendRoomVideoWindow(Session client, String url) throws NoSuchMethodException, IllegalAccessException, IOException, InstantiationException, InvocationTargetException {
-        final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenYoutubeWindowMessage);
-        final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+        final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.OpenYoutubeWindowMessage);
+
+        if(message == null) return;
 
         message.data = new JSONObject();
         message.data.put("url", url.replace("watch?v=", "embed/") + "?autoplay=1&controls=1");

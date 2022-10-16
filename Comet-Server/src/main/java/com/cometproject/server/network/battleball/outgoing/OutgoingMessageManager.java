@@ -12,6 +12,7 @@ import com.cometproject.server.network.battleball.outgoing.traxmachine.OpenTraxM
 import com.cometproject.server.network.battleball.outgoing.youtube.CloseYoutubeWindowMessage;
 import com.cometproject.server.network.battleball.outgoing.youtube.OpenYoutubeWindowMessage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 public class OutgoingMessageManager {
@@ -48,6 +49,13 @@ public class OutgoingMessageManager {
         this.messages.put(Outgoing.CloseYoutubeWindowMessage, CloseYoutubeWindowMessage.class);
         this.messages.put(Outgoing.OpenTraxMachineWindowMessage, OpenTraxMachineWindowMessage.class);
         this.messages.put(Outgoing.CloseTraxMachineWindowMessage, CloseTraxMachineWindowMessage.class);
+    }
+
+    public OutgoingMessage getMessageInstance(int outgoingId) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        if(!this.getMessages().containsKey(outgoingId))
+            return null;
+
+        return this.getMessages().get(outgoingId).getDeclaredConstructor().newInstance();
     }
 
 }

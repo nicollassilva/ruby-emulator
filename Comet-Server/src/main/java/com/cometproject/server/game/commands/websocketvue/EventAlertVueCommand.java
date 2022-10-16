@@ -31,8 +31,10 @@ public class EventAlertVueCommand extends ChatCommand {
         output.put("room_id", roomId);
 
         try {
-            final Class<? extends OutgoingMessage> classMessage = OutgoingMessageManager.getInstance().getMessages().get(Outgoing.OpenEventAlertMessage);
-            final OutgoingMessage message = classMessage.getDeclaredConstructor().newInstance();
+            final OutgoingMessage message = OutgoingMessageManager.getInstance().getMessageInstance(Outgoing.OpenEventAlertMessage);
+
+            if(message == null) return;
+
             final IMessageComposer messageComposer = new RoomForwardMessageComposer(roomId);
 
             for (final Map.Entry<Integer, ISession> map : SessionManagerAccessor.getInstance().getSessionManager().getSessions().entrySet()) {
