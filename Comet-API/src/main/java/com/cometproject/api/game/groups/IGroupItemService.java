@@ -18,4 +18,12 @@ public interface IGroupItemService {
     Map<Integer, IGroupBadgeItem> getBackgroundColours();
 
     void load();
+
+    IGroupBadgeItem getSymbolColourByIndex(int index);
+
+    IGroupBadgeItem getBackgroundColourByIndex(int index);
+
+    boolean isValidSymbolColour(int index);
+
+    boolean isValidBackgroundColour(int index);
 }

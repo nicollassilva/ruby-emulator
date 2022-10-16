@@ -12,8 +12,8 @@ import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.lovelock.LoveLockWidgetMessageComposer;
 
 public class LoveLockFloorItem extends RoomItemFloor {
-    private int leftEntity = 0;
-    private int rightEntity = 0;
+    private PlayerEntity leftEntity;
+    private PlayerEntity rightEntity;
 
     public LoveLockFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
@@ -70,8 +70,8 @@ public class LoveLockFloorItem extends RoomItemFloor {
             return false;
 
 
-        RoomEntity leftEntity = leftTile.getEntity();
-        RoomEntity rightEntity = rightTile.getEntity();
+        final RoomEntity leftEntity = leftTile.getEntity();
+        final RoomEntity rightEntity = rightTile.getEntity();
 
         if (leftEntity.getEntityType() != RoomEntityType.PLAYER || rightEntity.getEntityType() != RoomEntityType.PLAYER)
             return false;
@@ -80,8 +80,8 @@ public class LoveLockFloorItem extends RoomItemFloor {
             ((PlayerEntity) leftEntity).getPlayer().getSession().send(new LoveLockWidgetMessageComposer(this.getVirtualId()));
             ((PlayerEntity) rightEntity).getPlayer().getSession().send(new LoveLockWidgetMessageComposer(this.getVirtualId()));
 
-            this.leftEntity = ((PlayerEntity) leftEntity).getPlayerId();
-            this.rightEntity = ((PlayerEntity) rightEntity).getPlayerId();
+            this.leftEntity = ((PlayerEntity) leftEntity);
+            this.rightEntity = ((PlayerEntity) rightEntity);
         } catch (Exception e) {
             return false;
         }
@@ -89,11 +89,11 @@ public class LoveLockFloorItem extends RoomItemFloor {
         return true;
     }
 
-    public int getLeftEntity() {
+    public PlayerEntity getLeftEntity() {
         return leftEntity;
     }
 
-    public int getRightEntity() {
+    public PlayerEntity getRightEntity() {
         return rightEntity;
     }
 }

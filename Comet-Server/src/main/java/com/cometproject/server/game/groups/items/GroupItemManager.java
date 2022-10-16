@@ -40,7 +40,7 @@ public class GroupItemManager implements IGroupItemService {
             backgroundColours.clear();
         }
 
-        int itemCount = GroupItemDao.loadGroupItems(bases, symbols, baseColours, symbolColours, backgroundColours);
+        final int itemCount = GroupItemDao.loadGroupItems(bases, symbols, baseColours, symbolColours, backgroundColours);
 
         log.info("Loaded " + itemCount + " group items");
     }
@@ -63,5 +63,29 @@ public class GroupItemManager implements IGroupItemService {
 
     public Map<Integer, IGroupBadgeItem> getBackgroundColours() {
         return this.backgroundColours;
+    }
+
+    public IGroupBadgeItem getSymbolColourByIndex(int index) {
+        if(this.getSymbolColours().containsKey(index)) {
+            return this.getSymbolColours().get(index);
+        }
+
+        return null;
+    }
+
+    public boolean isValidSymbolColour(int index) {
+        return this.getSymbolColourByIndex(index) != null;
+    }
+
+    public IGroupBadgeItem getBackgroundColourByIndex(int index) {
+        if(this.getBackgroundColours().containsKey(index)) {
+            return this.getBackgroundColours().get(index);
+        }
+
+        return null;
+    }
+
+    public boolean isValidBackgroundColour(int index) {
+        return this.getBackgroundColourByIndex(index) != null;
     }
 }

@@ -18,27 +18,22 @@ import java.util.Calendar;
 public class ConfirmLoveLockMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        Room room = client.getPlayer().getEntity().getRoom();
+        final Room room = client.getPlayer().getEntity().getRoom();
 
         if (room == null) {
             return;
         }
 
-        int virtualId = msg.readInt();
-        long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
+        final int virtualId = msg.readInt();
+        final long itemId = ItemManager.getInstance().getItemIdByVirtualId(virtualId);
         final boolean confirmed = msg.readBoolean();
 
-        RoomItemFloor floorItem = room.getItems().getFloorItem(itemId);
+        final RoomItemFloor floorItem = room.getItems().getFloorItem(itemId);
 
         if (!(floorItem instanceof LoveLockFloorItem)) return;
 
-        final int leftEntity = ((LoveLockFloorItem) floorItem).getLeftEntity();
-        final int rightEntity = ((LoveLockFloorItem) floorItem).getRightEntity();
-
-        if (leftEntity == 0 || rightEntity == 0) return;
-
-        PlayerEntity leftPlayer = room.getEntities().getEntityByPlayerId(leftEntity);
-        PlayerEntity rightPlayer = room.getEntities().getEntityByPlayerId(rightEntity);
+        final PlayerEntity leftPlayer = ((LoveLockFloorItem) floorItem).getLeftEntity();
+        final PlayerEntity rightPlayer = ((LoveLockFloorItem) floorItem).getRightEntity();
 
         if (leftPlayer == null || rightPlayer == null) return;
 
@@ -47,7 +42,7 @@ public class ConfirmLoveLockMessageEvent implements Event {
         if (confirmed) {
             boolean bothConfirmed = false;
 
-            if (leftEntity == client.getPlayer().getId()) {
+            if (leftPlayer.getPlayerId() == client.getPlayer().getId()) {
                 leftPlayer.setAttribute("lovelockConfirm", true);
 
                 if (rightPlayer.hasAttribute("lovelockConfirm")) {
@@ -65,7 +60,7 @@ public class ConfirmLoveLockMessageEvent implements Event {
                 leftPlayer.removeAttribute("lovelockConfirm");
                 rightPlayer.removeAttribute("lovelockConfirm");
 
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 final String date = dateFormat.format(Calendar.getInstance().getTime());
 
                 final String itemData = "1" + (char) 5 + leftPlayer.getUsername() + (char) 5 + rightPlayer.getUsername() + (char) 5 + leftPlayer.getFigure() + (char) 5 + rightPlayer.getFigure() + (char) 5 + date;

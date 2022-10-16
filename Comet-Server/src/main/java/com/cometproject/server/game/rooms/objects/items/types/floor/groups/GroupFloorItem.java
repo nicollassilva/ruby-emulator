@@ -1,6 +1,7 @@
 package com.cometproject.server.game.rooms.objects.items.types.floor.groups;
 
 import com.cometproject.api.game.GameContext;
+import com.cometproject.api.game.groups.IGroupItemService;
 import com.cometproject.api.game.groups.types.IGroupData;
 import com.cometproject.api.game.quests.QuestType;
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
@@ -85,11 +86,14 @@ public class GroupFloorItem extends RoomItemFloor {
             msg.writeString(this.groupId);
             msg.writeString(groupData.getBadge());
 
-            String colourA = GameContext.getCurrent().getGroupService().getItemService().getSymbolColours().get(groupData.getColourA()) != null ? GameContext.getCurrent().getGroupService().getItemService().getSymbolColours().get(groupData.getColourA()).getFirstValue() : "ffffff";
-            String colourB = GameContext.getCurrent().getGroupService().getItemService().getBackgroundColours().get(groupData.getColourB()) != null ? GameContext.getCurrent().getGroupService().getItemService().getBackgroundColours().get(groupData.getColourB()).getFirstValue() : "ffffff";
+            final IGroupItemService groupItemService = GameContext.getCurrent().getGroupService().getItemService();
 
-            msg.writeString(colourA);
-            msg.writeString(colourB);
+            msg.writeString(groupItemService.isValidSymbolColour(groupData.getColourA())
+                    ? groupItemService.getSymbolColourByIndex(groupData.getColourA()).getFirstValue()
+                    : "ffffff");
+            msg.writeString(groupItemService.isValidBackgroundColour(groupData.getColourB())
+                    ? groupItemService.getBackgroundColourByIndex(groupData.getColourB()).getFirstValue()
+                    : "ffffff");
         }
     }
 

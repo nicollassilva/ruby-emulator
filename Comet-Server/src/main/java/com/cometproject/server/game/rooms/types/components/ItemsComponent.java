@@ -848,6 +848,7 @@ public class ItemsComponent {
 
     public boolean moveFloorItem(long itemId, Position newPosition, int newRotation, Session client) {
         final RoomItemFloor item = this.getFloorItem(itemId);
+
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
@@ -862,6 +863,7 @@ public class ItemsComponent {
         }
 
         int newState = 0;
+
         if (client.getPlayer().getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) client.getPlayer().getEntity().getAttribute("state.height");
 

@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class BuildingComponent {
     private static final Logger log = LogManager.getLogger(BuildingComponent.class.getName());
@@ -35,6 +34,10 @@ public class BuildingComponent {
     private volatile boolean isBuilding = false;
     private volatile int builderId = -1;
     private String builderName = "";
+
+    public BuildingComponent(Room room) {
+        this.room = room;
+    }
 
     public void dispose() {
         try {
@@ -52,28 +55,29 @@ public class BuildingComponent {
         }
     }
 
-    public BuildingComponent(Room room) {
-        this.room = room;
-    }
-
     public void moveFloorItem(Session client, RoomItemFloor item, Position newPosition, int newRotation) {
-        if (client == null || item == null)
-            return;
+        if (client == null || item == null) return;
 
         if (item instanceof MagicMoveFloorItem) {
             room.getItems().moveItemsOnSquare((MagicMoveFloorItem) item, newPosition);
-        } else {
-            final boolean successfulMove = room.getItems().moveFloorItem(item.getId(), newPosition, newRotation, client);
-            if (successfulMove) {
-                room.getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(item));
-                if (item.getTile().getItems().size() > 1) {
-                    client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
-                }
-            } else {
-                final Map<String, String> notificationParams = Maps.newHashMap();
-                notificationParams.put("message", "${room.error.cant_set_item}");
-                client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
-            }
+            return;
+        }
+
+        final boolean successfulMove = room.getItems().moveFloorItem(item.getId(), newPosition, newRotation, client);
+
+        room.getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(item));
+
+        if (!successfulMove) {
+            final Map<String, String> notificationParams = Maps.newHashMap();
+
+            notificationParams.put("message", "${room.error.cant_set_item}");
+
+            client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
+            return;
+        }
+
+        if (item.getTile().getItems().size() > 1) {
+            client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
         }
     }
 
@@ -98,17 +102,21 @@ public class BuildingComponent {
         }
 
         final Long itemId = ItemManager.getInstance().getItemIdByVirtualId(id);
+
         if (itemId == null) {
             return;
         }
 
         final PlayerItem item = client.getPlayer().getInventory().getItem(itemId);
+
         if (item == null) {
             return;
         }
 
         client.getPlayer().getEntity().getRoom().getItems().placeWallItem(item, position, client.getPlayer());
+
         final RoomItemWall roomItemWall = client.getPlayer().getEntity().getRoom().getItems().getWallItem(item.getId());
+
         if (roomItemWall != null) {
             client.getPlayer().getQuests().progressQuest(QuestType.FURNI_PLACE);
         }
@@ -137,22 +145,24 @@ public class BuildingComponent {
         }
 
         client.getPlayer().getEntity().getRoom().getItems().placeFloorItem(item, x, y, rot, client.getPlayer());
+
         if (client.getPlayer().getEntity().getRoom().getItems() == null) {
             return false;
         }
 
         final RoomItemFloor floorItem = client.getPlayer().getEntity().getRoom().getItems().getFloorItem(item.getId());
-        if (floorItem != null) {
-            final RoomTile tile = floorItem.getTile();
-            if (tile != null) {
-                if (tile.getItems().size() > 1) {
-                    client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
-                }
-            }
-            return true;
+
+        if (floorItem == null) {
+            return false;
         }
 
-        return false;
+        final RoomTile tile = floorItem.getTile();
+
+        if (tile != null && tile.getItems().size() > 1) {
+            client.getPlayer().getQuests().progressQuest(QuestType.FURNI_STACK);
+        }
+
+        return true;
     }
 
     public synchronized boolean isBuilding() {
@@ -174,9 +184,7 @@ public class BuildingComponent {
     public void setBuilder(@Nullable PlayerEntity player) {
         this.builderId = player != null ? player.getPlayerId() : -1;
         this.builderName = player != null ? player.getUsername() : this.builderName;
-        MessageComposer notification = new NotificationMessageComposer("generic",
-                "O comando fill foi " + (player != null ? "ativado" : "desativado") + " para o usuário " + this.builderName + "."
-        );
+        MessageComposer notification = new NotificationMessageComposer("generic", "O comando fill foi " + (player != null ? "ativado" : "desativado") + " para o usuário " + this.builderName + ".");
         this.room.getEntities().broadcastMessage(notification, true);
     }
 
@@ -188,13 +196,15 @@ public class BuildingComponent {
 
         this.buildingExecutor.submit(() -> {
             this.isBuilding = true;
+
             try {
                 final List<Position> fillArea = Position.makeSquareInclusive(from, to);
-                for (final Position position : fillArea.stream().limit(CometSettings.FILL_AREA_MAX_SIZE).collect(Collectors.toList())) {
+
+                for (final Position position : fillArea.stream().limit(CometSettings.FILL_AREA_MAX_SIZE).toList()) {
                     try {
-                        PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(baseItemId);
-                        if (nextItem == null)
-                            break;
+                        final PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(baseItemId);
+
+                        if (nextItem == null) break;
 
                         Thread.sleep(CometSettings.FILL_ITEM_PLACE_DELAY);
                         __internalPlaceFloorItem(client, nextItem, position.getX(), position.getY(), rot);
@@ -226,10 +236,9 @@ public class BuildingComponent {
                             break;
                         }
 
-                        PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
-                        if (nextItem == null)
-                            break;
+                        final PlayerItem nextItem = client.getPlayer().getInventory().getFirstItemByBaseItemId(item.getBaseId());
 
+                        if (nextItem == null) break;
 
                         Thread.sleep(CometSettings.FILL_ITEM_PLACE_DELAY);
                         __internalPlaceFloorItem(client, nextItem, x, y, rot);

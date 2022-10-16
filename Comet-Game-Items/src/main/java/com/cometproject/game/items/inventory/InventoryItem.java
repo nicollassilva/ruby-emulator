@@ -7,7 +7,7 @@ import com.cometproject.api.game.players.data.components.inventory.InventoryItem
 import com.cometproject.api.game.players.data.components.inventory.PlayerItem;
 import com.cometproject.api.game.players.data.components.inventory.PlayerItemSnapshot;
 import com.cometproject.api.networking.messages.IComposer;
-import com.google.gson.JsonObject;
+import com.cometproject.game.items.inventory.items.GiftInventoryItem;
 
 public class InventoryItem implements PlayerItem {
 
@@ -82,7 +82,7 @@ public class InventoryItem implements PlayerItem {
     }
 
     protected int getExtraInt() {
-        return 0;
+        return this instanceof GiftInventoryItem ? this.getExtraInt() : 0;
     }
 
     protected int getSpriteId() {

@@ -44,7 +44,7 @@ public class GiftInventoryItem extends InventoryItem {
             return 0;
         }
 
-        return this.giftData.getWrappingPaper() * 1000 + this.giftData.getDecorationType();
+        return (this.giftData.getWrappingPaper() * 1000) + this.giftData.getDecorationType();
     }
 
 }

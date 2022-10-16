@@ -76,8 +76,8 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
         }
 
         synchronized (this) {
-            this.handleItems();
             this.handleEntities();
+            this.handleItems();
         }
 
         this.movedEntities.clear();
