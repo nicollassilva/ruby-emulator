@@ -7,15 +7,12 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.RollableFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.state.FloorItemEvent;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
 import com.cometproject.server.utilities.RandomUtil;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import java.util.List;
 
 public class BanzaiTeleporterFloorItem extends RoomItemFloor {
     private int stage = 0;
@@ -28,11 +25,6 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
         super(itemData, room);
         this.getItemData().setData(0);
     }
-
-//    @Override
-//    public void onEventComplete(BanzaiTeleportEvent event) {
-//
-//    }
 
     @Override
     public void onItemAddedToStack(RoomItemFloor floorItem) {
@@ -50,13 +42,12 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
             return;
         }
 
-        final Position teleportPosition = this.findPosition();
+        final Position teleportToPosition = this.findAleatoryPosition();
 
-        if (teleportPosition == null) {
+        if (teleportToPosition == null)
             return;
-        }
 
-        this.teleportPosition = teleportPosition;
+        this.teleportPosition = teleportToPosition;
 
         this.floorItem = floorItem;
         this.floorItem.setAttribute("warp", true);
@@ -77,13 +68,12 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
         }
 
 
-        final Position teleportPosition = this.findPosition();
+        final Position teleportToPosition = this.findAleatoryPosition();
 
-        if (teleportPosition == null) {
+        if (teleportToPosition == null)
             return;
-        }
 
-        this.teleportPosition = teleportPosition;
+        this.teleportPosition = teleportToPosition;
 
         this.entity = entity;
         this.entity.setAttribute("warp", true);
@@ -97,23 +87,18 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
         this.setTicks(LowPriorityItemProcessor.getProcessTime(0.25));
     }
 
-    private Position findPosition() {
-        Set<BanzaiTeleporterFloorItem> teleporters = new HashSet<>();
+    private Position findAleatoryPosition() {
+        final List<RoomItemFloor> teleports = this.getRoom().getItems().getBanzaiTeleportsExcept(this.getId());
 
-        for (RoomItemFloor tele : this.getRoom().getItems().getFloorItems().values()) {
-            if (tele instanceof BanzaiTeleporterFloorItem) {
-                if (tele.getId() != this.getId())
-                    teleporters.add((BanzaiTeleporterFloorItem) tele);
-            }
-        }
+        if (teleports.isEmpty()) return null;
 
-        if (teleporters.size() < 1)
-            return null;
+        final BanzaiTeleporterFloorItem randomTeleport = (BanzaiTeleporterFloorItem) teleports.get(RandomUtil.getRandomInt(0, teleports.size() - 1));
 
-        BanzaiTeleporterFloorItem randomTeleporter = (BanzaiTeleporterFloorItem) teleporters.toArray()[RandomUtil.getRandomInt(0, teleporters.size() - 1)];
-        teleporters.clear();
+        teleports.clear();
 
-        return new Position(randomTeleporter.getPosition().getX(), randomTeleporter.getPosition().getY(), randomTeleporter.getTile().getWalkHeight());
+        if(randomTeleport == null) return null;
+
+        return new Position(randomTeleport.getPosition().getX(), randomTeleport.getPosition().getY(), randomTeleport.getTile().getWalkHeight());
     }
 
     @Override
@@ -136,9 +121,9 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
 
                 this.entity.warpBanzai(this.teleportPosition.copy(), false);
 
-                RoomEntity entity= this.entity;
+                RoomEntity entity = this.entity;
                 this.entity = null;
-                if(! (tile.getTopItemInstance() instanceof BanzaiTeleporterFloorItem)) {
+                if (!(tile.getTopItemInstance() instanceof BanzaiTeleporterFloorItem)) {
                     this.onEntityStepOn(entity); // in the rare case that our top item is not the banzai teleport, avoid freeze walking
                 }
             }
@@ -159,19 +144,5 @@ public class BanzaiTeleporterFloorItem extends RoomItemFloor {
 
         this.getItemData().setData("0");
         this.sendUpdate();
-    }
-
-    public class BanzaiTeleportEvent extends FloorItemEvent {
-
-        protected static final int OUTGOING = 2;
-        protected static final int INCOMING = 1;
-
-        private final int event;
-
-        protected BanzaiTeleportEvent(int event) {
-            super(1);
-
-            this.event = event;
-        }
     }
 }

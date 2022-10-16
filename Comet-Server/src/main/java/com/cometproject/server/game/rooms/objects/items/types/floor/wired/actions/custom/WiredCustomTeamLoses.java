@@ -8,9 +8,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.events
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameTeam;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class WiredCustomTeamLoses extends WiredActionItem {
     private static final int PARAM_TEAM_ID = 0;
 
@@ -34,12 +31,14 @@ public class WiredCustomTeamLoses extends WiredActionItem {
 
     @Override
     public void onEventComplete(WiredItemEvent event) {
-        this.getRoom().getGame().decreaseScore(getTeam(), 100000);
-        for(PlayerEntity player : this.getRoom().getGame().getPlayers()) {
-            if(player.getGameTeam() == getTeam()) {
-                this.getRoom().getGame().removeFromTeam(getTeam(), player);
-                player.applyEffect(new PlayerEffect(0, false));
-            }
+        this.getRoom().getGame().decreaseScore(getTeam(), this.getRoom().getGame().getScore(getTeam()));
+
+        for (final PlayerEntity player : this.getRoom().getGame().getPlayers()) {
+            if (player.getGameTeam() != getTeam())
+                continue;
+
+            this.getRoom().getGame().removeFromTeam(getTeam(), player);
+            player.applyEffect(new PlayerEffect(0, false));
         }
     }
 

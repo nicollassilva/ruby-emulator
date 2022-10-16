@@ -22,14 +22,6 @@ public class WiredConditionCustomIsIdle extends WiredConditionItem {
     public boolean evaluate(RoomEntity entity, Object data) {
         if (entity == null) return false;
 
-        boolean isIdle = false;
-
-        PlayerEntity playerEntity = (PlayerEntity) entity;
-
-        if (playerEntity.isIdle()) {
-            isIdle = true;
-        }
-
-        return isNegative != isIdle;
+        return isNegative != entity.isIdle();
     }
 }

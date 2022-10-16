@@ -19,6 +19,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiTeleporterFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.traxmachine.TraxMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
@@ -52,6 +53,7 @@ import org.apache.logging.log4j.Logger;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 
 public class ItemsComponent {
@@ -1148,5 +1150,11 @@ public class ItemsComponent {
         notificationParams.put("message", "${room.error.cant_set_item}");
 
         client.send(new NotificationMessageComposer("furni_placement_error", notificationParams));
+    }
+
+    public List<RoomItemFloor> getBanzaiTeleportsExcept(long teleportId) {
+        return this.getFloorItems().values().stream()
+                .filter(item -> item instanceof BanzaiTeleporterFloorItem && item.getId() != teleportId)
+                .collect(Collectors.toList());
     }
 }

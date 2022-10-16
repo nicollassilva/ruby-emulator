@@ -39,11 +39,16 @@ public class WiredCustomForceCollisionTeam extends WiredActionItem {
 
         if (gameTeam == GameTeam.NONE)
             return;
-        List<Integer> groupMembers =  new ArrayList<>(this.getRoom().getGame().getTeams().get(gameTeam));
 
-        for (Integer groupMember : groupMembers) {
-            PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(groupMember);
-            if (player != null) WiredTriggerCollision.executeTriggers(player, null);
+        final List<Integer> groupMembers =  new ArrayList<>(this.getRoom().getGame().getTeams().get(gameTeam));
+
+        for (final Integer groupMember : groupMembers) {
+            final PlayerEntity player = this.getRoom().getEntities().getEntityByPlayerId(groupMember);
+
+            if (player == null)
+                continue;
+
+            WiredTriggerCollision.executeTriggers(player, null);
         }
     }
 
