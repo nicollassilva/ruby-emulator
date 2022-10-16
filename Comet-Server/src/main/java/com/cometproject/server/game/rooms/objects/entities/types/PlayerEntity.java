@@ -371,6 +371,8 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
     private void sendTraxMachineSong() {
         if(this.getPlayer() == null) return;
 
+        if(this.getRoom().getItems().getTraxMachine() == null) return;
+
         final TraxMachineSong song = RoomManager.getInstance().getTraxMachineSongFromUserAndSongId(this.getRoom().getData().getOwnerId(), this.getRoom().getData().getSongId());
 
         if(song == null) return;

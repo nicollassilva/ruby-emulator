@@ -19,6 +19,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.traxmachine.TraxMachineFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonNewPuzzleBox;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonPuzzleBox;
@@ -62,6 +63,7 @@ public class ItemsComponent {
     private final Map<Class<? extends RoomItemFloor>, Set<Long>> itemClassIndex = new ConcurrentHashMap<>();
     private final Map<String, Set<Long>> itemInteractionIndex = new ConcurrentHashMap<>();
     private RoomItemFloor soundMachineFloorItem;
+    private RoomItemFloor traxMachineFloorItem;
     private long moodlightId;
 
     private long itemsCount = 0;
@@ -76,6 +78,7 @@ public class ItemsComponent {
         this.log = LogManager.getLogger("Room Items Component [" + room.getData().getName() + "]");
         this.itemClassIndex.put(HighscoreFloorItem.class, Sets.newConcurrentHashSet());
         this.soundMachineFloorItem = null;
+        this.traxMachineFloorItem = null;
         this.loadItems();
     }
 
@@ -155,6 +158,10 @@ public class ItemsComponent {
         for (final RoomItemFloor floorItem : this.floorItems.values()) {
             if (floorItem instanceof SoundMachineFloorItem) {
                 soundMachineFloorItem = floorItem;
+            }
+
+            if (floorItem instanceof TraxMachineFloorItem) {
+                traxMachineFloorItem = floorItem;
             }
 
             if (floorItem.getDefinition().getInteraction().equals("blackhole")) {
@@ -689,6 +696,10 @@ public class ItemsComponent {
             this.soundMachineFloorItem = null;
         }
 
+        if (item instanceof TraxMachineFloorItem) {
+            this.traxMachineFloorItem = null;
+        }
+
         if (item.getWiredItems().size() != 0) {
             for (final long wiredItem : item.getWiredItems()) {
                 final WiredFloorItem floorItem = (WiredFloorItem) this.getFloorItem(wiredItem);
@@ -748,6 +759,10 @@ public class ItemsComponent {
     public void removeItem(RoomItemFloor item, Session session, boolean toInventory, boolean delete, boolean sendPacket) {
         if (item instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = null;
+        }
+
+        if (item instanceof TraxMachineFloorItem) {
+            this.traxMachineFloorItem = null;
         }
 
         if (item.getDefinition().getInteraction().equals("blackhole")) {
@@ -1008,6 +1023,15 @@ public class ItemsComponent {
             return;
         }
 
+        if(item.getDefinition().getInteraction().equals("traxmachine") && this.traxMachineFloorItem != null) {
+            final Map<String, String> notificationParams = Maps.newHashMap();
+
+            notificationParams.put("message", Locale.get("game.room.traxExists"));
+
+            player.getSession().send(new NotificationMessageComposer("furni_placement_error", notificationParams));
+            return;
+        }
+
         if (item.getDefinition() != null && item.getDefinition().getInteraction() != null) {
             if (item.getDefinition().getInteraction().equals("mannequin")) {
                 rot = 2;
@@ -1019,6 +1043,7 @@ public class ItemsComponent {
         }
 
         int newState = 0;
+
         if (player.getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) player.getEntity().getAttribute("state.height");
 
@@ -1027,6 +1052,7 @@ public class ItemsComponent {
         }
 
         final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : (!player.getEntity().hasAttribute("state.height") ? item.getExtraData() : String.valueOf(newState));
+
         RoomItemDao.placeFloorItem(room.getId(), x, y, height, rot, ExtraData, item.getId());
         player.getInventory().removeItem(item.getId());
 
@@ -1040,6 +1066,7 @@ public class ItemsComponent {
 
         final RoomItemFloor floorItem = room.getItems().addFloorItem(item.getId(), item.getBaseId(), room, player.getId(), player.getData().getUsername(), x, y, rot, height, ExtraData, item.getLimitedEditionItem());
         final List<RoomTile> tilesToUpdate = new ArrayList<>();
+
         for (final RoomItemFloor stackItem : room.getItems().getItemsOnSquare(x, y)) {
             if (item.getId() != stackItem.getId()) {
                 stackItem.onItemAddedToStack(floorItem);
@@ -1054,14 +1081,21 @@ public class ItemsComponent {
             }
 
             final RoomTile tileInstance = this.room.getMapping().getTile(affTile.x, affTile.y);
+
             if (tileInstance != null) {
                 tileInstance.reload();
                 tilesToUpdate.add(tileInstance);
             }
         }
+
         room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
+
         if (floorItem instanceof SoundMachineFloorItem) {
             this.soundMachineFloorItem = floorItem;
+        }
+
+        if (floorItem instanceof TraxMachineFloorItem) {
+            this.traxMachineFloorItem = floorItem;
         }
 
         if (!tilesToUpdate.isEmpty()) {
@@ -1097,6 +1131,10 @@ public class ItemsComponent {
 
     public SoundMachineFloorItem getSoundMachine() {
         return (SoundMachineFloorItem) this.soundMachineFloorItem;
+    }
+
+    public TraxMachineFloorItem getTraxMachine() {
+        return (TraxMachineFloorItem) this.traxMachineFloorItem;
     }
 
     public Map<Integer, String> getItemOwners() {
