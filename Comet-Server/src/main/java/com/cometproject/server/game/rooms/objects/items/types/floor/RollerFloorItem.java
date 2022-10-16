@@ -124,6 +124,9 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
                 continue;
             }
 
+            if (tile.rollingIsBlocked())
+                continue;
+
             if (sqInfront.getX() == this.getRoom().getModel().getDoorX() && sqInfront.getY() == this.getRoom().getModel().getDoorY()) {
                 entity.leaveRoom(false, false, true);
             } else {
@@ -227,7 +230,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
 
             if (!this.getRoom().getMapping().isValidStep(null, new Position(floor.getPosition().getX(), floor.getPosition().getY(), floor.getPosition().getZ()), sqInfront, true, false, false, false, true) ||
                     this.getRoom().getEntities().positionHasEntity(sqInfront, this.movedEntities) ||
-                    (nextTile.getTopItemInstance() != null && !nextTile.getTopItemInstance().getDefinition().canStack())) {
+                    (nextTile.hasRoller() && !(nextTile.getTopItemInstance() instanceof RollerFloorItem))) {
                 return;
             }
 
@@ -244,7 +247,7 @@ public class RollerFloorItem extends AdvancedFloorItem<RollerFloorItemEvent> {
         }
 
         if (slidingItems.size() != 0) {
-            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(position, sqInfront.copy(), this.getVirtualId(), 0, slidingItems));
+            this.getRoom().getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(position, sqInfront, this.getVirtualId(), 0, slidingItems));
         }
 
         this.getRoom().getMapping().updateTile(this.getPosition().getX(), this.getPosition().getY());

@@ -425,4 +425,12 @@ public class RoomTile {
     public boolean hasGate() {
         return this.hasGate;
     }
+
+    public boolean hasRoller() {
+        return this.items.stream().anyMatch(item -> item instanceof RollerFloorItem);
+    }
+
+    public boolean rollingIsBlocked() {
+        return this.hasRoller() && !(this.getTopItemInstance() instanceof RollerFloorItem);
+    }
 }
