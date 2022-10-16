@@ -24,7 +24,7 @@ public class WiredConditionCustomHasRights extends WiredConditionItem {
         boolean hasRights = false;
         final PlayerEntity playerEntity = (PlayerEntity) entity;
 
-        if (playerEntity.getRoom().getRights().hasRights(playerEntity.getPlayer().getId()) && playerEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
+        if (playerEntity.getRoom().getRights().hasRights(playerEntity.getPlayer().getId()) || playerEntity.getPlayer().getPermissions().getRank().roomFullControl()) {
             hasRights = true;
         }
 
