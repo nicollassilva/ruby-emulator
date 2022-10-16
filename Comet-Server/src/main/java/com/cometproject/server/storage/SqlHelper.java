@@ -72,10 +72,6 @@ public class SqlHelper {
                 final QueryLog log = queryLog.get(statement.hashCode());
                 final long timeTaken = (System.currentTimeMillis() - log.startTime);
 
-                if (NetworkManager.getInstance().getMessagingClient() != null) {
-                    NetworkManager.getInstance().getMessagingClient().sendMessage("com.cometproject:manager", new QueryRequest(log.query, timeTaken));
-                }
-
                 System.out.println("[QUERY] " + log.query + " took " + timeTaken + "ms");
 
                 queryLog.remove(statement.hashCode());

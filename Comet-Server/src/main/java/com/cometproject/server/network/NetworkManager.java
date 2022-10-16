@@ -14,7 +14,6 @@ import com.cometproject.server.network.sessions.net.NetSessionFactory;
 import com.cometproject.server.network.ws.WebSocketChannelHandler;
 import com.cometproject.server.protocol.codec.ws.WebSocketMessageEncoder;
 import com.google.common.collect.Sets;
-import io.coerce.services.messaging.client.MessagingClient;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
@@ -45,7 +44,6 @@ public class NetworkManager {
     private SessionManager sessions;
     private MessageHandler messageHandler;
 
-    private MessagingClient messagingClient;
 
     public NetworkManager() {
 
@@ -92,7 +90,7 @@ public class NetworkManager {
                                         .addLast(new WebSocketMessageEncoder())
                                         .addLast(new WebSocketChannelHandler());
 
-                                ch.config().setTrafficClass(0x18);
+                                ch.config().setTrafficClass(24);
                                 ch.config().setTcpNoDelay(true);
                             }
 
@@ -100,7 +98,6 @@ public class NetworkManager {
                 )
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
                 .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
@@ -150,7 +147,4 @@ public class NetworkManager {
         return serverPort;
     }
 
-    public MessagingClient getMessagingClient() {
-        return this.messagingClient;
-    }
 }
