@@ -93,7 +93,8 @@ public class PlayerLoginRequest implements CometTask {
                 cloneSession.disconnect();
             }
 
-            if (BanManager.getInstance().hasBan(Integer.toString(player.getId()), BanType.USER)) {
+            if (BanManager.getInstance().hasBan(Integer.toString(player.getId()), BanType.USER)
+                    || BanManager.getInstance().hasBan(player.getData().getUsername(), BanType.USER)) {
                 client.getLogger().warn("Banned player: " + player.getId() + " tried logging in");
                 client.disconnect("banned");
                 return;
@@ -139,7 +140,7 @@ public class PlayerLoginRequest implements CometTask {
 
             RoomManager.getInstance().loadRoomsForUser(player);
 
-            if(Comet.isDebugging) {
+            if (Comet.isDebugging) {
                 client.getLogger().debug(client.getPlayer().getData().getUsername() + " logged in");
             }
 
@@ -166,7 +167,7 @@ public class PlayerLoginRequest implements CometTask {
                     sendQueue(new UpdateInventoryMessageComposer()).
                     sendQueue(new AchievementRequirementsMessageComposer(AchievementManager.getInstance().getAchievementGroups().values()));
 
-            if(!player.getPermissions().getRank().modTool()) {
+            if (!player.getPermissions().getRank().modTool()) {
                 client.sendQueue(new HomeRoomMessageComposer(player.getSettings().getHomeRoom(), player.getSettings().getHomeRoom()));
             }
 
@@ -191,7 +192,7 @@ public class PlayerLoginRequest implements CometTask {
 
             client.flush();
 
-            if(CometExternalSettings.enableStaffMessengerLogs) {
+            if (CometExternalSettings.enableStaffMessengerLogs) {
                 for (final IMessengerFriend friend : client.getPlayer().getMessenger().getFriends().values()) {
                     if (!friend.isOnline() || friend.getUserId() == client.getPlayer().getId()) {
                         continue;
