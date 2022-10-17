@@ -90,6 +90,7 @@ public class SetBuildToolEvent extends IncomingEvent {
 
                 if (value > 100 || value < 0) return;
 
+                System.out.println("Estou aqui");
                 client.getPlayer().getEntity().setAttribute("state.height", value);
                 //client.send(new WhisperMessageComposer(client.getPlayer().getEntity().getId(), "État du mobis mis à " + value + "."));
 

@@ -12,11 +12,9 @@ public class SetStateCommand extends ChatCommand {
             return;
         }
 
-        if (params[0].equals("stop")) {
+        if (params[0].equalsIgnoreCase("stop")) {
             if(client.getPlayer().getEntity().hasAttribute("state.height")) {
                 client.getPlayer().getEntity().removeAttribute("state.height");
-                sendWhisper("Estado desativado.", client);
-                return;
             }
 
             sendWhisper("Estado desativado.", client);

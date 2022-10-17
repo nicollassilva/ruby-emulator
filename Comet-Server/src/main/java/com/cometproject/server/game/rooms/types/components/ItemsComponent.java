@@ -494,7 +494,7 @@ public class ItemsComponent {
         if (autoHeight && this.getRoom().getEntities().getEntitiesAt(newPosition).size() > 0)
             return false;
 
-        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, height, newRotation, -1);
+        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, height, newRotation, 0);
         return true;
     }
 
@@ -690,6 +690,7 @@ public class ItemsComponent {
     public void removeItem(RoomItemFloor item, Session client) {
         removeItem(item, client, true);
     }
+
     public void removeItem(RoomItemFloor item, Session client, boolean toInventory){
         removeItem(item,client,toInventory, true);
     }
@@ -869,8 +870,8 @@ public class ItemsComponent {
         if (client.getPlayer().getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) client.getPlayer().getEntity().getAttribute("state.height");
 
-            if (newState > item.getDefinition().getInteractionCycleCount())
-                newState = item.getDefinition().getInteractionCycleCount();
+            if (newState > (item.getDefinition().getInteractionCycleCount() - 1))
+                newState = item.getDefinition().getInteractionCycleCount() - 1;
         }
 
         if (!this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), client.getPlayer().getEntity())) {
@@ -893,7 +894,7 @@ public class ItemsComponent {
         double newHeight = tile.getStackHeight(item);
 
         newPosition.setZ(newHeight);
-        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, newHeight, newRotation,-1);
+        this.__unsafeMoveItemUpdateTilesAndSave(null, item, newPosition, newHeight, newRotation,0);
         return true;
     }
 
@@ -1051,8 +1052,8 @@ public class ItemsComponent {
         if (player.getEntity().hasAttribute("state.height") && item.getDefinition().getInteractionCycleCount() > 0) {
             newState = (int) player.getEntity().getAttribute("state.height");
 
-            if (newState > item.getDefinition().getInteractionCycleCount())
-                newState = item.getDefinition().getInteractionCycleCount();
+            if (newState > (item.getDefinition().getInteractionCycleCount() - 1))
+                newState = item.getDefinition().getInteractionCycleCount() - 1;
         }
 
         final String ExtraData = (item.getExtraData().isEmpty() || item.getExtraData().equals(" ")) ? "0" : (!player.getEntity().hasAttribute("state.height") ? item.getExtraData() : String.valueOf(newState));

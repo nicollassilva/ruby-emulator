@@ -29,7 +29,7 @@ public class Comet {
     /**
      * Is a debugger attached?
      */
-    public static volatile boolean isDebugging = false;
+    public static volatile boolean isDebugging = true;
     /**
      * Is Comet running?
      */

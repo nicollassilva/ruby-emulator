@@ -10,9 +10,11 @@ import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.AdjustableHeightFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.MagicStackFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.SoundMachineFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.*;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiTileFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.battleball.BattleBallTileFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.traxmachine.TraxMachineFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.addons.WiredAddonFloorSwitch;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.components.games.GameTeam;
 import com.cometproject.server.network.messages.outgoing.room.items.UpdateFloorItemMessageComposer;
@@ -74,12 +76,19 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
         }
 
         msg.writeInt(-1);
-        //msg.writeInt(!this.getDefinition().getInteraction().equals("default") ? 1 : 0);
-        msg.writeInt((!(this instanceof DefaultFloorItem) || this.getDefinition().getInteractionCycleCount() >= 2) && !(this instanceof SoundMachineFloorItem) ? 1 : 0);
+        msg.writeInt(this.isUsableFurniture() ? 1 : 0);
         msg.writeInt(this.getRoom().isPublicRoom() ? 0 : this.getItemData().getOwnerId());
 
         if (isNew)
             msg.writeString(this.getRoom().isPublicRoom() ? "" : this.getItemData().getOwnerName());
+    }
+
+    public boolean isUsableFurniture() {
+        if(this instanceof SoundMachineFloorItem || this instanceof TraxMachineFloorItem || this instanceof BanzaiTileFloorItem || this instanceof BattleBallTileFloorItem) {
+            return false;
+        }
+
+        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch || (this.isUsable() && !(this instanceof DefaultFloorItem));
     }
 
     @Override
