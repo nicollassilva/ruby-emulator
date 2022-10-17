@@ -46,13 +46,13 @@ public class AboutCommand extends ChatCommand {
         // This will be visible to developers on the manager, no need to display it to the end-user.
         if (client.getPlayer().getPermissions().getRank().aboutDetailed()) {
             about.append(Locale.getOrDefault("command.about.server_info", "<br><b>Server Info</b><br>"));
-            about.append(Locale.getOrDefault("command.about.allocated_memory", "Allocated memory: ") + format.format(cometStats.getAllocatedMemory()) + "MB<br>");
-            about.append(Locale.getOrDefault("command.about.used_memory", "Used memory: ") + format.format(cometStats.getUsedMemory()) + "MB<br>");
+            about.append(Locale.getOrDefault("command.about.allocated_memory", "Allocated memory: ")).append(format.format(cometStats.getAllocatedMemory())).append("MB<br>");
+            about.append(Locale.getOrDefault("command.about.used_memory", "Used memory: ")).append(format.format(cometStats.getUsedMemory())).append("MB<br>");
 
-            about.append(Locale.getOrDefault("command.about.proccess_id", "Process ID: ") + CometRuntime.processId + "<br>");
-            about.append(Locale.getOrDefault("command.about.os", "OS: ") + cometStats.getOperatingSystem() + "<br>");
-            about.append(Locale.getOrDefault("command.about.cpu_cores", "CPU cores:  ") + cometStats.getCpuCores() + "<br>");
-            about.append(Locale.getOrDefault("command.about.threads", "Threads:  ") + ManagementFactory.getThreadMXBean().getThreadCount() + "<br>");
+            about.append(Locale.getOrDefault("command.about.proccess_id", "Process ID: ")).append(CometRuntime.processId).append("<br>");
+            about.append(Locale.getOrDefault("command.about.os", "OS: ")).append(cometStats.getOperatingSystem()).append("<br>");
+            about.append(Locale.getOrDefault("command.about.cpu_cores", "CPU cores:  ")).append(cometStats.getCpuCores()).append("<br>");
+            about.append(Locale.getOrDefault("command.about.threads", "Threads:  ")).append(ManagementFactory.getThreadMXBean().getThreadCount()).append("<br>");
         }
 
         if (aboutStats) {
