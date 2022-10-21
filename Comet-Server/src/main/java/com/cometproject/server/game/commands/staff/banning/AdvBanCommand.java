@@ -41,12 +41,13 @@ public class AdvBanCommand extends ChatCommand {
         final long expire = Comet.getTime() + (72 * 3600);
 
         final String ipAddress = user.getIpAddress();
+        final int userId = user.getPlayer().getId();
 
         if (!BanManager.getInstance().hasBan(ipAddress, BanType.IP)) {
-            BanManager.getInstance().banPlayer(BanType.IP, user.getIpAddress(), user.getPlayer().getEntity().getUsername(), 72, expire, Locale.getOrDefault("command.advban.reason", "Advertising"), client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+            BanManager.getInstance().banPlayer(BanType.IP, user.getIpAddress(), user.getPlayer().getEntity().getUsername(), 72, expire, Locale.getOrDefault("command.advban.reason", "Advertising"), client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
         }
 
-        BanManager.getInstance().banPlayer(BanType.USER, user.getPlayer().getId() + "", user.getPlayer().getEntity().getUsername(), 72, expire, Locale.getOrDefault("command.advban.reason", "Advertising"), client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        BanManager.getInstance().banPlayer(BanType.USER, userId + "", user.getPlayer().getEntity().getUsername(), 72, expire, Locale.getOrDefault("command.advban.reason", "Advertising"), client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
 
         final List<Integer> playerIds = PlayerManager.getInstance().getPlayerIdsByIpAddress(ipAddress);
 

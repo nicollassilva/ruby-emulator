@@ -47,7 +47,9 @@ public class TradeBanCommand extends ChatCommand {
         user.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked", "Atividade suspeita foi detectada em sua conta e suas negociações foram bloqueadas por " + length + " minutos.")));
         client.send(new NotificationMessageComposer("trade_block", Locale.getOrDefault("user.got.tradeblocked.success", "Você bloqueou com sucesso negociações de " + username + " durante " + length + " minutos.")));
 
-        BanManager.getInstance().banPlayer(BanType.TRADE, user.getPlayer().getId() + "", user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        final int userId = user.getPlayer().getId();
+
+        BanManager.getInstance().banPlayer(BanType.TRADE, userId + "", user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
 
         PunishmentWebhook.sendTradeBan(client.getPlayer().getData().getUsername(), username, params.length > 2 ? this.merge(params, 2) : "Motivo não citado", length);
 

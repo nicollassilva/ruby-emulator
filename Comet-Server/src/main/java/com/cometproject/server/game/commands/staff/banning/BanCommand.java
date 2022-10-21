@@ -45,8 +45,9 @@ public class BanCommand extends ChatCommand {
         user.disconnect("banned");
 
         final long expire = Comet.getTime() + (length * 3600L);
+        final int userId = user.getPlayer().getId();
 
-        BanManager.getInstance().banPlayer(BanType.USER, user.getPlayer().getId() + "", user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        BanManager.getInstance().banPlayer(BanType.USER, userId + "", user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
 
         PunishmentWebhook.sendBan(client.getPlayer().getData().getUsername(), username, params.length > 2 ? this.merge(params, 2) : "Motivo não citado", length);
 

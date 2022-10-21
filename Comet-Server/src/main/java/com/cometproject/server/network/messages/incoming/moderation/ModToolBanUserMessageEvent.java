@@ -72,14 +72,14 @@ public class ModToolBanUserMessageEvent implements Event {
         this.updateStats(playerId);
 
         if (ipBan) {
-            BanManager.getInstance().banPlayer(BanType.IP, ipAddress, userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime());
+            BanManager.getInstance().banPlayer(BanType.IP, ipAddress, userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime(), playerId);
         }
 
         if (machineBan && !uniqueId.isEmpty()) {
-            BanManager.getInstance().banPlayer(BanType.MACHINE, uniqueId, userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime());
+            BanManager.getInstance().banPlayer(BanType.MACHINE, uniqueId, userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime(), playerId);
         }
 
-        BanManager.getInstance().banPlayer(BanType.USER, playerId + "", userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime());
+        BanManager.getInstance().banPlayer(BanType.USER, playerId + "", userBanned, length, expire, message, moderatorId, userAddedBan, (int) Comet.getTime(), playerId);
     }
 
     private void updateStats(int playerId) {

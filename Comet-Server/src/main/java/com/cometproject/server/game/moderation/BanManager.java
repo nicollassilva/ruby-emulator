@@ -65,8 +65,8 @@ public class BanManager implements Initialisable {
         bansToRemove.clear();
     }
 
-    public void banPlayer(BanType type, String data, String userBanned, int length, long expire, String reason, int bannerId, String userAddedBan, int banTime) {
-        int banId = BanDao.createBan(type, length, expire, data, userBanned, bannerId, userAddedBan, banTime, reason);
+    public void banPlayer(BanType type, String data, String userBanned, int length, long expire, String reason, int bannerId, String userAddedBan, int banTime, int userId) {
+        int banId = BanDao.createBan(type, length, expire, data, userBanned, bannerId, userAddedBan, banTime, reason, userId);
         this.add(new Ban(banId, data, length == 0 ? length : expire, type, reason));
     }
 

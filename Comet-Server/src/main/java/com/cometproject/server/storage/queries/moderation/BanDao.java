@@ -4,6 +4,7 @@ import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.moderation.types.Ban;
 import com.cometproject.server.game.moderation.types.BanType;
 import com.cometproject.server.storage.SqlHelper;
+import com.cometproject.server.storage.queries.player.PlayerDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,7 +43,7 @@ public class BanDao {
         return data;
     }
 
-    public static int createBan(BanType type, long length, long expire, String data, String userBanned, int addedBy, String userAddedBan, int banTime, String reason) {
+    public static int createBan(BanType type, long length, long expire, String data, String userBanned, int addedBy, String userAddedBan, int banTime, String reason, int userId) {
 
         Connection sqlConnection = null;
         PreparedStatement preparedStatement = null;
@@ -51,7 +52,7 @@ public class BanDao {
         try {
             sqlConnection = SqlHelper.getConnection();
 
-            preparedStatement = SqlHelper.prepare("INSERT into bans (`type`, `expire`, `data`, `user_banned`, `reason`, `added_by`, `user_addedban`, `ban_time`) VALUES(?, ?, ?, ?, ?, ?, ?, ?);", sqlConnection, true);
+            preparedStatement = SqlHelper.prepare("INSERT into bans (`type`, `expire`, `data`, `user_banned`, `reason`, `added_by`, `user_addedban`, `ban_time`, `user_id`, `ip`) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", sqlConnection, true);
 
             preparedStatement.setString(1, type.toString().toLowerCase());
             preparedStatement.setLong(2, length == 0 ? 0 : expire);
@@ -61,6 +62,8 @@ public class BanDao {
             preparedStatement.setInt(6, addedBy);
             preparedStatement.setString(7, userAddedBan);
             preparedStatement.setInt(8, banTime);
+            preparedStatement.setInt(9, userId);
+            preparedStatement.setString(10, PlayerDao.getIpAddress(userId));
 
             SqlHelper.executeStatementSilently(preparedStatement, false);
             resultSet = preparedStatement.getGeneratedKeys();

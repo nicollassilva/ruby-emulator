@@ -40,8 +40,9 @@ public class SoftBanCommand extends ChatCommand {
         user.disconnect("banned");
 
         final long expire = Comet.getTime() + (2 * 3600);
+        final int userId = user.getPlayer().getId();
 
-        BanManager.getInstance().banPlayer(BanType.USER, user.getPlayer().getId() + "", user.getPlayer().getEntity().getUsername(), 2, expire, params.length > 1 ? this.merge(params, 1) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        BanManager.getInstance().banPlayer(BanType.USER, userId + "", user.getPlayer().getEntity().getUsername(), 2, expire, params.length > 1 ? this.merge(params, 1) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 

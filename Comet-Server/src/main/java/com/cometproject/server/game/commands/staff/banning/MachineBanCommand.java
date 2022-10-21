@@ -46,7 +46,7 @@ public class MachineBanCommand extends ChatCommand {
             return;
         }
 
-        BanManager.getInstance().banPlayer(BanType.MACHINE, user.getUniqueId(), user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        BanManager.getInstance().banPlayer(BanType.MACHINE, user.getUniqueId(), user.getPlayer().getEntity().getUsername(), length, expire, params.length > 2 ? this.merge(params, 2) : "", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), user.getPlayer().getId());
         sendNotif("Usuário foi banido pela máquina (" + uniqueId + ")", client);
 
         user.disconnect("banned");

@@ -41,7 +41,9 @@ public class SuperBanCommand extends ChatCommand {
 
         final int expire = 2147472000; // Approximately latest timestamp
 
-        BanManager.getInstance().banPlayer(BanType.USER, Integer.toString(user.getPlayer().getId()), user.getPlayer().getEntity().getUsername(), expire, expire, "Superban", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime());
+        final int userId = user.getPlayer().getId();
+
+        BanManager.getInstance().banPlayer(BanType.USER, Integer.toString(userId), user.getPlayer().getEntity().getUsername(), expire, expire, "Superban", client.getPlayer().getId(), client.getPlayer().getEntity().getUsername(), (int) Comet.getTime(), userId);
 
         PunishmentWebhook.sendSuperBan(client.getPlayer().getData().getUsername(), username);
 
