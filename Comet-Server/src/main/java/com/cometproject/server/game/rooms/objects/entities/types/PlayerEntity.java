@@ -252,7 +252,6 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
         if (session.getPlayer().getData().getTimeMuted() != 0) {
             if (session.getPlayer().getData().getTimeMuted() > (int) Comet.getTime()) {
                 session.getPlayer().getSession().send(new MutedMessageComposer(session.getPlayer().getData().getTimeMuted() - (int) Comet.getTime()));
-                return;
             }
         }
 
