@@ -24,6 +24,7 @@ import com.cometproject.server.game.polls.types.Poll;
 import com.cometproject.server.game.quests.QuestManager;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.bundles.RoomBundleManager;
+import com.cometproject.server.game.utilities.validator.ClothingValidationManager;
 import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.network.messages.outgoing.catalog.TargetedOfferComposer;
 import com.cometproject.server.network.messages.outgoing.catalog.marketplace.MarketplaceConfigComposer;
@@ -69,6 +70,7 @@ public class ReloadCommand extends ChatCommand {
                                 "- pets\n" +
                                 "- polls\n" +
                                 "- quests\n" +
+                                "- figuredata\n" +
                                 "- targetoffers"
                 ));
 
@@ -227,6 +229,12 @@ public class ReloadCommand extends ChatCommand {
                 GameCenterManager.getInstance().initialize();
                 sendNotif("GameCenter reiniciado com sucesso.", client);
 
+                break;
+
+            case "figuredata":
+                ClothingValidationManager.reloadFiguredata("./config/figuredata.xml");
+
+                sendNotif("Figuredata atualizado com sucesso.", client);
                 break;
         }
     }
