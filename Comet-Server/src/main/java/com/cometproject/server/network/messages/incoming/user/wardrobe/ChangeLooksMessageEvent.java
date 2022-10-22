@@ -21,12 +21,12 @@ public class ChangeLooksMessageEvent implements Event {
         final String gender = msg.readString();
         String figure = msg.readString();
 
-        if(client.getPlayer().getData() == null)
+        if (client.getPlayer().getData() == null)
             return;
 
         if (figure.isEmpty() || gender.isEmpty()) return;
 
-        figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
+        figure = ClothingValidationManager.validateLook(client.getPlayer(), figure, FigureGender.fromString(gender));
 
         if (figure.length() < 18) {
             client.send(new AlertMessageComposer(Locale.get("game.figure.invalid")));
@@ -39,7 +39,6 @@ public class ChangeLooksMessageEvent implements Event {
 
         final int timeSinceLastUpdate = ((int) Comet.getTime()) - client.getPlayer().getLastFigureUpdate();
         if (timeSinceLastUpdate >= CometSettings.playerChangeFigureCooldown) {
-            figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
             client.getPlayer().getData().setGender(gender);
             client.getPlayer().getData().setFigure(figure);
             client.getPlayer().getData().save();

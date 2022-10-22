@@ -19,19 +19,17 @@ import java.util.List;
 public class SaveWardrobeMessageEvent implements Event {
     @Override
     public void handle(Session client, MessageEvent msg) throws Exception {
-        int slot = msg.readInt();
+        final int slot = msg.readInt();
         String figure = msg.readString();
-        String gender = msg.readString();
+        final String gender = msg.readString();
 
-        if(figure == null || figure.isEmpty()) return;
-
-        if(gender == null || gender.isEmpty()) return;
+        if (figure.isEmpty() || gender.isEmpty()) return;
 
         if (!gender.equalsIgnoreCase("m") && !gender.equalsIgnoreCase("f")) {
             return;
         }
 
-        figure = ClothingValidationManager.validateLook(client.getPlayer(),figure, FigureGender.fromString(gender));
+        figure = ClothingValidationManager.validateLook(client.getPlayer(), figure, FigureGender.fromString(gender));
         List<IWardrobeItem> wardrobe = client.getPlayer().getSettings().getWardrobe();
         boolean wardrobeUpdated = false;
         for (IWardrobeItem item : wardrobe) {
