@@ -646,7 +646,7 @@ public class MessageHandler {
                         this.eventExecutor.submit(new MessageEventTask(event, client, message));
                     } else {
                         final long start = System.currentTimeMillis();
-                        if (Comet.isDebugging) {
+                        if (Comet.logPackets) {
                             log.debug("Started packet process for packet: [" + event.getClass().getSimpleName() + "][" + header + "]");
                         }
 
@@ -655,14 +655,14 @@ public class MessageHandler {
                         long timeTakenSinceCreation = ((System.currentTimeMillis() - start));
 
                         // If the packet took more than 100ms to be handled, red flag!
-                        if (timeTakenSinceCreation >= 100 && Comet.isDebugging) {
+                        if (timeTakenSinceCreation >= 100 && Comet.logPackets) {
                             if (client.getPlayer() != null && client.getPlayer().getData() != null)
                                 log.trace("[" + event.getClass().getSimpleName() + "][" + message.getId() + "][" + client.getPlayer().getId() + "][" + client.getPlayer().getData().getUsername() + "] Packet took " + timeTakenSinceCreation + "ms to execute");
                             else
                                 log.trace("[" + event.getClass().getSimpleName() + "][" + message.getId() + "] Packet took " + timeTakenSinceCreation + "ms to execute");
                         }
 
-                        if (Comet.isDebugging) {
+                        if (Comet.logPackets) {
                             log.debug("Finished packet process for packet: [" + event.getClass().getSimpleName() + "][" + header + "] in " + ((System.currentTimeMillis() - start)) + "ms");
                         }
                     }
