@@ -108,11 +108,13 @@ public class Comet {
             for (final String arg : arguments) {
                 if (arg.equals("--debug-logging")) {
                     isDebugging = true;
+                    logPackets = true;
                     logLevel = org.apache.log4j.Level.TRACE;
 
                 }
                 if (arg.equals("--no-debug")) {
                     isDebugging = false;
+                    logPackets = false;
                     logLevel = org.apache.log4j.Level.ERROR;
 
                 }
