@@ -111,6 +111,11 @@ public class Comet {
                     logLevel = org.apache.log4j.Level.TRACE;
 
                 }
+                if (arg.equals("--no-debug")) {
+                    isDebugging = false;
+                    logLevel = org.apache.log4j.Level.ERROR;
+
+                }
 
                 if (arg.equals("--gui")) {
                     // start GUI!
