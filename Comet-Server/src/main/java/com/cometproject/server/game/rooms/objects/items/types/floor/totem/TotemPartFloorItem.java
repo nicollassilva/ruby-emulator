@@ -38,6 +38,12 @@ public abstract class TotemPartFloorItem extends RoomItemFloor {
 
     @Override
     public boolean onInteract(RoomEntity entity, int requestData, boolean isWiredTrigger) {
+        if (isWiredTrigger || !(entity instanceof PlayerEntity))
+            return false;
+
+        if (((PlayerEntity) entity).getPlayer().getData().getId() != this.getItemData().getOwnerId())
+            return false;
+
         //make sure that is completed the totem
         if (this.isComplete()) {
             if (!(this instanceof final TotemPlanetFloorItem totemPlanetFloorItem))
