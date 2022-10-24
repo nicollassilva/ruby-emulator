@@ -98,7 +98,6 @@ public class NetworkManager {
                 )
                 .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(32 * 1024, 64 * 1024))
                 .option(ChannelOption.SO_BACKLOG, 500)
-                .childOption(ChannelOption.SO_BACKLOG, 500)
                 .childOption(ChannelOption.TCP_NODELAY, true)
                 .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
