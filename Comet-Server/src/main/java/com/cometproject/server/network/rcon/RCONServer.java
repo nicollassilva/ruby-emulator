@@ -1,6 +1,7 @@
 package com.cometproject.server.network.rcon;
 
 import com.cometproject.server.boot.Comet;
+import com.cometproject.server.network.messages.rcon.DisconnectUser;
 import com.cometproject.server.network.messages.rcon.ForwardUser;
 import com.cometproject.server.network.messages.rcon.ReloadCredits;
 import com.cometproject.server.network.rcon.utils.RCONMessage;
@@ -35,6 +36,7 @@ public class RCONServer extends Server {
 
         this.addRCONMessage("forwarduser", ForwardUser.class);
         this.addRCONMessage("reloadcredits", ReloadCredits.class);
+        this.addRCONMessage("disconnect", DisconnectUser.class);
 
         Collections.addAll(this.allowedAdresses, "127.0.0.1");
     }
