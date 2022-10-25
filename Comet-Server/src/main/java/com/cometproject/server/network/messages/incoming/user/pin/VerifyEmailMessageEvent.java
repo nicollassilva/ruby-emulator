@@ -20,7 +20,7 @@ public class VerifyEmailMessageEvent implements Event {
 
         final String email = msg.readString();
 
-        if(email.toLowerCase().contains(client.getPlayer().getSettings().getPersonalPin().toLowerCase())) {
+        if(email.equalsIgnoreCase(client.getPlayer().getSettings().getPersonalPin().toLowerCase())) {
             client.getPlayer().sendBubble("pincode", Locale.getOrDefault("pin.code.success", "Acabas de introducir tu pin correctamente, ¡disfruta de tu sesión!"));
             client.getPlayer().getSettings().setPinSucces();
             client.send(new ModToolMessageComposer());
