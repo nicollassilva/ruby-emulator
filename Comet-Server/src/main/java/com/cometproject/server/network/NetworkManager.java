@@ -18,7 +18,10 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.*;
+import io.netty.channel.epoll.Epoll;
 import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.epoll.EpollServerSocketChannel;
+import io.netty.channel.epoll.EpollSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -47,14 +50,13 @@ public class NetworkManager {
     private MessageHandler messageHandler;
 
 
-
     private EventLoopGroup ioLoopGroup;
     private EventLoopGroup acceptLoopGroup;
 
 
     public NetworkManager() {
-        this.ioLoopGroup =  new NioEventLoopGroup(4);
-        this.acceptLoopGroup =  new NioEventLoopGroup(4);
+        this.ioLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(4) : new NioEventLoopGroup(4);
+        this.acceptLoopGroup = Epoll.isAvailable() ? new EpollEventLoopGroup(4) : new NioEventLoopGroup(4);
     }
 
     public static NetworkManager getInstance() {
@@ -86,7 +88,7 @@ public class NetworkManager {
 
         final ServerBootstrap bootstrapWebSocket = new ServerBootstrap()
                 .group(this.ioLoopGroup, this.acceptLoopGroup)
-                .channel(NioServerSocketChannel.class)
+                .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                 .childHandler(
                         new ChannelInitializer<SocketChannel>() {
                             @Override
@@ -112,7 +114,7 @@ public class NetworkManager {
                 .childOption(ChannelOption.SO_RCVBUF, 4096)
                 .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
-                .childOption(ChannelOption.ALLOCATOR, new UnpooledByteBufAllocator(false))
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
                 .childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(4096));
 
 
@@ -125,6 +127,8 @@ public class NetworkManager {
                 log.info("Websocket running on port:" + wsPort);
             }
         });
+
+        log.info("Epoll Enabled: " + Epoll.isAvailable());
 
         final Set<Short> portSet = Sets.newHashSet();
 
