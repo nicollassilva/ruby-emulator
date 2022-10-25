@@ -16,7 +16,9 @@ import com.cometproject.server.protocol.codec.ws.WebSocketMessageEncoder;
 import com.google.common.collect.Sets;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.*;
+import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -45,8 +47,14 @@ public class NetworkManager {
     private MessageHandler messageHandler;
 
 
-    public NetworkManager() {
 
+    private EventLoopGroup ioLoopGroup;
+    private EventLoopGroup acceptLoopGroup;
+
+
+    public NetworkManager() {
+        this.ioLoopGroup =  new NioEventLoopGroup(4);
+        this.acceptLoopGroup =  new NioEventLoopGroup(4);
     }
 
     public static NetworkManager getInstance() {
@@ -77,7 +85,7 @@ public class NetworkManager {
 
 
         final ServerBootstrap bootstrapWebSocket = new ServerBootstrap()
-                .group(new NioEventLoopGroup(), new NioEventLoopGroup())
+                .group(this.ioLoopGroup, this.acceptLoopGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(
                         new ChannelInitializer<SocketChannel>() {
@@ -99,9 +107,14 @@ public class NetworkManager {
                 .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(32 * 1024, 64 * 1024))
                 .option(ChannelOption.SO_BACKLOG, 500)
                 .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true)
+                .childOption(ChannelOption.SO_REUSEADDR, true)
+                .childOption(ChannelOption.SO_RCVBUF, 4096)
                 .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
-                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
+                .childOption(ChannelOption.ALLOCATOR, new UnpooledByteBufAllocator(false))
+                .childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(4096));
+
 
         int wsPort = Integer.parseInt(Configuration.currentConfig().get("comet.network.websocket.port"));
 
