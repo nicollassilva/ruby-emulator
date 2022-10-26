@@ -42,6 +42,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -311,7 +312,6 @@ public class Room implements Attributable, IRoom {
         if (this.mapping != null) {
             this.mapping.tick();
         }
-
     }
 
     public void startQuestion(String question) {

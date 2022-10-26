@@ -45,6 +45,8 @@ public class AbstractRoomProcess implements CometTask {
 
     private final Logger log;
     private ScheduledFuture processFuture;
+    private ScheduledFuture processFutureRoom;
+    private ScheduledFuture processFutureRoomWired;
     private boolean active = false;
 
     private final boolean adaptiveProcessTimes;
@@ -54,8 +56,6 @@ public class AbstractRoomProcess implements CometTask {
 
     private boolean isProcessing = false;
 
-    private List<PlayerEntity> playersToRemove;
-    private List<RoomEntity> entitiesToUpdate;
 
     private boolean update = false;
 
@@ -67,9 +67,18 @@ public class AbstractRoomProcess implements CometTask {
         this.log = LogManager.getLogger("Room Process [" + room.getData().getName() + ", #" + room.getId() + "]");
 
         this.adaptiveProcessTimes = CometSettings.ADAPTIVE_ENTITY_PROCESS_DELAY;
+
+
+        //  this.playerWalkTask = this::startProcessing;
+
+
     }
 
+    //private final Runnable playerWalkTask;
+
     public void tick() {
+        final long timeStart = System.currentTimeMillis();
+
         if (!this.active) {
             return;
         }
@@ -87,104 +96,11 @@ public class AbstractRoomProcess implements CometTask {
             log.info("Time since last cleanWord: " + timeSinceLastProcess + "ms");
         }
 
-        final long timeStart = System.currentTimeMillis();
-
-
         try {
-            Runnable roomTask = () -> {
+            this.startProcessing();
+        } catch (Exception ex) {
+            log.error("Error during room entity processing [1]", ex);
 
-                if (update)
-                    getRoom().tick();
-            };
-
-            CompletableFuture.runAsync(roomTask).get();
-
-        } catch (Exception e) {
-            log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
-        }
-
-        try {
-            try {
-
-
-                Runnable roomTask = () -> {
-                    final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
-
-                    playersToRemove = new ArrayList<>();
-                    entitiesToUpdate = new ArrayList<>();
-
-
-                    for (final RoomEntity entity : entities.values()) {
-                        if (entity == null)
-                            continue;
-
-                        if (entity.isFastWalkEnabled() || this.update) {
-                            this.startProcessing(entity);
-                        }
-                    }
-
-                };
-
-                CompletableFuture.runAsync(roomTask).get();
-            } catch (Exception ex) {
-                log.error("Error during room entity processing [1]", ex);
-
-            }
-            try {
-
-                Runnable roomTask = () -> {
-                    // only send the updates if we need to
-                    if (entitiesToUpdate.size() > 0) {
-                        this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
-                    }
-                };
-
-                CompletableFuture.runAsync(roomTask).get();
-            } catch (Exception ex) {
-                log.error("Error during room entity processing [2]", ex);
-            }
-
-            try {
-
-                Runnable roomTask = () -> {
-                    for (final RoomEntity entity : entitiesToUpdate) {
-                        if (entity.updatePhase == 1) continue;
-
-                        if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
-                            playersToRemove.add((PlayerEntity) entity);
-                        }
-                    }
-
-                };
-
-                CompletableFuture.runAsync(roomTask).get();
-            } catch (Exception ex) {
-                log.error("Error during room entity processing [3]", ex);
-            }
-
-            try {
-
-                Runnable roomTask = () -> {
-                    for (final PlayerEntity entity : playersToRemove) {
-                        if (entity == null)
-                            continue;
-
-                        entity.leaveRoom(entity.getPlayer() == null, false, true);
-                    }
-                };
-
-                CompletableFuture.runAsync(roomTask).get();
-            } catch (Exception ex) {
-                log.error("Error during room entity processing [4]", ex);
-            }
-
-            playersToRemove.clear();
-            entitiesToUpdate.clear();
-
-            playersToRemove = null;
-            entitiesToUpdate = null;
-        } catch (Exception e) {
-            log.error("Error during room entity processing", e);
         }
 
         final TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
@@ -194,7 +110,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 240 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 235 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         this.isProcessing = false;
@@ -206,10 +122,19 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 245, TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
             this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 245, TimeUnit.MILLISECONDS);
         }
+
+        this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
+            try {
+                getRoom().tick();
+            } catch (Exception e) {
+                log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
+            }
+        }, 490, 490, TimeUnit.MILLISECONDS);
+
 
         this.active = true;
 
@@ -233,6 +158,28 @@ public class AbstractRoomProcess implements CometTask {
                 log.debug("Processing stopped");
             }
         }
+
+        if (this.processFutureRoom != null) {
+            this.active = false;
+
+
+            this.processFutureRoom.cancel(false);
+
+            if (Comet.isDebugging) {
+                log.debug("Processing room stopped");
+            }
+        }
+
+        if (this.processFutureRoomWired != null) {
+            this.active = false;
+
+
+            this.processFutureRoomWired.cancel(false);
+
+            if (Comet.isDebugging) {
+                log.debug("Processing room wired stopped");
+            }
+        }
     }
 
     @Override
@@ -245,64 +192,107 @@ public class AbstractRoomProcess implements CometTask {
         this.processFuture = CometThreadManager.getInstance().executePeriodic(this, 0L, time, TimeUnit.MILLISECONDS);
     }
 
-    private void startProcessing(RoomEntity entity) {
-        if (entity.getEntityType() == RoomEntityType.PLAYER) {
-            final PlayerEntity playerEntity = (PlayerEntity) entity;
+    private void startProcessing() {
 
-            try {
-                if (playerEntity.getPlayer() == null || playerEntity.getPlayer().isDisposed || playerEntity.getPlayer().getSession() == null) {
-                    playersToRemove.add(playerEntity);
-                    return;
+        final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
+
+        List<PlayerEntity> playersToRemove = new ArrayList<>();
+        List<RoomEntity> entitiesToUpdate = new ArrayList<>();
+
+
+        for (final RoomEntity entity : entities.values()) {
+            if (entity == null)
+                continue;
+
+            if (entity.isFastWalkEnabled() || this.update) {
+
+                if (entity.getEntityType() == RoomEntityType.PLAYER) {
+                    final PlayerEntity playerEntity = (PlayerEntity) entity;
+
+                    try {
+                        if (playerEntity.getPlayer() == null || playerEntity.getPlayer().isDisposed || playerEntity.getPlayer().getSession() == null) {
+                            playersToRemove.add(playerEntity);
+                            return;
+                        }
+                    } catch (Exception e) {
+                        log.warn("Failed to remove null player from room - user data was null");
+                        return;
+                    }
+
+                    final boolean playerNeedsRemove = processEntity(playerEntity);
+
+                    if (playerNeedsRemove) {
+                        playersToRemove.add(playerEntity);
+                    }
+                } else {
+                    if (entity.getAI() != null) {
+                        entity.getAI().onTick();
+                    }
+                    if (entity.getEntityType() == RoomEntityType.BOT) {
+                        processEntity(entity);
+                    } else if (entity.getEntityType() == RoomEntityType.PET && entity.getMountedEntity() == null) {
+                        processEntity(entity);
+                    }
                 }
-            } catch (Exception e) {
-                log.warn("Failed to remove null player from room - user data was null");
-                return;
-            }
 
-            final boolean playerNeedsRemove = processEntity(playerEntity);
+                if ((entity.needsUpdate() && !entity.needsUpdateCancel() || entity.isNeedsForcedUpdate()) && entity.isVisible()) {
+                    if (entity.isNeedsForcedUpdate() && entity.updatePhase == 1) {
+                        entity.setNeedsForcedUpdate(false);
+                        entity.updatePhase = 0;
 
-            if (playerNeedsRemove) {
-                playersToRemove.add(playerEntity);
-            }
-        } else {
-            if (entity.getAI() != null) {
-                entity.getAI().onTick();
-            }
-            if (entity.getEntityType() == RoomEntityType.BOT) {
-                processEntity(entity);
-            } else if (entity.getEntityType() == RoomEntityType.PET && entity.getMountedEntity() == null) {
-                processEntity(entity);
+                        entitiesToUpdate.add(entity);
+                    } else if (entity.isNeedsForcedUpdate()) {
+                        if (entity.hasStatus(RoomEntityStatus.MOVE)) {
+                            entity.removeStatus(RoomEntityStatus.MOVE);
+                        }
+
+                        entity.updatePhase = 1;
+                        entitiesToUpdate.add(entity);
+                    } else {
+                        if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
+                            processEntity(entity.getMountedEntity());
+                            entity.getMountedEntity().markUpdateComplete();
+                            entitiesToUpdate.add(entity.getMountedEntity());
+                        }
+
+                        if (entity.isWarped()) {
+                            entity.setWarped(false);
+                        }
+
+                        entity.markUpdateComplete();
+                        entitiesToUpdate.add(entity);
+                    }
+                }
             }
         }
 
-        if ((entity.needsUpdate() && !entity.needsUpdateCancel() || entity.isNeedsForcedUpdate()) && entity.isVisible()) {
-            if (entity.isNeedsForcedUpdate() && entity.updatePhase == 1) {
-                entity.setNeedsForcedUpdate(false);
-                entity.updatePhase = 0;
 
-                entitiesToUpdate.add(entity);
-            } else if (entity.isNeedsForcedUpdate()) {
-                if (entity.hasStatus(RoomEntityStatus.MOVE)) {
-                    entity.removeStatus(RoomEntityStatus.MOVE);
-                }
+        CompletableFuture.runAsync(() -> {
 
-                entity.updatePhase = 1;
-                entitiesToUpdate.add(entity);
-            } else {
-                if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
-                    processEntity(entity.getMountedEntity());
-                    entity.getMountedEntity().markUpdateComplete();
-                    entitiesToUpdate.add(entity.getMountedEntity());
-                }
-
-                if (entity.isWarped()) {
-                    entity.setWarped(false);
-                }
-
-                entity.markUpdateComplete();
-                entitiesToUpdate.add(entity);
+            if (entitiesToUpdate.size() > 0) {
+                this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
             }
-        }
+
+            for (final RoomEntity entity : entitiesToUpdate) {
+                if (entity.updatePhase == 1) continue;
+
+                if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
+                    playersToRemove.add((PlayerEntity) entity);
+                }
+            }
+
+
+            for (final PlayerEntity entity : playersToRemove) {
+                if (entity == null)
+                    continue;
+
+                entity.leaveRoom(entity.getPlayer() == null, false, true);
+            }
+
+            playersToRemove.clear();
+            entitiesToUpdate.clear();
+
+        });
     }
 
     public boolean updateEntityStuff(RoomEntity entity) {

@@ -31,7 +31,7 @@ public class Comet {
      */
     public static volatile boolean isDebugging = false;
 
-    public static volatile boolean logPackets = true;
+    public static volatile boolean logPackets = false;
     /**
      * Is Comet running?
      */
