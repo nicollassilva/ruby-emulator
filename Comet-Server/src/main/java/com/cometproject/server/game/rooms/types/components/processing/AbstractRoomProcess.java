@@ -176,9 +176,9 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 250, TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 245, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 235, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 245, TimeUnit.MILLISECONDS);
         }
 
         this.active = true;
