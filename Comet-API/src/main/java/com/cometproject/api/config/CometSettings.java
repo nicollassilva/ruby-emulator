@@ -182,7 +182,7 @@ public class CometSettings {
     /**
      * Config storage
      */
-    public static boolean ADAPTIVE_ENTITY_PROCESS_DELAY = false;
+    public static boolean ADAPTIVE_ENTITY_PROCESS_DELAY = true;
 
     /**
      * Recycler Config

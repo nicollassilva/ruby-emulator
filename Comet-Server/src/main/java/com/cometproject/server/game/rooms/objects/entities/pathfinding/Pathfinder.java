@@ -126,6 +126,7 @@ public abstract class Pathfinder {
     }
 
     public boolean isValidStep(RoomObject object, Position from, Position to, boolean lastStep, boolean isRetry) {
+
         if (object instanceof RoomEntity)
             return object.getRoom().getMapping().isValidEntityStep((RoomEntity) object, from, to, lastStep, isRetry);
         else
