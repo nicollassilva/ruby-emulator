@@ -8,18 +8,17 @@ import com.cometproject.api.networking.sessions.SessionManagerAccessor;
 import com.cometproject.api.utilities.JsonUtil;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.players.PlayerManager;
+import com.cometproject.server.network.NetworkManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 
 public final class SessionManager implements ISessionManager, ISessionService {
@@ -222,5 +221,15 @@ public final class SessionManager implements ISessionManager, ISessionService {
 
     public ArrayList<String> getPendingConnections() {
         return pendingConnections;
+    }
+
+    public List<ISession> getPlayersIdFromUniqueId(int id) {
+        final Session firstSession = NetworkManager.getInstance().getSessions().fromPlayer(id);
+
+        if(firstSession == null) {
+            return null;
+        }
+
+        return this.getSessions().values().stream().filter(session -> session != null && ((Session) session).getUniqueId().equals(firstSession.getUniqueId())).toList();
     }
 }
