@@ -35,6 +35,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -88,9 +89,16 @@ public class AbstractRoomProcess implements CometTask {
 
         final long timeStart = System.currentTimeMillis();
 
+
         try {
-            if (this.update)
-                this.getRoom().tick();
+            Runnable roomTask = () -> {
+
+                if (update)
+                    getRoom().tick();
+            };
+
+            CompletableFuture.runAsync(roomTask).get();
+
         } catch (Exception e) {
             log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
         }
@@ -98,52 +106,74 @@ public class AbstractRoomProcess implements CometTask {
         try {
             try {
 
-                final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
-                playersToRemove = new ArrayList<>();
-                entitiesToUpdate = new ArrayList<>();
+                Runnable roomTask = () -> {
+                    final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
+
+                    playersToRemove = new ArrayList<>();
+                    entitiesToUpdate = new ArrayList<>();
 
 
-                for (final RoomEntity entity : entities.values()) {
-                    if (entity == null)
-                        continue;
+                    for (final RoomEntity entity : entities.values()) {
+                        if (entity == null)
+                            continue;
 
-                    if (entity.isFastWalkEnabled() || this.update) {
-                        this.startProcessing(entity);
+                        if (entity.isFastWalkEnabled() || this.update) {
+                            this.startProcessing(entity);
+                        }
                     }
-                }
+
+                };
+
+                CompletableFuture.runAsync(roomTask).get();
             } catch (Exception ex) {
                 log.error("Error during room entity processing [1]", ex);
 
             }
             try {
-                // only send the updates if we need to
-                if (entitiesToUpdate.size() > 0) {
-                    this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
-                }
+
+                Runnable roomTask = () -> {
+                    // only send the updates if we need to
+                    if (entitiesToUpdate.size() > 0) {
+                        this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
+                    }
+                };
+
+                CompletableFuture.runAsync(roomTask).get();
             } catch (Exception ex) {
                 log.error("Error during room entity processing [2]", ex);
             }
 
             try {
-                for (final RoomEntity entity : entitiesToUpdate) {
-                    if (entity.updatePhase == 1) continue;
 
-                    if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
-                        playersToRemove.add((PlayerEntity) entity);
+                Runnable roomTask = () -> {
+                    for (final RoomEntity entity : entitiesToUpdate) {
+                        if (entity.updatePhase == 1) continue;
+
+                        if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
+                            playersToRemove.add((PlayerEntity) entity);
+                        }
                     }
-                }
+
+                };
+
+                CompletableFuture.runAsync(roomTask).get();
             } catch (Exception ex) {
                 log.error("Error during room entity processing [3]", ex);
             }
 
             try {
-                for (final PlayerEntity entity : playersToRemove) {
-                    if (entity == null)
-                        continue;
 
-                    entity.leaveRoom(entity.getPlayer() == null, false, true);
-                }
+                Runnable roomTask = () -> {
+                    for (final PlayerEntity entity : playersToRemove) {
+                        if (entity == null)
+                            continue;
+
+                        entity.leaveRoom(entity.getPlayer() == null, false, true);
+                    }
+                };
+
+                CompletableFuture.runAsync(roomTask).get();
             } catch (Exception ex) {
                 log.error("Error during room entity processing [4]", ex);
             }
@@ -164,7 +194,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 235 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 240 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         this.isProcessing = false;
