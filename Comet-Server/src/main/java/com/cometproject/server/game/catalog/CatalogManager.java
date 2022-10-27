@@ -330,7 +330,7 @@ public class CatalogManager implements ICatalogService {
             }
         }
 
-        return items.entrySet().stream().sorted((a, b)-> b.getValue().compareTo(a.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+        return items.entrySet().stream().sorted((a, b)-> a.getValue().compareTo(b.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                 (e1, e2) -> e1, LinkedHashMap::new));
     }
 
