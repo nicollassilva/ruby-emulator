@@ -22,6 +22,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -255,7 +257,7 @@ public class CatalogManager implements ICatalogService {
     public List<IClubOffer> getClubOfferItems() {
         final List<IClubOffer> offers = new ArrayList<>();
 
-        for (final Map.Entry<Integer, IClubOffer> entry : this.clubOfferItems.entrySet()) {
+        for (final Entry<Integer, IClubOffer> entry : this.clubOfferItems.entrySet()) {
             if (! entry.getValue().isDeal()) {
                 offers.add(entry.getValue());
             }
@@ -322,13 +324,14 @@ public class CatalogManager implements ICatalogService {
     public Map<Integer, ICatalogItem> getItemsForPage(int pageId) {
         final Map<Integer, ICatalogItem> items = Maps.newHashMap();
 
-        for (final Map.Entry<Integer, ICatalogItem> catalogItem : this.items.entrySet()) {
+        for (final Entry<Integer, ICatalogItem> catalogItem : this.items.entrySet()) {
             if (catalogItem.getValue().getPageId() == pageId) {
                 items.put(catalogItem.getKey(), catalogItem.getValue());
             }
         }
 
-        return items;
+        return items.entrySet().stream().sorted((a, b)-> b.getValue().compareTo(a.getValue())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                (e1, e2) -> e1, LinkedHashMap::new));
     }
 
     /**

@@ -415,10 +415,11 @@ public class CatalogDao {
         final String badgeId = resultSet.getString("badge_id");
         final String extraData = resultSet.getString("extradata");
         final int pageId = resultSet.getInt("page_id");
+        final int orderNum = resultSet.getInt("order_num");
 
         return new CatalogItem(id, itemIds, catalogName, costCredits, costPixels,
                 costDiamonds, costSeasonal, amount, vip, limitedStack, limitedSells, offerActive, badgeId,
-                extraData, pageId);
+                extraData, pageId, orderNum);
     }
 
     public static void getClubOffers(THashMap<Integer, IClubOffer> clubItems) {

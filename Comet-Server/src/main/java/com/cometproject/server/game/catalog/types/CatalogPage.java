@@ -106,7 +106,7 @@ public class CatalogPage implements ICatalogPage {
                 }
 
                 final ICatalogItem catalogItem = new CatalogItem(roomBundle.getId(), "-1", bundledItems, "single_bundle",
-                        roomBundle.getCostCredits(), roomBundle.getCostActivityPoints(), roomBundle.getCostVip(), roomBundle.getCostSeasonal(),1, false, 0, 0, false, "", "", this.id);
+                        roomBundle.getCostCredits(), roomBundle.getCostActivityPoints(), roomBundle.getCostVip(), roomBundle.getCostSeasonal(),1, false, 0, 0, false, "", "", this.id, 0);
 
                 this.items = new HashMap<>();
                 this.items.put(catalogItem.getId(), catalogItem);

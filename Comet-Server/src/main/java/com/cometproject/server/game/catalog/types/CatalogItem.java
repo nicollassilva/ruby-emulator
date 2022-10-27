@@ -94,11 +94,13 @@ public class CatalogItem implements ICatalogItem {
      */
     private final int pageId;
 
-    public CatalogItem(int id, String itemId, String displayName, int costCredits, int costActivityPoints, int costDiamonds, int costSeasonal, int amount, boolean vip, int limitedTotal, int limitedSells, boolean allowOffer, String badgeId, String presetData, int pageId) {
-        this(id, itemId, null, displayName, costCredits, costActivityPoints, costDiamonds, costSeasonal, amount, vip, limitedTotal, limitedSells, allowOffer, badgeId, presetData, pageId);
+    private final int orderNum;
+
+    public CatalogItem(int id, String itemId, String displayName, int costCredits, int costActivityPoints, int costDiamonds, int costSeasonal, int amount, boolean vip, int limitedTotal, int limitedSells, boolean allowOffer, String badgeId, String presetData, int pageId, int orderNum) {
+        this(id, itemId, null, displayName, costCredits, costActivityPoints, costDiamonds, costSeasonal, amount, vip, limitedTotal, limitedSells, allowOffer, badgeId, presetData, pageId, orderNum);
     }
 
-    public CatalogItem(int id, String itemId, List<ICatalogBundledItem> bundledItems, String displayName, int costCredits, int costActivityPoints, int costDiamonds, int costSeasonal, int amount, boolean vip, int limitedTotal, int limitedSells, boolean allowOffer, String badgeId, String presetData, int pageId) {
+    public CatalogItem(int id, String itemId, List<ICatalogBundledItem> bundledItems, String displayName, int costCredits, int costActivityPoints, int costDiamonds, int costSeasonal, int amount, boolean vip, int limitedTotal, int limitedSells, boolean allowOffer, String badgeId, String presetData, int pageId, int orderNum) {
         this.id = id;
         this.itemId = itemId;
         this.displayName = displayName;
@@ -114,6 +116,7 @@ public class CatalogItem implements ICatalogItem {
         this.badgeId = badgeId;
         this.presetData = presetData;
         this.pageId = pageId;
+        this.orderNum = orderNum;
 
         this.items = bundledItems != null ? bundledItems : new ArrayList<>();
 
@@ -390,5 +393,14 @@ public class CatalogItem implements ICatalogItem {
     @Override
     public boolean isZeroSeasonal() {
         return this.costSeasonal <= 0;
+    }
+
+    @Override
+    public int getOrder() {
+        return this.orderNum;
+    }
+
+    public int compareTo(ICatalogItem item) {
+        return this.orderNum - item.getOrder();
     }
 }

@@ -56,4 +56,8 @@ public interface ICatalogItem {
     boolean isZeroDiamonds();
 
     boolean isZeroSeasonal();
+
+    int getOrder();
+
+    int compareTo(ICatalogItem item);
 }
