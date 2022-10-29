@@ -9,6 +9,7 @@ import com.cometproject.api.networking.messages.IComposer;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.AffectedTile;
+import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.types.DefaultFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.*;
 import com.cometproject.server.game.rooms.objects.items.types.floor.games.banzai.BanzaiTileFloorItem;
@@ -76,19 +77,23 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
         }
 
         msg.writeInt(-1);
-        msg.writeInt(this.isUsableFurniture() ? 1 : 0);
+        msg.writeInt(this.isUsableFurnitureForEverybody() ? 2 : this.isUsableFurnitureControllers() ? 1 : 0);
         msg.writeInt(this.getRoom().isPublicRoom() ? 0 : this.getItemData().getOwnerId());
 
         if (isNew)
             msg.writeString(this.getRoom().isPublicRoom() ? "" : this.getItemData().getOwnerName());
     }
 
-    public boolean isUsableFurniture() {
+    public boolean isUsableFurnitureForEverybody() {
         if(this instanceof SoundMachineFloorItem || this instanceof TraxMachineFloorItem || this instanceof BanzaiTileFloorItem || this instanceof BattleBallTileFloorItem) {
             return false;
         }
 
-        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch || (this.isUsable() && !(this instanceof DefaultFloorItem));
+        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch;
+    }
+
+    public boolean isUsableFurnitureControllers() {
+        return this.isUsable();
     }
 
     @Override
