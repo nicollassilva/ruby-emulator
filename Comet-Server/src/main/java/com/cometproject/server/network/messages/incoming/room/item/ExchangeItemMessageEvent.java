@@ -75,13 +75,13 @@ public class ExchangeItemMessageEvent implements Event {
 
         if (isDiamond) {
             client.getPlayer().getData().increaseVipPoints(value);
-            exchangeValue = "Diamonds: " + client.getPlayer().getData().getVipPoints();
+            exchangeValue = "Diamantes: " + client.getPlayer().getData().getVipPoints();
         } else if (isRuby) {
             client.getPlayer().getData().increaseSeasonalPoints(value);
-            exchangeValue = "Rubys: " + client.getPlayer().getData().getSeasonalPoints();
+            exchangeValue = "Rubis: " + client.getPlayer().getData().getSeasonalPoints();
         } else {
             client.getPlayer().getData().increaseCredits(value);
-            exchangeValue = "Credits: " + client.getPlayer().getData().getCredits();
+            exchangeValue = "Moedas: " + client.getPlayer().getData().getCredits();
         }
 
         PlayerDao.saveExchangeLog(client.getPlayer().getData().getId(), itemId, item.getDefinition().getId(), exchangeValue);
