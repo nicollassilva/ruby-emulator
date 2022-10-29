@@ -85,15 +85,23 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
     }
 
     public boolean isUsableFurnitureForEverybody() {
-        if(this instanceof SoundMachineFloorItem || this instanceof TraxMachineFloorItem || this instanceof BanzaiTileFloorItem || this instanceof BattleBallTileFloorItem) {
+        if (!this.notUsableFurnitures()) {
             return false;
         }
 
-        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch;
+        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch || this instanceof TeleporterFloorItem;
     }
 
     public boolean isUsableFurnitureControllers() {
+        if (!this.notUsableFurnitures()) {
+            return false;
+        }
+
         return this.isUsable();
+    }
+
+    private boolean notUsableFurnitures() {
+        return !(this instanceof SoundMachineFloorItem) && !(this instanceof TraxMachineFloorItem) && !(this instanceof BanzaiTileFloorItem) && !(this instanceof BattleBallTileFloorItem);
     }
 
     @Override
