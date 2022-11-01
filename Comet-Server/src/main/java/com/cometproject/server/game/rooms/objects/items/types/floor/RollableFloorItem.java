@@ -20,15 +20,13 @@ import com.cometproject.server.utilities.Direction;
 
 
 public abstract class RollableFloorItem extends RoomItemFloor {
-    public static final int KICK_POWER = 6;
+    public static final int KICK_POWER = 5;
 
     private boolean isRolling = false;
     private RoomEntity kickerEntity;
     private boolean skipNext = false;
     private boolean wasDribbling = false;
     private int rollStage = -1;
-
-
 
     public RollableFloorItem(RoomItemData itemData, Room room) {
         super(itemData, room);
@@ -64,7 +62,20 @@ public abstract class RollableFloorItem extends RoomItemFloor {
 
         boolean isOnBall = entity.getWalkingGoal().getX() == this.getPosition().getX() && entity.getWalkingGoal().getY() == this.getPosition().getY();
 
+
+        var inFrontBall = this.getPosition().squareInFront(entity.getBodyRotation());
         this.setRotation(entity.getBodyRotation());
+
+        if (!isOnBall && inFrontBall.getX() == entity.getWalkingGoal().getX() && inFrontBall.getY() == entity.getWalkingGoal().getY()) {
+            //this.kickerEntity = entity;
+            //this.skipNext = true;
+
+            this.rollSingle(entity);
+            this.skipNext = true;
+            this.kickerEntity = entity;
+            this.wasDribbling = true;
+            return;
+        }
 
         if (isOnBall && !this.wasDribbling && this.getRoom().getGame().shootEnabled()) {
             if (entity instanceof PlayerEntity) {
@@ -83,6 +94,7 @@ public abstract class RollableFloorItem extends RoomItemFloor {
             this.wasDribbling = false;
         } else {
             this.rollSingle(entity);
+
             this.wasDribbling = true;
         }
     }
@@ -169,6 +181,9 @@ public abstract class RollableFloorItem extends RoomItemFloor {
             Position nextPosition = this.getNextPosition();
             Position newPosition;
 
+            if (!this.isRolling)
+                return;
+
             if (this.isValidRoll(nextPosition)) {
                 newPosition = nextPosition;
             } else {
@@ -198,6 +213,7 @@ public abstract class RollableFloorItem extends RoomItemFloor {
     private boolean isValidRoll(Position position) {
         RoomTile tile = this.getRoom().getMapping().getTile(position.getX(), position.getY());
 
+
         if (tile != null) {
             if (tile.canPlaceItemHere() && tile.getMovementNode() == RoomEntityMovementNode.OPEN && tile.getState() == RoomTileState.VALID) {
                 return tile.getEntities().size() == 0;
@@ -213,6 +229,13 @@ public abstract class RollableFloorItem extends RoomItemFloor {
 
     private Position getNextPosition(int rotation, Position position) {
         if (!this.isValidRoll(position)) {
+
+            if (this.getRoom().getMapping().positionHasUser(position)) {
+
+                this.isRolling = false;
+                return position;
+            }
+
             rotation = Position.getInvertedRotation(rotation);
             position = this.getPosition().squareInFront(rotation);
 
@@ -221,26 +244,16 @@ public abstract class RollableFloorItem extends RoomItemFloor {
                 position = this.getPosition();
 
                 switch (rotation) {
-                    case Position.NORTH:
-                        rotation = Position.SOUTH;
-                        break;
-
-                    case Position.NORTH_EAST:
+                    case Position.NORTH -> rotation = Position.SOUTH;
+                    case Position.NORTH_EAST -> {
                         rotation = Position.SOUTH_EAST;
-
                         if (!this.isValidRoll(position.squareInFront(rotation))) {
                             rotation = Position.SOUTH_WEST;
                         }
-
-                        break;
-
-                    case Position.EAST:
-                        rotation = Position.WEST;
-                        break;
-
-                    case Position.SOUTH_EAST:
+                    }
+                    case Position.EAST -> rotation = Position.WEST;
+                    case Position.SOUTH_EAST -> {
                         rotation = Position.SOUTH_WEST;
-
                         if (!this.isValidRoll(position.squareInFront(rotation))) {
                             rotation = Position.NORTH_EAST;
 
@@ -248,31 +261,21 @@ public abstract class RollableFloorItem extends RoomItemFloor {
                                 rotation = Position.NORTH_EAST;
                             }
                         }
-                        break;
-
-                    case Position.SOUTH:
-                        rotation = Position.NORTH;
-                        break;
-
-                    case Position.SOUTH_WEST:
+                    }
+                    case Position.SOUTH -> rotation = Position.NORTH;
+                    case Position.SOUTH_WEST -> {
                         rotation = Position.NORTH_WEST;
-
                         if (!this.isValidRoll(position.squareInFront(rotation))) {
                             rotation = Position.SOUTH_EAST;
                         }
-                        break;
-
-                    case Position.WEST:
-                        rotation = Position.EAST;
-                        break;
-
-                    case Position.NORTH_WEST:
+                    }
+                    case Position.WEST -> rotation = Position.EAST;
+                    case Position.NORTH_WEST -> {
                         rotation = Position.SOUTH_WEST;
-
                         if (!this.isValidRoll(position.squareInFront(rotation))) {
                             rotation = Position.SOUTH_EAST;
                         }
-                        break;
+                    }
                 }
 
                 position = position.squareInFront(rotation);
@@ -302,7 +305,8 @@ public abstract class RollableFloorItem extends RoomItemFloor {
         entity.moveTo(this.getPosition());
 
         if (this.isValidRoll(newPosition)) {
-         //   newPosition = calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation());
+            if (this.wasDribbling)
+                newPosition = calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation());
         } else {
             newPosition = Position.calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation(), true, 1);
             this.setRotation(Direction.get(this.getRotation()).invert().num);

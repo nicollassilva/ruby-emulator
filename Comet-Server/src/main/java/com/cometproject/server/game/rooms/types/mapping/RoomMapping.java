@@ -169,26 +169,23 @@ public class RoomMapping {
         return !(hasMe && entitySize == 1) && entitySize > 0;
     }
 
-    public boolean positionCanWalkUser(Position position) {
+    public boolean positionHasUser(Position position) {
         final List<RoomEntity> entities = this.room.getEntities().getEntitiesAt(position);
 
         for (final RoomEntity entity : entities) {
             if (!entity.canWalkOn()) {
-                return false;
+                return true;
             }
 
-            if(entity instanceof PetEntity) {
-                return false;
-            }
 
-            if (entity instanceof BotEntity) {
-                if(!room.getData().getAllowWalkthrough()) {
-                    return false;
-                }
+            if (entity instanceof BotEntity || entity instanceof PlayerEntity || entity instanceof PetEntity) {
+                return true;
+
+
             }
         }
 
-        return true;
+        return false;
     }
 
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove,boolean isRetry) {
