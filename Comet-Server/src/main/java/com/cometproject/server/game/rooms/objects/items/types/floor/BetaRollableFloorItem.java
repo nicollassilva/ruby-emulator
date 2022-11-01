@@ -91,7 +91,7 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
     @Override
     public void onEntityStepOff(RoomEntity entity) {
         if (!this.skipNext) {
-            //this.rollBall(this.getPosition(), Direction.get(entity.getBodyRotation()).invert().num);
+            this.rollBall(this.getPosition(), Direction.get(entity.getBodyRotation()).invert().num);
         } else {
             this.skipNext = false;
         }
