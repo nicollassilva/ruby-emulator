@@ -20,7 +20,7 @@ import com.cometproject.server.utilities.Direction;
 
 
 public abstract class RollableFloorItem extends RoomItemFloor {
-    public static final int KICK_POWER = 5;
+    public static final int KICK_POWER = 6;
 
     private boolean isRolling = false;
     private RoomEntity kickerEntity;
@@ -236,51 +236,52 @@ public abstract class RollableFloorItem extends RoomItemFloor {
                 return position;
             }
 
-            rotation = Position.getInvertedRotation(rotation);
-            position = this.getPosition().squareInFront(rotation);
+        //    rotation = Position.getInvertedRotation(rotation);
+        //    position = this.getPosition().squareInFront(rotation);
 
-            if (!this.isValidRoll(position)) {
-                // reset the position back the original
-                position = this.getPosition();
+     //   if (!this.isValidRoll(position))
+            {
+            // reset the position back the original
+            position = this.getPosition();
 
-                switch (rotation) {
-                    case Position.NORTH -> rotation = Position.SOUTH;
-                    case Position.NORTH_EAST -> {
-                        rotation = Position.SOUTH_EAST;
-                        if (!this.isValidRoll(position.squareInFront(rotation))) {
-                            rotation = Position.SOUTH_WEST;
-                        }
+            switch (rotation) {
+                case Position.NORTH -> rotation = Position.SOUTH;
+                case Position.NORTH_EAST -> {
+                    rotation = Position.SOUTH_EAST;
+                    if (!this.isValidRoll(position.squareInFront(rotation))) {
+                        rotation = Position.NORTH_WEST;
                     }
-                    case Position.EAST -> rotation = Position.WEST;
-                    case Position.SOUTH_EAST -> {
+                }
+                case Position.EAST -> rotation = Position.WEST;
+                case Position.SOUTH_EAST -> {
+                    rotation = Position.NORTH_EAST;
+                    if (!this.isValidRoll(position.squareInFront(rotation))) {
                         rotation = Position.SOUTH_WEST;
+
                         if (!this.isValidRoll(position.squareInFront(rotation))) {
                             rotation = Position.NORTH_EAST;
-
-                            if (!this.isValidRoll(position.squareInFront(rotation))) {
-                                rotation = Position.NORTH_EAST;
-                            }
-                        }
-                    }
-                    case Position.SOUTH -> rotation = Position.NORTH;
-                    case Position.SOUTH_WEST -> {
-                        rotation = Position.NORTH_WEST;
-                        if (!this.isValidRoll(position.squareInFront(rotation))) {
-                            rotation = Position.SOUTH_EAST;
-                        }
-                    }
-                    case Position.WEST -> rotation = Position.EAST;
-                    case Position.NORTH_WEST -> {
-                        rotation = Position.SOUTH_WEST;
-                        if (!this.isValidRoll(position.squareInFront(rotation))) {
-                            rotation = Position.SOUTH_EAST;
                         }
                     }
                 }
-
-                position = position.squareInFront(rotation);
+                case Position.SOUTH -> rotation = Position.NORTH;
+                case Position.SOUTH_WEST -> {
+                    rotation = Position.NORTH_WEST;
+                    if (!this.isValidRoll(position.squareInFront(rotation))) {
+                        rotation = Position.SOUTH_EAST;
+                    }
+                }
+                case Position.WEST -> rotation = Position.EAST;
+                case Position.NORTH_WEST -> {
+                    rotation = Position.SOUTH_WEST;
+                    if (!this.isValidRoll(position.squareInFront(rotation))) {
+                        rotation = Position.NORTH_EAST;
+                    }
+                }
             }
+
+            position = position.squareInFront(rotation);
         }
+    }
 
         position.setFlag(rotation);
         return position;

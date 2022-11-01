@@ -28,23 +28,21 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
-public class ItemProcessComponent implements CometTask {
+public class BallItemProcessComponent implements CometTask {
     private static final int INTERVAL = 400;
-    private static final int FLAG = 400;
+    private static final int FLAG = 300;
     private final Room room;
     private final Logger log;
 
     private ScheduledFuture future;
-    private ScheduledFuture saveFuture;
 
-    private final Queue<RoomItem> saveQueue = Queues.newConcurrentLinkedQueue();
 
     private boolean active = false;
 
-    public ItemProcessComponent(Room room) {
+    public BallItemProcessComponent(Room room) {
         this.room = room;
 
-        log = LogManager.getLogger("Item Process [" + room.getData().getName() + "]");
+        log = LogManager.getLogger("Ball Item Process [" + room.getData().getName() + "]");
     }
 
     public void start() {
@@ -55,23 +53,10 @@ public class ItemProcessComponent implements CometTask {
         this.active = true;
 
         this.future = CometThreadManager.getInstance().executePeriodic(this, 0, INTERVAL, TimeUnit.MILLISECONDS);
-        this.saveFuture = CometThreadManager.getInstance().executePeriodic(this::saveQueueTick, 1000, 1000, TimeUnit.MILLISECONDS);
 
         if(Comet.isDebugging) {
             log.debug("Processing started");
         }
-    }
-
-    private void saveQueueTick() {
-        RoomItem roomItem;
-
-        final Set<IRoomItemData> items = Sets.newHashSet();
-
-        while ((roomItem = this.saveQueue.poll()) != null) {
-            items.add(roomItem.getItemData());
-        }
-
-        StorageContext.getCurrentContext().getRoomItemRepository().saveItemBatch(items);
     }
 
     public void stop() {
@@ -79,9 +64,6 @@ public class ItemProcessComponent implements CometTask {
             this.active = false;
 
             this.future.cancel(false);
-            this.saveFuture.cancel(false);
-
-            this.saveQueueTick();
 
             if(Comet.isDebugging) {
                 log.debug("Processing stopped");
@@ -102,31 +84,16 @@ public class ItemProcessComponent implements CometTask {
             return;
         }
 
-        final Set<String> positionsWithPeriodicTrigger = new HashSet<>();
+
 
         for (final RoomItemFloor item : this.getRoom().getItems().getFloorItems().values()) {
             try {
-                if ((item == null || !item.requiresTick()) && !(item instanceof RollerFloorItem)) {
+                if ((item == null || !item.requiresTick())) {
                     continue;
                 }
 
-
-                if ((item instanceof RollableFloorItem) || (item instanceof BetaRollableFloorItem)) {
+                if (!(item instanceof RollableFloorItem) && !(item instanceof BetaRollableFloorItem)) {
                     continue;
-                }
-
-                if (item instanceof WiredActionItem) {
-                    ((WiredActionItem) item).resetExecute();
-                }
-
-                if (item instanceof WiredTriggerPeriodically) {
-                    final String posStr = item.getPosition().getX() + "_" + item.getPosition().getY();
-
-                    if (positionsWithPeriodicTrigger.contains(posStr)) {
-                        continue;
-                    } else {
-                        positionsWithPeriodicTrigger.add(posStr);
-                    }
                 }
 
                 if (item.isStateSwitched()) {
@@ -139,15 +106,7 @@ public class ItemProcessComponent implements CometTask {
             }
         }
 
-        for (final RoomItemWall item : this.getRoom().getItems().getWallItems().values()) {
-            try {
-                if (item != null && item.requiresTick()) {
-                    item.tick();
-                }
-            } catch (Exception e) {
-                this.handleException(item, e);
-            }
-        }
+
 
         if(Comet.isDebugging) {
             final TimeSpan span = new TimeSpan(System.currentTimeMillis(), System.currentTimeMillis());
@@ -163,19 +122,8 @@ public class ItemProcessComponent implements CometTask {
         this.processTick();
     }
 
-    public void queueAction(WiredTriggerExecutor action) {
-        // TODO: monitor this
-        CometThreadManager.getInstance().executeOnce(action);
-    }
-
-    public void saveItem(RoomItem roomItem) {
-        this.saveQueue.remove(roomItem);
-
-        this.saveQueue.add(roomItem);
-    }
-
     protected void handleException(RoomItem item, Exception e) {
-        log.error("Error while processing item: " + item.getId() + " (" + item.getClass().getSimpleName() + ")", e);
+        log.error("Error while processing ball item: " + item.getId() + " (" + item.getClass().getSimpleName() + ")", e);
     }
 
     public Room getRoom() {

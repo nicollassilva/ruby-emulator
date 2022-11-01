@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class BetaRollableFloorItem extends RoomItemFloor {
-    public static final int KICK_POWER = 5;
+    public static final int KICK_POWER = 6;
 
     private boolean isRolling = false;
     private boolean takeable = true;
@@ -397,6 +397,8 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
         }
 
         this.getPosition().setZ(pos.getZ());
+
+
         this.save();
     }
 
