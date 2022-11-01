@@ -298,17 +298,18 @@ public abstract class RollableFloorItem extends RoomItemFloor {
 
         this.isRolling = true;
 
-        Position newPosition;
+        Position newPosition = this.getNextPosition();
         entity.moveTo(this.getPosition());
 
-        if (this.isValidRoll(this.getNextPosition())) {
-            newPosition = calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation());
+        if (this.isValidRoll(newPosition)) {
+         //   newPosition = calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation());
         } else {
             newPosition = Position.calculatePosition(this.getPosition().getX(), this.getPosition().getY(), entity.getBodyRotation(), true, 1);
             this.setRotation(Direction.get(this.getRotation()).invert().num);
         }
 
         if (!this.isValidRoll(newPosition)) {
+            this.isRolling = false;
             return;
         }
 
