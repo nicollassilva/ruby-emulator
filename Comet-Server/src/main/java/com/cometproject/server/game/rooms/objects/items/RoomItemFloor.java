@@ -89,7 +89,7 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
             return false;
         }
 
-        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch || this instanceof TeleporterFloorItem;
+        return this instanceof VendingMachineFloorItem || this instanceof SidelessVendingMachineFloorItem || this instanceof WiredAddonFloorSwitch || this instanceof TeleporterFloorItem || this instanceof DiceFloorItem;
     }
 
     public boolean isUsableFurnitureControllers() {
