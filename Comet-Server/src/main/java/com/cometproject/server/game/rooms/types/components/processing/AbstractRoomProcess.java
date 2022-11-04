@@ -46,7 +46,6 @@ public class AbstractRoomProcess implements CometTask {
     private final Logger log;
     private ScheduledFuture processFuture;
     private ScheduledFuture processFutureRoom;
-    private ScheduledFuture processFutureRoomWired;
     private boolean active = false;
 
     private final boolean adaptiveProcessTimes;
@@ -110,7 +109,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 235 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 250 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         this.isProcessing = false;
@@ -170,16 +169,6 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
-        if (this.processFutureRoomWired != null) {
-            this.active = false;
-
-
-            this.processFutureRoomWired.cancel(false);
-
-            if (Comet.isDebugging) {
-                log.debug("Processing room wired stopped");
-            }
-        }
     }
 
     @Override
@@ -563,9 +552,8 @@ public class AbstractRoomProcess implements CometTask {
                         isCancelled = true;
                     }
 
-                    if (!isCancelled) {
-                        item.onEntityPreStepOn(entity);
-                    }
+                    item.onEntityPreStepOn(entity);
+
                 }
             }
             if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {

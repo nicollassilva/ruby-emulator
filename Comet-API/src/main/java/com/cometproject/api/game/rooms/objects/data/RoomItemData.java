@@ -99,6 +99,24 @@ public class RoomItemData implements IRoomItemData {
     }
 
     @Override
+    public int getIntData() {
+        try {
+            return Integer.parseInt(this.data);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public void decItemData(int i) {
+        int data = Integer.parseInt(this.data);
+
+        data -= i;
+
+        this.data = "" + data;
+    }
+
+    @Override
     public LimitedEditionItem  getLimitedEdition() {
         return limitedEdition;
     }

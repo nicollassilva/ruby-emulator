@@ -28,6 +28,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTimeLong;
 import com.cometproject.server.game.rooms.types.components.*;
 import com.cometproject.server.game.rooms.types.mapping.RoomMapping;
+import com.cometproject.server.game.rooms.types.mapping.SquareFlagManager;
 import com.cometproject.server.network.messages.outgoing.room.polls.GetInfobusPollResultsMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.polls.QuickPollMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.polls.QuickPollResultsMessageComposer;
@@ -51,6 +52,7 @@ public class Room implements Attributable, IRoom {
 
     private final IRoomData data;
 
+    private SquareFlagManager squareFlag;
     private final RoomDataObject cachedData;
     private final AtomicInteger wiredTimer = new AtomicInteger(0);
     private IRoomModel model;
@@ -136,6 +138,9 @@ public class Room implements Attributable, IRoom {
         this.process = new ProcessComponent(this);
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
+        this.squareFlag = new SquareFlagManager();
+
+
 
         this.mapping.init();
 
