@@ -69,7 +69,7 @@ public class Position {
         int dx = this.getX() - point.getX();
         int dy = this.getY() - point.getY();
 
-        return (dx * dx) + (dy * dy);
+        return Math.abs(this.x - point.getX()) + Math.abs(this.y - point.getY());
     }
 
     public static String validateWallPosition(String position) {

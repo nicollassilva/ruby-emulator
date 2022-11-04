@@ -90,18 +90,8 @@ public abstract class Pathfinder {
                     }
 
                     if (!node.isInClosed()) {
-                        diff = 0;
 
-                        if (current.getPosition().getX() != node.getPosition().getX()) {
-                            diff += 1;
-                        }
-
-                        if (current.getPosition().getY() != node.getPosition().getY()) {
-                            diff += 1;
-                        }
-
-
-                        cost = current.getCost() + diff + node.getPosition().getDistanceSquared(end);
+                        cost =  node.getPosition().getDistanceSquared(end);
 
                         if (cost < node.getCost()) {
                             node.setCost(cost);
