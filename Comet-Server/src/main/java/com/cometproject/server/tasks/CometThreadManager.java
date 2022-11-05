@@ -14,6 +14,7 @@ public class CometThreadManager implements Initialisable {
     public static int POOL_SIZE = 0;
     private static CometThreadManager cometThreadManagerInstance;
     private ScheduledExecutorService coreExecutor;
+    private ScheduledExecutorService ballExecutor;
     private ScheduledExecutorService roomProcessingExecutor;
 
     public CometThreadManager() {
@@ -54,6 +55,9 @@ public class CometThreadManager implements Initialisable {
 
             return scheduledThread;
         });
+
+        this.ballExecutor = new ScheduledThreadPoolExecutor(8);
+
     }
 
     public void executeOnce(CometTask task) {
@@ -75,6 +79,10 @@ public class CometThreadManager implements Initialisable {
         }
 
         return this.coreExecutor.schedule(task, delay, unit);
+    }
+    public ScheduledFuture executeScheduleBall(CometTask task, long delay, TimeUnit unit) {
+        return this.ballExecutor.schedule(task, delay, unit);
+
     }
 
     public ScheduledExecutorService getCoreExecutor() {
