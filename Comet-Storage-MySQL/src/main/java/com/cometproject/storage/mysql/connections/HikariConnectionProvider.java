@@ -25,7 +25,8 @@ public class HikariConnectionProvider extends MySQLConnectionProvider {
             config.setJdbcUrl(
                     "jdbc:mysql://" + Configuration.currentConfig().get("comet.db.host") +
                             "/" + Configuration.currentConfig().get("comet.db.name") + "?tcpKeepAlive=" + Configuration.currentConfig().get("comet.db.pool.tcpKeepAlive") +
-                            "&autoReconnect=" + Configuration.currentConfig().get("comet.db.pool.autoReconnect") + "&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=UTC"
+                            "&autoReconnect=" + Configuration.currentConfig().get("comet.db.pool.autoReconnect") + "&useSSL=false&characterEncoding=utf8&useTimezone=true&serverTimezone=UTC" +
+                            "&maxPoolSize=" + Integer.parseInt(Configuration.currentConfig().get("comet.db.pool.max"))
             );
 
             config.setUsername(Configuration.currentConfig().get("comet.db.username"));
@@ -66,7 +67,7 @@ public class HikariConnectionProvider extends MySQLConnectionProvider {
     public void closeConnection(Connection connection) {
         try {
             connection.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Failed to close Hikari connection", e);
         }
     }

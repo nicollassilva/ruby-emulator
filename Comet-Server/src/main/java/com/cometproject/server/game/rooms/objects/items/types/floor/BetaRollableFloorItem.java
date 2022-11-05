@@ -139,7 +139,7 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
         this.rollStage++;
         this.takeable = this.rollStage != 2 && this.rollStage != 3;
         this.playerCollidable = this.rollStage != 1 && this.rollStage != 2 && this.rollStage != 3;
-        System.out.println(this.takeable);
+
         // the first roll... let's do some magic.
 
         int tiles = 1;

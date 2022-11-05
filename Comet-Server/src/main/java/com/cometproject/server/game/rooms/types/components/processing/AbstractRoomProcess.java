@@ -33,6 +33,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -109,7 +110,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 250 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 245 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         this.isProcessing = false;
@@ -188,6 +189,7 @@ public class AbstractRoomProcess implements CometTask {
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
 
+        Collections.shuffle(entities.values().stream().toList());
 
         for (final RoomEntity entity : entities.values()) {
             if (entity == null)
