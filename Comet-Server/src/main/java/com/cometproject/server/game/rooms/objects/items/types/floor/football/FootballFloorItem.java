@@ -18,31 +18,18 @@ public class FootballFloorItem extends RoomItemFloor {
     }
 
     public RoomEntity getPusher() {
-        return null;
+        return this.pusher;
     }
 
+    private RoomEntity pusher;
     @Override
-    public void onEntityPreStepOn(RoomEntity entity) {
-        CometThreadManager.getInstance().executeSchedule(
-                new BallonFootBall(this, (PlayerEntity) entity, entity.getProcessingPath().size() == 0) {
-                    @Override
-                    public void run() {
-                        super.run();
-                    }
-                }, 50, TimeUnit.MILLISECONDS);
+    public void onEntityPostStepOn(RoomEntity entity) {
+
+        this.pusher = entity;
+        CometThreadManager.getInstance().executeSchedule(new BallonFootBall(this, (PlayerEntity) entity, entity.getProcessingPath().size() == 0), 50, TimeUnit.MILLISECONDS);
 
     }
 
-    @Override
-    public void onEntityStepOff(RoomEntity entity) {
-        CometThreadManager.getInstance().executeSchedule(
-                new BallonFootBall(this, (PlayerEntity) entity, entity.getProcessingPath().size() == 0) {
-                    @Override
-                    public void run() {
-                        super.run();
-                    }
-                }, 50, TimeUnit.MILLISECONDS);
 
-    }
 
 }

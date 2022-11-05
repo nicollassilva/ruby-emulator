@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
-public abstract class BallonFootBall implements CometTask {
+public class BallonFootBall implements CometTask {
 
     private Direction8 rot;
     private final PlayerEntity avatar;
@@ -54,19 +54,16 @@ public abstract class BallonFootBall implements CometTask {
             return true;
         }
 
-        if (!tile.canPlaceItemHere())
-            return true;
 
         if (tile.getEntities().size() > 0) {
             return true;
         }
-        if (tile.getItems() != null && tile.getItems().size() > 0) {
-            return true;
-        }
+
 
         if (tile.getMovementNode() != RoomEntityMovementNode.OPEN || tile.getState() != RoomTileState.VALID) {
             return true;
         }
+
         return false;
 
     }
@@ -118,6 +115,7 @@ public abstract class BallonFootBall implements CometTask {
 
             this.ballItem.getPosition().setX(pos.getX());
             this.ballItem.getPosition().setY(pos.getY());
+            this.ballItem.getPosition().setZ(pos.getZ());
 
             if (tile != null) {
                 tile.reload();
