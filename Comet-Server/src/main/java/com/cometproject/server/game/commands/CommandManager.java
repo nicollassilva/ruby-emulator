@@ -197,6 +197,9 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.banner.name", "banner"), new BannerCommand());
         this.addCommand(Locale.getOrDefault("command.disablemimic.name", "desativarcopiar"), new DisableMimicCommand());
 
+        this.addCommand("clickthrouse", new NoclickAvatarCommand());
+
+
         // Gimmick commands
         this.addCommand(Locale.get("command.rob.name"), new RobCommand());
         this.addCommand(Locale.get("command.kiss.name"), new KissCommand());
