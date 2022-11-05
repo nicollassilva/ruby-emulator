@@ -244,7 +244,7 @@ public class Room implements Attributable, IRoom {
 
         this.process.stop();
         this.itemProcess.stop();
-        
+
         this.game.stop();
 
         this.buildingComponent.dispose();

@@ -509,6 +509,9 @@ public class AbstractRoomProcess implements CometTask {
                 ((PlayerEntity) entity).increaseKickWalkStage();
             }
 
+
+            entity.getProcessingPath().remove(nextSq);
+
             boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
             if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
