@@ -61,7 +61,6 @@ public class Room implements Attributable, IRoom {
     private RightsComponent rights;
     private ItemsComponent items;
     private ItemProcessComponent itemProcess;
-    private BallItemProcessComponent ballItemProccess;
     private TradeComponent trade;
     private RoomBotComponent bots;
     private PetComponent pets;
@@ -134,7 +133,7 @@ public class Room implements Attributable, IRoom {
 
         this.mapping = new RoomMapping(this);
         this.itemProcess = new ItemProcessComponent(this);
-        this.ballItemProccess = new BallItemProcessComponent(this);
+
         this.process = new ProcessComponent(this);
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
@@ -245,7 +244,7 @@ public class Room implements Attributable, IRoom {
 
         this.process.stop();
         this.itemProcess.stop();
-        this.ballItemProccess.stop();
+        
         this.game.stop();
 
         this.buildingComponent.dispose();
