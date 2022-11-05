@@ -124,14 +124,13 @@ public class BallonFootBall implements CometTask {
             newTile.reload();
 
             for (RoomItemFloor floorItem : this.ballItem.getRoom().getItems().getItemsOnSquare(pos.getX(), pos.getY())) {
-                floorItem.onItemAddedToStack(this.ballItem);
+                if (floorItem != null)
+                    floorItem.onItemAddedToStack(this.ballItem);
             }
 
 
             this.ballItem.getPosition().setZ(pos.getZ());
             this.ballItem.save();
-
-
 
 
             if (goal) {
@@ -171,7 +170,7 @@ public class BallonFootBall implements CometTask {
 
             roll(this.ballItem, bkpItem, pos.copy(), this.ballItem.getRoom());
 
-       //     this.ballItem.sendUpdate();
+            //     this.ballItem.sendUpdate();
 
             this.ballItem.getItemData().decItemData(11);
         } catch (Exception ex) {
