@@ -18,6 +18,8 @@ import java.util.List;
 
 public class WalkMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
+        final long startTime = System.currentTimeMillis();
+
         final int goalX = msg.readInt();
         final int goalY = msg.readInt();
 
@@ -28,7 +30,8 @@ public class WalkMessageEvent implements Event {
 
             final PlayerEntity entity = client.getPlayer().getEntity();
 
-            if (!entity.isVisible()) return;
+            if (!entity.isVisible())
+                return;
 
             WiredTriggerCustomSensorMovement.executeTriggers(client.getPlayer().getEntity());
 
@@ -74,5 +77,9 @@ public class WalkMessageEvent implements Event {
             //client.getLogger().error("Error while finding path", e);
             e.printStackTrace();
         }
+
+        System.out.println("pathfinding took " + (System.currentTimeMillis() - startTime) + "ms");
+
     }
+
 }

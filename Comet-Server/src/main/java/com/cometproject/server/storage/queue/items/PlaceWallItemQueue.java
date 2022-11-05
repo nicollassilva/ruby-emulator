@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class PlaceWallItemQueue implements CometTask, IQueue {
+public class PlaceWallItemQueue implements CometTask,   IQueue {
 
     private ConcurrentLinkedQueue<PlaceWallItemContainer> itemsQueue;
     private ScheduledFuture periodic;

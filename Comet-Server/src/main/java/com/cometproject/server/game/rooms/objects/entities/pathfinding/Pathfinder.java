@@ -47,7 +47,7 @@ public abstract class Pathfinder {
                 nodes = nodes.getNextNode();
             }
         }
-   //     System.out.println("pathfinding took " + (System.currentTimeMillis() - startTime) + "ms");
+   //
         return Lists.reverse(squares);
     }
 

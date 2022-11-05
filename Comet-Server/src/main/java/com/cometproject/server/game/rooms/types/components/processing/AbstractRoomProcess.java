@@ -489,7 +489,7 @@ public class AbstractRoomProcess implements CometTask {
 
         // Check if we are wanting to walk to a location
         if (entity.getWalkingPath() != null) {
-            entity.setProcessingPath(new CopyOnWriteArrayList<>(entity.getWalkingPath()));
+            entity.setProcessingPath(new ArrayList<>(entity.getWalkingPath()));
 
             // Clear the walking path now we have a goal set
             entity.getWalkingPath().clear();
@@ -519,13 +519,14 @@ public class AbstractRoomProcess implements CometTask {
                     entity.getWalkingPath().clear();
                 }
 
+                entity.walking = false;
+
                 entity.getProcessingPath().clear();
 
                 entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
 
                 return this.processEntity(entity, true);
             }
-
 
 
             final Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
@@ -621,9 +622,16 @@ public class AbstractRoomProcess implements CometTask {
                 if (entity.getWalkingPath() != null) {
                     entity.getWalkingPath().clear();
                 }
+                entity.walking = false;
+
                 entity.getProcessingPath().clear();
                 entity.setWalkCancelled(false);//
             }
+
+
+            if (isLastStep)
+                entity.walking = false;
+
         } else {
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;
@@ -644,6 +652,7 @@ public class AbstractRoomProcess implements CometTask {
         if (entity.isWalkCancelled()) {
             entity.setWalkCancelled(false);
         }
+
 
         return false;
     }

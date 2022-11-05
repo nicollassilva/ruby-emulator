@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity {
     public int updatePhase = 0;
@@ -201,6 +202,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             return;
         }
 
+
         final RoomTile tile = this.getRoom().getMapping().getTile(x, y);
 
         if (tile == null) return;
@@ -218,6 +220,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             y = tile.getRedirect().getY();
         }
 
+        this.walking = true;
         this.previousSteps = 0;
 
         // Set the goal we are wanting to achieve
@@ -233,9 +236,15 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         }
 
+        if (path == null || path.size() == 0){
+            this.walking = false;
+        }
+
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
         this.setWalkingPath(path);
+        this.setProcessingPath(new ArrayList<>(path));
+
     }
 
     public void sit(double height, int rotation) {
@@ -354,9 +363,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.walkingPath = path;
     }
 
+    public boolean walking;
     @Override
     public boolean isWalking() {
-        return (this.processingPath != null) && (this.processingPath.size() > 0);
+        return walking || ((this.processingPath != null) && (this.processingPath.size() > 0));
     }
 
 

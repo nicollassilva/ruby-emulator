@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
-public class GameCycle implements CometTask, Initialisable {
+public class GameCycle implements CometTask,   Initialisable {
     private static final int interval = 1;
     private static final Logger log = LogManager.getLogger(GameCycle.class.getName());
     private static GameCycle gameThreadInstance;

@@ -26,7 +26,7 @@ public class FootballFloorItem extends RoomItemFloor {
     public void onEntityPostStepOn(RoomEntity entity) {
 
         this.pusher = entity;
-        CometThreadManager.getInstance().executeScheduleBall(new BallonFootBall(this, (PlayerEntity) entity, entity.getProcessingPath().size() == 0), 50, TimeUnit.MILLISECONDS);
+        CometThreadManager.getInstance().executeSchedule(new BallonFootBall(this, (PlayerEntity) entity, entity.getProcessingPath().size() == 0), 50, TimeUnit.MILLISECONDS);
 
     }
 
