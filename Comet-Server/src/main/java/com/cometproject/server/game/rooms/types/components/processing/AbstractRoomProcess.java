@@ -509,13 +509,18 @@ public class AbstractRoomProcess implements CometTask {
                 ((PlayerEntity) entity).increaseKickWalkStage();
             }
 
+            boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
-            if ((nextSq == null ) && !entity.isOverriden()) {
+            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
+                if (entity.getWalkingPath() != null) {
+                    entity.getWalkingPath().clear();
+                }
 
+                entity.getProcessingPath().clear();
 
-                // RoomTile is blocked, let's try again!
                 entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
-                    return this.processEntity(entity, true);
+
+                return this.processEntity(entity, true);
             }
 
 
@@ -555,11 +560,8 @@ public class AbstractRoomProcess implements CometTask {
 
 
 
-            boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
-
-            if (this.getRoom().getEntities().positionHasEntity(nextPos)|| !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) {
-
+            if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
 
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
                 final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
@@ -581,8 +583,8 @@ public class AbstractRoomProcess implements CometTask {
 
 
             }
-            entity.getProcessingPath().remove(nextSq);
 
+            
             if (!isCancelled) {
                 entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
                 entity.setHeadRotation(entity.getBodyRotation());
