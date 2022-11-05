@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class ItemProcessComponent implements CometTask {
-    private static final int INTERVAL = 400;
+    private static final int INTERVAL = 500;
     private static final int FLAG = 400;
     private final Room room;
     private final Logger log;
@@ -55,7 +55,7 @@ public class ItemProcessComponent implements CometTask {
         this.active = true;
 
         this.future = CometThreadManager.getInstance().executePeriodic(this, 0, INTERVAL, TimeUnit.MILLISECONDS);
-        this.saveFuture = CometThreadManager.getInstance().executePeriodic(this::saveQueueTick, 1000, 1000, TimeUnit.MILLISECONDS);
+        this.saveFuture = CometThreadManager.getInstance().executePeriodic(this::saveQueueTick, 30000, 30000, TimeUnit.MILLISECONDS);
 
         if(Comet.isDebugging) {
             log.debug("Processing started");
@@ -107,11 +107,6 @@ public class ItemProcessComponent implements CometTask {
         for (final RoomItemFloor item : this.getRoom().getItems().getFloorItems().values()) {
             try {
                 if ((item == null || !item.requiresTick()) && !(item instanceof RollerFloorItem)) {
-                    continue;
-                }
-
-
-                if ((item instanceof RollableFloorItem) || (item instanceof BetaRollableFloorItem)) {
                     continue;
                 }
 
