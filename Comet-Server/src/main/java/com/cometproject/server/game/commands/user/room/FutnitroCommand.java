@@ -26,7 +26,7 @@ public class FutnitroCommand extends ChatCommand {
 
     @Override
     public String getPermission() {
-        return "setspeed_command";
+        return "futnitro_command";
     }
 
 
