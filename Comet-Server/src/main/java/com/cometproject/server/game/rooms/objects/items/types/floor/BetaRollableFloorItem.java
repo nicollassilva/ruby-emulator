@@ -407,10 +407,12 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
             return 0.1;
         } else if (i == 5) {
             return 0.5;
+        } else if (i == 6) {
+            return 1;
         }
 
 //        System.out.println(i);
-        return 0;
+        return 0.5;
     }
 
     public RoomEntity getPusher() {
