@@ -18,7 +18,7 @@ import java.util.List;
 
 public class WalkMessageEvent implements Event {
     public void handle(Session client, MessageEvent msg) {
-        final long startTime = System.currentTimeMillis();
+     //   final long startTime = System.currentTimeMillis();
 
         final int goalX = msg.readInt();
         final int goalY = msg.readInt();
@@ -78,7 +78,7 @@ public class WalkMessageEvent implements Event {
             e.printStackTrace();
         }
 
-        System.out.println("pathfinding took " + (System.currentTimeMillis() - startTime) + "ms");
+   //     System.out.println("pathfinding took " + (System.currentTimeMillis() - startTime) + "ms");
 
     }
 

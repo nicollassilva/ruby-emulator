@@ -59,7 +59,6 @@ public abstract class Pathfinder {
         Position tmp;
 
         int cost;
-        int diff;
 
         PathfinderNode current = new PathfinderNode(roomFloorObject.getPosition());
         current.setCost(0);
@@ -89,7 +88,8 @@ public abstract class Pathfinder {
                         continue;
                     }
 
-                    if (!node.isInClosed()) {
+                    if (!node.isInClosed())
+                    {
 
                         cost =  node.getPosition().getDistanceSquared(end);
 

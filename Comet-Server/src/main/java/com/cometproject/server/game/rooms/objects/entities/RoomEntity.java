@@ -101,6 +101,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean hasMount = false;
 
     private boolean warping;
+    private boolean clickThrough = false;
 
     public RoomEntity(int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
         super(identifier, startPosition, roomInstance);
@@ -208,8 +209,17 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (tile == null) return;
 
         if ((tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) && tile.getRedirect() == null) {
-            if (playerEntity != null && !playerEntity.usingTeleportItem())
-                return;
+            if (tile.getMovementNode() == RoomEntityMovementNode.CLOSED) {
+                var sqFront = tile.getPosition().squareInFront(this.getBodyRotation());
+                if (sqFront != null) {
+                    x = sqFront.getX();
+                    y = sqFront.getY();
+                }
+
+            } else {
+                if (playerEntity != null && !playerEntity.usingTeleportItem())
+                    return;
+            }
         } else {
             if (playerEntity != null && playerEntity.usingTeleportItem())
                 return;
@@ -648,7 +658,13 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     public boolean isOverriden() {
         return this.overriden;
     }
+    public boolean isClickThrough() {
+        return this.clickThrough;
+    }
 
+    public void setClickThrough(boolean clickThrough) {
+        this.clickThrough = clickThrough;
+    }
     public void setOverriden(boolean overriden) {
         this.overriden = overriden;
     }

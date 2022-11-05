@@ -110,10 +110,13 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 245 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 240 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
         this.isProcessing = false;
+
+       // System.out.println("room cycle took " + (System.currentTimeMillis() - timeStart) + "ms");
+
     }
 
     public void start() {
@@ -124,7 +127,7 @@ public class AbstractRoomProcess implements CometTask {
         if (this.adaptiveProcessTimes) {
             CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 245, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 240, TimeUnit.MILLISECONDS);
         }
 
         this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
@@ -186,10 +189,18 @@ public class AbstractRoomProcess implements CometTask {
 
         final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
+
+
+        List<RoomEntity> arrayList = new ArrayList<>(entities.values());
+
+        if (this.room.hasAttribute("futnitro")) {
+            Collections.shuffle(arrayList);
+        }
+
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
 
-        for (final RoomEntity entity : entities.values()) {
+        for (final RoomEntity entity : arrayList) {
             if (entity == null)
                 continue;
 
@@ -563,8 +574,6 @@ public class AbstractRoomProcess implements CometTask {
             }
 
 
-
-
             if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
 
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
@@ -588,7 +597,7 @@ public class AbstractRoomProcess implements CometTask {
 
             }
 
-            
+
             if (!isCancelled) {
                 entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
                 entity.setHeadRotation(entity.getBodyRotation());

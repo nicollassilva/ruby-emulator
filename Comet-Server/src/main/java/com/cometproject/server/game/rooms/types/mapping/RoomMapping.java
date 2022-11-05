@@ -189,10 +189,10 @@ public class RoomMapping {
     }
 
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove,boolean isRetry) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden());
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), entity.isClickThrough());
     }
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden());
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden(), entity.isClickThrough());
     }
 
     public boolean isValidStep(Position from, Position to, boolean lastStep) {
@@ -225,7 +225,7 @@ public class RoomMapping {
             boolean ignoreHeight,
             boolean isItemOnRoller
     ) {
-        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false);
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false, false);
     }
 
     public boolean isValidStep(
@@ -237,7 +237,8 @@ public class RoomMapping {
             boolean isRetry,
             boolean ignoreHeight,
             boolean isItemOnRoller,
-            boolean isOverriding
+            boolean isOverriding,
+            boolean isClickThrough
     ) {
         if (from.getX() == to.getX() && from.getY() == to.getY()) {
             return true;
@@ -321,7 +322,7 @@ public class RoomMapping {
 
         if (positionHasUser) {
             if(lastStep && !isAtDoor && !room.getData().getAllowWalkthrough())
-                return false;
+                return isClickThrough;
 
             if (!isRetry && !room.getData().getAllowWalkthrough())
                 return false;
