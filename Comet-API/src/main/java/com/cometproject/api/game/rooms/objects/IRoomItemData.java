@@ -34,4 +34,8 @@ public interface IRoomItemData {
     void setWallPosition(String wallPosition);
 
     LimitedEditionItem getLimitedEdition();
+
+    void decItemData(int i);
+
+    int getIntData();
 }

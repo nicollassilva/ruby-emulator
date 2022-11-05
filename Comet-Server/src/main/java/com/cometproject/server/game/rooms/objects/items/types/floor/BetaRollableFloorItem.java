@@ -367,7 +367,7 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
         this.wasDribbling = false;
     }
 
-    private void moveTo(Position pos, int rotation) {
+    public void moveTo(Position pos, int rotation) {
         RoomTile newTile = this.getRoom().getMapping().getTile(pos);
 
         if (newTile == null) {

@@ -52,7 +52,6 @@ public class FootballGoalFloorItem extends RoomItemFloor {
                         ? ((PlayerEntity) ball.getPusher()).getPlayerId()
                         : this.getRoom().getData().getOwnerId()
         );
-
         if (PlayerManager.getInstance().isOnline(playerId)) {
             final Session session = NetworkManager.getInstance().getSessions().getByPlayerId(playerId);
 

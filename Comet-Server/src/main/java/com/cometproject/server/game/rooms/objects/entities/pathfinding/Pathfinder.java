@@ -52,7 +52,7 @@ public abstract class Pathfinder {
     }
 
     private PathfinderNode makePathReversed(RoomObject roomFloorObject, Position end, byte pathfinderMode, boolean isRetry) {
-        final MinMaxPriorityQueue<PathfinderNode> openList = MinMaxPriorityQueue.maximumSize(256).create();
+        final MinMaxPriorityQueue<PathfinderNode> openList = MinMaxPriorityQueue.maximumSize(25).create();
 
         final PathfinderNode[][] map = new PathfinderNode[roomFloorObject.getRoom().getMapping().getModel().getSizeX()][roomFloorObject.getRoom().getMapping().getModel().getSizeY()];
         PathfinderNode node;
@@ -90,18 +90,8 @@ public abstract class Pathfinder {
                     }
 
                     if (!node.isInClosed()) {
-                        diff = 0;
 
-                        if (current.getPosition().getX() != node.getPosition().getX()) {
-                            diff += 1;
-                        }
-
-                        if (current.getPosition().getY() != node.getPosition().getY()) {
-                            diff += 1;
-                        }
-
-
-                        cost = current.getCost() + diff + node.getPosition().getDistanceSquared(end);
+                        cost =  node.getPosition().getDistanceSquared(end);
 
                         if (cost < node.getCost()) {
                             node.setCost(cost);

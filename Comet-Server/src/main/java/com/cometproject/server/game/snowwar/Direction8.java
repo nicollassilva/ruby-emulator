@@ -65,7 +65,7 @@ public class Direction8 {
                 return E;
             }
 
-            if(deltaY > 0) {
+            if (deltaY > 0) {
                 return SE;
             }
         }

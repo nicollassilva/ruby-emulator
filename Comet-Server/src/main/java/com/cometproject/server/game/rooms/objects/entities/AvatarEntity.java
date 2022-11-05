@@ -47,9 +47,6 @@ public interface AvatarEntity extends Attributable {
 
     boolean isWalking();
 
-    Square getFutureSquare();
-
-    void setFutureSquare(Square square);
 
     void moveTo(int x, int y);
 

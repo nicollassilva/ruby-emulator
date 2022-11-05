@@ -41,7 +41,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private int headRotation;
     private List<Square> processingPath;
     private List<Square> walkingPath;
-    private Square futureSquare;
+
     private int previousSteps = 0;
     private int idleTime;
     private int signTime;
@@ -206,10 +206,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (tile == null) return;
 
         if ((tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) && tile.getRedirect() == null) {
-            if(playerEntity != null && !playerEntity.usingTeleportItem())
+            if (playerEntity != null && !playerEntity.usingTeleportItem())
                 return;
         } else {
-            if(playerEntity != null && playerEntity.usingTeleportItem())
+            if (playerEntity != null && playerEntity.usingTeleportItem())
                 return;
         }
 
@@ -230,12 +230,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (path == null || path.size() == 0) {
             path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
 
-            if (path == null || path.size() == 0) {
-                // Reset the goal and return as no path was found
 
-                this.setWalkingGoal(this.getPosition().getX(), this.getPosition().getY());
-                return;
-            }
         }
 
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
@@ -364,15 +359,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         return (this.processingPath != null) && (this.processingPath.size() > 0);
     }
 
-    @Override
-    public Square getFutureSquare() {
-        return this.futureSquare;
-    }
-
-    @Override
-    public void setFutureSquare(Square square) {
-        this.futureSquare = square;
-    }
 
     @Override
     public Map<RoomEntityStatus, String> getStatuses() {

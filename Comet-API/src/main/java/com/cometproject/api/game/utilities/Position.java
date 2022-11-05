@@ -30,6 +30,8 @@ public class Position {
     private double z;
 
     private int flag = -1;
+    private int prevX;
+    private int prevY;
 
     public Position(int x, int y, double z) {
         this.x = x;
@@ -67,7 +69,7 @@ public class Position {
         int dx = this.getX() - point.getX();
         int dy = this.getY() - point.getY();
 
-        return (dx * dx) + (dy * dy);
+        return Math.abs(this.x - point.getX()) + Math.abs(this.y - point.getY());
     }
 
     public static String validateWallPosition(String position) {
@@ -275,9 +277,15 @@ public class Position {
     public int getX() {
         return this.x;
     }
+    public int getPrevX() {
+        return this.prevX;
+    }
 
     public int getY() {
         return this.y;
+    }
+    public int getPrevY() {
+        return this.prevY;
     }
 
     public double getZ() {
@@ -285,6 +293,7 @@ public class Position {
     }
 
     public void setX(int x) {
+        this.prevX = this.x;
         this.x = x;
     }
 
@@ -297,6 +306,8 @@ public class Position {
     }
 
     public void setY(int y) {
+
+        this.prevY = this.y;
         this.y = y;
     }
 

@@ -311,6 +311,7 @@ public class RoomItemFactory {
 
             put("football_timer", FootballTimerFloorItem.class);
             put("ball", FootballFloorItem.class);
+            put("rebug_ball", FootballFloorItem.class);
 
 
             put("football_gate", FootballGateFloorItem.class);

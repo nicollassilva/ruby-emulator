@@ -105,14 +105,14 @@ public class CommandManager implements Initialisable {
         this.loadBotCommands();
         this.notifications = new NotificationManager();
 
-        if (Comet.isDebugging) {
-            this.addCommand("reloadmapping", new ReloadMappingCommand());
-            this.addCommand("instancestats", new InstanceStatsCommand());
-            this.addCommand("roomgrid", new RoomGridCommand());
-            this.addCommand("processtimes", new ProcessTimesCommand());
-            this.addCommand("pos", new PositionCommand(true));
-            this.addCommand("itemdata", new ItemDataCommand());
-        }
+
+        this.addCommand("reloadmapping", new ReloadMappingCommand());
+        this.addCommand("instancestats", new InstanceStatsCommand());
+        this.addCommand("roomgrid", new RoomGridCommand());
+        this.addCommand("processtimes", new ProcessTimesCommand());
+        this.addCommand("pos", new PositionCommand());
+        this.addCommand("itemdata", new ItemDataCommand());
+
 
         this.addCommand("itemid", new ItemVirtualIdCommand());
     }

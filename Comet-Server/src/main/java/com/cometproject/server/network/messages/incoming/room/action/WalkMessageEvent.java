@@ -36,9 +36,6 @@ public class WalkMessageEvent implements Event {
                 return;
             }
 
-            if (goalX == entity.getPosition().getX() && goalY == entity.getPosition().getY()) {
-                return;
-            }
 
             if (entity.hasAttribute("teleport")) {
                 final Position newPosition = new Position(goalX, goalY);
