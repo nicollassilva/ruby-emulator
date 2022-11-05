@@ -189,8 +189,6 @@ public class AbstractRoomProcess implements CometTask {
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
 
-        Collections.shuffle(entities.values().stream().toList());
-
         for (final RoomEntity entity : entities.values()) {
             if (entity == null)
                 continue;
