@@ -321,6 +321,7 @@ public class RoomMapping {
         final boolean positionHasUser = positionHasUser(entityId, to);
 
         if (positionHasUser) {
+
             if(lastStep && !isAtDoor && !room.getData().getAllowWalkthrough())
                 return isClickThrough;
 

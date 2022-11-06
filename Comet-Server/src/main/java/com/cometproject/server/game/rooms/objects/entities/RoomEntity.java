@@ -243,12 +243,13 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (path == null || path.size() == 0) {
             path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
 
-
+            if (path == null || path.size() == 0) {
+                // Reset the goal and return as no path was found
+                this.setWalkingGoal(this.getPosition().getX(), this.getPosition().getY());
+                return;
+            }
         }
 
-        if (path == null || path.size() == 0){
-            this.walking = false;
-        }
 
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
