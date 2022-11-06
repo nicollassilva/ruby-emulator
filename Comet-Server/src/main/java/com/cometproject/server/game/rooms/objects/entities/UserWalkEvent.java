@@ -193,6 +193,8 @@ public class UserWalkEvent {
             mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
         }
 
+        this.liveEntity.addToTile(tile);
+
         final List<RoomItemFloor> postItems = room.getItems().getItemsOnSquare(nextX, nextY);
 
         for (final RoomItemFloor item : postItems) {
@@ -201,7 +203,6 @@ public class UserWalkEvent {
             }
         }
 
-        this.liveEntity.addToTile(tile);
 
         if (effectNeedsRemove && this.liveEntity.getCurrentEffect() != null && this.liveEntity.getCurrentEffect().isItemEffect()) {
             this.liveEntity.applyEffect(this.liveEntity.getLastEffect());
