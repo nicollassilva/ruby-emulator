@@ -87,7 +87,7 @@ public class Room implements Attributable, IRoom {
     private boolean forcedUnload = false;
     private final boolean isPublicRoom;
 
-    public Map<Integer, UserWalkEvent> userEvents;
+    private Map<Integer, UserWalkEvent> userEvents;
 
     private Integer eventIdGeneratorUsers;
 
@@ -112,7 +112,7 @@ public class Room implements Attributable, IRoom {
         }
     }
 
-    public void parseEvent(UserWalkEvent evt)
+    private void parseEvent(UserWalkEvent evt)
     {
         if (evt.Ticks-- > 0) {
             return;

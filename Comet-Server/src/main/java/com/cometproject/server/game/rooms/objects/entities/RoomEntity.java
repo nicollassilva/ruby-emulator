@@ -239,9 +239,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
 
-       // findWalkPath();
+        findWalkPath();
 
-        this.evtWalk.walk(this.getRoom(), x, y);
+       // this.evtWalk.walk(this.getRoom(), x, y);
 
 
     }
