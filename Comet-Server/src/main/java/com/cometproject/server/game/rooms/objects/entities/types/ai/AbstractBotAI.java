@@ -11,6 +11,8 @@ import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.ai.pets.PetAI;
 import com.cometproject.server.game.rooms.objects.entities.types.ai.pets.PetMonsterPlantAI;
+import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.games.BallonFootBall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerBotReachedAvatar;
 import com.cometproject.server.game.rooms.types.components.types.RoomMessageType;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
@@ -59,7 +61,7 @@ public abstract class AbstractBotAI implements BotAI {
                     newStep = false;
                 }
             }
-
+/*
             if ((chance < 3 || this.walkNow) && newStep) {
                 if (this.walkNow) {
                     this.walkNow = false;
@@ -75,6 +77,22 @@ public abstract class AbstractBotAI implements BotAI {
                     });
                 }
             }
+ */
+            if (newStep && !this.getEntity().isWalking() && this.canMove() && this.getEntity().canWalk() && this.followingPlayer == null) {
+                botPathCalculator.submit(() -> {
+                    var reachableTile = this.getEntity().getRoom().getItems().getByClass(FootballFloorItem.class);
+                    if (reachableTile != null && reachableTile.size() >0)
+                    {
+                        var item = reachableTile.get(0);
+                        if (item != null)
+                        {
+                            this.getEntity().moveTo(item.getPosition().getX(), item.getPosition().getY());
+                        }
+                    }
+
+                });
+            }
+
         }
 
         if (this.getEntity() instanceof BotEntity) {

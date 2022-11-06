@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class BallonFootBall implements CometTask {
 
     private Direction8 rot;
-    private final PlayerEntity avatar;
+    private final RoomEntity avatar;
     private final RoomItemFloor ballItem;
 
     public static final int KICK_POWER = 6;
@@ -37,7 +37,7 @@ public class BallonFootBall implements CometTask {
     private boolean wasDribbling = false;
     private int rollStage = -1;
 
-    public BallonFootBall(RoomItemFloor item, PlayerEntity avt, boolean lastSteep) {
+    public BallonFootBall(RoomItemFloor item, RoomEntity avt, boolean lastSteep) {
         this.rot = Direction8.getRot(avt.getPosition().getX(), avt.getPosition().getY(), item.getPosition().getX(),
                 item.getPosition().getY());
         this.ballItem = item;

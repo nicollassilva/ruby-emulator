@@ -19,6 +19,7 @@ import com.cometproject.server.game.polls.PollManager;
 import com.cometproject.server.game.polls.types.Poll;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.RoomQueue;
+import com.cometproject.server.game.rooms.objects.entities.UserWalkEvent;
 import com.cometproject.server.game.rooms.objects.entities.types.BotEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.data.PlayerBotData;
@@ -44,6 +45,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -84,7 +86,10 @@ public class Room implements Attributable, IRoom {
     private boolean isReloading = false;
     private boolean forcedUnload = false;
     private final boolean isPublicRoom;
-    private int executedEvent = 0;
+
+    private Map<Integer, UserWalkEvent> userEvents;
+
+    private Integer eventIdGeneratorUsers;
 
     public Room(IRoomData data) {
         this.data = data;
@@ -96,6 +101,40 @@ public class Room implements Attributable, IRoom {
     public Room(RoomDataObject cachedRoomObject) {
         this(cachedRoomObject.getData());
     }
+
+
+    public void addUserEvent(UserWalkEvent task, int ticks) {
+        task.Ticks = ticks;
+        synchronized (this.eventIdGeneratorUsers) {
+            this.eventIdGeneratorUsers = (this.eventIdGeneratorUsers + 1) % 999999;
+            this.userEvents.put(this.eventIdGeneratorUsers, task);
+            task.eventId = this.eventIdGeneratorUsers;
+        }
+    }
+
+    private void parseEvent(UserWalkEvent evt)
+    {
+        if (evt.Ticks-- > 0) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        try
+        {
+            evt.run(this);
+        }
+        catch (Exception ex)
+        {
+            log.error("Room-Events", ex);
+        }
+        long delay = System.currentTimeMillis() - now;
+        if (delay > 10L) {
+            log.error("RoomEvent slow = " + delay + " | " + evt);
+        }
+        if (evt.Ticks < 0) {
+            this.userEvents.remove(evt.eventId);
+        }
+    }
+
 
     public Room load() {
         this.model = GameContext.getCurrent().getRoomModelService().getModel(this.getData().getModel());
@@ -139,9 +178,9 @@ public class Room implements Attributable, IRoom {
         this.items = new ItemsComponent(this);
         this.squareFlag = new SquareFlagManager();
 
-
-
         this.mapping.init();
+        this.userEvents = new ConcurrentHashMap<>();
+        this.eventIdGeneratorUsers = 0;
 
         this.trade = new TradeComponent(this);
         this.game = new GameComponent(this);
@@ -542,7 +581,6 @@ public class Room implements Attributable, IRoom {
     }
 
     public void setExecutedEvent(int executedEvent) {
-        this.executedEvent = executedEvent;
     }
 
     public BuildingComponent getBuilderComponent() {

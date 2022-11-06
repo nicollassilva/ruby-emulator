@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity {
     public int updatePhase = 0;
@@ -40,14 +39,12 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private Position positionToSet;
     private int bodyRotation;
     private int headRotation;
-    private List<Square> processingPath;
-    private List<Square> walkingPath;
+    public List<Square> processingPath;
 
     private int previousSteps = 0;
     private int idleTime;
     private int signTime;
     private int danceId;
-    private int statusType;
     private PlayerEffect teamEffect;
     private PlayerEffect lastEffect;
     private PlayerEffect effect;
@@ -64,7 +61,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean canWalk = true;
     private boolean isFreeze = false;
     private boolean freeze = false;
-    private final boolean countDados = false;
     private boolean isTeleported = false;
     private boolean isIdle = false;
     private boolean isRolling;
@@ -103,6 +99,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean warping;
     private boolean clickThrough = false;
 
+    private UserWalkEvent evtWalk;
     public RoomEntity(int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
         super(identifier, startPosition, roomInstance);
 
@@ -123,6 +120,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.handItemTimer = 0;
         this.isRolling = false;
 
+        this.evtWalk = new UserWalkEvent(this);
+
         this.danceId = 0;
         this.walkTimeOut = (int) Comet.getTime();
         this.status = new ConcurrentHashMap<>();
@@ -136,12 +135,16 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.doorbellAnswered = false;
 
+        this.processingPath = new ArrayList<>();
+
         if (this.getRoom().hasRoomMute()) {
             this.isRoomMuted = true;
         }
 
         this.joinTime = System.currentTimeMillis();
     }
+
+
 
     public RoomEntityType getEntityType() {
         return this.entityType;
@@ -236,12 +239,20 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
 
+        findWalkPath();
+
+       // this.evtWalk.walk(this.getRoom(), x, y);
+
+
+    }
+
+    public void findWalkPath(){
         // Create a walking path
-        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), false);
+        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(), false);
 
         // Check returned path to see if it calculated one
         if (path == null || path.size() == 0) {
-            path = EntityPathfinder.getInstance().makePath(this, new Position(x, y), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
+            path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
 
             if (path == null || path.size() == 0) {
                 // Reset the goal and return as no path was found
@@ -254,8 +265,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
         this.setWalkingPath(path);
-        this.setProcessingPath(new ArrayList<>(path));
-
+        this.setProcessingPath(path);
     }
 
     public void sit(double height, int rotation) {
@@ -362,16 +372,12 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     @Override
     public List<Square> getWalkingPath() {
-        return this.walkingPath;
+        return this.processingPath;
     }
 
     @Override
     public void setWalkingPath(List<Square> path) {
-        if (this.walkingPath != null) {
-            this.walkingPath.clear();
-        }
-
-        this.walkingPath = path;
+        this.processingPath = path;
     }
 
     public boolean walking;
@@ -1077,7 +1083,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public void setStatusType(int statusType) {
-        this.statusType = statusType;
     }
 
     public int getWalkTimeOut() {

@@ -20,7 +20,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerBotReachedFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.custom.WiredTriggerAntiWalk;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
@@ -37,7 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -491,24 +489,9 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
-        if (entity.hasStatus(RoomEntityStatus.MOVE)) {
-            entity.removeStatus(RoomEntityStatus.MOVE);
-            entity.removeStatus(RoomEntityStatus.GESTURE);
 
-            entity.markNeedsUpdate();
-        }
-
-        // Check if we are wanting to walk to a location
-        if (entity.getWalkingPath() != null) {
-            entity.setProcessingPath(new ArrayList<>(entity.getWalkingPath()));
-
-            // Clear the walking path now we have a goal set
-            entity.getWalkingPath().clear();
-            entity.setWalkingPath(null);
-        }
-
-        if (entity.isWalking()) {
-            final Square nextSq = entity.getProcessingPath().get(0);
+        if (entity.isWalking() && entity.getProcessingPath().size() > 0) {
+            Square nextSq = entity.getProcessingPath().remove(0);
             entity.incrementPreviousSteps();
 
             if (isPlayer && ((PlayerEntity) entity).isKicked()) {
@@ -521,14 +504,9 @@ public class AbstractRoomProcess implements CometTask {
             }
 
 
-            entity.getProcessingPath().remove(nextSq);
-
             boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
             if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
-                if (entity.getWalkingPath() != null) {
-                    entity.getWalkingPath().clear();
-                }
 
                 entity.walking = false;
 
@@ -537,6 +515,23 @@ public class AbstractRoomProcess implements CometTask {
                 entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
 
                 return this.processEntity(entity, true);
+            }
+
+            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
+
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.walking = false;
+                    return false;
+                }
+
+                entity.findWalkPath();
+
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.walking = false;
+                    return false;
+                }
+
+                nextSq = entity.processingPath.remove(0);
             }
 
 
@@ -575,7 +570,6 @@ public class AbstractRoomProcess implements CometTask {
 
 
             if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
-
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
                 final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
                 final boolean isOverriding = isPlayer && entity.isOverriden();
@@ -593,12 +587,26 @@ public class AbstractRoomProcess implements CometTask {
                         isCancelled = false;
                     }
                 }
-
-
             }
 
+            if (isCancelled){
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.walking = false;
+                    return false;
+                }
 
-            if (!isCancelled) {
+                entity.findWalkPath();
+
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.walking = false;
+                    return false;
+                }
+
+                nextSq = entity.processingPath.remove(0);
+               // isCancelled = false;
+            }
+
+          //  if (!isCancelled) {
                 entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
                 entity.setHeadRotation(entity.getBodyRotation());
 
@@ -627,21 +635,22 @@ public class AbstractRoomProcess implements CometTask {
                 }
 
                 entity.addToTile(tile);
-            } else {
-                if (entity.getWalkingPath() != null) {
-                    entity.getWalkingPath().clear();
-                }
-                entity.walking = false;
 
-                entity.getProcessingPath().clear();
-                entity.setWalkCancelled(false);//
-            }
+
 
 
             if (isLastStep)
                 entity.walking = false;
 
         } else {
+
+            if (entity.hasStatus(RoomEntityStatus.MOVE)) {
+                entity.removeStatus(RoomEntityStatus.MOVE);
+                entity.removeStatus(RoomEntityStatus.GESTURE);
+
+                entity.markNeedsUpdate();
+            }
+
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;
         }

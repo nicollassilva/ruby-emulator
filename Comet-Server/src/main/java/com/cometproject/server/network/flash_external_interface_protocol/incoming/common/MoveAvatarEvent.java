@@ -3,7 +3,6 @@ package com.cometproject.server.network.flash_external_interface_protocol.incomi
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
-import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.custom.WiredTriggerCustomSensorMovement;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.network.flash_external_interface_protocol.incoming.IncomingExternalInterfaceMessage;
