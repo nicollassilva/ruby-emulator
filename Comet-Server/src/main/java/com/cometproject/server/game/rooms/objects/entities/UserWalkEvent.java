@@ -72,7 +72,8 @@ public class UserWalkEvent {
 
         boolean isLastStep = (this.liveEntity.getProcessingPath().size() == 0);
 
-        if ((nextSq == null || !this.liveEntity.getRoom().getMapping().isValidEntityStep(this.liveEntity, this.liveEntity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !this.liveEntity.isOverriden()) {
+        if ((nextSq == null ||
+                !this.liveEntity.getRoom().getMapping().isValidEntityStep(this.liveEntity, this.liveEntity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !this.liveEntity.isOverriden()) {
 
             if (this.liveEntity.getProcessingPath().isEmpty()) {
                 stopWalk(room);
@@ -85,9 +86,57 @@ public class UserWalkEvent {
                 stopWalk(room);
                 return;
             }
+
+            nextSq = this.liveEntity.processingPath.remove(0);
+
+        }
+
+        if (nextSq == null) {
+            return;
+        }
+
+        var nextPos = new Position(nextSq.x, nextSq.y, nextSq.height);
+
+        boolean isCancelled = this.liveEntity.isWalkCancelled();
+
+        if (room.getEntities().positionHasEntity(nextPos)) {
+
+            final boolean allowWalkthrough = room.getData().getAllowWalkthrough();
+            final boolean nextPosIsTheGoal = this.liveEntity.getWalkingGoal().equals(nextPos);
+            final boolean isOverriding = this.liveEntity instanceof PlayerEntity && this.liveEntity.isOverriden();
+            if (!isOverriding && (!allowWalkthrough && nextPosIsTheGoal)) {
+                isCancelled = true;
+            }
+
+            final RoomEntity entityOnTile = room.getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
+            if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == this.liveEntity) {
+                isCancelled = false;
+            }
+
+            if (entityOnTile instanceof PetEntity && this.liveEntity instanceof PetEntity) {
+                if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
+                    isCancelled = false;
+                }
+            }
+
+
+        }
+
+        if (isCancelled) {
+
+            this.liveEntity.findWalkPath();
+
+            if (this.liveEntity.getProcessingPath().isEmpty()) {
+                stopWalk(room);
+                return;
+            }
+
             nextSq = this.liveEntity.processingPath.remove(0);
         }
 
+        if (nextSq == null) {
+            return;
+        }
 
         final Position currentPos = this.liveEntity.getPosition() != null ? this.liveEntity.getPosition() : new Position(0, 0, 0);
 
@@ -95,7 +144,6 @@ public class UserWalkEvent {
 
         final RoomTile tile = room.getMapping().getTile(nextSq.x, nextSq.y);
         final double height = tile.getWalkHeight() + mountHeight;
-        boolean isCancelled = this.liveEntity.isWalkCancelled();
         boolean effectNeedsRemove = true;
 
 
@@ -122,6 +170,39 @@ public class UserWalkEvent {
 
             }
         }
+
+
+
+        this.liveEntity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextX, nextY, this.liveEntity.isMoonwalking()));
+        this.liveEntity.setHeadRotation(this.liveEntity.getBodyRotation());
+
+        this.liveEntity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextX).concat(",").concat(String.valueOf(nextY)).concat(",").concat(String.valueOf(nextZ)));
+
+        this.liveEntity.removeStatus(RoomEntityStatus.SIT);
+        this.liveEntity.removeStatus(RoomEntityStatus.LAY);
+
+        final Position newPosition = new Position(nextX, nextY, nextZ);
+
+        this.liveEntity.updateAndSetPosition(newPosition);
+        this.liveEntity.markNeedsUpdate();
+
+
+        if (this.liveEntity instanceof PlayerEntity && this.liveEntity.getMountedEntity() != null) {
+            final RoomEntity mountedEntity = this.liveEntity.getMountedEntity();
+
+            mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
+        }
+
+        final List<RoomItemFloor> postItems = room.getItems().getItemsOnSquare(nextX, nextY);
+
+        for (final RoomItemFloor item : postItems) {
+            if (item != null) {
+                item.onEntityPostStepOn(this.liveEntity);
+            }
+        }
+
+        this.liveEntity.addToTile(tile);
+
         if (effectNeedsRemove && this.liveEntity.getCurrentEffect() != null && this.liveEntity.getCurrentEffect().isItemEffect()) {
             this.liveEntity.applyEffect(this.liveEntity.getLastEffect());
         }
@@ -167,60 +248,6 @@ public class UserWalkEvent {
         }
 
 
-        if (room.getEntities().positionHasEntity(nextPos)) {
-
-            final boolean allowWalkthrough = room.getData().getAllowWalkthrough();
-            final boolean nextPosIsTheGoal = this.liveEntity.getWalkingGoal().equals(nextPos);
-            final boolean isOverriding = this.liveEntity instanceof PlayerEntity && this.liveEntity.isOverriden();
-            if (!isOverriding && (!allowWalkthrough && nextPosIsTheGoal)) {
-                isCancelled = true;
-            }
-
-            final RoomEntity entityOnTile = room.getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
-            if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == this.liveEntity) {
-                isCancelled = false;
-            }
-
-            if (entityOnTile instanceof PetEntity && this.liveEntity instanceof PetEntity) {
-                if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
-                    isCancelled = false;
-                }
-            }
-
-
-        }
-
-        if (!isCancelled) {
-            this.liveEntity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextX, nextY, this.liveEntity.isMoonwalking()));
-            this.liveEntity.setHeadRotation(this.liveEntity.getBodyRotation());
-
-            this.liveEntity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextX).concat(",").concat(String.valueOf(nextY)).concat(",").concat(String.valueOf(nextZ)));
-
-            this.liveEntity.removeStatus(RoomEntityStatus.SIT);
-            this.liveEntity.removeStatus(RoomEntityStatus.LAY);
-
-            final Position newPosition = new Position(nextX, nextY, nextZ);
-
-            this.liveEntity.updateAndSetPosition(newPosition);
-            this.liveEntity.markNeedsUpdate();
-
-            if (this.liveEntity instanceof PlayerEntity && this.liveEntity.getMountedEntity() != null) {
-                final RoomEntity mountedEntity = this.liveEntity.getMountedEntity();
-
-                mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
-            }
-
-            final List<RoomItemFloor> postItems = room.getItems().getItemsOnSquare(nextX, nextY);
-
-            for (final RoomItemFloor item : postItems) {
-                if (item != null) {
-                    item.onEntityPostStepOn(this.liveEntity);
-                }
-            }
-
-            this.liveEntity.addToTile(tile);
-        }
-
         return this.isWalking;
     }
 
@@ -229,8 +256,8 @@ public class UserWalkEvent {
 
         this.liveEntity.walking = false;
         this.isWalking = false;
-        this.liveEntity.processingPath = null;
-        
+        this.liveEntity.processingPath.clear();
+
         //  room.entityWalk(this.nextXY, this.liveEntity, false);
         // room.entityWalk(this.liveEntity.xy, this.liveEntity, true);
         if (this.liveEntity.hasStatus(RoomEntityStatus.MOVE)) {

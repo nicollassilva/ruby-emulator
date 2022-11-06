@@ -189,10 +189,10 @@ public class RoomMapping {
     }
 
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove,boolean isRetry) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), entity.isClickThrough());
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), entity.isClickThrough(), true);
     }
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden(), entity.isClickThrough());
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden(), false, false);
     }
 
     public boolean isValidStep(Position from, Position to, boolean lastStep) {
@@ -225,7 +225,7 @@ public class RoomMapping {
             boolean ignoreHeight,
             boolean isItemOnRoller
     ) {
-        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false, false);
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false, false, false);
     }
 
     public boolean isValidStep(
@@ -238,7 +238,8 @@ public class RoomMapping {
             boolean ignoreHeight,
             boolean isItemOnRoller,
             boolean isOverriding,
-            boolean isClickThrough
+            boolean isClickThrough,
+            boolean checkDiag
     ) {
         if (from.getX() == to.getX() && from.getY() == to.getY()) {
             return true;
@@ -271,6 +272,64 @@ public class RoomMapping {
         if (isFloorItem) {
             if (this.getTile(to).hasGate()) {
                 return false;
+            }
+        }
+
+
+        if (checkDiag && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.DISABLED))
+        {
+
+            var xLen = tiles.length;
+            var yLen = tiles[0].length;
+            int xValue = to.getX() - from.getX();
+            int yValue = to.getY() - from.getY();
+
+            if (xValue == -1 && yValue == -1)
+            {
+                if (xLen <= to.getX() + 1 || yLen <= to.getY() + 1)
+                {
+                    return false;
+                }
+
+                var sqState = tiles[to.getX() + 1][ to.getY() + 1];
+                if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
+                    return false;
+            }
+            else if (xValue == 1 && yValue == -1)
+            {
+                if (xLen <= to.getX() - 1 || yLen <= to.getY() + 1)
+                {
+                    return false;
+                }
+
+                var sqState = tiles[to.getX() - 1][ to.getY() + 1];
+
+                if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
+                    return false;
+            }
+            else if (xValue == 1 && yValue == 1)
+            {
+                if (xLen <= to.getX() - 1 || yLen <= to.getY() - 1)
+                {
+                    return false;
+                }
+
+                var sqState = tiles[to.getX() - 1][ to.getY() - 1];
+
+                if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
+                    return false;
+            }
+            else if (xValue == -1 && yValue == 1)
+            {
+                if (xLen <= to.getX() + 1 || yLen <= to.getY() - 1)
+                {
+                    return false;
+                }
+
+                var sqState = tiles[to.getX() + 1][ to.getY() - 1];
+
+                if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
+                    return false;
             }
         }
 
