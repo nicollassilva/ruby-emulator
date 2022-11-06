@@ -10,7 +10,7 @@ public class NoclickAvatarCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
 
-        if (client.getPlayer().getEntity().getGameTeam() == GameTeam.NONE) {
+        if (client.getPlayer().getEntity().getGameTeam() == GameTeam.NONE || !client.getPlayer().getEntity().isClickThrough()) {
             final GameTeam gameTeam = GameTeam.RED;
             client.getPlayer().getEntity().setGameTeam(gameTeam);
             client.getPlayer().getEntity().setClickThrough(true);
