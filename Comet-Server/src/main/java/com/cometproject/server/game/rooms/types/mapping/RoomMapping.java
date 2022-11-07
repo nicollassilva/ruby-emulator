@@ -249,9 +249,6 @@ public class RoomMapping {
             return true;
         }
 
-        if (!(to.getX() < this.getModel().getSquareState().length)) {
-            return false;
-        }
 
         if (!isValidPosition(to) || (this.getModel().getSquareState()[to.getX()][to.getY()] == RoomTileState.INVALID)) {
             return false;
@@ -329,44 +326,40 @@ public class RoomMapping {
 
             final int rotation = Position.calculateRotation(from, to);
 
-            if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
-                // Get all tiles at passing corners
-                RoomTile left = null;
-                RoomTile right = null;
+            // Get all tiles at passing corners
+            RoomTile left = null;
+            RoomTile right = null;
 
-                switch (rotation) {
-                    case 1:
-                        left = this.getTile(from.squareInFront(rotation + 1));
-                        right = this.getTile(to.squareBehind(rotation + 1));
-                        break;
-
-                    case 3:
-                        left = this.getTile(to.squareBehind(rotation + 1));
-                        right = this.getTile(to.squareBehind(rotation - 1));
-                        break;
-
-                    case 5:
-                        left = this.getTile(from.squareInFront(rotation - 1));
-                        right = this.getTile(to.squareBehind(rotation - 1));
-                        break;
-
-                    case 7:
-                        left = this.getTile(to.squareBehind(rotation - 1));
-                        right = this.getTile(from.squareInFront(rotation - 1));
-                        break;
+            switch (rotation) {
+                case 1 -> {
+                    left = this.getTile(from.squareInFront(rotation + 1));
+                    right = this.getTile(to.squareBehind(rotation + 1));
                 }
-
-                if (left != null && right != null) {
-                    if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID)
-                        return false;
-
-                    if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID)
-                        return false;
-
-                    if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN)
-                        return false;
+                case 3 -> {
+                    left = this.getTile(to.squareBehind(rotation + 1));
+                    right = this.getTile(to.squareBehind(rotation - 1));
+                }
+                case 5 -> {
+                    left = this.getTile(from.squareInFront(rotation - 1));
+                    right = this.getTile(to.squareBehind(rotation - 1));
+                }
+                case 7 -> {
+                    left = this.getTile(to.squareBehind(rotation - 1));
+                    right = this.getTile(from.squareInFront(rotation - 1));
                 }
             }
+
+            if (left != null && right != null) {
+                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID)
+                    return false;
+
+                if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID)
+                    return false;
+
+                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN)
+                    return false;
+            }
+
         }
 
         if (isOverriding)
@@ -401,14 +394,16 @@ public class RoomMapping {
         if ((tile.getMovementNode() == RoomEntityMovementNode.CLOSED || (tile.getMovementNode() == RoomEntityMovementNode.END_OF_ROUTE && !lastStep)) && !isItemOnRoller)
             return isClickThrough && generating;
 
-        if (ignoreHeight)
+        if (ignoreHeight || (isClickThrough && generating))
+            return true;
+
+
+        if (isAtDoor)
             return true;
 
         final double fromHeight = this.getStepHeight(from);
         final double toHeight = this.getStepHeight(to);
 
-        if (isAtDoor)
-            return true;
 
         if (fromHeight > toHeight) {
             if (entity != null)

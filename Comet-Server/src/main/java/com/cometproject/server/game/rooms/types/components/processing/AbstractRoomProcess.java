@@ -125,7 +125,7 @@ public class AbstractRoomProcess implements CometTask {
         if (this.adaptiveProcessTimes) {
             CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 490, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 500, TimeUnit.MILLISECONDS);
         }
 
         this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
@@ -134,7 +134,7 @@ public class AbstractRoomProcess implements CometTask {
             } catch (Exception e) {
                 log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
             }
-        }, 490, 490, TimeUnit.MILLISECONDS);
+        }, 0, 500, TimeUnit.MILLISECONDS);
 
 
         this.active = true;
@@ -240,9 +240,8 @@ public class AbstractRoomProcess implements CometTask {
 
                         entitiesToUpdate.add(entity);
                     } else if (entity.isNeedsForcedUpdate()) {
-                        if (entity.hasStatus(RoomEntityStatus.MOVE)) {
-                            entity.removeStatus(RoomEntityStatus.MOVE);
-                        }
+                        entity.removeStatus(RoomEntityStatus.MOVE);
+
 
                         entity.updatePhase = 1;
                         entitiesToUpdate.add(entity);
@@ -485,8 +484,10 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
+        entity.removeStatus(RoomEntityStatus.MOVE);
+        entity.markNeedsUpdate();
 
-        if (entity.isWalking() && entity.getProcessingPath().size() > 0) {
+        if (entity.isWalking()) {
             Square nextSq = entity.getProcessingPath().remove(0);
             entity.incrementPreviousSteps();
 

@@ -211,7 +211,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         final RoomTile tile = this.getRoom().getMapping().getTile(x, y);
 
-        if (tile == null) return;
+        if (tile == null)
+            return;
 
 
         if (playerEntity != null && playerEntity.usingTeleportItem())
