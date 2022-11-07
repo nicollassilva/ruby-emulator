@@ -230,7 +230,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
 
-        findWalkPath(true);
+        this.findPath = true;
+        //findWalkPath(true);
 
         //this.evtWalk.walk(this.getRoom(), x, y);
 
@@ -266,11 +267,16 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         }
 
+        this.findPath = false;
+
+        this.setWalkingPath(path);
 
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
-        this.setWalkingPath(path);
+
     }
+
+    public boolean findPath;
 
     public void sit(double height, int rotation) {
         this.removeStatus(RoomEntityStatus.LAY);

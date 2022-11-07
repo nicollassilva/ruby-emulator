@@ -188,7 +188,6 @@ public class AbstractRoomProcess implements CometTask {
         final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
 
-
         List<RoomEntity> arrayList = new ArrayList<>(entities.values());
 
         if (this.room.hasAttribute("futnitro")) {
@@ -484,10 +483,15 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
+        if (entity.findPath) {
+            entity.findPath = false;
+            entity.findWalkPath(true);
+        }
+
         entity.removeStatus(RoomEntityStatus.MOVE);
         entity.markNeedsUpdate();
 
-        if (entity.isWalking()) {
+        if (entity.isWalking() && entity.processingPath.size() > 0) {
             Square nextSq = entity.getProcessingPath().remove(0);
             entity.incrementPreviousSteps();
 
@@ -578,21 +582,9 @@ public class AbstractRoomProcess implements CometTask {
                 }
             }
 
-            if (isCancelled){
-                if (entity.getProcessingPath().isEmpty()) {
-                    entity.walking = false;
-                    return false;
-                }
-
-                entity.findWalkPath(false);
-
-                if (entity.getProcessingPath().isEmpty()) {
-                    entity.walking = false;
-                    return false;
-                }
-
-                nextSq = entity.processingPath.remove(0);
-                // isCancelled = false;
+            if (isCancelled) {
+                entity.findPath = true;
+                return false;
             }
 
 
@@ -628,8 +620,6 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             entity.addToTile(tile);
-
-
 
 
             if (isLastStep)
