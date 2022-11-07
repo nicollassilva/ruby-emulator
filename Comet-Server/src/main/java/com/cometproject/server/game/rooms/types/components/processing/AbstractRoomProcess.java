@@ -123,9 +123,9 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 490, TimeUnit.MILLISECONDS);
+            CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 490, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 240, TimeUnit.MILLISECONDS);
         }
 
         this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
@@ -202,7 +202,7 @@ public class AbstractRoomProcess implements CometTask {
             if (entity == null)
                 continue;
 
-            if (true) {
+            if (entity.isFastWalkEnabled() || this.update) {
 
                 if (entity.getEntityType() == RoomEntityType.PLAYER) {
                     final PlayerEntity playerEntity = (PlayerEntity) entity;
@@ -508,6 +508,17 @@ public class AbstractRoomProcess implements CometTask {
 
             if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
 
+                entity.walking = false;
+
+                entity.getProcessingPath().clear();
+
+                entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
+
+                return this.processEntity(entity, true);
+            }
+
+            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
+
                 if (entity.getProcessingPath().isEmpty()) {
                     entity.walking = false;
                     return false;
@@ -523,8 +534,6 @@ public class AbstractRoomProcess implements CometTask {
                 nextSq = entity.processingPath.remove(0);
             }
 
-            if (nextSq == null)
-                return false;
 
             final Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
             final Position nextPos = new Position(nextSq.x, nextSq.y);
@@ -596,9 +605,6 @@ public class AbstractRoomProcess implements CometTask {
                 nextSq = entity.processingPath.remove(0);
                // isCancelled = false;
             }
-
-            if (nextSq== null)
-                return false;
 
           //  if (!isCancelled) {
                 entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
