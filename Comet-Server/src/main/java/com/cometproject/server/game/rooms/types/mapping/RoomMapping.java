@@ -277,7 +277,7 @@ public class RoomMapping {
         }
 
 
-        if (checkDiag && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.DISABLED)) {
+        if (checkDiag && this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.STRICT)) {
 
             var xLen = tiles.length;
             var yLen = tiles[0].length;
