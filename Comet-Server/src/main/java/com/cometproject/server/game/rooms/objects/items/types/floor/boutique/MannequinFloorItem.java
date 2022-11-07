@@ -88,10 +88,7 @@ public class MannequinFloorItem extends RoomItemFloor {
         if (figure.length() > 512)
             return false;
 
-        if(ClothingValidationManager.isInvalidLook(playerEntity.getPlayer(), figure, FigureGender.fromString(gender)))
-            return false;
-
-        playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(playerEntity.getPlayer(),figure, FigureGender.fromString(gender)));
+        playerEntity.getPlayer().getData().setFigure(ClothingValidationManager.validateLook(playerEntity.getPlayer(), figure, FigureGender.fromString(gender)));
         playerEntity.getPlayer().getData().setGender(this.gender);
 
         playerEntity.getPlayer().getData().save();
