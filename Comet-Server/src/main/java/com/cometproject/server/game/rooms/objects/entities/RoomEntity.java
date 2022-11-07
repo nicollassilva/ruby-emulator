@@ -36,6 +36,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean needsForcedUpdate = false;
     private RoomEntityType entityType;
     private Position walkingGoal;
+    private Position prevWalkingGoal;
     private Position positionToSet;
     private int bodyRotation;
     private int headRotation;
@@ -161,6 +162,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     @Override
     public void setWalkingGoal(int x, int y) {
+        this.prevWalkingGoal = walkingGoal;
         this.walkingGoal = new Position(x, y, 0.0);
     }
 
@@ -211,22 +213,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         if (tile == null) return;
 
-        if ((tile.getState() == RoomTileState.INVALID || tile.getMovementNode() == RoomEntityMovementNode.CLOSED) && tile.getRedirect() == null) {
-            if (tile.getMovementNode() == RoomEntityMovementNode.CLOSED) {
-                var sqFront = tile.getPosition().squareInFront(this.getBodyRotation());
-                if (sqFront != null) {
-                    x = sqFront.getX();
-                    y = sqFront.getY();
-                }
 
-            } else {
-                if (playerEntity != null && !playerEntity.usingTeleportItem())
-                    return;
-            }
-        } else {
-            if (playerEntity != null && playerEntity.usingTeleportItem())
-                return;
-        }
+        if (playerEntity != null && playerEntity.usingTeleportItem())
+            return;
+
 
         if (tile.getRedirect() != null) {
             x = tile.getRedirect().getX();
@@ -246,19 +236,33 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     }
 
-    public void findWalkPath(){
+    public void findWalkPath(boolean firstGen){
         // Create a walking path
-        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(), false);
+        List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(),
+                false, firstGen);
 
         // Check returned path to see if it calculated one
         if (path == null || path.size() == 0) {
-            path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(), true);
+            path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(), true,
+                    firstGen);
 
             if (path == null || path.size() == 0) {
-                // Reset the goal and return as no path was found
-                this.setWalkingGoal(this.getPosition().getX(), this.getPosition().getY());
+                if (this.getEntityType() == RoomEntityType.PLAYER) {
+                    PlayerEntity playerEntity = (PlayerEntity) this;
+
+                 if (playerEntity.isClickThrough()){
+                     this.processingPath.clear();
+                 }
+                }
+
+                if (prevWalkingGoal != null) {
+                    this.walkingGoal = prevWalkingGoal;
+                }
+
                 return;
             }
+
+
         }
 
 

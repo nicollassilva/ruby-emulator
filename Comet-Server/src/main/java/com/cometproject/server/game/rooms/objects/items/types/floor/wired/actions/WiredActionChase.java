@@ -65,11 +65,11 @@ public class WiredActionChase extends WiredActionItem {
                 }
 
                 this.targetId = nearestEntity.getId();
-                List<Square> tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition(), RoomDiagonalType.DISABLED.getKey(), false);
+                List<Square> tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition(), RoomDiagonalType.DISABLED.getKey(), false, false);
 
                 for (int direction : Position.COLLIDE_TILES) {
                     if (tilesToEntity.size() == 0.0) {
-                        tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), RoomDiagonalType.DISABLED.getKey(), false);
+                        tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), RoomDiagonalType.DISABLED.getKey(), false, false);
                         break;
                     }
                 }

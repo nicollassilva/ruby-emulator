@@ -54,8 +54,8 @@ public class UserWalkEvent {
 
         if (this.findPath) {
             this.findPath = false;
-            this.liveEntity.processingPath.clear();
-            this.liveEntity.findWalkPath();
+           // this.liveEntity.processingPath.clear();
+            this.liveEntity.findWalkPath(true);
         }
 
 
@@ -80,7 +80,7 @@ public class UserWalkEvent {
                 return;
             }
 
-            this.liveEntity.findWalkPath();
+            this.liveEntity.findWalkPath(false);
 
             if (this.liveEntity.getProcessingPath().isEmpty()) {
                 stopWalk(room);
@@ -124,7 +124,7 @@ public class UserWalkEvent {
 
         if (isCancelled) {
 
-            this.liveEntity.findWalkPath();
+            this.liveEntity.findWalkPath(false);
 
             if (this.liveEntity.getProcessingPath().isEmpty()) {
                 stopWalk(room);

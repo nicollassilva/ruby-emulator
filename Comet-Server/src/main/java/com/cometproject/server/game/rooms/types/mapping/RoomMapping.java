@@ -188,11 +188,12 @@ public class RoomMapping {
         return false;
     }
 
-    public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove,boolean isRetry) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), entity.isClickThrough(), true);
+    public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove, boolean isRetry, boolean generating) {
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), entity.isClickThrough(), true, generating);
     }
+
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove) {
-        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden(), false, false);
+        return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, true, false, false, entity.isOverriden(), false, false, false);
     }
 
     public boolean isValidStep(Position from, Position to, boolean lastStep) {
@@ -206,6 +207,7 @@ public class RoomMapping {
     public boolean isValidStep(@Nullable Integer entity, Position from, Position to, boolean lastStep, boolean isFloorItem, boolean isRetry) {
         return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, false);
     }
+
     public boolean isValidStep(@Nullable Integer entity,
                                Position from,
                                Position to,
@@ -215,6 +217,7 @@ public class RoomMapping {
                                boolean ignoreHeight) {
         return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, false);
     }
+
     public boolean isValidStep(
             @Nullable Integer entity,
             Position from,
@@ -225,7 +228,7 @@ public class RoomMapping {
             boolean ignoreHeight,
             boolean isItemOnRoller
     ) {
-        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false, false, false);
+        return isValidStep(entity, from, to, lastStep, isFloorItem, isRetry, ignoreHeight, isItemOnRoller, false, false, false, false);
     }
 
     public boolean isValidStep(
@@ -239,7 +242,8 @@ public class RoomMapping {
             boolean isItemOnRoller,
             boolean isOverriding,
             boolean isClickThrough,
-            boolean checkDiag
+            boolean checkDiag,
+            boolean generating
     ) {
         if (from.getX() == to.getX() && from.getY() == to.getY()) {
             return true;
@@ -276,113 +280,104 @@ public class RoomMapping {
         }
 
 
-        if (checkDiag && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.DISABLED))
-        {
+        if (checkDiag && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.DISABLED)) {
 
             var xLen = tiles.length;
             var yLen = tiles[0].length;
             int xValue = to.getX() - from.getX();
             int yValue = to.getY() - from.getY();
 
-            if (xValue == -1 && yValue == -1)
-            {
-                if (xLen <= to.getX() + 1 || yLen <= to.getY() + 1)
-                {
+            if (xValue == -1 && yValue == -1) {
+                if (xLen <= to.getX() + 1 || yLen <= to.getY() + 1) {
                     return false;
                 }
 
-                var sqState = tiles[to.getX() + 1][ to.getY() + 1];
+                var sqState = tiles[to.getX() + 1][to.getY() + 1];
                 if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
                     return false;
-            }
-            else if (xValue == 1 && yValue == -1)
-            {
-                if (xLen <= to.getX() - 1 || yLen <= to.getY() + 1)
-                {
+            } else if (xValue == 1 && yValue == -1) {
+                if (xLen <= to.getX() - 1 || yLen <= to.getY() + 1) {
                     return false;
                 }
 
-                var sqState = tiles[to.getX() - 1][ to.getY() + 1];
+                var sqState = tiles[to.getX() - 1][to.getY() + 1];
 
                 if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
                     return false;
-            }
-            else if (xValue == 1 && yValue == 1)
-            {
-                if (xLen <= to.getX() - 1 || yLen <= to.getY() - 1)
-                {
+            } else if (xValue == 1 && yValue == 1) {
+                if (xLen <= to.getX() - 1 || yLen <= to.getY() - 1) {
                     return false;
                 }
 
-                var sqState = tiles[to.getX() - 1][ to.getY() - 1];
+                var sqState = tiles[to.getX() - 1][to.getY() - 1];
 
                 if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
                     return false;
-            }
-            else if (xValue == -1 && yValue == 1)
-            {
-                if (xLen <= to.getX() + 1 || yLen <= to.getY() - 1)
-                {
+            } else if (xValue == -1 && yValue == 1) {
+                if (xLen <= to.getX() + 1 || yLen <= to.getY() - 1) {
                     return false;
                 }
 
-                var sqState = tiles[to.getX() + 1][ to.getY() - 1];
+                var sqState = tiles[to.getX() + 1][to.getY() - 1];
 
                 if (sqState.getState() != RoomTileState.VALID || sqState.getMovementNode() != RoomEntityMovementNode.OPEN)
                     return false;
             }
         }
 
-        final int rotation = Position.calculateRotation(from, to);
+        if (!this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ENABLED)) {
 
-        if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
-            // Get all tiles at passing corners
-            RoomTile left = null;
-            RoomTile right = null;
+            final int rotation = Position.calculateRotation(from, to);
 
-            switch (rotation) {
-                case 1:
-                    left = this.getTile(from.squareInFront(rotation + 1));
-                    right = this.getTile(to.squareBehind(rotation + 1));
-                    break;
+            if (rotation == 1 || rotation == 3 || rotation == 5 || rotation == 7) {
+                // Get all tiles at passing corners
+                RoomTile left = null;
+                RoomTile right = null;
 
-                case 3:
-                    left = this.getTile(to.squareBehind(rotation + 1));
-                    right = this.getTile(to.squareBehind(rotation - 1));
-                    break;
+                switch (rotation) {
+                    case 1:
+                        left = this.getTile(from.squareInFront(rotation + 1));
+                        right = this.getTile(to.squareBehind(rotation + 1));
+                        break;
 
-                case 5:
-                    left = this.getTile(from.squareInFront(rotation - 1));
-                    right = this.getTile(to.squareBehind(rotation - 1));
-                    break;
+                    case 3:
+                        left = this.getTile(to.squareBehind(rotation + 1));
+                        right = this.getTile(to.squareBehind(rotation - 1));
+                        break;
 
-                case 7:
-                    left = this.getTile(to.squareBehind(rotation - 1));
-                    right = this.getTile(from.squareInFront(rotation - 1));
-                    break;
-            }
+                    case 5:
+                        left = this.getTile(from.squareInFront(rotation - 1));
+                        right = this.getTile(to.squareBehind(rotation - 1));
+                        break;
 
-            if (left != null && right != null && !this.getRoom().getData().getRoomDiagonalType().equals(RoomDiagonalType.ENABLED)) {
-                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID)
-                    return false;
+                    case 7:
+                        left = this.getTile(to.squareBehind(rotation - 1));
+                        right = this.getTile(from.squareInFront(rotation - 1));
+                        break;
+                }
 
-                if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID)
-                    return false;
+                if (left != null && right != null) {
+                    if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getState() == RoomTileState.INVALID)
+                        return false;
 
-                if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN)
-                    return false;
+                    if (right.getMovementNode() != RoomEntityMovementNode.OPEN && left.getState() == RoomTileState.INVALID)
+                        return false;
+
+                    if (left.getMovementNode() != RoomEntityMovementNode.OPEN && right.getMovementNode() != RoomEntityMovementNode.OPEN)
+                        return false;
+                }
             }
         }
 
-        if(isOverriding)
+        if (isOverriding)
             return true;
 
         final boolean positionHasUser = positionHasUser(entityId, to);
 
         if (positionHasUser) {
 
-            if(lastStep && !isAtDoor && !room.getData().getAllowWalkthrough())
-                return isClickThrough;
+            if (lastStep && !isAtDoor && !room.getData().getAllowWalkthrough())
+                return isClickThrough && generating;
 
             if (!isRetry && !room.getData().getAllowWalkthrough())
                 return false;
@@ -404,7 +399,7 @@ public class RoomMapping {
         }
 
         if ((tile.getMovementNode() == RoomEntityMovementNode.CLOSED || (tile.getMovementNode() == RoomEntityMovementNode.END_OF_ROUTE && !lastStep)) && !isItemOnRoller)
-            return false;
+            return isClickThrough && generating;
 
         if (ignoreHeight)
             return true;
@@ -415,11 +410,11 @@ public class RoomMapping {
         if (isAtDoor)
             return true;
 
-        if(fromHeight > toHeight){
-            if(entity != null)
+        if (fromHeight > toHeight) {
+            if (entity != null)
                 return true;
 
-            if(fromHeight - toHeight >= 3)
+            if (fromHeight - toHeight >= 3)
                 return false;
         }
 

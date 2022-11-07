@@ -54,7 +54,7 @@ public class WiredActionFlee extends WiredActionItem {
                 if (nearestEntity != null && nearestEntity.getPosition() != null) {
                     Position newCoordinate = floorItem.getPosition().squareBehind(Position.calculateRotation(floorItem.getPosition().getX(), floorItem.getPosition().getY(), nearestEntity.getPosition().getX(), nearestEntity.getPosition().getY(), false));
 
-                    List<Square> tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, newCoordinate, (byte) 0, false);
+                    List<Square> tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, newCoordinate, (byte) 0, false, false);
                     if ((tilesToEntity != null) && (tilesToEntity.size() != 0)) {
                         Position positionTo = new Position(tilesToEntity.get(0).x, tilesToEntity.get(0).y);
                         moveToTile(floorItem, positionFrom, positionTo);

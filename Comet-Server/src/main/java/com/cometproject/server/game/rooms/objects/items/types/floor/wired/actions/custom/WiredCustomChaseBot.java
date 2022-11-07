@@ -74,7 +74,7 @@ public class WiredCustomChaseBot extends WiredActionItem {
                 List<Square> tilesToEntity = new ArrayList<>();
 
                 for (int direction : Position.COLLIDE_TILES) {
-                    tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), RoomDiagonalType.DISABLED.getKey(), false);
+                    tilesToEntity = ItemPathfinder.getInstance().makePath(floorItem, nearestEntity.getPosition().squareInFront(direction), RoomDiagonalType.DISABLED.getKey(), false, false);
                     break;
                 }
 
