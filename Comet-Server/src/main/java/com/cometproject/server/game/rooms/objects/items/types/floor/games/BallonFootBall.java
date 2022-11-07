@@ -73,8 +73,8 @@ public class BallonFootBall implements CometTask {
 
         final Map<Integer, Double> items = new HashMap<>();
 
-//        items.put(item.getVirtualId(), item.getPosition().getZ());
-        room.getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(from.copy(), to.copy(), item.getVirtualId(), 0, item.getVirtualId()));
+        items.put(item.getVirtualId(), item.getPosition().getZ());
+        room.getEntities().broadcastMessage(new SlideObjectBundleMessageComposer(from.copy(), to.copy(), item.getVirtualId(), 0, items));
     }
 
     public void run() {

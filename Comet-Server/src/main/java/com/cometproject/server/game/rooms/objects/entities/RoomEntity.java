@@ -120,7 +120,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.handItemTimer = 0;
         this.isRolling = false;
 
-        this.evtWalk = new UserWalkEvent(this);
+        //this.evtWalk = new UserWalkEvent(this);
 
         this.danceId = 0;
         this.walkTimeOut = (int) Comet.getTime();

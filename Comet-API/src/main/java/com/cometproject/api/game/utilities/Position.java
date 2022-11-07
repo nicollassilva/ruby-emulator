@@ -24,14 +24,6 @@ public class Position {
             NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST
     };
 
-    public final int getLocalCost(Position start, Position goal)
-    {
-        if (this.x == start.getX() && this.y == start.getY()) {
-            return 999999;
-        }
-
-        return Math.abs(this.x - goal.x) + Math.abs(this.y - goal.y);
-    }
 
     private int x;
     private int y;
