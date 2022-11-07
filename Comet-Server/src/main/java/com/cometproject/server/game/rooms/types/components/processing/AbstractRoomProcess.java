@@ -126,7 +126,7 @@ public class AbstractRoomProcess implements CometTask {
         if (this.adaptiveProcessTimes) {
             CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 490, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 500, TimeUnit.MILLISECONDS);
         }
 
         this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
@@ -135,7 +135,7 @@ public class AbstractRoomProcess implements CometTask {
             } catch (Exception e) {
                 log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
             }
-        }, 490, 490, TimeUnit.MILLISECONDS);
+        }, 0, 500, TimeUnit.MILLISECONDS);
 
 
         this.active = true;

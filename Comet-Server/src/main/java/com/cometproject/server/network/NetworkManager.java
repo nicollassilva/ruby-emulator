@@ -52,6 +52,7 @@ public class NetworkManager {
 
     private EventLoopGroup ioLoopGroup;
     private EventLoopGroup acceptLoopGroup;
+    private GameServer wsServer;
 
 
     public NetworkManager() {
@@ -150,10 +151,19 @@ public class NetworkManager {
 
         System.out.println("Starting WS on port: " + port);
 
-        var wsServer = new GameServer(port);
-        wsServer.start();
+        this.wsServer = new GameServer(port);
+        this.wsServer.start();
+
     }
 
+
+    public void Shutdown(){
+        try {
+            this.wsServer.stop(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public SessionManager getSessions() {
         return this.sessions;
     }

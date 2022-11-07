@@ -4,6 +4,7 @@ import com.cometproject.api.game.GameContext;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.logging.LogManager;
 import com.cometproject.server.logging.database.queries.LogQueries;
+import com.cometproject.server.network.NetworkManager;
 import com.cometproject.server.storage.StorageManager;
 import com.cometproject.server.storage.queries.system.StatisticsDao;
 import org.apache.logging.log4j.Logger;
@@ -29,8 +30,11 @@ public class ShutdownProcess {
             LogQueries.updateRoomEntries();
         }
 
+
         log.info("Closing all database connections");
         StorageManager.getInstance().shutdown();
+
+        NetworkManager.getInstance().Shutdown();
 
         if (exit) {
             System.exit(0);
