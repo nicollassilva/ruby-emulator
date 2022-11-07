@@ -101,6 +101,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean clickThrough = false;
 
     private UserWalkEvent evtWalk;
+
     public RoomEntity(int identifier, Position startPosition, int startBodyRotation, int startHeadRotation, Room roomInstance) {
         super(identifier, startPosition, roomInstance);
 
@@ -144,7 +145,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.joinTime = System.currentTimeMillis();
     }
-
 
 
     public RoomEntityType getEntityType() {
@@ -229,14 +229,14 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
 
-       // findWalkPath();
+        findWalkPath(true);
 
-        this.evtWalk.walk(this.getRoom(), x, y);
+        //this.evtWalk.walk(this.getRoom(), x, y);
 
 
     }
 
-    public void findWalkPath(boolean firstGen){
+    public void findWalkPath(boolean firstGen) {
         // Create a walking path
         List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(),
                 false, firstGen);
@@ -250,9 +250,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 if (this.getEntityType() == RoomEntityType.PLAYER) {
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
-                 if (playerEntity.isClickThrough()){
-                     this.processingPath.clear();
-                 }
+                    if (playerEntity.isClickThrough()) {
+                        this.processingPath.clear();
+                    }
                 }
 
                 if (prevWalkingGoal != null) {
@@ -269,7 +269,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         // UnIdle the user and set the path (if the path has nodes it will mean the user is walking)
         this.unIdle();
         this.setWalkingPath(path);
-        this.setProcessingPath(path);
     }
 
     public void sit(double height, int rotation) {
@@ -385,6 +384,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public boolean walking;
+
     @Override
     public boolean isWalking() {
         return walking || ((this.processingPath != null) && (this.processingPath.size() > 0));
@@ -669,6 +669,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     public boolean isOverriden() {
         return this.overriden;
     }
+
     public boolean isClickThrough() {
         return this.clickThrough;
     }
@@ -676,6 +677,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     public void setClickThrough(boolean clickThrough) {
         this.clickThrough = clickThrough;
     }
+
     public void setOverriden(boolean overriden) {
         this.overriden = overriden;
     }

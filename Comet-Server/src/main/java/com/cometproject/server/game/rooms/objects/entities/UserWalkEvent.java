@@ -164,7 +164,7 @@ public class UserWalkEvent {
                 if (item.isMovementCancelled(this.liveEntity, new Position(nextSq.x, nextSq.y))) {
                     isCancelled = true;
                 }
-    
+
                 if (!isCancelled)
                     item.onEntityPreStepOn(this.liveEntity);
 
