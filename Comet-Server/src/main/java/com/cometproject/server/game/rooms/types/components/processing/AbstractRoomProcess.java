@@ -263,32 +263,29 @@ public class AbstractRoomProcess implements CometTask {
         }
 
 
-        CompletableFuture.runAsync(() -> {
+        if (entitiesToUpdate.size() > 0) {
+            this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
+        }
 
-            if (entitiesToUpdate.size() > 0) {
-                this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
+        for (final RoomEntity entity : entitiesToUpdate) {
+            if (entity.updatePhase == 1) continue;
+
+            if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
+                playersToRemove.add((PlayerEntity) entity);
             }
-
-            for (final RoomEntity entity : entitiesToUpdate) {
-                if (entity.updatePhase == 1) continue;
-
-                if (this.updateEntityStuff(entity) && entity instanceof PlayerEntity) {
-                    playersToRemove.add((PlayerEntity) entity);
-                }
-            }
+        }
 
 
-            for (final PlayerEntity entity : playersToRemove) {
-                if (entity == null)
-                    continue;
+        for (final PlayerEntity entity : playersToRemove) {
+            if (entity == null)
+                continue;
 
-                entity.leaveRoom(entity.getPlayer() == null, false, true);
-            }
+            entity.leaveRoom(entity.getPlayer() == null, false, true);
+        }
 
-            playersToRemove.clear();
-            entitiesToUpdate.clear();
+        playersToRemove.clear();
+        entitiesToUpdate.clear();
 
-        });
     }
 
     public boolean updateEntityStuff(RoomEntity entity) {
