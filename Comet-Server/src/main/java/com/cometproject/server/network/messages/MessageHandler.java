@@ -133,6 +133,7 @@ import com.google.common.collect.Maps;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -141,7 +142,7 @@ import java.util.concurrent.ForkJoinPool;
 public class MessageHandler {
     public static Logger log = LogManager.getLogger(MessageHandler.class.getName());
 
-    private final Map<Short, Event> messages = Maps.newConcurrentMap();
+    private final Map<Short, Event> messages = new HashMap<>();
     //private final Map<Integer, IMessageEventHandler> eventHandlers = Maps.newConcurrentMap();
 
     private final ExecutorService eventExecutor;

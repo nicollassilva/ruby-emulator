@@ -38,6 +38,7 @@ import com.cometproject.server.storage.cache.objects.RoomDataObject;
 import com.cometproject.server.storage.cache.objects.items.FloorItemDataObject;
 import com.cometproject.server.storage.cache.objects.items.WallItemDataObject;
 import com.cometproject.server.utilities.attributes.Attributable;
+import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.cometproject.storage.mysql.models.factories.rooms.RoomModelDataFactory;
 import com.google.common.collect.Sets;
 import org.apache.logging.log4j.LogManager;
@@ -87,7 +88,7 @@ public class Room implements Attributable, IRoom {
     private boolean forcedUnload = false;
     private final boolean isPublicRoom;
 
-    public Map<Integer, UserWalkEvent> userEvents;
+    public ConcurrentHashSet<UserWalkEvent> userEvents;
 
     private Integer eventIdGeneratorUsers;
 
@@ -103,27 +104,21 @@ public class Room implements Attributable, IRoom {
     }
 
 
-    public void addUserEvent(UserWalkEvent task, int ticks) {
+    public void addUserEvent(UserWalkEvent task, int ticks)
+    {
         task.Ticks = ticks;
-        synchronized (this.eventIdGeneratorUsers) {
-            this.eventIdGeneratorUsers = (this.eventIdGeneratorUsers + 1) % 999999;
-            this.userEvents.put(this.eventIdGeneratorUsers, task);
-            task.eventId = this.eventIdGeneratorUsers;
-        }
+        this.userEvents.add(task);
+
     }
 
-    public void parseEvent(UserWalkEvent evt)
-    {
+    public void parseEvent(UserWalkEvent evt) {
         if (evt.Ticks-- > 0) {
             return;
         }
         long now = System.currentTimeMillis();
-        try
-        {
+        try {
             evt.run(this);
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex) {
             log.error("Room-Events", ex);
         }
         long delay = System.currentTimeMillis() - now;
@@ -131,7 +126,7 @@ public class Room implements Attributable, IRoom {
             log.error("RoomEvent slow = " + delay + " | " + evt);
         }
         if (evt.Ticks < 0) {
-            this.userEvents.remove(evt.eventId);
+            this.userEvents.remove(evt);
         }
     }
 
@@ -179,7 +174,7 @@ public class Room implements Attributable, IRoom {
         this.squareFlag = new SquareFlagManager();
 
         this.mapping.init();
-        this.userEvents = new ConcurrentHashMap<>();
+        this.userEvents = new ConcurrentHashSet<>();
         this.eventIdGeneratorUsers = 0;
 
         this.trade = new TradeComponent(this);

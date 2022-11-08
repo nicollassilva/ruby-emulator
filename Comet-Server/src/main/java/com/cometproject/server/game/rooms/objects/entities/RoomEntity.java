@@ -233,7 +233,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.findPath = true;
         //findWalkPath(true);
 
-        //this.evtWalk.walk(this.getRoom(), x, y);
+        this.evtWalk.walk(this.getRoom(), x, y);
 
 
     }
@@ -253,6 +253,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
                     if (playerEntity.isClickThrough()) {
+                        this.evtWalk.isWalking = false;
                         this.processingPath.clear();
                     }
                 }
