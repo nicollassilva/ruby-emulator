@@ -1,9 +1,7 @@
 package com.cometproject.server.game.rooms.objects.entities;
 
-import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.utilities.Position;
-import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
@@ -12,13 +10,8 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.EffectFloorI
 import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
 import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
-import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
-import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
-import com.cometproject.server.utilities.TimeSpan;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 public class UserWalkEvent {
     public int Ticks;
@@ -26,14 +19,7 @@ public class UserWalkEvent {
 
     private static final int MAX_STEEPS = 25;
     private final RoomEntity entity;
-    private int walkX;
-    private int walkY;
-    private int nextX;
-    private int nextY;
-    private int nextXY;
-    private double nextZ;
-    private boolean doSteep;
-    private boolean findPath;
+
     public boolean isWalking;
 
     public UserWalkEvent(RoomEntity entity) {
@@ -203,45 +189,7 @@ public class UserWalkEvent {
         this.Ticks = 0;
 
     }
-
-    public boolean doWalkSteep(Room room) {
-        boolean isCancelled = this.entity.isWalkCancelled();
-
-        final Position nextPos = new Position(nextX, nextY);
-        final Position currentPos = this.entity.getPosition() != null ? this.entity.getPosition() : new Position(0, 0, 0);
-
-        final List<RoomItemFloor> preItems = room.getItems().getItemsOnSquare(nextX, nextY);
-
-        final RoomTile tile = room.getMapping().getTile(nextX, nextY);
-        boolean effectNeedsRemove = true;
-
-        for (final RoomItemFloor item : preItems) {
-            if (item != null) {
-                if (!(item instanceof EffectFloorItem) && this.entity.getCurrentEffect() != null && this.entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
-                    if (item.getId() == tile.getTopItem()) {
-                        effectNeedsRemove = false;
-                    }
-                }
-
-                if (item.isMovementCancelled(this.entity, new Position(nextX, nextY))) {
-                    isCancelled = true;
-                }
-
-                if (!isCancelled)
-                    item.onEntityPreStepOn(this.entity);
-
-            }
-        }
-        if (effectNeedsRemove && this.entity.getCurrentEffect() != null && this.entity.getCurrentEffect().isItemEffect()) {
-            this.entity.applyEffect(this.entity.getLastEffect());
-        }
-
-
-        return this.isWalking;
-    }
-
-
-    private void stopWalk(Room room) {
+    public void stopWalk(Room room) {
 
         entity.findPath = false;
         this.entity.walking = false;
@@ -256,10 +204,16 @@ public class UserWalkEvent {
 
 
     public void walk(Room room, int x, int y) {
-        this.walkX = x;
-        this.walkY = y;
 
         entity.findPath = true;
+        if (!this.isWalking) {
+            this.isWalking = true;
+            room.addUserEvent(this, 0);
+        }
+    }
+    public void walk(Room room) {
+        entity.findPath = false;
+
         if (!this.isWalking) {
             this.isWalking = true;
             room.addUserEvent(this, 0);

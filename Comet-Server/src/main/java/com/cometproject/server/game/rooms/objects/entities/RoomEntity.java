@@ -1130,4 +1130,22 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     public boolean usingTeleportItem() {
         return this.hasAttribute("interacttpencours") && this.hasAttribute("tptpencours");
     }
+
+    public void walkToPath(List<Square> path) {
+        if (path == null || path.isEmpty()) {
+            return;
+        }
+
+        if (this.getRoom() == null)
+            return;
+
+        evtWalk.stopWalk(this.getRoom());
+
+        this.setWalkingPath(path);
+
+        evtWalk.walk(this.getRoom());
+
+        //this.setNeedsForcedUpdate(true);
+    }
+
 }

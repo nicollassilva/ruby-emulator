@@ -70,11 +70,11 @@ public class MoveAvatarEvent extends IncomingExternalInterfaceMessage<MoveAvatar
                 entity.resetAfkTimer();
 
                 if (entity.getMountedEntity() != null) {
-                    entity.getMountedEntity().setWalkingPath(squares);
+                    entity.getMountedEntity().walkToPath(squares);
                     entity.getMountedEntity().setWalkingGoal(goal.getX(), goal.getY());
                 }
 
-                entity.setWalkingPath(squares);
+                entity.walkToPath(squares);
                 entity.setWalkingGoal(goal.getX(), goal.getY());
                 return;
             }

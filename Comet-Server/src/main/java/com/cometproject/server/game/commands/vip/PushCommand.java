@@ -123,7 +123,7 @@ public class PushCommand extends ChatCommand {
             if (entity.getWalkingPath() != null)
                 entity.getWalkingPath().clear();
 
-            entity.setWalkingPath(path);
+            entity.walkToPath(path);
 
             client.getPlayer().getEntity().getRoom().getEntities().broadcastMessage(
                     new TalkMessageComposer(client.getPlayer().getEntity().getId(), Locale.get("command.push.message").replace("%playername%", entity.getUsername()), ChatEmotion.NONE, 0)
