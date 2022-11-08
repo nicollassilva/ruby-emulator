@@ -11,9 +11,11 @@ public class DisableMimicCommand extends ChatCommand {
     public void execute(Session client, String[] message) {
         final PlayerSettings playerSettings = client.getPlayer().getSettings();
 
-        playerSettings.setAllowMimic(!playerSettings.getAllowMimic());
+        final boolean allowMimic = !playerSettings.getAllowMimic();
 
-        sendNotif(Locale.getOrDefault("command.disablemimic." + (playerSettings.getAllowMimic() ? "ativado" : "desativado"), "Já " + (playerSettings.getAllowMimic() ? "" : "não") + " podem copiar seu visual!"), client);
+        playerSettings.setAllowMimic(allowMimic);
+
+        sendNotif(Locale.getOrDefault("command.disablemimic." + (allowMimic ? "desativado" : "ativado"), "Já " + (allowMimic ? "não" : "") + " podem copiar seu visual!"), client);
         PlayerDao.updateAllowMimic(playerSettings.getAllowMimic(), client.getPlayer().getId());
     }
 

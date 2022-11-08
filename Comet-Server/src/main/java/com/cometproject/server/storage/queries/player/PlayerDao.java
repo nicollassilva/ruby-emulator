@@ -1270,6 +1270,33 @@ public class PlayerDao {
         return null;
     }
 
+    public static boolean getAllowMimic(int userId) {
+        Connection sqlConnection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            sqlConnection = SqlHelper.getConnection();
+
+            preparedStatement = SqlHelper.prepare("SELECT `allow_mimic` FROM player_settings WHERE `id` = ?", sqlConnection);
+            preparedStatement.setInt(1, userId);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                return resultSet.getBoolean("allow_mimic");
+            }
+        } catch (SQLException e) {
+            SqlHelper.handleSqlException(e);
+        } finally {
+            SqlHelper.closeSilently(resultSet);
+            SqlHelper.closeSilently(preparedStatement);
+            SqlHelper.closeSilently(sqlConnection);
+        }
+
+        return false;
+    }
+
     public static String getUsernameByRegIp(String regIp) {
 
         Connection sqlConnection = null;
