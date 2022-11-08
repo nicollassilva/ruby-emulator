@@ -21,12 +21,18 @@ public class MimicOfflineCommand extends ChatCommand {
         final String figure = PlayerDao.getFigureByUsername(username);
         final String gender = PlayerDao.getGenderByUsername(username);
 
-        if(figure == null || gender == null) {
+        if (figure == null || gender == null) {
             sendNotif("Usuário não encontrado!", client);
             return;
         }
 
-        if(ClothingValidationManager.isInvalidLook(client.getPlayer(), figure, FigureGender.fromString(gender))){
+        final boolean allowMimic = PlayerDao.getAllowMimic(PlayerDao.getIdByUsername(username));
+        if (!allowMimic) {
+            sendNotif(Locale.getOrDefault("command.mimic.disabled", "Você não pode copiar o visual desse usuário."), client);
+            return;
+        }
+
+        if (ClothingValidationManager.isInvalidLook(client.getPlayer(), figure, FigureGender.fromString(gender))){
             sendNotif(Locale.getOrDefault("command.mimic.missing_clothing", "Você não pode copiar o visual desse usuário porque não possuí todas as peças de roupa que ele está vestindo."), client);
             return;
         }
