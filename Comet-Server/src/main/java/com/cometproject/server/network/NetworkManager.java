@@ -28,13 +28,20 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslHandler;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Log4J2LoggerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import java.net.InetSocketAddress;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
 import java.util.Set;
 
 
@@ -86,6 +93,16 @@ public class NetworkManager {
 
         NetworkingContext.setCurrentContext(networkingContext);
 
+        SSLContext ctx = null;
+        try {
+            ctx = SSLContext.getDefault();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        final SSLEngine engine = ctx.createSSLEngine();
+        engine.setUseClientMode(false);
+        engine.setNeedClientAuth(false);
 
         final ServerBootstrap bootstrapWebSocket = new ServerBootstrap()
                 .group(this.ioLoopGroup, this.acceptLoopGroup)
@@ -101,6 +118,8 @@ public class NetworkManager {
                                         .addLast(new WebSocketMessageEncoder())
                                         .addLast(new WebSocketChannelHandler());
 
+                              //  pipeline.addLast("sslHandler", new SslHandler(engine));
+
                                 ch.config().setTrafficClass(24);
                                 ch.config().setTcpNoDelay(true);
                             }
@@ -110,8 +129,6 @@ public class NetworkManager {
                 .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(32 * 1024, 64 * 1024))
                 .option(ChannelOption.SO_BACKLOG, 500)
                 .childOption(ChannelOption.TCP_NODELAY, true)
-                .childOption(ChannelOption.SO_KEEPALIVE, true)
-                .childOption(ChannelOption.SO_REUSEADDR, true)
                 .childOption(ChannelOption.SO_RCVBUF, 4096)
                 .childOption(ChannelOption.CONNECT_TIMEOUT_MILLIS, 0)
                 .childOption(ChannelOption.MESSAGE_SIZE_ESTIMATOR, DefaultMessageSizeEstimator.DEFAULT)
@@ -156,6 +173,21 @@ public class NetworkManager {
 
     }
 
+/*
+    private SslContext createSSLContext() throws Exception{
+        KeyStore keystore = KeyStore.getInstance("JKS");
+        keystore.load(NettyWSServer.class.getResourceAsStream("/TestKeystore.jks"), "changeit".toCharArray());
+
+        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+        keyManagerFactory.init(keystore, "changeit".toCharArray());
+
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
+
+        return SslContextBuilder.forServer(keyManagerFactory).build();
+    }
+    */
+ 
 
     public void Shutdown(){
         try {

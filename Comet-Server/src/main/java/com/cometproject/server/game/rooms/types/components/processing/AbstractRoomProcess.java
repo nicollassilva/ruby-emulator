@@ -163,6 +163,12 @@ public class AbstractRoomProcess implements CometTask {
 
         final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
+        List<RoomEntity> arrayList = new ArrayList<>(entities.values());
+
+        if (this.room.hasAttribute("futnitro")) {
+            Collections.shuffle(arrayList);
+        }
+
 
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
