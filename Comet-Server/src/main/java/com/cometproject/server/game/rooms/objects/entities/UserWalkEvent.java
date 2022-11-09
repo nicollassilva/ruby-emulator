@@ -36,7 +36,7 @@ public class UserWalkEvent {
             return;
         }
 
-        if (this.entity.getWalkingGoal() == this.entity.getPosition())
+        if (this.entity.getWalkingGoal().equals(this.entity.getPosition()))
         {
             stopWalk(room);
             return;
