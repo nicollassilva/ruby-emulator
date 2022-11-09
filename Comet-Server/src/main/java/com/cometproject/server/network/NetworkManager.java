@@ -6,6 +6,7 @@ import com.cometproject.networking.api.INetworkingServerFactory;
 import com.cometproject.networking.api.NetworkingContext;
 import com.cometproject.networking.api.config.NetworkingServerConfig;
 import com.cometproject.networking.api.sessions.INetSessionFactory;
+import com.cometproject.server.boot.Comet;
 import com.cometproject.server.network.battleball.gameserver.GameServer;
 import com.cometproject.server.network.messages.GameMessageHandler;
 import com.cometproject.server.network.messages.MessageHandler;
@@ -81,8 +82,10 @@ public class NetworkManager {
 
         sslCtx = null;
         try {
-            SelfSignedCertificate ssc = new SelfSignedCertificate("localhost");
-           // sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+            SelfSignedCertificate ssc = new SelfSignedCertificate();
+
+            if (!Comet.isDebugging)
+                sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -184,8 +187,6 @@ public class NetworkManager {
         this.wsServer.start();
 
     }
-
-
 
 
     public void Shutdown() {
