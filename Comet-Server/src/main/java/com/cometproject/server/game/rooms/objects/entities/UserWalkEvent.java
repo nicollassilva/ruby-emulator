@@ -36,6 +36,11 @@ public class UserWalkEvent {
             return;
         }
 
+        if (this.entity.getWalkingGoal() == this.entity.getPosition())
+        {
+            stopWalk(room);
+            return;
+        }
         final boolean isPlayer = entity instanceof PlayerEntity;
 
         if (entity.findPath) {
@@ -129,6 +134,12 @@ public class UserWalkEvent {
             }
 
             if (isCancelled) {
+                if (entity.isWalkCancelled())
+                {
+                    stopWalk(room);
+                    return;
+                }
+
                 entity.findWalkPath(false);
 
                 if (entity.getProcessingPath().isEmpty()) {
@@ -190,10 +201,10 @@ public class UserWalkEvent {
 
     }
     public void stopWalk(Room room) {
+        this.isWalking = false;
 
         entity.findPath = false;
         this.entity.walking = false;
-        this.isWalking = false;
         this.entity.processingPath.clear();
 
         this.entity.removeStatus(RoomEntityStatus.MOVE);

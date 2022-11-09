@@ -29,19 +29,21 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
 import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.ResourceLeakDetector;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.Log4J2LoggerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
+import javax.net.ssl.*;
+import java.io.FileInputStream;
 import java.net.InetSocketAddress;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Set;
 
 
@@ -60,6 +62,7 @@ public class NetworkManager {
     private EventLoopGroup ioLoopGroup;
     private EventLoopGroup acceptLoopGroup;
     private GameServer wsServer;
+    private SslContext sslCtx;
 
 
     public NetworkManager() {
@@ -75,6 +78,21 @@ public class NetworkManager {
     }
 
     public void initialize(String ip, String ports) {
+
+        sslCtx = null;
+        try {
+            SelfSignedCertificate ssc = new SelfSignedCertificate("localhost");
+           // sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.setProperty("javax.net.ssl.trustStore", "./config/Truststore.jks");
+        System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
+        System.setProperty("javax.net.ssl.keyStore", "./config/Keystore.jks");
+        System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
+
+
         this.sessions = new SessionManager();
         this.messageHandler = new MessageHandler();
 
@@ -93,32 +111,26 @@ public class NetworkManager {
 
         NetworkingContext.setCurrentContext(networkingContext);
 
-        SSLContext ctx = null;
-        try {
-            ctx = SSLContext.getDefault();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        final SSLEngine engine = ctx.createSSLEngine();
-        engine.setUseClientMode(false);
-        engine.setNeedClientAuth(false);
-
+        SslContext finalSslCtx = sslCtx;
         final ServerBootstrap bootstrapWebSocket = new ServerBootstrap()
                 .group(this.ioLoopGroup, this.acceptLoopGroup)
                 .channel(Epoll.isAvailable() ? EpollServerSocketChannel.class : NioServerSocketChannel.class)
                 .childHandler(
                         new ChannelInitializer<SocketChannel>() {
                             @Override
-                            public void initChannel(final SocketChannel ch) throws Exception {
+                            public void initChannel(final SocketChannel ch) {
                                 ChannelPipeline pipeline = ch.pipeline();
+
+                                if (finalSslCtx != null)
+                                    pipeline.addLast(finalSslCtx.newHandler(ch.alloc()));
+
                                 pipeline.addLast(new HttpServerCodec())
                                         .addLast(new HttpObjectAggregator(65536))
                                         .addLast(new WebSocketServerCompressionHandler())
                                         .addLast(new WebSocketMessageEncoder())
                                         .addLast(new WebSocketChannelHandler());
 
-                              //  pipeline.addLast("sslHandler", new SslHandler(engine));
+                                //  pipeline.addLast("sslHandler", new SslHandler(engine));
 
                                 ch.config().setTrafficClass(24);
                                 ch.config().setTcpNoDelay(true);
@@ -173,29 +185,17 @@ public class NetworkManager {
 
     }
 
-/*
-    private SslContext createSSLContext() throws Exception{
-        KeyStore keystore = KeyStore.getInstance("JKS");
-        keystore.load(NettyWSServer.class.getResourceAsStream("/TestKeystore.jks"), "changeit".toCharArray());
 
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyManagerFactory.init(keystore, "changeit".toCharArray());
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagerFactory.getKeyManagers(), null, null);
 
-        return SslContextBuilder.forServer(keyManagerFactory).build();
-    }
-    */
- 
-
-    public void Shutdown(){
+    public void Shutdown() {
         try {
             this.wsServer.stop(1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
+
     public SessionManager getSessions() {
         return this.sessions;
     }
