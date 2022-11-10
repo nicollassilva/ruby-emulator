@@ -9,14 +9,11 @@ import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntityType;
 import com.cometproject.server.game.rooms.objects.entities.WiredTriggerExecutor;
 import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
-import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
 import com.cometproject.server.game.rooms.objects.entities.types.BotEntity;
-import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.EffectFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.TeleportPadFloorItem;
-import com.cometproject.server.game.rooms.objects.items.types.floor.pet.breeding.BreedingBoxFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerBotReachedFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
@@ -35,16 +32,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class AbstractNitroRoomProcess implements CometTask {
+public class AlternativeAbstractRoomProcess implements CometTask {
     private final Room room;
 
     private final Logger log;
     private ScheduledFuture processFuture;
-    private ScheduledFuture processFutureRoom;
+
     private boolean active = false;
 
     private final boolean adaptiveProcessTimes;
@@ -52,14 +48,13 @@ public class AbstractNitroRoomProcess implements CometTask {
 
     private long lastProcess = 0;
 
-    private boolean isProcessing = false;
 
 
     private boolean update = false;
 
     private final long delay;
 
-    public AbstractNitroRoomProcess(Room room, long delay) {
+    public AlternativeAbstractRoomProcess(Room room, long delay) {
         this.room = room;
         this.delay = delay;
         this.log = LogManager.getLogger("Room Process [" + room.getData().getName() + ", #" + room.getId() + "]");
@@ -72,27 +67,14 @@ public class AbstractNitroRoomProcess implements CometTask {
 
     }
 
-    //private final Runnable playerWalkTask;
 
     public void tick() {
-        final long timeStart = System.currentTimeMillis();
-
         if (!this.active) {
             return;
         }
 
-        if (this.isProcessing) return;
 
         this.isProcessing = true;
-
-        update = !update;
-
-        final long timeSinceLastProcess = this.lastProcess == 0 ? 0 : (System.currentTimeMillis() - this.lastProcess);
-        this.lastProcess = System.currentTimeMillis();
-
-        if (this.getProcessTimes() != null && this.getProcessTimes().size() < 30) {
-            log.info("Time since last cleanWord: " + timeSinceLastProcess + "ms");
-        }
 
         try {
             this.startProcessing();
@@ -100,22 +82,12 @@ public class AbstractNitroRoomProcess implements CometTask {
             log.error("Error during room entity processing [1]", ex);
 
         }
-
-        final TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
-
-        if (this.getProcessTimes() != null && this.getProcessTimes().size() < 30) {
-            this.getProcessTimes().add(span.toMilliseconds());
-        }
-
-        if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 240 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
-        }
-
         this.isProcessing = false;
 
         // System.out.println("room cycle took " + (System.currentTimeMillis() - timeStart) + "ms");
 
     }
+    private boolean isProcessing = false;
 
     public void start() {
         if (this.active) {
@@ -128,14 +100,6 @@ public class AbstractNitroRoomProcess implements CometTask {
             this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 500, TimeUnit.MILLISECONDS);
         }
 
-        this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
-            try {
-                getRoom().tick();
-            } catch (Exception e) {
-                log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
-            }
-        }, 0, 500, TimeUnit.MILLISECONDS);
-
 
         this.active = true;
 
@@ -143,6 +107,15 @@ public class AbstractNitroRoomProcess implements CometTask {
             log.debug("Processing started");
         }
     }
+
+
+    private void ProcessWalks() {
+        for (var event :
+                room.userEvents.values()) {
+            room.parseEvent(event);
+        }
+    }
+
 
     public void stop() {
         if (this.getProcessTimes() != null) {
@@ -160,16 +133,6 @@ public class AbstractNitroRoomProcess implements CometTask {
             }
         }
 
-        if (this.processFutureRoom != null) {
-            this.active = false;
-
-
-            this.processFutureRoom.cancel(false);
-
-            if (Comet.isDebugging) {
-                log.debug("Processing room stopped");
-            }
-        }
 
     }
 
@@ -185,8 +148,16 @@ public class AbstractNitroRoomProcess implements CometTask {
 
     private void startProcessing() {
 
-        final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
+        try {
+            ProcessWalks();
+        } catch (Exception e) {
+            log.error("Error during room entity processing [2]", e);
+        }
+
+
+
+        final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
         List<RoomEntity> arrayList = new ArrayList<>(entities.values());
 
@@ -194,10 +165,11 @@ public class AbstractNitroRoomProcess implements CometTask {
             Collections.shuffle(arrayList);
         }
 
+
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
 
-        for (final RoomEntity entity : arrayList) {
+        for (final RoomEntity entity : entities.values()) {
             if (entity == null)
                 continue;
 
@@ -259,7 +231,6 @@ public class AbstractNitroRoomProcess implements CometTask {
             }
         }
 
-
         if (entitiesToUpdate.size() > 0) {
             this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));
         }
@@ -282,6 +253,14 @@ public class AbstractNitroRoomProcess implements CometTask {
 
         playersToRemove.clear();
         entitiesToUpdate.clear();
+
+
+            try {
+                getRoom().tick();
+            } catch (Exception e) {
+                log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
+            }
+
     }
 
     public boolean updateEntityStuff(RoomEntity entity) {
@@ -480,17 +459,7 @@ public class AbstractNitroRoomProcess implements CometTask {
             }
         }
 
-        if (entity.findPath) {
-            entity.findPath = false;
-            entity.findWalkPath(true);
-        }
-
-        entity.removeStatus(RoomEntityStatus.MOVE);
-        entity.markNeedsUpdate();
-
-        if (entity.isWalking() && entity.processingPath.size() > 0) {
-            Square nextSq = entity.getProcessingPath().remove(0);
-            entity.incrementPreviousSteps();
+        if (entity.isWalking()) {
 
             if (isPlayer && ((PlayerEntity) entity).isKicked()) {
 
@@ -502,134 +471,8 @@ public class AbstractNitroRoomProcess implements CometTask {
             }
 
 
-            boolean isLastStep = (entity.getProcessingPath().size() == 0);
-
-            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
-
-                if (entity.getProcessingPath().isEmpty()) {
-                    entity.walking = false;
-                    return false;
-                }
-
-                entity.findWalkPath(false);
-
-                if (entity.getProcessingPath().isEmpty()) {
-                    entity.walking = false;
-                    return false;
-                }
-
-                nextSq = entity.processingPath.remove(0);
-            }
-
-
-            if (nextSq == null)
-                return false;
-
-            final Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
-            final Position nextPos = new Position(nextSq.x, nextSq.y);
-
-            final double mountHeight = entity instanceof PlayerEntity && entity.getMountedEntity() != null ? 1.0 : 0;
-
-            final RoomTile tile = this.room.getMapping().getTile(nextSq.x, nextSq.y);
-            final double height = tile.getWalkHeight() + mountHeight;
-            boolean isCancelled = entity.isWalkCancelled();
-            boolean effectNeedsRemove = true;
-
-            final List<RoomItemFloor> preItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-            for (final RoomItemFloor item : preItems) {
-                if (item != null) {
-                    if (!(item instanceof EffectFloorItem) && entity.getCurrentEffect() != null && entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
-                        if (item.getId() == tile.getTopItem()) {
-                            effectNeedsRemove = false;
-                        }
-                    }
-
-                    if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-                        isCancelled = true;
-                    }
-
-                    if (!isCancelled)
-                        item.onEntityPreStepOn(entity);
-
-                }
-            }
-            if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {
-                entity.applyEffect(entity.getLastEffect());
-            }
-
-
-            if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
-                final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
-                final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
-                final boolean isOverriding = isPlayer && entity.isOverriden();
-                if (!isOverriding && (!allowWalkthrough && nextPosIsTheGoal)) {
-                    isCancelled = true;
-                }
-
-                final RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
-                if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
-                    isCancelled = false;
-                }
-
-                if (entityOnTile instanceof PetEntity && entity instanceof PetEntity) {
-                    if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
-                        isCancelled = false;
-                    }
-                }
-            }
-
-            if (isCancelled) {
-                entity.findPath = true;
-                return false;
-            }
-
-
-            if (nextSq == null)
-                return false;
-
-            //  if (!isCancelled) {
-            entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
-            entity.setHeadRotation(entity.getBodyRotation());
-
-            entity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextSq.x).concat(",").concat(String.valueOf(nextSq.y)).concat(",").concat(String.valueOf(height)));
-
-            entity.removeStatus(RoomEntityStatus.SIT);
-            entity.removeStatus(RoomEntityStatus.LAY);
-
-            final Position newPosition = new Position(nextSq.x, nextSq.y, height);
-
-            entity.updateAndSetPosition(newPosition);
-            entity.markNeedsUpdate();
-
-            if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
-                final RoomEntity mountedEntity = entity.getMountedEntity();
-
-                mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
-            }
-
-            final List<RoomItemFloor> postItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-            for (final RoomItemFloor item : postItems) {
-                if (item != null) {
-                    item.onEntityPostStepOn(entity);
-                }
-            }
-
-            entity.addToTile(tile);
-
-
-            if (isLastStep)
-                entity.walking = false;
-
         } else {
 
-            if (entity.hasStatus(RoomEntityStatus.MOVE)) {
-                entity.removeStatus(RoomEntityStatus.MOVE);
-                entity.removeStatus(RoomEntityStatus.GESTURE);
-
-                entity.markNeedsUpdate();
-            }
 
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;

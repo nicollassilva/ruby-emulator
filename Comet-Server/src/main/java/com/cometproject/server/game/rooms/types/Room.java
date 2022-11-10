@@ -28,6 +28,7 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTime;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTimeLong;
 import com.cometproject.server.game.rooms.types.components.*;
+import com.cometproject.server.game.rooms.types.components.processing.AlternativeAbstractRoomProcess;
 import com.cometproject.server.game.rooms.types.mapping.RoomMapping;
 import com.cometproject.server.game.rooms.types.mapping.SquareFlagManager;
 import com.cometproject.server.network.messages.outgoing.room.polls.GetInfobusPollResultsMessageComposer;
@@ -60,7 +61,7 @@ public class Room implements Attributable, IRoom {
     private final AtomicInteger wiredTimer = new AtomicInteger(0);
     private IRoomModel model;
     private RoomMapping mapping;
-    private ProcessComponent process;
+    private AlternativeAbstractRoomProcess process;
     private RightsComponent rights;
     private ItemsComponent items;
     private ItemProcessComponent itemProcess;
@@ -88,7 +89,7 @@ public class Room implements Attributable, IRoom {
     private boolean forcedUnload = false;
     private final boolean isPublicRoom;
 
-    public ConcurrentHashSet<UserWalkEvent> userEvents;
+    public Map<Integer, UserWalkEvent> userEvents;
 
     private Integer eventIdGeneratorUsers;
 
@@ -104,10 +105,13 @@ public class Room implements Attributable, IRoom {
     }
 
 
-    public void addUserEvent(UserWalkEvent task, int ticks)
-    {
+    public void addUserEvent(UserWalkEvent task, int ticks) {
         task.Ticks = ticks;
-        this.userEvents.add(task);
+        synchronized (this.eventIdGeneratorUsers) {
+            this.eventIdGeneratorUsers = (this.eventIdGeneratorUsers.intValue() + 1) % 999999;
+            this.userEvents.put(this.eventIdGeneratorUsers, task);
+            task.eventId = this.eventIdGeneratorUsers;
+        }
 
     }
 
@@ -126,7 +130,7 @@ public class Room implements Attributable, IRoom {
             log.error("RoomEvent slow = " + delay + " | " + evt);
         }
         if (evt.Ticks < 0) {
-            this.userEvents.remove(evt);
+            this.userEvents.remove(evt.eventId);
         }
     }
 
@@ -168,13 +172,13 @@ public class Room implements Attributable, IRoom {
         this.mapping = new RoomMapping(this);
         this.itemProcess = new ItemProcessComponent(this);
 
-        this.process = new ProcessComponent(this);
+        this.process = new AlternativeAbstractRoomProcess(this, 0);
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
         this.squareFlag = new SquareFlagManager();
 
         this.mapping.init();
-        this.userEvents = new ConcurrentHashSet<>();
+        this.userEvents = new ConcurrentHashMap();
         this.eventIdGeneratorUsers = 0;
 
         this.trade = new TradeComponent(this);
@@ -460,7 +464,7 @@ public class Room implements Attributable, IRoom {
         return this.model;
     }
 
-    public ProcessComponent getProcess() {
+    public AlternativeAbstractRoomProcess getProcess() {
         return this.process;
     }
 

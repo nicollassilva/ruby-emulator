@@ -122,6 +122,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         this.handItemTimer = 0;
         this.isRolling = false;
 
+
         this.evtWalk = new UserWalkEvent(this);
 
         this.danceId = 0;
@@ -224,14 +225,15 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             y = tile.getRedirect().getY();
         }
 
-        this.walking = true;
+        //this.walking = true;
         this.previousSteps = 0;
 
         // Set the goal we are wanting to achieve
         this.setWalkingGoal(x, y);
 
         this.findPath = true;
-        //findWalkPath(true);
+
+     //   findWalkPath(true);
 
         this.evtWalk.walk(this.getRoom(), x, y);
 
@@ -253,7 +255,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
                     if (playerEntity.isClickThrough()) {
-                        this.evtWalk.isWalking = false;
+                        //this.evtWalk.isWalking = false;
+                        this.walking = false;
                         this.processingPath.clear();
                     }
                 }
@@ -1139,11 +1142,14 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (this.getRoom() == null)
             return;
 
-        evtWalk.stopWalk(this.getRoom());
+
+        this.processingPath.clear();
+        this.walking = false;
+       // evtWalk.stopWalk(this.getRoom());
 
         this.setWalkingPath(path);
 
-        evtWalk.walk(this.getRoom());
+    //    evtWalk.walk(this.getRoom());
 
         //this.setNeedsForcedUpdate(true);
     }

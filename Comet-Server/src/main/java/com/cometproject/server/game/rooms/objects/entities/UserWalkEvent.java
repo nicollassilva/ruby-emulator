@@ -45,11 +45,12 @@ public class UserWalkEvent {
 
         if (entity.findPath) {
             entity.findPath = false;
+            entity.processingPath.clear();
             entity.findWalkPath(true);
         }
 
 
-        if (entity.isWalking() && entity.processingPath.size() > 0) {
+        if (entity.isWalking()) {
             Square nextSq = entity.getProcessingPath().remove(0);
             entity.incrementPreviousSteps();
 
@@ -100,7 +101,8 @@ public class UserWalkEvent {
                     }
 
                     if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-                        isCancelled = true;
+                        stopWalk(room);
+                        return;
                     }
 
                     if (!isCancelled)
@@ -140,7 +142,7 @@ public class UserWalkEvent {
                     return;
                 }
 
-                entity.findWalkPath(false);
+                entity.findWalkPath(true);
 
                 if (entity.getProcessingPath().isEmpty()) {
                     stopWalk(room);

@@ -40,7 +40,7 @@ public class GateFloorItem extends RoomItemFloor {
         }
 
         for (RoomEntity entity : this.getRoom().getEntities().getAllEntities().values()) {
-            if (this.getPosition().distanceTo(entity.getPosition()) <= 1 && entity.isWalking()) {
+            if (entity.isWalking() && this.getPosition().distanceTo(entity.getPosition()) <= 1) {
                 return false;
             }
         }
