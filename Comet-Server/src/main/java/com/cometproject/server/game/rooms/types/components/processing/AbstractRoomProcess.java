@@ -576,7 +576,14 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             if (isCancelled) {
-                entity.findPath = true;
+                if (entity.isWalkCancelled()) {
+                    entity.processingPath.clear();
+                    entity.findPath = false;
+                    entity.setWalkCancelled(false);
+
+                } else {
+                    entity.findPath = true;
+                }
                 return false;
             }
 

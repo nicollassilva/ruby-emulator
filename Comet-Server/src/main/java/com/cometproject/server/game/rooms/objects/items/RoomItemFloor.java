@@ -137,6 +137,10 @@ public abstract class RoomItemFloor extends RoomItem implements Collidable, IFlo
         // override me
     }
 
+    public RoomEntity getPusher(){
+        return null;
+    }
+
     public void onPositionChanged(Position newPosition) {
         // override me
     }

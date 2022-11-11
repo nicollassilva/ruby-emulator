@@ -27,6 +27,12 @@ public class WalkMessageEvent implements Event {
             if (!entity.isVisible())
                 return;
 
+            if (entity.getPosition() != null && entity.getPosition().equals(new Position(goalX, goalY, 0))) {
+                entity.findPath = false;
+                entity.processingPath.clear();
+                return;
+            }
+
             WiredTriggerCustomSensorMovement.executeTriggers(client.getPlayer().getEntity());
 
             if (entity.hasAttribute("tp")) {

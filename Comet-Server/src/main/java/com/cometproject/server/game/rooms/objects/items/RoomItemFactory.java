@@ -310,7 +310,7 @@ public class RoomItemFactory {
 
             put("football_timer", FootballTimerFloorItem.class);
             put("ball", FootballFloorItem.class);
-            put("original_ball", RollableFloorItem.class);
+            put("original_ball", OriginalFootballFloorItem.class);
             put("beta_football", BetaFootballFloorItem.class); // test
 
 
@@ -509,7 +509,7 @@ public class RoomItemFactory {
         long realTime = Math.round(time * 1000 / processMs);
 
         if (realTime < 1) {
-            realTime = 1; //0.5s
+            realTime = 0; //0.5s
         }
 
         return (int) realTime;

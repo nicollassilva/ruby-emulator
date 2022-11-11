@@ -7,6 +7,7 @@ import com.cometproject.server.game.rooms.objects.entities.pathfinding.Pathfinde
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
 import com.cometproject.server.game.rooms.objects.items.types.floor.RollableFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.football.FootballFloorItem;
+import com.cometproject.server.game.rooms.objects.items.types.floor.football.OriginalFootballFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.groups.GroupGateFloorItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionChase;
 import com.cometproject.server.game.rooms.types.mapping.RoomEntityMovementNode;
@@ -78,7 +79,7 @@ public class ItemPathfinder extends Pathfinder {
             return false;
         }
 
-        if (object instanceof FootballFloorItem) {
+        if (object instanceof FootballFloorItem|| object instanceof OriginalFootballFloorItem) {
             for (RoomItemFloor floor : tile.getItems()) {
                 if (floor instanceof GroupGateFloorItem) {
                     return false;

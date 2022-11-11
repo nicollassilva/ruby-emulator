@@ -37,19 +37,16 @@ public class FootballGoalFloorItem extends RoomItemFloor {
 
     @Override
     public void onItemAddedToStack(RoomItemFloor floorItem) {
-        if (!(floorItem instanceof FootballFloorItem))
+        if (!(floorItem instanceof FootballFloorItem) && !(floorItem instanceof OriginalFootballFloorItem))
             return;
 
-
-        final FootballFloorItem ball = (FootballFloorItem) floorItem;
-
-        if(ball.getPusher() == null) return;
+        if(floorItem.getPusher() == null) return;
 
         this.getRoom().getGame().increaseScore(this.gameTeam, 1);
 
         final int playerId = (
-                ball.getPusher() != null && ball.getPusher() instanceof PlayerEntity
-                        ? ((PlayerEntity) ball.getPusher()).getPlayerId()
+                floorItem.getPusher() != null && floorItem.getPusher() instanceof PlayerEntity
+                        ? ((PlayerEntity) floorItem.getPusher()).getPlayerId()
                         : this.getRoom().getData().getOwnerId()
         );
         if (PlayerManager.getInstance().isOnline(playerId)) {

@@ -176,7 +176,11 @@ public abstract class RollableFloorItem extends RoomItemFloor {
 
             this.moveTo(position, position.getFlag());
             //System.out.println(tiles);
-            this.setTicks(RoomItemFactory.getProcessTime(tiles * 0.5));
+            if (tiles > 0) {
+                this.setTicks(RoomItemFactory.getProcessTime(tiles * 0.5));
+            } else {
+                this.setTicks(1);
+            }
         } else {
             Position nextPosition = this.getNextPosition();
             Position newPosition;
@@ -202,6 +206,8 @@ public abstract class RollableFloorItem extends RoomItemFloor {
             this.sendUpdate();
 
             this.moveTo(newPosition, newPosition.getFlag());
+
+
             this.setTicks(RoomItemFactory.getProcessTime(this.getDelay(this.rollStage)));
         }
     }
@@ -390,6 +396,7 @@ public abstract class RollableFloorItem extends RoomItemFloor {
         return 0.5;
     }
 
+    @Override
     public RoomEntity getPusher() {
         return kickerEntity;
     }
