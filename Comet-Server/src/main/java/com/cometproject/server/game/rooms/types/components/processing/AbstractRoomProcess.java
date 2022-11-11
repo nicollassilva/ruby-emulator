@@ -53,9 +53,6 @@ public class AbstractRoomProcess implements CometTask {
 
     private boolean isProcessing = false;
 
-
-    private boolean update = false;
-
     private final long delay;
 
     public AbstractRoomProcess(Room room, long delay) {
@@ -84,7 +81,6 @@ public class AbstractRoomProcess implements CometTask {
 
         this.isProcessing = true;
 
-        update = !update;
 
         final long timeSinceLastProcess = this.lastProcess == 0 ? 0 : (System.currentTimeMillis() - this.lastProcess);
         this.lastProcess = System.currentTimeMillis();
@@ -124,7 +120,7 @@ public class AbstractRoomProcess implements CometTask {
         if (this.adaptiveProcessTimes) {
             CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
         } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 500, TimeUnit.MILLISECONDS);
+            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 480, TimeUnit.MILLISECONDS);
         }
 
         this.processFutureRoom = CometThreadManager.getInstance().executePeriodic(() -> {
@@ -480,7 +476,6 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (entity.findPath) {
-            entity.findPath = false;
             entity.findWalkPath(true);
         }
 
@@ -624,6 +619,8 @@ public class AbstractRoomProcess implements CometTask {
                 entity.findPath = false;
 
         } else {
+
+            entity.findPath = false;
 
             if (entity.hasStatus(RoomEntityStatus.MOVE)) {
                 entity.removeStatus(RoomEntityStatus.MOVE);

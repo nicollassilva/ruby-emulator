@@ -233,9 +233,9 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.findPath = true;
 
-     //   findWalkPath(true);
+        findWalkPath(true);
 
-        this.evtWalk.walk(this.getRoom(), x, y);
+        // this.evtWalk.walk(this.getRoom(), x, y);
 
 
     }
@@ -271,7 +271,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         }
 
-        this.findPath = false;
+        if (!firstGen)
+            this.findPath = false;
 
         this.setWalkingPath(path);
 
@@ -1145,11 +1146,11 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.processingPath.clear();
         this.walking = false;
-       // evtWalk.stopWalk(this.getRoom());
+        // evtWalk.stopWalk(this.getRoom());
 
         this.setWalkingPath(path);
 
-    //    evtWalk.walk(this.getRoom());
+        //    evtWalk.walk(this.getRoom());
 
         //this.setNeedsForcedUpdate(true);
     }

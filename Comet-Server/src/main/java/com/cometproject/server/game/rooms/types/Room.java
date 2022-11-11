@@ -28,7 +28,6 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTime;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTimeLong;
 import com.cometproject.server.game.rooms.types.components.*;
-import com.cometproject.server.game.rooms.types.components.processing.AlternativeAbstractRoomProcess;
 import com.cometproject.server.game.rooms.types.mapping.RoomMapping;
 import com.cometproject.server.game.rooms.types.mapping.SquareFlagManager;
 import com.cometproject.server.network.messages.outgoing.room.polls.GetInfobusPollResultsMessageComposer;
@@ -61,7 +60,7 @@ public class Room implements Attributable, IRoom {
     private final AtomicInteger wiredTimer = new AtomicInteger(0);
     private IRoomModel model;
     private RoomMapping mapping;
-    private AlternativeAbstractRoomProcess process;
+    private ProcessComponent process;
     private RightsComponent rights;
     private ItemsComponent items;
     private ItemProcessComponent itemProcess;
@@ -172,13 +171,13 @@ public class Room implements Attributable, IRoom {
         this.mapping = new RoomMapping(this);
         this.itemProcess = new ItemProcessComponent(this);
 
-        this.process = new AlternativeAbstractRoomProcess(this, 0);
+        this.process = new ProcessComponent(this);
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
         this.squareFlag = new SquareFlagManager();
 
         this.mapping.init();
-        this.userEvents = new ConcurrentHashMap();
+        this.userEvents = new ConcurrentHashMap<>();
         this.eventIdGeneratorUsers = 0;
 
         this.trade = new TradeComponent(this);
@@ -464,7 +463,7 @@ public class Room implements Attributable, IRoom {
         return this.model;
     }
 
-    public AlternativeAbstractRoomProcess getProcess() {
+    public ProcessComponent getProcess() {
         return this.process;
     }
 
