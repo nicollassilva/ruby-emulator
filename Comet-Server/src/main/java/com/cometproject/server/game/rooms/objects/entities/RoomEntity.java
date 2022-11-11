@@ -1146,6 +1146,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.processingPath.clear();
         this.walking = false;
+        this.findPath = false;
         // evtWalk.stopWalk(this.getRoom());
 
         this.setWalkingPath(path);

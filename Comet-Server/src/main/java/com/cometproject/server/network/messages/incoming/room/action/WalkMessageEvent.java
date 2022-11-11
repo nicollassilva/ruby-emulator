@@ -18,11 +18,17 @@ public class WalkMessageEvent implements Event {
         final int goalY = msg.readInt();
 
         try {
-            if (client.getPlayer().getEntity() == null || client.getPlayer().getEntity().hasAttribute("warp")) {
+            final PlayerEntity entity = client.getPlayer().getEntity();
+
+            if (entity == null)
+                return;
+
+            if (client.getPlayer().getEntity().hasAttribute("warp")) {
+                entity.findPath = false;
+                entity.processingPath.clear();
                 return;
             }
 
-            final PlayerEntity entity = client.getPlayer().getEntity();
 
             if (!entity.isVisible())
                 return;

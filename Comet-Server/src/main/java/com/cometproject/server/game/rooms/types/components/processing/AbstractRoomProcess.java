@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +56,10 @@ public class AbstractRoomProcess implements CometTask {
 
     private final long delay;
 
+    private List<RoomEntity> entitiesToUpdate;
+    private List<PlayerEntity> playersToRemove;
+
+
     public AbstractRoomProcess(Room room, long delay) {
         this.room = room;
         this.delay = delay;
@@ -62,6 +67,8 @@ public class AbstractRoomProcess implements CometTask {
 
         this.adaptiveProcessTimes = CometSettings.ADAPTIVE_ENTITY_PROCESS_DELAY;
 
+        this.entitiesToUpdate = new ArrayList<>();
+        this.playersToRemove = new ArrayList<>();
 
         //  this.playerWalkTask = this::startProcessing;
 
@@ -166,6 +173,11 @@ public class AbstractRoomProcess implements CometTask {
             }
         }
 
+        this.entitiesToUpdate.clear();
+        this.playersToRemove.clear();
+        this.entitiesToUpdate = null;
+        this.playersToRemove = null;
+
     }
 
     @Override
@@ -189,8 +201,6 @@ public class AbstractRoomProcess implements CometTask {
             Collections.shuffle(arrayList);
         }
 
-        List<PlayerEntity> playersToRemove = new ArrayList<>();
-        List<RoomEntity> entitiesToUpdate = new ArrayList<>();
 
         for (final RoomEntity entity : arrayList) {
             if (entity == null)
@@ -253,6 +263,7 @@ public class AbstractRoomProcess implements CometTask {
                 }
             }
         }
+
 
 
         if (entitiesToUpdate.size() > 0) {

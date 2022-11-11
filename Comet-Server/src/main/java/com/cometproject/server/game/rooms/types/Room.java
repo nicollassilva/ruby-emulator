@@ -19,6 +19,7 @@ import com.cometproject.server.game.polls.PollManager;
 import com.cometproject.server.game.polls.types.Poll;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.RoomQueue;
+import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.UserWalkEvent;
 import com.cometproject.server.game.rooms.objects.entities.types.BotEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
@@ -55,7 +56,6 @@ public class Room implements Attributable, IRoom {
 
     private final IRoomData data;
 
-    private SquareFlagManager squareFlag;
     private final RoomDataObject cachedData;
     private final AtomicInteger wiredTimer = new AtomicInteger(0);
     private IRoomModel model;
@@ -174,7 +174,6 @@ public class Room implements Attributable, IRoom {
         this.process = new ProcessComponent(this);
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
-        this.squareFlag = new SquareFlagManager();
 
         this.mapping.init();
         this.userEvents = new ConcurrentHashMap<>();

@@ -6,6 +6,8 @@ import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.items.ItemManager;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
+import com.cometproject.server.game.rooms.objects.entities.pathfinding.Square;
+import com.cometproject.server.game.rooms.objects.entities.pathfinding.types.EntityPathfinder;
 import com.cometproject.server.game.rooms.objects.entities.types.PlayerEntity;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFactory;
 import com.cometproject.server.game.rooms.objects.items.RoomItemFloor;
@@ -15,6 +17,8 @@ import com.cometproject.server.game.rooms.types.Room;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.network.messages.outgoing.room.avatar.WhisperMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.engine.RoomForwardMessageComposer;
+
+import java.util.List;
 
 public class TeleporterFloorItem extends AdvancedFloorItem<TeleporterFloorItem.TeleporterItemEvent> {
     class TeleporterItemEvent extends FloorItemEvent {
@@ -48,7 +52,11 @@ public class TeleporterFloorItem extends AdvancedFloorItem<TeleporterFloorItem.T
         try {
             switch (event.state) {
                 case 0: {
-                    event.outgoingEntity.moveTo(this.getPosition());
+
+                    final List<Square> path = EntityPathfinder.getInstance().makePath(event.outgoingEntity, this.getPosition());
+
+                    event.outgoingEntity.walkToPath(path);
+                    //event.outgoingEntity.moveTo(this.getPosition());
 
                     if (!(this instanceof TeleportPadFloorItem)) {
                         this.toggleDoor(true);
