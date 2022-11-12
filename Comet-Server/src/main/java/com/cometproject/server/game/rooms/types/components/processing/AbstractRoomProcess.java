@@ -52,8 +52,6 @@ public class AbstractRoomProcess implements CometTask {
 
     private long lastProcess = 0;
 
-    private boolean isProcessing = false;
-
     private final long delay;
 
     private List<RoomEntity> entitiesToUpdate;
@@ -84,10 +82,6 @@ public class AbstractRoomProcess implements CometTask {
             return;
         }
 
-        if (this.isProcessing) return;
-
-        this.isProcessing = true;
-
 
         final long timeSinceLastProcess = this.lastProcess == 0 ? 0 : (System.currentTimeMillis() - this.lastProcess);
         this.lastProcess = System.currentTimeMillis();
@@ -113,8 +107,6 @@ public class AbstractRoomProcess implements CometTask {
             CometThreadManager.getInstance().executeSchedule(this, 240 - span.toMilliseconds(), TimeUnit.MILLISECONDS);
         }
 
-        this.isProcessing = false;
-
         // System.out.println("room cycle took " + (System.currentTimeMillis() - timeStart) + "ms");
 
     }
@@ -136,7 +128,7 @@ public class AbstractRoomProcess implements CometTask {
             } catch (Exception e) {
                 log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
             }
-        }, 0, 500, TimeUnit.MILLISECONDS);
+        }, 0, 480, TimeUnit.MILLISECONDS);
 
 
         this.active = true;
@@ -487,7 +479,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (entity.findPath) {
-            entity.findWalkPath(true);
+            entity.findWalkPath(false);
         }
 
         entity.removeStatus(RoomEntityStatus.MOVE);
@@ -593,6 +585,7 @@ public class AbstractRoomProcess implements CometTask {
                     entity.setWalkCancelled(false);
 
                 } else {
+                    //entity.processingPath.clear();
                     entity.findPath = true;
                 }
                 return false;

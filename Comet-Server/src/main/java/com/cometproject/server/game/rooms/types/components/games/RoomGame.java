@@ -45,10 +45,12 @@ public abstract class RoomGame implements CometTask {
             if (timer == 0) {
                 this.state = GameState.RUNNING;
                 final List<WiredAddonBlob> blobs = room.getItems().getByClass(WiredAddonBlob.class);
-                Collections.shuffle(blobs);
+                if (blobs != null && !blobs.isEmpty()) {
+                    Collections.shuffle(blobs);
 
-                for (final WiredAddonBlob blob : blobs) {
-                    blob.onGameStarted();
+                    for (final WiredAddonBlob blob : blobs) {
+                        blob.onGameStarted();
+                    }
                 }
 
                 onGameStarts();
@@ -73,7 +75,9 @@ public abstract class RoomGame implements CometTask {
 
             if (timer >= gameLength || (gameLength - timer) <= 0) {
                 onGameEnds();
-                room.getGame().stop();
+
+                if (room.getGame() != null)
+                    room.getGame().stop();
                 //this.stop();
             }
 
@@ -98,7 +102,7 @@ public abstract class RoomGame implements CometTask {
     }
 
     public void pause() {
-        if ( this.state.equals(GameState.RUNNING) && this.future != null) {
+        if (this.state.equals(GameState.RUNNING) && this.future != null) {
             this.future.cancel(true);
             this.state = GameState.PAUSED;
         }

@@ -5,6 +5,7 @@ import com.cometproject.api.game.rooms.models.RoomTileState;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.permissions.PermissionsManager;
+import com.cometproject.server.game.players.types.Player;
 import com.cometproject.server.game.rooms.objects.RoomFloorObject;
 import com.cometproject.server.game.rooms.objects.RoomObject;
 import com.cometproject.server.game.rooms.objects.entities.effects.PlayerEffect;
@@ -98,7 +99,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     private boolean hasMount = false;
 
     private boolean warping;
-    private boolean clickThrough = false;
 
     private UserWalkEvent evtWalk;
 
@@ -241,6 +241,14 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public void findWalkPath(boolean firstGen) {
+
+        if (this.walkingGoal.getX() == this.getPosition().getX() && this.walkingGoal.getY() == this.getPosition().getY()){
+
+            this.processingPath.clear();
+            this.findPath = false;
+            return;
+        }
+
         // Create a walking path
         List<Square> path = EntityPathfinder.getInstance().makePath(this, new Position(walkingGoal.getX(), walkingGoal.getY()), this.getRoom().getData().getRoomDiagonalType().getKey(),
                 false, firstGen);
@@ -254,7 +262,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 if (this.getEntityType() == RoomEntityType.PLAYER) {
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
-                    if (playerEntity.isClickThrough()) {
+                    if (playerEntity.getPlayer().isClickThrough()) {
                         //this.evtWalk.isWalking = false;
                         this.walking = false;
                         this.processingPath.clear();
@@ -270,9 +278,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
 
         }
-
-        if (!firstGen)
-            this.findPath = false;
 
         this.setWalkingPath(path);
 
@@ -682,13 +687,6 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         return this.overriden;
     }
 
-    public boolean isClickThrough() {
-        return this.clickThrough;
-    }
-
-    public void setClickThrough(boolean clickThrough) {
-        this.clickThrough = clickThrough;
-    }
 
     public void setOverriden(boolean overriden) {
         this.overriden = overriden;

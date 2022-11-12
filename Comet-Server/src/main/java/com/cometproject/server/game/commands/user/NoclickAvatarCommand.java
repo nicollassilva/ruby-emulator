@@ -10,15 +10,15 @@ public class NoclickAvatarCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] params) {
 
-        if (client.getPlayer().getEntity().getGameTeam() == GameTeam.NONE || !client.getPlayer().getEntity().isClickThrough()) {
+        if (client.getPlayer().getEntity().getGameTeam() == GameTeam.NONE || !client.getPlayer().isClickThrough()) {
             final GameTeam gameTeam = GameTeam.RED;
             client.getPlayer().getEntity().setGameTeam(gameTeam);
-            client.getPlayer().getEntity().setClickThrough(true);
+            client.getPlayer().setClickThrough(true);
             sendWhisper("Modo ClickThrough ativado.", client);
             client.getPlayer().getEntity().getRoom().getGame().joinTeam(gameTeam, client.getPlayer().getEntity());
         } else {
             client.getPlayer().getEntity().getRoom().getGame().removeFromTeam(client.getPlayer().getEntity());
-            client.getPlayer().getEntity().setClickThrough(false);
+            client.getPlayer().setClickThrough(false);
 
             sendWhisper("Modo ClickThrough desativado.", client);
         }

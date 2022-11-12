@@ -169,6 +169,17 @@ public class Player extends Observable implements IPlayer {
     private boolean nitroEnabled = false;
     private int lastInviteFriends = 0;
 
+    private boolean clickThrough = false;
+
+    public boolean isClickThrough() {
+        return this.clickThrough;
+    }
+
+    public void setClickThrough(boolean clickThrough) {
+        this.clickThrough = clickThrough;
+    }
+
+
     public Player(ResultSet data, boolean isFallback) throws SQLException {
         this.id = data.getInt("playerId");
 
