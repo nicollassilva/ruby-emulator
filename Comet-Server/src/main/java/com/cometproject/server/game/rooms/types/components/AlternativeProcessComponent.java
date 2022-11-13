@@ -1,4 +1,4 @@
-package com.cometproject.server.game.rooms.types.components.processing;
+package com.cometproject.server.game.rooms.types.components;
 
 import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.quests.QuestType;
@@ -18,11 +18,11 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
+import com.cometproject.server.game.rooms.types.components.processing.AbstractRoomProcess;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
 import com.cometproject.server.network.messages.outgoing.room.avatar.AvatarUpdateMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.avatar.TalkMessageComposer;
-import com.cometproject.server.tasks.CometTask;
 import com.cometproject.server.tasks.CometThreadManager;
 import com.cometproject.server.utilities.TimeSpan;
 import org.apache.logging.log4j.LogManager;
@@ -35,77 +35,18 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class AlternativeAbstractRoomProcess implements CometTask {
-    private final Room room;
-
-    private final Logger log;
-    private ScheduledFuture processFuture;
-
-    private boolean active = false;
-
-    private final boolean adaptiveProcessTimes;
-    private List<Long> processTimes;
-
-    private long lastProcess = 0;
+public class AlternativeProcessComponent extends AbstractRoomProcess {
 
 
 
-    private boolean update = false;
 
-    private final long delay;
-
-    public AlternativeAbstractRoomProcess(Room room, long delay) {
-        this.room = room;
-        this.delay = delay;
-        this.log = LogManager.getLogger("Room Process [" + room.getData().getName() + ", #" + room.getId() + "]");
-
-        this.adaptiveProcessTimes = CometSettings.ADAPTIVE_ENTITY_PROCESS_DELAY;
+    public AlternativeProcessComponent(Room room) {
+        super(room, 0);
 
 
         //  this.playerWalkTask = this::startProcessing;
 
 
-    }
-
-
-    public void tick() {
-        if (!this.active) {
-            return;
-        }
-
-
-        this.isProcessing = true;
-
-        try {
-            this.startProcessing();
-        } catch (Exception ex) {
-            log.error("Error during room entity processing [1]", ex);
-
-        }
-        this.isProcessing = false;
-
-        // System.out.println("room cycle took " + (System.currentTimeMillis() - timeStart) + "ms");
-
-    }
-    private boolean isProcessing = false;
-
-    public void start() {
-        if (this.active) {
-            stop();
-        }
-
-        if (this.adaptiveProcessTimes) {
-            CometThreadManager.getInstance().executeSchedule(this, 235, TimeUnit.MILLISECONDS);
-        } else {
-            this.processFuture = CometThreadManager.getInstance().executePeriodic(this, this.delay, 500, TimeUnit.MILLISECONDS);
-        }
-
-
-        this.active = true;
-
-        if (Comet.isDebugging) {
-            log.debug("Processing started");
-        }
     }
 
 
@@ -117,22 +58,21 @@ public class AlternativeAbstractRoomProcess implements CometTask {
     }
 
 
-    public void stop() {
-        if (this.getProcessTimes() != null) {
-            this.getProcessTimes().clear();
+    @Override
+    public void tick() {
+        if (!this.active) {
+            return;
         }
 
-        if (this.processFuture != null) {
-            this.active = false;
 
-            if (!this.adaptiveProcessTimes)
-                this.processFuture.cancel(false);
-
-            if (Comet.isDebugging) {
-                log.debug("Processing stopped");
-            }
+        try {
+            this.startProcessing();
+        } catch (Exception ex) {
+            log.error("Error during room entity processing [1]", ex);
+            ex.printStackTrace();
         }
 
+        // System.out.println("room cycle took " + (System.currentTimeMillis() - timeStart) + "ms");
 
     }
 
@@ -141,10 +81,6 @@ public class AlternativeAbstractRoomProcess implements CometTask {
         this.tick();
     }
 
-    public void setDelay(int time) {
-        this.processFuture.cancel(false);
-        this.processFuture = CometThreadManager.getInstance().executePeriodic(this, 0L, time, TimeUnit.MILLISECONDS);
-    }
 
     private void startProcessing() {
 
@@ -156,14 +92,9 @@ public class AlternativeAbstractRoomProcess implements CometTask {
         }
 
 
-
         final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
-        List<RoomEntity> arrayList = new ArrayList<>(entities.values());
 
-        if (this.room.hasAttribute("futnitro")) {
-            Collections.shuffle(arrayList);
-        }
 
 
         List<PlayerEntity> playersToRemove = new ArrayList<>();
@@ -253,13 +184,6 @@ public class AlternativeAbstractRoomProcess implements CometTask {
 
         playersToRemove.clear();
         entitiesToUpdate.clear();
-
-
-            try {
-                getRoom().tick();
-            } catch (Exception e) {
-                log.error("Error while cycling room: " + room.getData().getId() + ", " + room.getData().getName(), e);
-            }
 
     }
 
@@ -498,22 +422,7 @@ public class AlternativeAbstractRoomProcess implements CometTask {
         return false;
     }
 
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public Room getRoom() {
-        return this.room;
-    }
-
-    public List<Long> getProcessTimes() {
-        return processTimes;
-    }
-
-    public void setProcessTimes(List<Long> processTimes) {
-        this.processTimes = processTimes;
-    }
-
+    @Override
     protected boolean needsProcessing(RoomEntity entity) {
         return true;
     }

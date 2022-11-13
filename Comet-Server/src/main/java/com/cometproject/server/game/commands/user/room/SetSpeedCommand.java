@@ -31,7 +31,6 @@ public class SetSpeedCommand extends ChatCommand {
 
                 //client.getPlayer().getEntity().getRoom().setAttribute("customRollerSpeed", speed);
                 client.getPlayer().getEntity().getRoom().getData().setRollerSpeedLevel(speed);
-                client.getPlayer().getEntity().getRoom().getData().setRollerSpeed(true);
 
                 sendNotif(Locale.get("command.setspeed.set").replace("%s", speed + ""), client);
 

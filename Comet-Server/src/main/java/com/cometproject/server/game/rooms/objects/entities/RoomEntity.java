@@ -1,5 +1,6 @@
 package com.cometproject.server.game.rooms.objects.entities;
 
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.rooms.models.RoomTileState;
 import com.cometproject.api.game.utilities.Position;
@@ -233,20 +234,24 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
         this.findPath = true;
 
-        findWalkPath(true);
-
-        // this.evtWalk.walk(this.getRoom(), x, y);
+        if (this.getRoom().getData().getRoomProcessType() == RoomProcessingType.CLICK) {
+            this.evtWalk.walk(this.getRoom(), x, y);
+        } else {
+            findWalkPath(true);
+        }
 
 
     }
 
     public void findWalkPath(boolean firstGen) {
 
-        if (this.walkingGoal.getX() == this.getPosition().getX() && this.walkingGoal.getY() == this.getPosition().getY()){
+        if (this.getRoom().getData().getRoomProcessType() != RoomProcessingType.CLICK) {
+            if (this.walkingGoal.getX() == this.getPosition().getX() && this.walkingGoal.getY() == this.getPosition().getY()) {
 
-            this.processingPath.clear();
-            this.findPath = false;
-            return;
+                this.processingPath.clear();
+                this.findPath = false;
+                return;
+            }
         }
 
         // Create a walking path

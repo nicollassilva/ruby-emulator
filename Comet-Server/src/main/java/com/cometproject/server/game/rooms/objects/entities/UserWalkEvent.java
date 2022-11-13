@@ -41,6 +41,7 @@ public class UserWalkEvent {
             stopWalk(room);
             return;
         }
+
         final boolean isPlayer = entity instanceof PlayerEntity;
 
         if (entity.findPath) {
@@ -142,7 +143,8 @@ public class UserWalkEvent {
                     return;
                 }
 
-                entity.findWalkPath(true);
+
+                entity.findWalkPath(false);
 
                 if (entity.getProcessingPath().isEmpty()) {
                     stopWalk(room);

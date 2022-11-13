@@ -52,6 +52,8 @@ public abstract class BetaRollableFloorItem extends RoomItemFloor {
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
+
+
         if (this.skipNext && (this.kickerEntity != null && entity.getId() == this.kickerEntity.getId())) {
             this.kickerEntity = null;
             this.skipNext = false;

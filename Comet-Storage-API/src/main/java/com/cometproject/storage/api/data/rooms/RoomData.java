@@ -2,6 +2,7 @@ package com.cometproject.storage.api.data.rooms;
 
 import com.cometproject.api.game.rooms.IRoomData;
 import com.cometproject.api.game.rooms.RoomDiagonalType;
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.settings.*;
 
@@ -58,13 +59,11 @@ public class RoomData implements IRoomData {
 
     private boolean wiredHidden;
 
-    private int userIdleTicks;
     private int rollerSpeedLevel;
     private int songId;
-    private boolean rollerSpeed;
     private final int creationTime;
-    private boolean wiredLimit;
     private RoomDiagonalType roomDiagonalType;
+    private RoomProcessingType roomProcessingType;
     private int roomPrice;
     private int roomBuyer;
 
@@ -75,7 +74,8 @@ public class RoomData implements IRoomData {
                     boolean allowPets, String heightmap, RoomMuteState muteState, RoomKickState kickState,
                     RoomBanState banState, int bubbleMode, int bubbleType, int bubbleScroll, int chatDistance,
                     int antiFloodSettings, List<String> disabledCommands, int groupId,
-                    String requiredBadge, String thumbnail, boolean wiredHidden, int userIdleTicks, int rollerSpeedLevel, boolean rollerSpeed, boolean wiredLimit, RoomDiagonalType roomDiagonalType, int songId, int roomPrice, int roomBuyer) {
+                    String requiredBadge, String thumbnail, boolean wiredHidden, int rollerSpeedLevel, RoomDiagonalType roomDiagonalType, int songId, int roomPrice,
+                    int roomBuyer, RoomProcessingType roomProcessingType) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -112,10 +112,10 @@ public class RoomData implements IRoomData {
         this.requiredBadge = requiredBadge;
         this.thumbnail = thumbnail;
         this.wiredHidden = wiredHidden;
-        this.userIdleTicks = userIdleTicks;
         this.rollerSpeedLevel = rollerSpeedLevel;
-        this.rollerSpeed = rollerSpeed;
-        this.wiredLimit = wiredLimit;
+
+        this.roomProcessingType = roomProcessingType;
+
         this.roomDiagonalType = roomDiagonalType;
         this.songId = songId;
         this.roomPrice = roomPrice;
@@ -250,7 +250,9 @@ public class RoomData implements IRoomData {
     }
 
     @Override
-    public int getCreationTime() { return creationTime;}
+    public int getCreationTime() {
+        return creationTime;
+    }
 
     @Override
     public void setTradeState(RoomTradeState tradeState) {
@@ -493,15 +495,6 @@ public class RoomData implements IRoomData {
         this.wiredHidden = hiddenWired;
     }
 
-    @Override
-    public int getUserIdleTicks() {
-        return this.userIdleTicks;
-    }
-
-    @Override
-    public void setUserIdleTicks(int ticks) {
-        this.userIdleTicks = ticks;
-    }
 
     @Override
     public int getRollerSpeedLevel() {
@@ -509,23 +502,10 @@ public class RoomData implements IRoomData {
     }
 
     @Override
-    public void setRollerSpeedLevel(int rollerSpeedLevel) { this.rollerSpeedLevel = rollerSpeedLevel;}
-
-    @Override
-    public void setRollerSpeed(boolean rollerSpeed) { this.rollerSpeed = rollerSpeed; }
-
-    @Override
-    public boolean getRollerSpeed() { return this.rollerSpeed;}
-
-    @Override
-    public boolean getWiredLimit() {
-        return this.wiredLimit;
+    public void setRollerSpeedLevel(int rollerSpeedLevel) {
+        this.rollerSpeedLevel = rollerSpeedLevel;
     }
 
-    @Override
-    public void setWiredLimit(boolean wiredLimit) {
-        this.wiredLimit = wiredLimit;
-    }
 
     @Override
     public boolean isRoomDiagonal() {
@@ -560,5 +540,15 @@ public class RoomData implements IRoomData {
     @Override
     public void setRoomBuyer(int id) {
         this.roomBuyer = id;
+    }
+
+    @Override
+    public RoomProcessingType getRoomProcessType() {
+        return this.roomProcessingType;
+    }
+
+    @Override
+    public RoomProcessingType setRoomProcessType(RoomProcessingType type) {
+        return this.roomProcessingType = type;
     }
 }

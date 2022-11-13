@@ -2,6 +2,7 @@ package com.cometproject.server.storage.queries.rooms;
 
 import com.cometproject.api.game.rooms.IRoomData;
 import com.cometproject.api.game.rooms.RoomDiagonalType;
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.models.CustomFloorMapData;
 import com.cometproject.api.game.rooms.settings.*;
@@ -484,26 +485,6 @@ public class RoomDao {
         }
     }
 
-    public static void updateRoomIdleTicks(int ticks, int roomId) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            sqlConnection = SqlHelper.getConnection();
-
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET user_idle_ticks = ? WHERE `id` = ?", sqlConnection);
-
-            preparedStatement.setInt(1, ticks);
-            preparedStatement.setInt(2, roomId);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-    }
 
     public static void rollerSpeedRoom(int rollerLevel, int roomId) {
         Connection sqlConnection = null;
@@ -705,43 +686,6 @@ public class RoomDao {
         }
     }
 
-    public static void wiredLimit(int roomId) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET wired_limit = '1' WHERE `id` = ?", sqlConnection);
-
-            preparedStatement.setInt(1, roomId);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-    }
-
-    public static void wiredLimitOff(int roomId) {
-        Connection sqlConnection = null;
-        PreparedStatement preparedStatement = null;
-
-        try {
-            sqlConnection = SqlHelper.getConnection();
-            preparedStatement = SqlHelper.prepare("UPDATE rooms SET wired_limit = '0' WHERE `id` = ?", sqlConnection);
-
-            preparedStatement.setInt(1, roomId);
-
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            SqlHelper.handleSqlException(e);
-        } finally {
-            SqlHelper.closeSilently(preparedStatement);
-            SqlHelper.closeSilently(sqlConnection);
-        }
-    }
 
     public static void updateRoomName(String name, int roomId) {
         Connection sqlConnection = null;
@@ -810,11 +754,9 @@ public class RoomDao {
         final int groupId = room.getInt("group_id");
         final String requiredBadge = room.getString("required_badge");
         final boolean wiredHidden = room.getString("hide_wired").equals("1");
-        final int userIdleTicks = room.getInt("user_idle_ticks");
         final int rollerSpeedLevel = room.getInt("roller_speed_level");
-        final boolean rollerSpeed = room.getString("roller_speed").equals("1");
-        final boolean wiredLimit = room.getBoolean("wired_limit");
         final RoomDiagonalType roomDiagonal = RoomDiagonalType.parse(room.getString("room_diagonal"));
+        final RoomProcessingType processingType = RoomProcessingType.parse(room.getString("processing_type"));
         final int songId = room.getInt("song_id");
         final int roomPrice = room.getInt("room_price");
         final int roomBuyer = room.getInt("room_buyer");
@@ -823,7 +765,7 @@ public class RoomDao {
                 password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands, groupId,
-                requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice, roomBuyer);
+                requiredBadge, thumbnail, wiredHidden, rollerSpeedLevel, roomDiagonal, songId, roomPrice, roomBuyer, processingType);
     }
 
     private static void fillDecorations(Map<String, String> decorations, String[] decorationsArray) {

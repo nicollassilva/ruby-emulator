@@ -4,22 +4,17 @@ import com.cometproject.api.game.GameContext;
 import com.cometproject.api.game.bots.IBotData;
 import com.cometproject.api.game.groups.types.IGroup;
 import com.cometproject.api.game.pets.IPetData;
-import com.cometproject.api.game.rooms.IRoom;
-import com.cometproject.api.game.rooms.IRoomData;
-import com.cometproject.api.game.rooms.RoomCategory;
-import com.cometproject.api.game.rooms.RoomType;
+import com.cometproject.api.game.rooms.*;
 import com.cometproject.api.game.rooms.models.CustomFloorMapData;
 import com.cometproject.api.game.rooms.models.IRoomModel;
 import com.cometproject.api.game.rooms.models.RoomModelData;
 import com.cometproject.api.utilities.JsonUtil;
-import com.cometproject.game.rooms.factories.RoomModelFactory;
 import com.cometproject.server.boot.Comet;
 import com.cometproject.server.game.navigator.NavigatorManager;
 import com.cometproject.server.game.polls.PollManager;
 import com.cometproject.server.game.polls.types.Poll;
 import com.cometproject.server.game.rooms.RoomManager;
 import com.cometproject.server.game.rooms.RoomQueue;
-import com.cometproject.server.game.rooms.objects.entities.RoomEntity;
 import com.cometproject.server.game.rooms.objects.entities.UserWalkEvent;
 import com.cometproject.server.game.rooms.objects.entities.types.BotEntity;
 import com.cometproject.server.game.rooms.objects.entities.types.PetEntity;
@@ -29,8 +24,8 @@ import com.cometproject.server.game.rooms.objects.items.RoomItemWall;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTime;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerAtGivenTimeLong;
 import com.cometproject.server.game.rooms.types.components.*;
+import com.cometproject.server.game.rooms.types.components.processing.AbstractRoomProcess;
 import com.cometproject.server.game.rooms.types.mapping.RoomMapping;
-import com.cometproject.server.game.rooms.types.mapping.SquareFlagManager;
 import com.cometproject.server.network.messages.outgoing.room.polls.GetInfobusPollResultsMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.polls.QuickPollMessageComposer;
 import com.cometproject.server.network.messages.outgoing.room.polls.QuickPollResultsMessageComposer;
@@ -39,14 +34,12 @@ import com.cometproject.server.storage.cache.objects.RoomDataObject;
 import com.cometproject.server.storage.cache.objects.items.FloorItemDataObject;
 import com.cometproject.server.storage.cache.objects.items.WallItemDataObject;
 import com.cometproject.server.utilities.attributes.Attributable;
-import com.cometproject.server.utilities.collections.ConcurrentHashSet;
 import com.cometproject.storage.mysql.models.factories.rooms.RoomModelDataFactory;
 import com.google.common.collect.Sets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -60,7 +53,7 @@ public class Room implements Attributable, IRoom {
     private final AtomicInteger wiredTimer = new AtomicInteger(0);
     private IRoomModel model;
     private RoomMapping mapping;
-    private ProcessComponent process;
+    private AbstractRoomProcess process;
     private RightsComponent rights;
     private ItemsComponent items;
     private ItemProcessComponent itemProcess;
@@ -107,11 +100,10 @@ public class Room implements Attributable, IRoom {
     public void addUserEvent(UserWalkEvent task, int ticks) {
         task.Ticks = ticks;
         synchronized (this.eventIdGeneratorUsers) {
-            this.eventIdGeneratorUsers = (this.eventIdGeneratorUsers.intValue() + 1) % 999999;
+            this.eventIdGeneratorUsers = (this.eventIdGeneratorUsers + 1) % 999999;
             this.userEvents.put(this.eventIdGeneratorUsers, task);
             task.eventId = this.eventIdGeneratorUsers;
         }
-
     }
 
     public void parseEvent(UserWalkEvent evt) {
@@ -171,7 +163,11 @@ public class Room implements Attributable, IRoom {
         this.mapping = new RoomMapping(this);
         this.itemProcess = new ItemProcessComponent(this);
 
-        this.process = new ProcessComponent(this);
+        this.process = this.data.getRoomProcessType() == RoomProcessingType.CLICK
+                ? new AlternativeProcessComponent(this)
+                : new ProcessComponent(this);
+
+
         this.rights = new RightsComponent(this);
         this.items = new ItemsComponent(this);
 
@@ -462,7 +458,7 @@ public class Room implements Attributable, IRoom {
         return this.model;
     }
 
-    public ProcessComponent getProcess() {
+    public AbstractRoomProcess getProcess() {
         return this.process;
     }
 

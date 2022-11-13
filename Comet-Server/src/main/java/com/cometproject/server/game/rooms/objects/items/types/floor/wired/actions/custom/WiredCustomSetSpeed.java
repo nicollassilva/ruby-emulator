@@ -55,7 +55,6 @@ public class WiredCustomSetSpeed extends WiredActionItem {
         final int rollerLevel = Integer.parseInt(this.getWiredData().getText());
 
         playerEntity.getRoom().getData().setRollerSpeedLevel(rollerLevel);
-        playerEntity.getRoom().getData().setRollerSpeed(true);
 
         RoomDao.rollerSpeedRoom(rollerLevel, playerEntity.getRoom().getId());
         RoomDao.rollerSpeed(playerEntity.getRoom().getId());

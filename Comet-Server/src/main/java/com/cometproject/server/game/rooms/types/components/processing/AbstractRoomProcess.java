@@ -2,6 +2,7 @@ package com.cometproject.server.game.rooms.types.components.processing;
 
 import com.cometproject.api.config.CometSettings;
 import com.cometproject.api.game.quests.QuestType;
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.utilities.Position;
 import com.cometproject.server.boot.Comet;
@@ -40,12 +41,12 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class AbstractRoomProcess implements CometTask {
-    private final Room room;
+    protected final Room room;
 
-    private final Logger log;
+    protected final Logger log;
     private ScheduledFuture processFuture;
     private ScheduledFuture processFutureRoom;
-    private boolean active = false;
+    protected boolean active = false;
 
     private final boolean adaptiveProcessTimes;
     private List<Long> processTimes;
@@ -94,7 +95,7 @@ public class AbstractRoomProcess implements CometTask {
             this.startProcessing();
         } catch (Exception ex) {
             log.error("Error during room entity processing [1]", ex);
-
+            ex.printStackTrace();
         }
 
         final TimeSpan span = new TimeSpan(timeStart, System.currentTimeMillis());
@@ -167,8 +168,7 @@ public class AbstractRoomProcess implements CometTask {
 
         this.entitiesToUpdate.clear();
         this.playersToRemove.clear();
-        this.entitiesToUpdate = null;
-        this.playersToRemove = null;
+
 
     }
 
@@ -189,7 +189,7 @@ public class AbstractRoomProcess implements CometTask {
 
         List<RoomEntity> arrayList = new ArrayList<>(entities.values());
 
-        if (this.room.hasAttribute("futnitro")) {
+        if (this.room.getData().getRoomProcessType() != RoomProcessingType.DEFAULT) {
             Collections.shuffle(arrayList);
         }
 
@@ -479,7 +479,7 @@ public class AbstractRoomProcess implements CometTask {
         }
 
         if (entity.findPath) {
-            entity.findWalkPath(false);
+            entity.findWalkPath(true);
         }
 
         entity.removeStatus(RoomEntityStatus.MOVE);

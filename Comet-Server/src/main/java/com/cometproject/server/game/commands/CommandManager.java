@@ -200,6 +200,7 @@ public class CommandManager implements Initialisable {
         this.addCommand("clickthrough", new NoclickAvatarCommand());
         this.addCommand("clickthrouse", new NoclickAvatarCommand());
         this.addCommand("futnitro", new FutnitroCommand());
+        this.addCommand("nitro", new FutnitroCommand());
 
 
         // Gimmick commands

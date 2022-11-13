@@ -34,10 +34,9 @@ public class SetIdleTimerCommand extends ChatCommand {
                 return;
             }
 
-            room.getData().setUserIdleTicks(ticks * 2); // testing
+           // room.getData().setUserIdleTicks(ticks * 2); // testing
             sendNotif(Locale.get("command.setidletimer.set").replace("%seconds%", "" + ticks), client);
 
-            RoomDao.updateRoomIdleTicks(ticks, room.getId());
         }
     }
 

@@ -152,21 +152,14 @@ public interface IRoomData {
 
     void setIsWiredHidden(boolean hiddenWired);
 
-    int getUserIdleTicks();
-
-    void setUserIdleTicks(int ticks);
 
     int getRollerSpeedLevel();
+    
 
-    boolean getRollerSpeed();
-
-    void setRollerSpeed(boolean rollerSpeed);
 
     void setRollerSpeedLevel(int rollerSpeedLevel);
 
-    void setWiredLimit(boolean wiredLimit);
 
-    boolean getWiredLimit();
 
     boolean isRoomDiagonal();
 
@@ -181,4 +174,8 @@ public interface IRoomData {
     int getRoomBuyer();
 
     void setRoomBuyer(int id);
+
+    RoomProcessingType getRoomProcessType();
+
+    RoomProcessingType setRoomProcessType(RoomProcessingType type);
 }

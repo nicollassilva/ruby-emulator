@@ -2,6 +2,7 @@ package com.cometproject.storage.mysql.repositories;
 
 import com.cometproject.api.game.rooms.IRoomData;
 import com.cometproject.api.game.rooms.RoomDiagonalType;
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.RoomType;
 import com.cometproject.api.game.rooms.models.RoomModelData;
 import com.cometproject.api.game.rooms.settings.*;
@@ -110,7 +111,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                         "thumbnail = ?, " +
                         "hide_wired = ?, " +
                         "roller_speed_level = ?, " +
-                        "roller_speed = ?, " +
+                        "processing_type = ?, " +
                         "wired_limit = ?, " +
                         "room_diagonal = ?, " +
                         "type = ? " +
@@ -149,8 +150,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                 data.getThumbnail(),
                 data.isWiredHidden() ? "1" : "0",
                 data.getRollerSpeedLevel(),
-                data.getRollerSpeed() ? "1" : "0",
-                data.getWiredLimit() ? "1" : "0",
+                data.getRoomProcessType().getKey(),
                 String.valueOf(data.getRoomDiagonalType().getKey()),
                 data.getType().name(),
                 data.getId());
@@ -213,11 +213,10 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
         final int groupId = room.readInteger("group_id");
         final String requiredBadge = room.readString("required_badge");
         final boolean wiredHidden = room.readString("hide_wired").equals("1");
-        final int userIdleTicks = room.readInteger("user_idle_ticks");
         final int rollerSpeedLevel = room.readInteger("roller_speed_level");
-        final boolean rollerSpeed = room.readString("roller_speed").equals("1");
-        final boolean wiredLimit = room.readBoolean("wired_limit");
+
         final RoomDiagonalType roomDiagonal = RoomDiagonalType.parse(room.readString("room_diagonal"));
+        final RoomProcessingType processingType = RoomProcessingType.parse(room.readString("processing_type"));
         final int songId = room.readInteger("song_id");
         final int roomPrice = room.readInteger("room_price");
         final int roomBuyer = room.readInteger("room_buyer");
@@ -226,6 +225,6 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                 password, tradeState, creationTime, score, tags, decorations, model, hideWalls, thicknessWall, thicknessFloor,
                 allowWalkthrough, allowPets, heightmap, muteState, kickState, banState, bubbleMode, bubbleType,
                 bubbleScroll, chatDistance, antiFloodSettings, disabledCommands == null ? Lists.newArrayList() : disabledCommands,
-                groupId, requiredBadge, thumbnail, wiredHidden, userIdleTicks, rollerSpeedLevel, rollerSpeed, wiredLimit, roomDiagonal, songId, roomPrice, roomBuyer);
+                groupId, requiredBadge, thumbnail, wiredHidden, rollerSpeedLevel, roomDiagonal, songId, roomPrice, roomBuyer, processingType);
     }
 }

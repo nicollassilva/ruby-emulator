@@ -8,6 +8,7 @@ import com.cometproject.server.network.rcon.RCONServer;
 import com.cometproject.server.utilities.CometRuntime;
 import com.cometproject.server.utilities.TimeSpan;
 
+import org.apache.log4j.FileAppender;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
