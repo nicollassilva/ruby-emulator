@@ -387,8 +387,7 @@ public class RoomMapping {
         if (tile == null)
             return false;
 
-        if (tile.getTopItemInstance() instanceof OneWayGateFloorItem) {
-            final OneWayGateFloorItem item = (OneWayGateFloorItem) tile.getTopItemInstance();
+        if (tile.getTopItemInstance() instanceof final OneWayGateFloorItem item) {
 
             if (entity != null && item.getInteractingEntity() != null && item.getInteractingEntity().getId() == entity)
                 return true;
