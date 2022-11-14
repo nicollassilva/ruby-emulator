@@ -32,7 +32,8 @@ public class HideWiredCommand extends ChatCommand {
                     room.getEntities().broadcastMessage(new SendFloorItemMessageComposer(floorItem));
                 }
 
-                floorItem.getTile().reload();
+                if (floorItem.getTile() != null)
+                    floorItem.getTile().reload();
             }
         }
 

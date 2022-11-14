@@ -664,6 +664,7 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
             }
         } catch (Exception e) {
             log.error("Error while executing command", e.getCause());
+            e.printStackTrace();
             return false;
         }
 
