@@ -39,6 +39,7 @@ public class RCONServer extends Server {
         this.addRCONMessage("disconnect", DisconnectUser.class);
 
         Collections.addAll(this.allowedAdresses, "127.0.0.1");
+        Collections.addAll(this.allowedAdresses, "0.0.0.0");
     }
 
     @Override

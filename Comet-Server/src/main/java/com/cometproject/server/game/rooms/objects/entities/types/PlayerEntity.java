@@ -7,6 +7,7 @@ import com.cometproject.api.game.bots.BotMode;
 import com.cometproject.api.game.bots.BotType;
 import com.cometproject.api.game.groups.types.IGroupData;
 import com.cometproject.api.game.quests.QuestType;
+import com.cometproject.api.game.rooms.RoomProcessingType;
 import com.cometproject.api.game.rooms.entities.PlayerRoomEntity;
 import com.cometproject.api.game.rooms.entities.RoomEntityStatus;
 import com.cometproject.api.game.rooms.settings.RoomAccessType;
@@ -364,6 +365,10 @@ public class PlayerEntity extends RoomEntity implements PlayerEntityAccess, Attr
 
         if(this.getRoom().getData().getSongId() != 0) {
             this.sendTraxMachineSong();
+        }
+
+        if (this.getRoom().getData().getRoomProcessType() != RoomProcessingType.DEFAULT) {
+            this.getPlayer().sendBubble("generic", "O Nitro deste quarto foi alterado para " + this.getRoom().getData().getRoomProcessType().getName() + "!");
         }
     }
 

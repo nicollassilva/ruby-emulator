@@ -267,7 +267,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 if (this.getEntityType() == RoomEntityType.PLAYER) {
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
-                    if (playerEntity.getPlayer().isClickThrough()) {
+                    if (playerEntity.getPlayer() != null && playerEntity.getPlayer().isClickThrough()) {
 
                         this.walking = false;
                         this.processingPath.clear();
@@ -741,7 +741,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
 
     public void cancelWalk() {
         this.evtWalk.isWalking = false;
-        
+
         this.setWalkCancelled(true);
         this.markNeedsUpdate();
     }

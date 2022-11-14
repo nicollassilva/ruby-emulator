@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class HotelAlertCommand extends ChatCommand {
-    private String logDesc;
 
     public void execute(Session client, String[] message) {
         if (message.length == 0) {
@@ -29,12 +28,12 @@ public class HotelAlertCommand extends ChatCommand {
 
         if (!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "-c enviou um alerta para o hotel. [-s]"
+        String logDesc = "-c enviou um alerta para o hotel. [-s]"
                 .replace("-c", client.getPlayer().getData().getUsername())
                 .replace("-s", this.merge(message));
 
         for (final Session player : ModerationManager.getInstance().getLogChatUsers()) {
-            player.send(new InstantChatMessageComposer(this.logDesc, Integer.MAX_VALUE - 1));
+            player.send(new InstantChatMessageComposer(logDesc, Integer.MAX_VALUE - 1));
         }
     }
 

@@ -41,7 +41,7 @@ public class FutnitroCommand extends ChatCommand {
             RoomProcessingType type = RoomProcessingType.parse(params[0]);
 
 
-            sendNotif(Locale.getOrDefault("command.togglenitro", "Nitro alterado para " + type.getName()), client);
+            sendNotif(Locale.getOrDefault("command.togglenitro.value", "Nitro alterado para " + type.getName()), client);
 
             client.getPlayer().getEntity().getRoom().getData().setRoomProcessType(type);
             GameContext.getCurrent().getRoomService().saveRoomData(client.getPlayer().getEntity().getRoom().getData());
@@ -50,7 +50,7 @@ public class FutnitroCommand extends ChatCommand {
             final RoomReloadListener reloadListener = new RoomReloadListener(client.getPlayer().getEntity().getRoom(), (players, newRoom) -> {
                 for (final Player player : players) {
                     if (player.getEntity() != null) {
-                        sendNotif(Locale.getOrDefault("command.togglenitro", "Nitro alterado para " + type.getName()), player.getSession());
+                        sendNotif(Locale.getOrDefault("command.togglenitro.value", "Nitro alterado para " + type.getName()), player.getSession());
                         player.getSession().send(new RoomForwardMessageComposer(newRoom.getId()));
                     }
                 }

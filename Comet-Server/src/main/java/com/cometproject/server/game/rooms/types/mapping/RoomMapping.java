@@ -190,7 +190,7 @@ public class RoomMapping {
     }
 
     public boolean isValidEntityStep(RoomEntity entity, Position currentPosition, Position toPosition, boolean isFinalMove, boolean isRetry, boolean generating) {
-        var clickThrough = entity.getEntityType() != RoomEntityType.PLAYER || (((PlayerEntity) entity).getPlayer().isClickThrough());
+        var clickThrough = entity.getEntityType() != RoomEntityType.PLAYER || (((PlayerEntity) entity).getPlayer() != null && (((PlayerEntity) entity).getPlayer().isClickThrough()));
 
         return isValidStep(entity.getId(), currentPosition, toPosition, isFinalMove, false, isRetry, false, false, entity.isOverriden(), clickThrough, true, generating);
     }
