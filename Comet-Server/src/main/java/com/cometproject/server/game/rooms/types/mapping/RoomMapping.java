@@ -376,10 +376,10 @@ public class RoomMapping {
                 return isClickThrough && generating;
 
             if (!isRetry && !room.getData().getAllowWalkthrough())
-                return isClickThrough && generating;
+                return  generating;
 
             if ((!room.getData().getAllowWalkthrough() || isFloorItem) && !isAtDoor)
-                return isClickThrough && generating;
+                return  generating;
         }
 
         final RoomTile tile = tiles[to.getX()][to.getY()];
