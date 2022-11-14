@@ -112,7 +112,6 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                         "hide_wired = ?, " +
                         "roller_speed_level = ?, " +
                         "processing_type = ?, " +
-                        "wired_limit = ?, " +
                         "room_diagonal = ?, " +
                         "type = ? " +
                         "WHERE id = ?;",
@@ -150,7 +149,7 @@ public class MySQLRoomRepository extends MySQLRepository implements IRoomReposit
                 data.getThumbnail(),
                 data.isWiredHidden() ? "1" : "0",
                 data.getRollerSpeedLevel(),
-                data.getRoomProcessType().getKey(),
+                ((int) data.getRoomProcessType().getKey()),
                 String.valueOf(data.getRoomDiagonalType().getKey()),
                 data.getType().name(),
                 data.getId());

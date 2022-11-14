@@ -92,13 +92,11 @@ public class AlternativeProcessComponent extends AbstractRoomProcess {
         }
 
 
-        final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
-
-
-
 
         List<PlayerEntity> playersToRemove = new ArrayList<>();
         List<RoomEntity> entitiesToUpdate = new ArrayList<>();
+
+        final Map<Integer, RoomEntity> entities = this.room.getEntities().getAllEntities();
 
         for (final RoomEntity entity : entities.values()) {
             if (entity == null)
@@ -140,8 +138,9 @@ public class AlternativeProcessComponent extends AbstractRoomProcess {
 
                     entitiesToUpdate.add(entity);
                 } else if (entity.isNeedsForcedUpdate()) {
-                    entity.removeStatus(RoomEntityStatus.MOVE);
-
+                    if (entity.hasStatus(RoomEntityStatus.MOVE)) {
+                        entity.removeStatus(RoomEntityStatus.MOVE);
+                    }
 
                     entity.updatePhase = 1;
                     entitiesToUpdate.add(entity);
@@ -161,6 +160,7 @@ public class AlternativeProcessComponent extends AbstractRoomProcess {
                 }
             }
         }
+
 
         if (entitiesToUpdate.size() > 0) {
             this.getRoom().getEntities().broadcastMessage(new AvatarUpdateMessageComposer(entitiesToUpdate));

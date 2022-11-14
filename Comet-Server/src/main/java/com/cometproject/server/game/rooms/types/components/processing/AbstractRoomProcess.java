@@ -303,9 +303,7 @@ public class AbstractRoomProcess implements CometTask {
                 }
             }
 
-            if (entity.hasStatus(RoomEntityStatus.SIT)) {
-                entity.removeStatus(RoomEntityStatus.SIT);
-            }
+            entity.removeStatus(RoomEntityStatus.SIT);
 
             // Create the new position
             final Position newPosition = entity.getPositionToSet().copy();
@@ -482,8 +480,12 @@ public class AbstractRoomProcess implements CometTask {
             entity.findWalkPath(true);
         }
 
-        entity.removeStatus(RoomEntityStatus.MOVE);
-        entity.markNeedsUpdate();
+        if (entity.hasStatus(RoomEntityStatus.MOVE)) {
+            entity.removeStatus(RoomEntityStatus.MOVE);
+            entity.removeStatus(RoomEntityStatus.GESTURE);
+
+            entity.markNeedsUpdate();
+        }
 
         if (entity.isWalking() && entity.processingPath.size() > 0) {
             Square nextSq = entity.getProcessingPath().remove(0);
@@ -562,7 +564,7 @@ public class AbstractRoomProcess implements CometTask {
                 final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
                 final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
                 final boolean isOverriding = isPlayer && entity.isOverriden();
-                if (!isOverriding && (!allowWalkthrough && nextPosIsTheGoal)) {
+                if (!isOverriding && !allowWalkthrough) {
                     isCancelled = true;
                 }
 
@@ -585,7 +587,7 @@ public class AbstractRoomProcess implements CometTask {
                     entity.setWalkCancelled(false);
 
                 } else {
-                    //entity.processingPath.clear();
+                    entity.processingPath.clear();
                     entity.findPath = true;
                 }
                 return false;
@@ -632,13 +634,6 @@ public class AbstractRoomProcess implements CometTask {
         } else {
 
             entity.findPath = false;
-
-            if (entity.hasStatus(RoomEntityStatus.MOVE)) {
-                entity.removeStatus(RoomEntityStatus.MOVE);
-                entity.removeStatus(RoomEntityStatus.GESTURE);
-
-                entity.markNeedsUpdate();
-            }
 
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;

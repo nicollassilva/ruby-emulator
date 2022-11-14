@@ -268,7 +268,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
                     if (playerEntity.getPlayer().isClickThrough()) {
-                        //this.evtWalk.isWalking = false;
+
                         this.walking = false;
                         this.processingPath.clear();
                     }
@@ -282,6 +282,10 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
             }
 
 
+        }
+
+        if (this.getRoom().getData().getRoomProcessType() != RoomProcessingType.CLICK) {
+            this.findPath = false;
         }
 
         this.setWalkingPath(path);
@@ -736,6 +740,8 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
     }
 
     public void cancelWalk() {
+        this.evtWalk.isWalking = false;
+        
         this.setWalkCancelled(true);
         this.markNeedsUpdate();
     }
