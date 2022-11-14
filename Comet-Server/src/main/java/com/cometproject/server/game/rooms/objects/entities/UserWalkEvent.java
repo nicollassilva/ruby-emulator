@@ -123,6 +123,11 @@ public class UserWalkEvent {
 
         if (isCancelled) {
 
+            if (this.liveEntity.isWalkCancelled()){
+                stopWalk(room);
+                return;
+            }
+
             this.liveEntity.findWalkPath(false);
 
             if (this.liveEntity.getProcessingPath().isEmpty()) {
