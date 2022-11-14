@@ -41,7 +41,7 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
     public boolean evaluate(RoomEntity entity, Object data) {
         if (this.hasTicks()) return false;
         if (this.getWiredData().getDelay() >= 1) {
-            this.setTicks(RoomItemFactory.getProcessTime(this.getWiredData().getDelay() / 2));
+            this.setTicks(RoomItemFactory.getProcessTime(this.getWiredData().getDelay() / 2.0));
         } else {
             this.onTickComplete();
         }
@@ -63,15 +63,17 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
             boolean rotationChanged = false;
             boolean stateChanged = false;
 
-            RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+            final RoomItemFloor floorItem = this.getRoom().getItems().getFloorItem(itemId);
+
             if (floorItem == null) continue;
 
-            WiredItemSnapshot itemSnapshot = this.getWiredData().getSnapshots().get(itemId);
+            final WiredItemSnapshot itemSnapshot = this.getWiredData().getSnapshots().get(itemId);
+
             if (itemSnapshot == null) continue;
 
             if (matchState && !(floorItem instanceof HighscoreClassicFloorItem)) {
-                String currentExtradata = floorItem.getItemData().getData();
-                String newExtradata = itemSnapshot.getExtraData();
+                final String currentExtradata = floorItem.getItemData().getData();
+                final String newExtradata = itemSnapshot.getExtraData();
 
                 if(!currentExtradata.equals(newExtradata)) {
                     floorItem.getItemData().setData(newExtradata);
@@ -79,21 +81,15 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
                 }
             }
 
-            int gameLength = 0;
-            if (floorItem instanceof FootballTimerFloorItem) {
-                try {
-                    gameLength = Integer.parseInt(itemSnapshot.getExtraData());
-                } catch (Exception e) {
-                    gameLength = -1;
-                }
-            }
+            int gameLength;
 
-            if (floorItem instanceof BanzaiTimerFloorItem) {
+            if ((floorItem instanceof BanzaiTimerFloorItem) || (floorItem instanceof FootballTimerFloorItem)) {
                 try {
                     gameLength = Integer.parseInt(itemSnapshot.getExtraData());
                 } catch (Exception e) {
                     gameLength = -1;
                 }
+
                 if (this.getRoom().getGame().getInstance() != null && gameLength != -1) {
                     this.getRoom().getGame().getInstance().ModifyTime(0);
                     this.getRoom().getGame().getInstance().ModifyTimer(gameLength);
@@ -114,13 +110,12 @@ public class WiredActionMatchToSnapshot extends WiredActionItem {
                 floorItem.sendUpdate();
 
                 if(floorItem instanceof GateFloorItem){
-                    Position currentPosition = floorItem.getPosition();
-                    this.getRoom().getMapping().getTile(currentPosition).reload();
+                    this.getRoom().getMapping().getTile(floorItem.getPosition()).reload();
                 }
             }
 
-            Position currentPosition = new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY(), floorItem.getPosition().getZ());
-            Position newPosition = new Position(itemSnapshot.getX(), itemSnapshot.getY(), itemSnapshot.getZ());
+            final Position currentPosition = new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY(), floorItem.getPosition().getZ());
+            final Position newPosition = new Position(itemSnapshot.getX(), itemSnapshot.getY(), itemSnapshot.getZ());
 
             if (this.getRoom().getItems().moveFloorItemMatch(floorItem, !matchPosition ? currentPosition : newPosition, matchRotation ? itemSnapshot.getRotation() : floorItem.getRotation(), true, false, false)) {
                 this.getRoom().getEntities().broadcastMessage(new UpdateFloorItemMessageComposer(floorItem));

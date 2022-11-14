@@ -359,7 +359,7 @@ public class ItemsComponent {
     public boolean moveFloorItemMatch(RoomItemFloor item, Position newPosition, int rotation, boolean save, boolean autoheight, boolean limit) {
         if (item == null) return false;
 
-        RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
+        final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
 
         if (autoheight && !this.verifyItemTilePosition(item.getDefinition(), item, tile, item.getPosition(), rotation)) {
             return false;
@@ -389,25 +389,23 @@ public class ItemsComponent {
     }
 
     private boolean moveFloorItemAfter(RoomItemFloor item, Position newPosition, double height, int rotation, boolean save) {
+        final List<RoomItemFloor> floorItemsAt = this.getItemsOnSquare(newPosition.getX(), newPosition.getY());
 
-        List<RoomItemFloor> floorItemsAt = this.getItemsOnSquare(newPosition.getX(), newPosition.getY());
-
-        for (RoomItemFloor stackItem : floorItemsAt) {
+        for (final RoomItemFloor stackItem : floorItemsAt) {
             if (item.getId() != stackItem.getId()) {
-
                 stackItem.onItemAddedToStack(item);
             }
         }
 
         item.onPositionChanged(newPosition);
 
-        List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
+        final List<RoomEntity> affectEntities0 = room.getEntities().getEntitiesAt(item.getPosition());
 
         for (RoomEntity entity0 : affectEntities0) {
             item.onEntityStepOff(entity0);
         }
 
-        List<Position> tilesToUpdate = new ArrayList<>();
+        final List<Position> tilesToUpdate = new ArrayList<>();
 
         tilesToUpdate.add(new Position(item.getPosition().getX(), item.getPosition().getY()));
         tilesToUpdate.add(new Position(newPosition.getX(), newPosition.getY()));
@@ -417,7 +415,7 @@ public class ItemsComponent {
             for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), item.getPosition().getX(), item.getPosition().getY(), item.getRotation())) {
                 tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
 
-                List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+                final List<RoomEntity> affectEntities1 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 for (RoomEntity entity1 : affectEntities1) {
                     item.onEntityStepOff(entity1);
@@ -427,7 +425,7 @@ public class ItemsComponent {
             for (AffectedTile affectedTile : AffectedTile.getAffectedTilesAt(item.getDefinition().getLength(), item.getDefinition().getWidth(), newPosition.getX(), newPosition.getY(), rotation)) {
                 tilesToUpdate.add(new Position(affectedTile.x, affectedTile.y));
 
-                List<RoomEntity> affectEntities2 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
+                final List<RoomEntity> affectEntities2 = room.getEntities().getEntitiesAt(new Position(affectedTile.x, affectedTile.y));
 
                 for (RoomEntity entity2 : affectEntities2) {
                     item.onEntityStepOn(entity2);
@@ -439,12 +437,11 @@ public class ItemsComponent {
 
         item.getPosition().setX(newPosition.getX());
         item.getPosition().setY(newPosition.getY());
-
-
         item.getPosition().setZ(height);
         item.setRotation(rotation);
+        item.setMoveDirection(-1);
 
-        List<RoomEntity> affectEntities3 = room.getEntities().getEntitiesAt(newPosition);
+        final List<RoomEntity> affectEntities3 = room.getEntities().getEntitiesAt(newPosition);
 
         for (RoomEntity entity3 : affectEntities3) {
             item.onEntityStepOn(entity3);
@@ -472,20 +469,19 @@ public class ItemsComponent {
         if (item == null) return false;
 
         final RoomTile tile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
+
         if (autoHeight && !this.verifyItemPosition(item.getDefinition(), item, tile, item.getPosition(), null)) {
             return false;
         }
 
         double height = newPosition.getZ();
+
         if (autoHeight) {
             height = tile.getStackHeight(item);
         }
 
-        if (item instanceof WiredAddonNewPuzzleBox) {
-            if (!tile.canPlaceItemHere()) {
-                return false;
-            }
-        }
+        if (item instanceof WiredAddonNewPuzzleBox && !tile.canPlaceItemHere())
+            return false;
 
         if (limit && (tile.getStackHeight() - tile.getTileHeight()) > 1.2)
             return false;
