@@ -53,7 +53,7 @@ public class WiredActionMoveToDirection extends WiredActionItem {
 
                 if (floorItem == null) continue;
 
-                if (floorItem.getMoveDirection() == -1 || floorItem.getLastStartDir() == startDir) {
+                if (floorItem.getMoveDirection() == -1 && floorItem.getLastStartDir() != startDir) {
                     floorItem.setMoveDirection(startDir);
                     this.setLastStartDir(startDir);
                 }
@@ -93,29 +93,12 @@ public class WiredActionMoveToDirection extends WiredActionItem {
         }
 
         switch (actionWhenBlocked) {
-            case ACTION_TURN_BACK:
-                movementDirection = Direction.get(movementDirection).invert().num;
-                break;
-
-            case ACTION_TURN_RANDOM:
-                movementDirection = getRandomDirection(floorItem);
-                break;
-
-            case ACTION_TURN_RIGHT_45:
-                movementDirection = this.getNextDirection(movementDirection);
-                break;
-
-            case ACTION_TURN_RIGHT_90:
-                movementDirection = this.clockwise(movementDirection, 2);
-                break;
-
-            case ACTION_TURN_LEFT_45:
-                movementDirection = this.getPreviousDirection(movementDirection);
-                break;
-
-            case ACTION_TURN_LEFT_90:
-                movementDirection = this.antiClockwise(movementDirection, 2);
-                break;
+            case ACTION_TURN_BACK -> movementDirection = Direction.get(movementDirection).invert().num;
+            case ACTION_TURN_RANDOM -> movementDirection = getRandomDirection(floorItem);
+            case ACTION_TURN_RIGHT_45 -> movementDirection = this.getNextDirection(movementDirection);
+            case ACTION_TURN_RIGHT_90 -> movementDirection = this.clockwise(movementDirection, 2);
+            case ACTION_TURN_LEFT_45 -> movementDirection = this.getPreviousDirection(movementDirection);
+            case ACTION_TURN_LEFT_90 -> movementDirection = this.antiClockwise(movementDirection, 2);
         }
 
         floorItem.setMoveDirection(movementDirection);
