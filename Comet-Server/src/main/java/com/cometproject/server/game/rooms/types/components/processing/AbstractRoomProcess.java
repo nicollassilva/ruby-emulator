@@ -426,7 +426,8 @@ public class AbstractRoomProcess implements CometTask {
 
         if (entity.findPath){
             entity.findPath = false;
-            entity.findWalkPath(true);
+            entity.getProcessingPath().clear();
+            entity.findWalkPath(true, false);
         }
 
         if (entity.isWalking()) {
@@ -536,20 +537,23 @@ public class AbstractRoomProcess implements CometTask {
                 } else {
                     if (!isLastStep){
                         entity.findPath = true;
+                    } else {
+                        entity.walking = false;
                     }
                     entity.getProcessingPath().clear();
                     entity.setWalkCancelled(false);//
                 }
             } else {
-                if (entity.getWalkingPath() != null) {
-                    entity.getWalkingPath().clear();
-                }
 
-                entity.getProcessingPath().clear();
+
+                //entity.walking = false;
+
+             //   entity.getProcessingPath().clear();
 
                 // RoomTile is blocked, let's try again!
                 if (!isLastStep) {
-                    entity.moveTo(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
+                    entity.findPath = true;
+
                 } else {
                     final RoomTile goalTile = this.getRoom().getMapping().getTile(entity.getWalkingGoal());
 
@@ -565,9 +569,13 @@ public class AbstractRoomProcess implements CometTask {
                     }
                 }
 
+
+
                 return false;//this.processEntity(entity, true);
             }
         } else {
+
+            entity.walking = false;
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;
 
@@ -592,6 +600,7 @@ public class AbstractRoomProcess implements CometTask {
             entity.setWalkCancelled(false);
         }
 //
+
 //        if(entity.getPendingWalk() != null) {
 //            entity.moveTo(entity.getPendingWalk());
 //            entity.setPendingWalk(null);

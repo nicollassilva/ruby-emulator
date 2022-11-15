@@ -237,13 +237,79 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
         if (this.getRoom().getData().getRoomProcessType() == RoomProcessingType.CLICK) {
             this.evtWalk.walk(this.getRoom(), x, y);
         } else {
-            findWalkPath(true);
+            findWalkPath(true, false);
         }
 
 
     }
 
-    public void findWalkPath(boolean firstGen) {
+    public void moveToAgain(int x, int y) {
+        if (this.isWarped()) {
+            return;
+        }
+
+        if (isFreeze) {
+            return;
+        }
+
+        PlayerEntity playerEntity = null;
+
+        if (this instanceof PlayerEntity) {
+            playerEntity = (PlayerEntity) this;
+        }
+
+        if (playerEntity != null && (playerEntity.hasAttribute("botcontrol") || playerEntity.hasAttribute("playercontrol"))) {
+            if (playerEntity.hasAttribute("botcontrol")) {
+                final Object botEntityObject = playerEntity.getAttribute("botcontrol");
+
+                if (botEntityObject != null) {
+                    playerEntity.moveTo(new Position(x, y));
+                }
+            }
+            if (playerEntity.hasAttribute("playercontrol")) {
+                final Object playerEntityObject = playerEntity.getAttribute("playercontrol");
+
+                if (playerEntityObject != null) {
+                    playerEntity.moveTo(new Position(x, y));
+                }
+            }
+            return;
+        }
+
+
+        final RoomTile tile = this.getRoom().getMapping().getTile(x, y);
+
+        if (tile == null)
+            return;
+
+
+        if (playerEntity != null && playerEntity.usingTeleportItem())
+            return;
+
+
+        if (tile.getRedirect() != null) {
+            x = tile.getRedirect().getX();
+            y = tile.getRedirect().getY();
+        }
+
+        //this.walking = true;
+        this.previousSteps = 0;
+
+        // Set the goal we are wanting to achieve
+        this.setWalkingGoal(x, y);
+
+        this.findPath = false;
+
+        if (this.getRoom().getData().getRoomProcessType() == RoomProcessingType.CLICK) {
+            this.evtWalk.walk(this.getRoom(), x, y);
+        } else {
+            findWalkPath(false, true);
+        }
+
+
+    }
+
+    public void findWalkPath(boolean firstGen, boolean again) {
 
         if (this.getRoom().getData().getRoomProcessType() != RoomProcessingType.CLICK) {
             if (this.walkingGoal.getX() == this.getPosition().getX() && this.walkingGoal.getY() == this.getPosition().getY()) {
@@ -267,7 +333,7 @@ public abstract class RoomEntity extends RoomFloorObject implements AvatarEntity
                 if (this.getEntityType() == RoomEntityType.PLAYER) {
                     PlayerEntity playerEntity = (PlayerEntity) this;
 
-                    if (playerEntity.getPlayer() != null && playerEntity.getPlayer().isClickThrough()) {
+                    if (again || (playerEntity.getPlayer() != null && playerEntity.getPlayer().isClickThrough())) {
 
                         this.walking = false;
                         this.processingPath.clear();
