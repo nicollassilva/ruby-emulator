@@ -430,7 +430,7 @@ public class AbstractRoomProcess implements CometTask {
             entity.findWalkPath(true, false);
         }
 
-        if (entity.isWalking()) {
+        if (entity.getProcessingPath() != null && !entity.getProcessingPath().isEmpty()) {
             Square nextSq = entity.getProcessingPath().get(0);
             entity.incrementPreviousSteps();
 
@@ -548,12 +548,11 @@ public class AbstractRoomProcess implements CometTask {
 
                 //entity.walking = false;
 
-             //   entity.getProcessingPath().clear();
+          //      entity.getProcessingPath().clear();
 
                 // RoomTile is blocked, let's try again!
                 if (!isLastStep) {
-                    entity.findPath = true;
-
+                    entity.moveToAgain(entity.getWalkingGoal().getX(), entity.getWalkingGoal().getY());
                 } else {
                     final RoomTile goalTile = this.getRoom().getMapping().getTile(entity.getWalkingGoal());
 
@@ -571,7 +570,7 @@ public class AbstractRoomProcess implements CometTask {
 
 
 
-                return false;//this.processEntity(entity, true);
+                return this.processEntity(entity, true);
             }
         } else {
 
