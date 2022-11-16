@@ -29,19 +29,21 @@ public class GateFloorItem extends RoomItemFloor {
             }
         }
 
-        for (AffectedTile tile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
-            if (this.getRoom().getEntities().getEntitiesAt(new Position(tile.x, tile.y)).size() > 0) {
+        if (isOpen()) {
+            for (AffectedTile tile : AffectedTile.getAffectedTilesAt(this.getDefinition().getLength(), this.getDefinition().getWidth(), this.getPosition().getX(), this.getPosition().getY(), this.getRotation())) {
+                if (this.getRoom().getEntities().getEntitiesAt(new Position(tile.x, tile.y)).size() > 0) {
+                    return false;
+                }
+            }
+
+            if (this.getRoom().getEntities().getEntitiesAt(this.getPosition()).size() > 0) {
                 return false;
             }
-        }
 
-        if (this.getRoom().getEntities().getEntitiesAt(this.getPosition()).size() > 0) {
-            return false;
-        }
-
-        for (RoomEntity entity : this.getRoom().getEntities().getAllEntities().values()) {
-            if (entity.isWalking() && this.getPosition().distanceTo(entity.getPosition()) <= 1) {
-                return false;
+            for (RoomEntity entity : this.getRoom().getEntities().getAllEntities().values()) {
+                if (entity.getProcessingPath() != null && !entity.getProcessingPath().isEmpty() && this.getPosition().distanceTo(entity.getPosition()) <= 1) {
+                    return false;
+                }
             }
         }
 
