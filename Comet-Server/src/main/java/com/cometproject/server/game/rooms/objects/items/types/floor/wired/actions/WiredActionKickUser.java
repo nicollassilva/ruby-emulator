@@ -33,7 +33,7 @@ public class WiredActionKickUser extends WiredActionShowMessage {
         String kickException = "";
 
         if (this.getRoom().getData().getOwnerId() == playerEntity.getPlayerId()) {
-            kickException = "Room owner";
+            kickException = "Proprietário do Quarto";
         }
 
         if (kickException.isEmpty()) {
@@ -48,7 +48,7 @@ public class WiredActionKickUser extends WiredActionShowMessage {
 
             this.queueEvent(event);
         } else {
-            playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Wired kick exception: " + kickException));
+            playerEntity.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), "Exceção do Wired de Kick: " + kickException));
         }
     }
 }
