@@ -38,6 +38,7 @@ import com.cometproject.server.game.commands.user.group.DeleteGroupCommand;
 import com.cometproject.server.game.commands.user.group.EjectAllCommand;
 import com.cometproject.server.game.commands.user.muting.MuteBotsCommand;
 import com.cometproject.server.game.commands.user.muting.MutePetsCommand;
+import com.cometproject.server.game.commands.user.muting.MuteUsersCommand;
 import com.cometproject.server.game.commands.user.room.*;
 import com.cometproject.server.game.commands.user.settings.*;
 import com.cometproject.server.game.commands.user.ws.RoomVideoCommand;
@@ -151,6 +152,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.getOrDefault("command.emptybots.name", "emptybots"), new EmptyBotsCommand());
         this.addCommand(Locale.get("command.mutebots.name"), new MuteBotsCommand());
         this.addCommand(Locale.get("command.mutepets.name"), new MutePetsCommand());
+        this.addCommand(Locale.getOrDefault("command.muteusers.name", "muteusers"), new MuteUsersCommand());
         this.addCommand(Locale.get("command.toggleevents.name"), new ToggleEventsCommand());
         this.addCommand(Locale.get("command.emptyfriends.name"), new EmptyFriendsCommand());
         //this.addCommand(Locale.get("command.reward.name"), new RewardCommand());

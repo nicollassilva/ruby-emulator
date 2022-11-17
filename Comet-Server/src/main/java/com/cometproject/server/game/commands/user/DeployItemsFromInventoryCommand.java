@@ -16,7 +16,7 @@ public class DeployItemsFromInventoryCommand extends ChatCommand {
     @Override
     public void execute(Session client, String[] message) {
         //check if the front tile is available
-        final Position position = client.getPlayer().getEntity().getPosition();
+        /*final Position position = client.getPlayer().getEntity().getPosition();
         final Position squareInFront = position.squareInFront(client.getPlayer().getEntity().getBodyRotation());
         if (squareInFront == null) {
             sendWhisper("Não pode usar o comando à frente deste quadrado!", client);
@@ -41,7 +41,7 @@ public class DeployItemsFromInventoryCommand extends ChatCommand {
             floorItems.stream().limit(75).forEach(item -> {
                 client.getPlayer().getEntity().getRoom().getBuilderComponent().placeFloorItem(client, item, squareInFront.getX(), squareInFront.getY(), 0);
             });
-        }
+        }*/
     }
 
     @Override
