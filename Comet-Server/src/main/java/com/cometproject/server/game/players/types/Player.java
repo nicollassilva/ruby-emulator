@@ -149,6 +149,7 @@ public class Player extends Observable implements IPlayer {
 
     private boolean petsMuted;
     private boolean botsMuted;
+    private boolean usersMuted;
 
     private boolean isFurnitureEditing = false;
     private boolean isFurniturePickup = false;
@@ -1019,6 +1020,14 @@ public class Player extends Observable implements IPlayer {
 
     public void setBotsMuted(boolean botsMuted) {
         this.botsMuted = botsMuted;
+    }
+
+    public boolean usersMuted() {
+        return usersMuted;
+    }
+
+    public void setUsersMuted(boolean usersMuted) {
+        this.usersMuted = usersMuted;
     }
 
     public WardrobeComponent getWardrobe() {

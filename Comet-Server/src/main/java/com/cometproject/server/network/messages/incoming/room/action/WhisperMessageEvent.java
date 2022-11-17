@@ -128,7 +128,7 @@ public class WhisperMessageEvent implements Event {
                 e.printStackTrace();
             }
 
-            if (!userTo.getPlayer().ignores(client.getPlayer().getId()))
+            if (!userTo.getPlayer().ignores(client.getPlayer().getId()) && !userTo.getPlayer().usersMuted())
                 userTo.getPlayer().getSession().send(new WhisperMessageComposer(playerEntity.getId(), filteredMessage));
 
             for (PlayerEntity entity : playerEntity.getRoom().getEntities().getWhisperSeers()) {
