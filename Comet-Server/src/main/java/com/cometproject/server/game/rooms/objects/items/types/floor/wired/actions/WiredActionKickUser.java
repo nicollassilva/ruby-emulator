@@ -24,16 +24,18 @@ public class WiredActionKickUser extends WiredActionShowMessage {
             return;
         }
 
-        if (!(event.entity instanceof PlayerEntity)) {
+        if (!(event.entity instanceof final PlayerEntity playerEntity)) {
             return;
         }
-
-        final PlayerEntity playerEntity = (PlayerEntity) event.entity;
 
         String kickException = "";
 
         if (this.getRoom().getData().getOwnerId() == playerEntity.getPlayerId()) {
             kickException = "Proprietário do Quarto";
+        }
+
+        if (!playerEntity.getPlayer().getPermissions().getRank().roomKickable()) {
+            kickException = "Membro da Equipe Staff";
         }
 
         if (kickException.isEmpty()) {
