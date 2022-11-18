@@ -22,7 +22,6 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.trigge
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOffFurni;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.triggers.WiredTriggerWalksOnFurni;
 import com.cometproject.server.game.rooms.types.Room;
-import com.cometproject.server.game.rooms.types.mapping.RoomEntityMovementNode;
 import com.cometproject.server.game.rooms.types.mapping.RoomTile;
 import com.cometproject.server.game.rooms.types.misc.ChatEmotion;
 import com.cometproject.server.network.messages.outgoing.room.avatar.AvatarUpdateMessageComposer;
@@ -38,7 +37,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -284,8 +282,6 @@ public class AbstractRoomProcess implements CometTask {
         entitiesToUpdate.clear();
     }
 
-
-
     public boolean updateEntityStuff(RoomEntity entity) {
         if (entity.getPositionToSet() != null) {
             if ((entity.getPositionToSet().getX() == this.room.getModel().getDoorX()) && (entity.getPositionToSet().getY() == this.room.getModel().getDoorY())) {
@@ -293,8 +289,11 @@ public class AbstractRoomProcess implements CometTask {
                 final List<RoomItemFloor> floorItemsAtDoor = this.getRoom().getItems().getItemsOnSquare(entity.getPositionToSet().getX(), entity.getPositionToSet().getY());
 
                 if (!floorItemsAtDoor.isEmpty()) {
-                    for (RoomItemFloor floorItem : floorItemsAtDoor) {
-                        if (floorItem instanceof TeleportPadFloorItem) leaveRoom = false;
+                    for (final RoomItemFloor floorItem : floorItemsAtDoor) {
+                        if (floorItem instanceof TeleportPadFloorItem) {
+                            leaveRoom = false;
+                            break;
+                        }
                     }
                 }
 
@@ -304,16 +303,14 @@ public class AbstractRoomProcess implements CometTask {
                 }
             }
 
-            /*if (entity.hasStatus(RoomEntityStatus.SIT)) {
-                entity.removeStatus(RoomEntityStatus.SIT);
-            }*/
+            entity.removeStatus(RoomEntityStatus.SIT);
 
             // Create the new position
-            Position newPosition = entity.getPositionToSet().copy();
-            Position oldPosition = entity.getPosition().copy();
+            final Position newPosition = entity.getPositionToSet().copy();
+            final Position oldPosition = entity.getPosition().copy();
 
-            List<RoomItemFloor> itemsOnSq = this.getRoom().getItems().getItemsOnSquare(entity.getPositionToSet().getX(), entity.getPositionToSet().getY());
-            List<RoomItemFloor> itemsOnOldSq = this.getRoom().getItems().getItemsOnSquare(entity.getPosition().getX(), entity.getPosition().getY());
+            final List<RoomItemFloor> itemsOnSq = this.getRoom().getItems().getItemsOnSquare(entity.getPositionToSet().getX(), entity.getPositionToSet().getY());
+            final List<RoomItemFloor> itemsOnOldSq = this.getRoom().getItems().getItemsOnSquare(entity.getPosition().getX(), entity.getPosition().getY());
 
             final RoomTile oldTile = this.getRoom().getMapping().getTile(entity.getPosition().getX(), entity.getPosition().getY());
             final RoomTile newTile = this.getRoom().getMapping().getTile(newPosition.getX(), newPosition.getY());
@@ -329,22 +326,35 @@ public class AbstractRoomProcess implements CometTask {
             entity.updateAndSetPosition(null);
             entity.setPosition(newPosition);
 
+            PlayerEntity playerEntity = null;
+
+            if (entity instanceof PlayerEntity) {
+                playerEntity = (PlayerEntity) entity;
+            }
+
+            if (playerEntity != null && playerEntity.hasAttribute("tp")) {
+                playerEntity.removeAttribute("tp");
+            }
+
             if (entity instanceof BotEntity) {
                 entity.getAI().onReachedTile(newTile);
             }
 
+            if (entity instanceof PlayerEntity) {
+                entity.onReachedTile(newTile);
+            }
+
             // Step off
-            for (RoomItemFloor item : itemsOnOldSq) {
+            for (final RoomItemFloor item : itemsOnOldSq) {
                 if (!itemsOnSq.contains(item)) {
                     item.onEntityStepOff(entity);
-                    WiredTriggerWalksOffFurni.executeTriggers(entity, item);
+                    this.getRoom().getItemProcess().queueAction(new WiredTriggerExecutor(WiredTriggerWalksOffFurni.class, entity, item));
                 }
             }
 
-            for (RoomItemFloor item : itemsOnSq) {
-                if (entity instanceof PlayerEntity) {
-                    PlayerEntity playerEntity = ((PlayerEntity) entity);
 
+            for (final RoomItemFloor item : itemsOnSq) {
+                if (playerEntity != null) {
                     if (playerEntity.getPlayer() != null && playerEntity.getPlayer().getData().getQuestId() != 0 && playerEntity.getPlayer().getQuests() != null)
                         ((PlayerEntity) entity).getPlayer().getQuests().progressQuest(QuestType.EXPLORE_FIND_ITEM, item.getDefinition().getSpriteId());
                 }
@@ -355,17 +365,24 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             if (newTile != null && newTile.getTopItem() != 0 && !entity.isWarped()) {
-                RoomItemFloor topItem = this.getRoom().getItems().getFloorItem(newTile.getTopItem());
+                final RoomItemFloor topItem = this.getRoom().getItems().getFloorItem(newTile.getTopItem());
 
                 if (topItem != null) {
                     final int itemEffectId = topItem.getDefinition().getEffectId();
 
-                    if (!(topItem instanceof EffectFloorItem) && itemEffectId != 0 && (entity.getCurrentEffect() == null || entity.getCurrentEffect().getEffectId() != itemEffectId)) {
+                    if (!(topItem instanceof EffectFloorItem) && itemEffectId != 0 && entity.getMountedEntity() == null && (entity.getCurrentEffect() == null || entity.getCurrentEffect().getEffectId() != itemEffectId)) {
                         entity.applyEffect(new PlayerEffect(topItem.getDefinition().getEffectId(), true));
                     }
 
                     topItem.onEntityStepOn(entity);
-                    WiredTriggerWalksOnFurni.executeTriggers(entity, topItem);
+
+                    if (entity instanceof PlayerEntity) {
+                        this.getRoom().getItemProcess().queueAction(new WiredTriggerExecutor<>(WiredTriggerWalksOnFurni.class, entity, topItem));
+                    }
+
+                    if (entity instanceof BotEntity) {
+                        WiredTriggerBotReachedFurni.executeTriggers(entity, topItem, entity.getUsername());
+                    }
                 }
             } else if (newTile != null) {
                 newTile.onEntityEntersTile(entity);
@@ -380,7 +397,7 @@ public class AbstractRoomProcess implements CometTask {
     }
 
     private boolean processEntity(RoomEntity entity, boolean isRetry) {
-        boolean isPlayer = entity instanceof PlayerEntity;
+        final boolean isPlayer = entity instanceof PlayerEntity;
 
         if (isPlayer && ((PlayerEntity) entity).getPlayer() == null || entity.getRoom() == null) {
             return true; // adds it to the to remove list automatically..
@@ -396,11 +413,52 @@ public class AbstractRoomProcess implements CometTask {
                         ((PlayerEntity) entity).getPlayer().setRoomFloodTime(0);
                     }
                 }
+
+                if (((PlayerEntity) entity).isAway()) {
+                    final long currentTime = Comet.getTime();
+
+                    if ((currentTime - ((PlayerEntity) entity).getLastAwayReminder()) >= 60) {
+                        this.getRoom().getEntities().broadcastChatMessage(new TalkMessageComposer(entity.getId(), String.format("Eu já estou fora por %s", TimeSpan.millisecondsToDate(((PlayerEntity) entity).getAwayTime())), ChatEmotion.NONE, 0), ((PlayerEntity) entity));
+                        ((PlayerEntity) entity).setLastAwayReminder(currentTime);
+                    }
+                }
             }
 
             if (entity.handItemNeedsRemove() && entity.getHandItem() != 0) {
                 entity.carryItem(0);
                 entity.setHandItemTimer(0);
+            }
+
+            if (entity.isBodyRotating()) {
+                int rotation = entity.getBodyRotation();
+                if (rotation >= 8)
+                    rotation = 0;
+
+                rotation++;
+                entity.setBodyRotation(rotation);
+                entity.markNeedsUpdate();
+            }
+
+            if (entity.isHeadRotating()) {
+                int rotation = entity.getHeadRotation();
+                if (rotation >= 8)
+                    rotation = 0;
+
+                rotation++;
+                entity.setHeadRotation(rotation);
+                entity.markNeedsUpdate();
+            }
+
+            if (entity instanceof PlayerEntity) {
+                if (((PlayerEntity) entity).isSpinBody()) {
+                    ((PlayerEntity) entity).incrementSpinBodyRotation();
+
+                    final int rotation = ((PlayerEntity) entity).getSpinBodyRotation();
+
+                    entity.setHeadRotation(rotation);
+                    entity.setBodyRotation(rotation);
+                    entity.markNeedsUpdate(true);
+                }
             }
 
             // Handle signs
@@ -410,11 +468,18 @@ public class AbstractRoomProcess implements CometTask {
             }
 
             if (entity instanceof PlayerEntity && entity.isIdleAndIncrement() && entity.isVisible()) {
+
                 if (entity.getIdleTime() >= 60 * CometSettings.roomIdleMinutes * 2) {
-                    if (this.getRoom().getData().getOwnerId() != ((PlayerEntity) entity).getPlayerId() && !((PlayerEntity) entity).getPlayer().getPermissions().getRank().roomFullControl())
-                        return true;
+                    //if (this.getRoom().getData().getOwnerId() != playerEntity.getPlayerId() && !playerEntity.getPlayer().getPermissions().getRank().roomFullControl())
+                    return false;
                 }
             }
+        }
+
+        if (entity.findPath) {
+            entity.getProcessingPath().clear();
+            entity.findWalkPath(true, false);
+            entity.findPath = false;
         }
 
         if (entity.hasStatus(RoomEntityStatus.MOVE)) {
@@ -424,16 +489,9 @@ public class AbstractRoomProcess implements CometTask {
             entity.markNeedsUpdate();
         }
 
-        if (entity.findPath){
-            entity.findPath = false;
-            entity.getProcessingPath().clear();
-            entity.findWalkPath(true, false);
-        }
-
-        if (entity.isWalking()) {
-            Square nextSq = entity.getProcessingPath().get(0);
+        if (entity.processingPath.size() > 0) {
+            Square nextSq = entity.getProcessingPath().remove(0);
             entity.incrementPreviousSteps();
-
 
             if (isPlayer && ((PlayerEntity) entity).isKicked()) {
 
@@ -444,144 +502,143 @@ public class AbstractRoomProcess implements CometTask {
                 ((PlayerEntity) entity).increaseKickWalkStage();
             }
 
-            entity.getProcessingPath().remove(nextSq);
 
             boolean isLastStep = (entity.getProcessingPath().size() == 0);
 
-            if (nextSq != null && entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0), isLastStep) || entity.isOverriden()) {
-                Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
-                Position nextPos = new Position(nextSq.x, nextSq.y);
+            if ((nextSq == null || !entity.getRoom().getMapping().isValidEntityStep(entity, entity.getPosition(), new Position(nextSq.x, nextSq.y, 0.0), isLastStep)) && !entity.isOverriden()) {
 
-                final double mountHeight = entity instanceof PlayerEntity && entity.getMountedEntity() != null ? 1.0 : 0;//(entity.getMountedEntity() != null) ? (((String) entity.getAttribute("transform")).startsWith("15 ") ? 1.0 : 0.5) : 0;
-
-                final RoomTile tile = this.room.getMapping().getTile(nextSq.x, nextSq.y);
-                final double height = tile.getWalkHeight() + mountHeight;
-                boolean isCancelled = entity.isWalkCancelled();
-                boolean effectNeedsRemove = true;
-
-                List<RoomItemFloor> preItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-                for (RoomItemFloor item : preItems) {
-                    if (item != null) {
-                        if (!(item instanceof EffectFloorItem) && entity.getCurrentEffect() != null && entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
-                            if (item.getId() == tile.getTopItem()) {
-                                effectNeedsRemove = false;
-                            }
-                        }
-
-                        if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
-                            isCancelled = true;
-                        }
-
-                        if (!isCancelled) {
-                            item.onEntityPreStepOn(entity);
-                        }
-                    }
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.findPath = false;
+                    return false;
                 }
 
-                if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {
-                    entity.applyEffect(entity.getLastEffect());
+                entity.findWalkPath(false, true);
+
+                if (entity.getProcessingPath().isEmpty()) {
+                    entity.findPath = false;
+                    return false;
                 }
 
-                if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
-                    final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
-                    final boolean isFinalStep = entity.getWalkingGoal().equals(nextPos);
+                nextSq = entity.processingPath.remove(0);
+            }
 
-                    if (isFinalStep && allowWalkthrough) {
-                        isCancelled = true;
-                    } else if (!allowWalkthrough) {
-                        isCancelled = true;
+
+            if (nextSq == null)
+                return false;
+
+            final Position currentPos = entity.getPosition() != null ? entity.getPosition() : new Position(0, 0, 0);
+            final Position nextPos = new Position(nextSq.x, nextSq.y);
+
+            final double mountHeight = entity instanceof PlayerEntity && entity.getMountedEntity() != null ? 1.0 : 0;
+
+            final RoomTile tile = this.room.getMapping().getTile(nextSq.x, nextSq.y);
+            final double height = tile.getWalkHeight() + mountHeight;
+            boolean isCancelled = entity.isWalkCancelled();
+            boolean effectNeedsRemove = true;
+
+            final List<RoomItemFloor> preItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
+
+            for (final RoomItemFloor item : preItems) {
+                if (item != null) {
+                    if (!(item instanceof EffectFloorItem) && entity.getCurrentEffect() != null && entity.getCurrentEffect().getEffectId() == item.getDefinition().getEffectId()) {
+                        if (item.getId() == tile.getTopItem()) {
+                            effectNeedsRemove = false;
+                        }
                     }
 
-                    RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
+                    if (item.isMovementCancelled(entity, new Position(nextSq.x, nextSq.y))) {
+                        entity.findPath = false;
+                        entity.processingPath.clear();
+                        return false;
+                    }
 
-                    if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
+                    if (!isCancelled)
+                        item.onEntityPreStepOn(entity);
+
+                }
+            }
+            if (effectNeedsRemove && entity.getCurrentEffect() != null && entity.getCurrentEffect().isItemEffect()) {
+                entity.applyEffect(entity.getLastEffect());
+            }
+
+
+            if (this.getRoom().getEntities().positionHasEntity(nextPos)) {
+                final boolean allowWalkthrough = this.getRoom().getData().getAllowWalkthrough();
+                final boolean nextPosIsTheGoal = entity.getWalkingGoal().equals(nextPos);
+                final boolean isOverriding = isPlayer && entity.isOverriden();
+                if (!isOverriding && !allowWalkthrough) {
+                    isCancelled = true;
+                }
+
+                final RoomEntity entityOnTile = this.getRoom().getMapping().getTile(nextPos.getX(), nextPos.getY()).getEntity();
+                if (entityOnTile != null && entityOnTile.getMountedEntity() != null && entityOnTile.getMountedEntity() == entity) {
+                    isCancelled = false;
+                }
+
+                if (entityOnTile instanceof PetEntity && entity instanceof PetEntity) {
+                    if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
                         isCancelled = false;
                     }
-
-                    if (entityOnTile instanceof PetEntity && entity instanceof PetEntity) {
-                        if (entityOnTile.getTile().getTopItemInstance() instanceof BreedingBoxFloorItem) {
-                            isCancelled = false;
-                        }
-                    }
                 }
-
-                if (!isCancelled) {
-                    entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
-                    entity.setHeadRotation(entity.getBodyRotation());
-
-                    entity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextSq.x).concat(",").concat(String.valueOf(nextSq.y)).concat(",").concat(String.valueOf(height)));
-
-                    entity.removeStatus(RoomEntityStatus.SIT);
-                    entity.removeStatus(RoomEntityStatus.LAY);
-
-                    final Position newPosition = new Position(nextSq.x, nextSq.y, height);
-                    entity.updateAndSetPosition(newPosition);
-                    entity.markNeedsUpdate();
-
-                    if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
-                        RoomEntity mountedEntity = entity.getMountedEntity();
-
-                        mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
-                    }
-
-                    List<RoomItemFloor> postItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
-
-                    for (RoomItemFloor item : postItems) {
-                        if (item != null) {
-                            item.onEntityPostStepOn(entity);
-                        }
-                    }
-
-                    entity.addToTile(tile);
-                } else {
-                    if (!isLastStep){
-                        entity.findPath = true;
-                    } else {
-                        entity.walking = false;
-                    }
-                    entity.getProcessingPath().clear();
-                    entity.setWalkCancelled(false);//
-                }
-            } else {
-
-
-                //entity.walking = false;
-
-             //   entity.getProcessingPath().clear();
-
-                // RoomTile is blocked, let's try again!
-                if (!isLastStep) {
-                    entity.findPath = true;
-
-                } else {
-                    final RoomTile goalTile = this.getRoom().getMapping().getTile(entity.getWalkingGoal());
-
-                    if (goalTile != null) {
-                        for (RoomTile adjacentTile : goalTile.getAdjacentTiles(entity.getPosition())) {
-
-                            if (adjacentTile != null && adjacentTile.getMovementNode() != RoomEntityMovementNode.CLOSED) {
-                                entity.moveTo(adjacentTile.getPosition());
-                                this.processEntity(entity, true);
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-
-
-                return false;//this.processEntity(entity, true);
             }
+
+            if (isCancelled) {
+                if (entity.isWalkCancelled()) {
+                    entity.processingPath.clear();
+                    entity.findPath = false;
+                    entity.setWalkCancelled(false);
+
+                } else {
+                    entity.processingPath.clear();
+                    entity.findPath = true;
+                }
+                return false;
+            }
+
+
+            if (nextSq == null)
+                return false;
+
+            //  if (!isCancelled) {
+            entity.setBodyRotation(Position.calculateRotation(currentPos.getX(), currentPos.getY(), nextSq.x, nextSq.y, entity.isMoonwalking()));
+            entity.setHeadRotation(entity.getBodyRotation());
+
+            entity.addStatus(RoomEntityStatus.MOVE, String.valueOf(nextSq.x).concat(",").concat(String.valueOf(nextSq.y)).concat(",").concat(String.valueOf(height)));
+
+            entity.removeStatus(RoomEntityStatus.SIT);
+            entity.removeStatus(RoomEntityStatus.LAY);
+
+            final Position newPosition = new Position(nextSq.x, nextSq.y, height);
+
+            entity.updateAndSetPosition(newPosition);
+            entity.markNeedsUpdate();
+
+            if (entity instanceof PlayerEntity && entity.getMountedEntity() != null) {
+                final RoomEntity mountedEntity = entity.getMountedEntity();
+
+                mountedEntity.moveTo(newPosition.getX(), newPosition.getY());
+            }
+
+            final List<RoomItemFloor> postItems = this.getRoom().getItems().getItemsOnSquare(nextSq.x, nextSq.y);
+
+            for (final RoomItemFloor item : postItems) {
+                if (item != null) {
+                    item.onEntityPostStepOn(entity);
+                }
+            }
+
+            entity.addToTile(tile);
+
+
+            if (isLastStep)
+                entity.findPath = false;
+
         } else {
 
-            entity.walking = false;
+            entity.findPath = false;
+
             if (isPlayer && ((PlayerEntity) entity).isKicked())
                 return true;
-
-            if (entity.getPositionToSet() != null) {
-                this.updateEntityStuff(entity);
-            }
         }
 
         // Handle expiring effects
@@ -589,7 +646,7 @@ public class AbstractRoomProcess implements CometTask {
             entity.getCurrentEffect().decrementDuration();
 
             if (entity.getCurrentEffect().getDuration() == 0 && entity.getCurrentEffect().expires()) {
-                entity.applyEffect(entity.getLastEffect());
+                entity.applyEffect(entity.getLastEffect() != null ? entity.getLastEffect() : null);
 
                 if (entity.getLastEffect() != null)
                     entity.setLastEffect(null);
@@ -599,13 +656,8 @@ public class AbstractRoomProcess implements CometTask {
         if (entity.isWalkCancelled()) {
             entity.setWalkCancelled(false);
         }
-//
 
-//        if(entity.getPendingWalk() != null) {
-//            entity.moveTo(entity.getPendingWalk());
-//            entity.setPendingWalk(null);
-//        }
-//
+
         return false;
     }
 
