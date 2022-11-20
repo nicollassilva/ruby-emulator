@@ -39,12 +39,17 @@ public class UserWalkEvent {
     public void run(Room room) {
         if (!this.isWalking) {
             this.liveEntity.processingPath.clear();
+            if (this.liveEntity.isWalkCancelled()){
+                stopWalk(room);
+                this.liveEntity.setWalkCancelled(false);
+                return;
+            }
             //   room.entityWalk(this.nextXY, this.liveEntity, false);
             return;
         }
         if (this.doSteep) {
             this.doSteep = false;
-            if (!this.isWalking) {
+            if (!this.isWalking || this.liveEntity.isWalkCancelled()) {
                 this.liveEntity.processingPath.clear();
                 stopWalk(room);
                 return;
@@ -148,6 +153,8 @@ public class UserWalkEvent {
             stopWalk(room);
             return;
         }
+
+
 
         final Position currentPos = this.liveEntity.getPosition() != null ? this.liveEntity.getPosition() : new Position(0, 0, 0);
 
