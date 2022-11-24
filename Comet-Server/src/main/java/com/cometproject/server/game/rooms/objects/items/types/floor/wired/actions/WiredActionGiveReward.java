@@ -215,25 +215,25 @@ public class WiredActionGiveReward extends WiredActionItem {
                                 case CREDITS:
                                     playerEntity.getPlayer().getData().increaseCredits(value);
                                     playerEntity.getPlayer().getSession().send(new AlertMessageComposer(
-                                            Locale.getOrDefault("wired.reward.coins", "You received %s coin(s)!").replace("%s", value + "")));
+                                            Locale.getOrDefault("wired.reward.coins", "Você recebeu %s moeda(s)!").replace("%s", value + "")));
                                     break;
 
                                 case ACTIVITY_POINTS:
                                     playerEntity.getPlayer().getData().increaseActivityPoints(value);
                                     playerEntity.getPlayer().getSession().send(new AlertMessageComposer(
-                                            Locale.getOrDefault("wired.reward.duckets", "You received %s ducket(s)!").replace("%s", value + "")));
+                                            Locale.getOrDefault("wired.reward.duckets", "Você recebeu %s ducket(s)!").replace("%s", value + "")));
                                     break;
 
                                 case VIP_POINTS:
                                     playerEntity.getPlayer().getData().increaseVipPoints(value);
                                     playerEntity.getPlayer().getSession().send(new AlertMessageComposer(
-                                            Locale.getOrDefault("wired.reward.diamonds", "You received %s diamond(s)!").replace("%s", value + "")));
+                                            Locale.getOrDefault("wired.reward.diamonds", "Você recebeu %s diamantes(s)!").replace("%s", value + "")));
                                     break;
 
                                 case SEASONAL_POINTS:
                                     playerEntity.getPlayer().getData().increaseSeasonalPoints(value);
                                     playerEntity.getPlayer().getSession().send(new AlertMessageComposer(
-                                            Locale.getOrDefault("wired.reward.seasonal", "You received %s seasonal(s)!").replace("%s", value + "")));
+                                            Locale.getOrDefault("wired.reward.seasonal", "Você recebeu %s rubi(s)!").replace("%s", value + "")));
                                     break;
 
                                 case GO_TO_ROOM:
