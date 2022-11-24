@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum RewardType {
-    CREDITS("credits"),
+    CREDITS("moedas"),
     ACTIVITY_POINTS("duckets"),
-    VIP_POINTS("diamonds"),
-    SEASONAL_POINTS("seasonal"),
+    VIP_POINTS("diamantes"),
+    SEASONAL_POINTS("rubis"),
     GO_TO_ROOM("goto"),
-    ALERT("alert");
+    ALERT("alerta");
 
 
     private static final Map<String, RewardType> map = new HashMap<>();
