@@ -35,19 +35,19 @@ public class GiveRankCommand extends ChatCommand {
         }
 
         if(rank >= client.getPlayer().getData().getRank()) {
-            client.getPlayer().sendNotif("error", Locale.getOrDefault("rank.too.high", "You cannot give a rank higher or equal to yours"));
+            client.getPlayer().sendNotif("error", Locale.getOrDefault("rank.too.high", "Você não pode dar um cargo maior ou igual ao seu."));
             return;
         }
 
         session.getPlayer().getData().setRank(rank);
         PlayerDao.updateRank(session.getPlayer().getId(), rank);
 
-        client.getPlayer().sendNotif("success", Locale.getOrDefault("command.giverank.success", "Rank set succesfully!"));
-        session.getPlayer().sendNotif("Rank updated", Locale.getOrDefault("command.giverank.received", "Your rank was set to " + rank + ". Please reload client"));
+        client.getPlayer().sendNotif("success", Locale.getOrDefault("command.giverank.success", "Rank alterado com sucesso!"));
+        session.getPlayer().sendNotif("Rank updated", Locale.getOrDefault("command.giverank.received", "Seu rank foi alterado para " + rank + ". Por favor relogue."));
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s has given rank %r to user '%u'"
+        this.logDesc = "%s deu o cargo %r para o usuário '%u'"
                 .replace("%r", Integer.toString(rank))
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%u", username);
