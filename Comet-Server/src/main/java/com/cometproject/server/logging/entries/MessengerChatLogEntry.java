@@ -24,7 +24,7 @@ public class MessengerChatLogEntry extends AbstractLogEntry {
 
     @Override
     public String getString() {
-        return "To: " + this.receiverId + ", Message: " + this.message;
+        return "Para: " + this.receiverId + ", Mensagem: " + this.message;
     }
 
     @Override
