@@ -37,54 +37,61 @@ public class WiredActionExecuteStacks extends WiredActionItem {
             if (floorItem == null || floorItem instanceof WiredActionExecuteStacks)
                 continue;
 
-            for (final Position positions : floorItem.getPositions()) {
-                if (!tilesToExecute.contains(positions))
-                    tilesToExecute.add(positions);
-            }
+            if ((floorItem.getPosition().getX() == this.getPosition().getX() && floorItem.getPosition().getY() == this.getPosition().getY()))
+                continue;
+
+            tilesToExecute.add(new Position(floorItem.getPosition().getX(), floorItem.getPosition().getY()));
         }
 
         for (final Position tileToUpdate : tilesToExecute) {
             final List<RoomItemFloor> itemsOnTile = this.getRoom().getMapping().getTile(tileToUpdate).getItems();
+
+            /*
             final boolean hasAddonRandomEffect = itemsOnTile.stream().anyMatch(item -> item instanceof WiredAddonRandomEffect);
 
             if (hasAddonRandomEffect) {
-                final List<RoomItemFloor> randomEffect = itemsOnTile.stream().filter(item -> item instanceof WiredActionItem).collect(Collectors.toList());
+                final List<RoomItemFloor> randomEffect = itemsOnTile.stream().filter(item -> item instanceof WiredActionItem).toList();
 
                 if (randomEffect.size() > 0) {
                     actions.add(randomEffect.get(RandomUtil.getRandomInt(0, randomEffect.size() - 1)));
                 }
             }
+            */
+
+            final int max = 50;
+            int limiter = 0;
 
             for (final RoomItemFloor roomItemFloor : itemsOnTile) {
-                if (actions.size() > 1000)
+
+                if (limiter >= max) {
                     break;
+                }
+
 
                 if (roomItemFloor instanceof WiredCustomForwardRoom || roomItemFloor instanceof WiredActionExecuteStacks)
                     continue;
 
-                if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
+               /* if (roomItemFloor instanceof WiredActionItem && hasAddonRandomEffect)
                     continue;
+*/
 
-                if (roomItemFloor instanceof WiredActionItem || roomItemFloor instanceof WiredConditionItem || roomItemFloor instanceof WiredAddonUnseenEffect || roomItemFloor instanceof WiredAddonRandomEffect || roomItemFloor instanceof WiredAddonNoItemsAnimateEffect) {
-                    if (roomItemFloor instanceof WiredActionShowMessage || roomItemFloor instanceof WiredCustomShowMessageRoom) {
-                        if (nbEffectMsg >= 10) {
-                            continue;
-                        }
-
-                        nbEffectMsg++;
+                if (roomItemFloor instanceof WiredActionShowMessage || roomItemFloor instanceof WiredCustomShowMessageRoom) {
+                    if (nbEffectMsg >= 10) {
+                        continue;
                     }
 
-                    actions.add(roomItemFloor);
+                    nbEffectMsg++;
+                } else {
+                    limiter++;
                 }
-            }
 
-            if (actions.size() > 0) {
-                WiredTriggerItem.startExecute(event.entity, event.data, actions, true);
-                actions.clear();
+                actions.add(roomItemFloor);
             }
         }
 
-        tilesToExecute.clear();
+        if (actions.size() > 0) {
+            WiredTriggerItem.startExecute(event.entity, event.data, actions, true);
+        }
     }
 
 
