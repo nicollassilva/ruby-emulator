@@ -14,13 +14,13 @@ public class WiredAddonPyramid extends RoomItemFloor {
 
     public WiredAddonPyramid(RoomItemData roomItemData, Room room) {
         super(roomItemData, room);
+
+        this.setTicks(RandomUtil.getRandomInt(5, 8) * 2);
     }
 
     @Override
     public void onEntityStepOn(RoomEntity entity) {
-        if(!this.hasEntity) {
-            this.hasEntity = true;
-        }
+        this.hasEntity = true;
     }
 
     @Override
@@ -43,6 +43,21 @@ public class WiredAddonPyramid extends RoomItemFloor {
         }
 
         return true;
+    }
+
+    @Override
+    public void onTickComplete() {
+        if (this.hasEntity) {
+            this.setTicks(RoomItemFactory.getProcessTime(1.0));
+            return;
+        }
+
+        toggleState();
+
+        this.sendUpdate();
+        this.setTicks(RoomItemFactory.getProcessTime(RandomUtil.getRandomInt(5, 8)));
+
+        this.getRoom().getMapping().updateTile(this.getPosition().getX(), this.getPosition().getY());
     }
 
     private void toggleState() {
