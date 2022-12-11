@@ -946,6 +946,9 @@ public class ItemsComponent {
 
         if (!tile.canStack() && tile.getTopItem() != 0 && tile.getTopItem() != item.getId() && !hasStackToolCommand) {
             if (!item.getItemName().startsWith(RoomItemFactory.STACK_TOOL)) {
+                if (playerEntity != null)
+                    return false;
+
                 if (tile.getMovementNode() == RoomEntityMovementNode.CLOSED)
                     return false;
             }
