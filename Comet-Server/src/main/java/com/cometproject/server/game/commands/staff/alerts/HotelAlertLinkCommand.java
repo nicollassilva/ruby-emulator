@@ -23,7 +23,7 @@ public class HotelAlertLinkCommand extends ChatCommand {
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s enviou um alerta com link '%e' e mensagem '%m'"
+        this.logDesc = "%s enviou um alerta da notícia '%e' e mensagem '%m'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%e", link)
                 .replace("%m", this.merge(params, 1));
@@ -36,7 +36,7 @@ public class HotelAlertLinkCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.hotelalertlink.parameter", "%message%");
     }
 
     @Override
