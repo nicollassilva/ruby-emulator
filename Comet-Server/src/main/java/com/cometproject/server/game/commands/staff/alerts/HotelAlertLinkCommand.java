@@ -18,12 +18,13 @@ public class HotelAlertLinkCommand extends ChatCommand {
         }
 
         final String link = params[0];
+        final String baseLink = "https://rubyhotel.city/article/";
 
-        NetworkManager.getInstance().getSessions().broadcast(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.hotelalertlink.title", "Alerta"), this.merge(params, 1) + "<br><br>- <b>" + client.getPlayer().getData().getUsername() + "</b>", Locale.getOrDefault("command.hotelalertlink.buttontitle", "+info"), link, "hal"));
+        NetworkManager.getInstance().getSessions().broadcast(new AdvancedAlertMessageComposer(Locale.getOrDefault("command.hotelalertlink.title", "Alerta"), this.merge(params, 1) + "<br><br>- <b>" + client.getPlayer().getData().getUsername() + "</b>", Locale.getOrDefault("command.hotelalertlink.buttontitle", "+info"), baseLink + link, "hal"));
 
         if(!CometExternalSettings.enableStaffMessengerLogs) return;
 
-        this.logDesc = "%s enviou um alerta com link '%e' e mensagem '%m'"
+        this.logDesc = "%s enviou um alerta da notícia '%e' e mensagem '%m'"
                 .replace("%s", client.getPlayer().getData().getUsername())
                 .replace("%e", link)
                 .replace("%m", this.merge(params, 1));
@@ -36,7 +37,7 @@ public class HotelAlertLinkCommand extends ChatCommand {
 
     @Override
     public String getParameter() {
-        return Locale.getOrDefault("command.parameter.message", "%message%");
+        return Locale.getOrDefault("command.hotelalertlink.parameter", "%message%");
     }
 
     @Override
