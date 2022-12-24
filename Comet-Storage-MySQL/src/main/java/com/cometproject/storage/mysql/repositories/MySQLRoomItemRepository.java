@@ -38,8 +38,8 @@ public class MySQLRoomItemRepository extends MySQLRepository implements IRoomIte
 
     @Override
     public void removeItemFromRoom(long itemId, int playerId, String finalState) {
-        update("UPDATE items SET room_id = 0, user_id = ?, x = 0, " +
-                "y = 0, z = 0, wall_pos = '', extra_data = ? WHERE id = ?", playerId, finalState, itemId);
+        update("UPDATE items SET room_id = 0,  x = 0, " +
+                "y = 0, z = 0, wall_pos = '', extra_data = ? WHERE id = ?", finalState, itemId);
     }
 
     @Override

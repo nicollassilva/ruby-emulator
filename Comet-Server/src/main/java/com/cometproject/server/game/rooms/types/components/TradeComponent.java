@@ -9,10 +9,11 @@ import java.util.List;
 
 
 public class TradeComponent {
-    private final Room room;
+    private Room room;
     private final List<Trade> trades;
 
     public void dispose(){
+        this.room = null;
         trades.clear();
     }
     public TradeComponent(Room room) {
