@@ -70,7 +70,11 @@ public class DisconnectUser extends RCONMessage<DisconnectUser.DisconnectUserJSO
             case "vip_expiration" -> {
                 final Session session = NetworkManager.getInstance().getSessions().fromPlayer(playerId);
 
+
                 if(session == null) return;
+
+                session.getPlayer().getData().setBanner("default");
+                session.getPlayer().getData().save();
 
                 session.disconnect("Você foi desconectado. Motivo: Seu vip acabou de expirar!");
             }
