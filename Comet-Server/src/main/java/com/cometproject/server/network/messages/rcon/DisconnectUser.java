@@ -76,7 +76,7 @@ public class DisconnectUser extends RCONMessage<DisconnectUser.DisconnectUserJSO
                 session.getPlayer().getData().setBanner("default");
                 session.getPlayer().getData().save();
 
-                session.disconnect("Você foi desconectado. Motivo: Seu vip acabou de expirar!");
+                session.disconnect("Você foi desconectado. Motivo: Seu VIP expirou!");
             }
         }
     }

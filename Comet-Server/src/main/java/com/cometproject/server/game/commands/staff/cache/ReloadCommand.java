@@ -54,6 +54,7 @@ public class ReloadCommand extends ChatCommand {
                                 "- config\n" +
                                 "- crafting\n" +
                                 "- emojis\n" +
+                                "- figuredata\n" +
                                 "- filter\n" +
                                 "- gamecenter\n" +
                                 "- groupitems\n" +
@@ -70,7 +71,6 @@ public class ReloadCommand extends ChatCommand {
                                 "- pets\n" +
                                 "- polls\n" +
                                 "- quests\n" +
-                                "- figuredata\n" +
                                 "- targetoffers"
                 ));
 
