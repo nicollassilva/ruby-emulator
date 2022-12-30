@@ -35,12 +35,20 @@ import com.cometproject.server.network.sessions.Session;
 import com.cometproject.server.network.sessions.SessionManager;
 import com.cometproject.server.storage.queries.config.ConfigDao;
 
-
 public class ReloadCommand extends ChatCommand {
 
     @Override
     public void execute(Session client, String[] params) {
         final String command = params.length == 0 ? "" : params[0];
+
+        final int rank = client.getPlayer().getData().getRank();
+
+        if (rank < 13) {
+            if (!(rank == 8 && (command.equals("items") || command.equals("catalog")))) {
+                sendWhisper("Oops, não pode executar essa ação!", client);
+                return;
+            }
+        }
 
         switch (command) {
             default:
