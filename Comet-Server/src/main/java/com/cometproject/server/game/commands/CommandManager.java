@@ -252,7 +252,7 @@ public class CommandManager implements Initialisable {
         this.addCommand(Locale.get("command.warp.name"), new WarpCommand());
         this.addCommand(Locale.getOrDefault("command.tradeban.name", "tradeban"), new TradeBanCommand());
         this.addCommand(Locale.getOrDefault("command.notilook.name", "notilook"), new NotificationLookCommand());
-        //this.addCommand("verclones", new VerClonesCommand());
+        this.addCommand("verclones", new VerClonesCommand());
         this.addCommand(Locale.get("command.teleport.name"), new TeleportCommand());
         this.addCommand(Locale.get("command.massmotd.name"), new MassMotdCommand());
         this.addCommand(Locale.get("command.hotelalert.name"), new HotelAlertCommand());
