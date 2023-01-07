@@ -10,6 +10,7 @@ import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredF
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.WiredUtil;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionGiveReward;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.WiredActionMatchToSnapshot;
+import com.cometproject.server.game.rooms.objects.items.types.floor.wired.actions.custom.WiredCustomGiveBadge;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.base.WiredActionItem;
 import com.cometproject.server.game.rooms.objects.items.types.floor.wired.conditions.positive.WiredConditionMatchSnapshot;
 import com.cometproject.server.game.rooms.types.Room;
@@ -51,7 +52,9 @@ public class SaveWiredDataMessageEvent implements Event {
 
         if (wiredItem == null) return;
 
-        if (wiredItem instanceof WiredActionGiveReward && CometSettings.roomWiredRewardMinimumRank > client.getPlayer().getData().getRank()) {
+        boolean isRewardableWired = wiredItem instanceof WiredActionGiveReward || wiredItem instanceof WiredCustomGiveBadge;
+
+        if (isRewardableWired && client.getPlayer().getData().getRank() < CometSettings.roomWiredRewardMinimumRank) {
             client.send(new SaveWiredMessageComposer());
             return;
         }
