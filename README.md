@@ -10,10 +10,11 @@ So I decided to make this repository public so that no one else would spend thei
 
 ## Credits for:
 
-- **Leon Hartley** creator of Comet Server.
 - **Dann for selling this stolen emulator to some people and not giving support, just installing the incomplete emulator and getting out!**
+  
+- **Leon Hartley** creator of Comet Server.
 - **Skeletor** and Endritt for improving the stability of this emulator.
-- **Cen0n* for improving websockets and adding good things together.
+- **Cen0n** for improving websockets and adding good things together.
 - **Juice** for contributing fixes and reporting bugs.
 - **Matuts** or **Matuvs**
 
